@@ -1,5 +1,7 @@
 package btc;
 
+import org.lwjgl.Sys;
+
 import lib.jog.audio;
 import lib.jog.graphics;
 import lib.jog.input;
@@ -15,12 +17,14 @@ public class Main implements input.EventHandler {
 	final private int WIDTH = 640;
 	final private int HEIGHT = 480;
 
-	private double dt;
+	private double _lastFrame;
+	private double _dt;
 	
 	public Main() {
 		start();
 		while(!window.isClosed()) {
-			update(dt);
+			_dt = getDeltaTime();
+			update(_dt);
 			draw();
 		}
 		quit();
@@ -30,11 +34,19 @@ public class Main implements input.EventHandler {
 		window.initialise(TITLE, WIDTH, HEIGHT);
 		graphics.initialise();
 		audio.initialise();
+		_lastFrame = 0;
 	}
 	
 	private void update(double dt) {
 		input.update(this);
 		window.update();
+	}
+	
+	private double getDeltaTime() {
+		double time = (double)(Sys.getTime()) / Sys.getTimerResolution();
+	    double delta = (time - _lastFrame);
+	    _lastFrame = time;
+	    return delta;
 	}
 	
 	private void draw() {
