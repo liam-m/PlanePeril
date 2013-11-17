@@ -1,5 +1,7 @@
 package btc;
 
+import java.io.File;
+
 import org.lwjgl.Sys;
 
 import lib.jog.audio;
@@ -36,7 +38,9 @@ public class Main implements input.EventHandler {
 		graphics.initialise();
 		audio.initialise();
 		_lastFrame = 0;
-		// _scene = new scn.Title(this);
+		graphics.Font font = graphics.newBitmapFont("gfx" + File.separator + "font.png", "ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz1234567890.,_-!?()[]><#~:;/\\^'\"{}&$@@@@@@@@");
+		graphics.setFont(font);
+		_scene = new scn.Title(this);
 		_scene.start();
 	}
 	
@@ -54,6 +58,7 @@ public class Main implements input.EventHandler {
 	}
 	
 	private void draw() {
+		graphics.clear();
 		_scene.draw();
 	}
 	
