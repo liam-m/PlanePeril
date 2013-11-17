@@ -22,29 +22,23 @@ public abstract class graphics {
 	
 	public static abstract class Font {
 		
-		protected abstract void print(double x, double y, String text);
+		protected abstract void print(double x, double y, String text, double size);
 		
 	}
 	
 	private static class BitmapFont extends Font {
 
 		private String _glyphs;
-		private Quad[] _quads;
 		private Image _img;
 		
 		private BitmapFont(String filepath, String glyphs) {
 			_img = newImage(filepath);
 			_glyphs = glyphs;
-			_quads = new Quad[_glyphs.length()];
-			int width = (int)_img.width() / _glyphs.length();
-			for (int i = 0; i < _quads.length; i ++) {
-				_quads[i] = newQuad(i * width, 0, width, width, _img.width(), width);
-			}
 		}
 
-		protected void print(double x, double y, String text) {
+		protected void print(double x, double y, String text, double size) {
 			y = window.height() - y;
-			double w = _img.width() / _glyphs.length();
+			double w = _img.height();
 			double h = -_img.height();
 			double qw = w / _img.width();
 			double qh = 1;
@@ -53,6 +47,7 @@ public abstract class graphics {
 	    	_img._texture.bind();
 			glPushMatrix();
 			glTranslated(x, y, 0);
+			glScaled(size, size, 1);
 			glBegin(GL_QUADS);
 			for (int i = 0; i < text.length(); i ++) {
 				double qx = _glyphs.indexOf(text.charAt(i)) * w / _img.width();
@@ -87,7 +82,7 @@ public abstract class graphics {
 			}
 		}
 
-		protected void print(double x, double y, String text) {
+		protected void print(double x, double y, String text, double size) {
 			_font.drawString((int)x, (int)y, text);
 		}
 	}
@@ -101,7 +96,7 @@ public abstract class graphics {
 			_font = new TrueTypeFont(awtFont, false);
 		}
 		
-		protected void print(double x, double y, String text) {
+		protected void print(double x, double y, String text, double size) {
 			y = y - window.height();
 			
 			glPushMatrix();
@@ -293,6 +288,8 @@ public abstract class graphics {
 	
 	static public void arc(boolean fill, double x, double y, double r, double startAngle, double angle, double segments) {
 		y = window.height() - y;
+		startAngle = -startAngle;
+		angle = -angle;
 		
 		glPushMatrix();
 		glTranslated(x, y, 0);
@@ -309,6 +306,9 @@ public abstract class graphics {
 		}
 		glEnd();
 		glPopMatrix();
+	}
+	static public void arc(boolean fill, double x, double y, double r, double startAngle, double angle) {
+		arc(fill, x, y, r, startAngle, angle, 20);
 	}
 	
 	static public void circle(boolean fill, double x, double y, double r, double segments) {
@@ -334,9 +334,12 @@ public abstract class graphics {
 		circle(fill, x, y, r, 20);
 	}
 	
-	static public void print(String text, double x, double y) {
+	static public void print(String text, double x, double y, double size) {
 		if (_font == null) _font = newSystemFont("Times New Roman");
-		_font.print(x, y, text);
+		_font.print(x, y, text, size);
+	}
+	static public void print(String text, double x, double y){
+		print(text, x, y, 1);
 	}
 	
 	/**
