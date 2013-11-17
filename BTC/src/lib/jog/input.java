@@ -30,11 +30,11 @@ public abstract class input {
 		while (Mouse.next()) {
 			if (Mouse.getEventButtonState()) {
 				if (Mouse.getEventButton() >= 0) {
-					handler.mousePressed(Mouse.getEventButton(), Mouse.getX(), Mouse.getY());
+					handler.mousePressed(Mouse.getEventButton(), mouseX(), mouseY());
 				}
 			} else {
 				if (Mouse.getEventButton() >= 0) {
-					handler.mouseReleased(Mouse.getEventButton(), Mouse.getX(), Mouse.getY());
+					handler.mouseReleased(Mouse.getEventButton(), mouseX(), mouseY());
 				}
 			}
 		}
@@ -62,8 +62,8 @@ public abstract class input {
 	}
 	
 	public static boolean isMouseInRect(int x, int y, int width, int height) {
-		int mx = Mouse.getX();
-		int my = Mouse.getY();
+		int mx = mouseX();
+		int my = mouseY();
 		return (mx >= x && mx <= x + width && my >= y && my <= y + height);
 	}
 	
@@ -72,7 +72,7 @@ public abstract class input {
 	}
 	
 	public static int mouseY() {
-		return Mouse.getY();
+		return window.height() - Mouse.getY();
 	}
 	
 }
