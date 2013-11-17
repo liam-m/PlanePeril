@@ -61,6 +61,12 @@ public abstract class input {
 		return Mouse.isButtonDown(button);
 	}
 	
+	public static boolean isMouseInRect(int x, int y, int width, int height) {
+		int mx = Mouse.getX();
+		int my = Mouse.getY();
+		return (mx >= x && mx <= x + width && my >= y && my <= y + height);
+	}
+	
 	public static int mouseX() {
 		return Mouse.getX();
 	}
