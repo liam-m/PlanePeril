@@ -34,11 +34,11 @@ public class Main implements input.EventHandler {
 	}
 	
 	private void start() {
+		_lastFrame = (double)(Sys.getTime()) / Sys.getTimerResolution();
 		window.initialise(TITLE, WIDTH, HEIGHT);
 		graphics.initialise();
 		audio.initialise();
-		_lastFrame = 0;
-		graphics.Font font = graphics.newBitmapFont("gfx" + File.separator + "font.png", "ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz1234567890.,_-!?()[]><#~:;/\\^'\"{}&$@@@@@@@@");
+		graphics.Font font = graphics.newBitmapFont("gfx" + File.separator + "font.png", "ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz1234567890.,_-!?()[]><#~:;/\\^'\"{}£$@@@@@@@@");
 		graphics.setFont(font);
 		_scene = new scn.Title(this);
 		_scene.start();
@@ -62,10 +62,11 @@ public class Main implements input.EventHandler {
 		_scene.draw();
 	}
 	
-	private void quit() {
+	public void quit() {
 		_scene.close();
 		window.dispose();
 		audio.dispose();
+		System.exit(0);
 	}
 
 	@Override
