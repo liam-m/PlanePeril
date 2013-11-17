@@ -291,6 +291,26 @@ public abstract class graphics {
 	    glPopMatrix();
 	}
 	
+	static public void arc(boolean fill, double x, double y, double r, double startAngle, double angle, double segments) {
+		y = window.height() - y;
+		
+		glPushMatrix();
+		glTranslated(x, y, 0);
+		glScaled(r, r, 1);
+		if (fill) {
+			glBegin(GL_TRIANGLE_FAN);
+			glVertex2d(0, 0);
+	    } else {
+	    	glBegin(GL_LINE_STRIP);
+	    }
+		for (int i = 0; i <= segments; i++) {
+		    double theta = startAngle + (angle * i / segments);
+		    glVertex2d(Math.cos(theta), Math.sin(theta));
+		}
+		glEnd();
+		glPopMatrix();
+	}
+	
 	static public void circle(boolean fill, double x, double y, double r, double segments) {
 		y = window.height() - y;
 		
