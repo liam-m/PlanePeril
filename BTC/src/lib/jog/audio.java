@@ -1,6 +1,5 @@
 package lib.jog;
 
-import org.lwjgl.LWJGLException;
 import org.lwjgl.openal.AL;
 import org.newdawn.slick.SlickException;
 
@@ -104,6 +103,14 @@ public abstract class audio {
 
 		public void stop() {
 			_source.stop();
+		}
+
+		public void setVolume(float volume) {
+			_volume = volume;
+		}
+		
+		public float getVolume() {
+			return _volume;
 		}
 		
 	}
