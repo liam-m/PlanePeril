@@ -1,5 +1,8 @@
 package scn;
 
+import java.io.File;
+
+import lib.jog.audio;
 import lib.jog.graphics;
 import lib.jog.input;
 import lib.jog.window;
@@ -8,6 +11,7 @@ import btc.Main;
 public class Title extends Scene {
 	
 	private double _timer;
+	private audio.Music _beep;
 
 	public Title(Main main) {
 		super(main);
@@ -16,11 +20,19 @@ public class Title extends Scene {
 	@Override
 	public void start() {
 		_timer = 0;
+		_beep = audio.newMusic("sfx" + File.separator + "beep.ogg");
+		_beep.setVolume(0.2f);
 	}
 
 	@Override
 	public void update(double dt) {
 		_timer += dt;
+		double beepTimer = (_timer * 4) + (Math.PI * 4 / 5);
+		beepTimer %= (2 * Math.PI);
+		if ( beepTimer <= 0.1 ) {
+			_beep.stop();
+			_beep.play();
+		}
 	}
 
 	@Override
