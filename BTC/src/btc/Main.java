@@ -37,7 +37,6 @@ public class Main implements input.EventHandler {
 		_lastFrame = (double)(Sys.getTime()) / Sys.getTimerResolution();
 		window.initialise(TITLE, WIDTH, HEIGHT);
 		graphics.initialise();
-		audio.initialise();
 		graphics.Font font = graphics.newBitmapFont("gfx" + File.separator + "font.png", "ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz1234567890.,_-!?()[]><#~:;/\\^'\"{}£$@@@@@@@@");
 		graphics.setFont(font);
 		_scene = new scn.Title(this);

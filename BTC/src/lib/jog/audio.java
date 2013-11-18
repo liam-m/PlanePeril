@@ -108,14 +108,6 @@ public abstract class audio {
 		
 	}
 	
-	public static void initialise() {
-		try {
-			AL.create();
-		} catch (LWJGLException e) {
-			e.printStackTrace();
-		}
-	}
-	
 	public static SoundEffect newSoundEffect(String filepath, boolean loop) {
 		return new SoundEffect(filepath, loop);
 	}
