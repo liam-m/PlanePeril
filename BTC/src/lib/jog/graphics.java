@@ -156,6 +156,7 @@ public abstract class graphics {
 	
 	private static Font _font;
 	private static Color _colour;
+	private static boolean _viewPortEnabled;
 	
 	static public void initialise() {
 		glMatrixMode(GL_PROJECTION);
@@ -164,6 +165,7 @@ public abstract class graphics {
 		glMatrixMode(GL_MODELVIEW);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		_viewPortEnabled = false;
 	}
 
 	static public void setColour(Color colour) {
@@ -187,6 +189,21 @@ public abstract class graphics {
 	
 	static public void setFont(Font font) {
 		_font = font;
+	}
+	
+	static public void setViewport(int x, int y, int width, int height) {
+		glPushMatrix();
+		glTranslated(x, -y, 0);
+		y = window.height() - y;
+		glEnable(GL_SCISSOR_TEST);		
+		glScissor(x, y - height, width, height);
+		_viewPortEnabled = true;
+	}
+	
+	static public void setViewport() {
+		glDisable(GL_SCISSOR_TEST);
+		glPopMatrix();
+		_viewPortEnabled = false;
 	}
 	
 	static public FileFont newFont(String filepath, int size) {
@@ -358,6 +375,7 @@ public abstract class graphics {
 			e.printStackTrace();
 		}
 		*/
+		if (_viewPortEnabled) setViewport();
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 		GL11.glColor3d(1, 1, 1);
 	}
