@@ -16,6 +16,9 @@ public abstract class input {
 	public final static int KEY_DOWN = Keyboard.KEY_DOWN;
 	public final static int KEY_LEFT = Keyboard.KEY_LEFT;
 	public final static int KEY_RIGHT = Keyboard.KEY_RIGHT;
+	public final static int KEY_SPACE = Keyboard.KEY_SPACE;
+	public final static int KEY_LCRTL = Keyboard.KEY_LCONTROL;
+	public final static int KEY_W = Keyboard.KEY_W;
 	
 	public interface EventHandler {
 		
