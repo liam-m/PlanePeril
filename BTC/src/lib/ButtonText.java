@@ -38,9 +38,9 @@ public class ButtonText {
 	
 	public void draw() {
 		if (isMouseOver()) {
-			graphics.setColor(_colourHover);
+			graphics.setColour(_colourHover);
 		} else {
-			graphics.setColor(_colourDefault);
+			graphics.setColour(_colourDefault);
 		}
 		graphics.print(_text, _x + _ox, _y + _oy);
 	}
