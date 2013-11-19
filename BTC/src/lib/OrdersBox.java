@@ -13,19 +13,21 @@ public class OrdersBox {
 	private double _timer;
 	private double _typeWait;
 	private boolean _typing;
+	private String _buffer;
 
 	public OrdersBox(int x, int y, int width, int height, int lines) {
+		LINES = lines;
 		_x = x;
 		_y = y;
 		_width = width;
 		_height = height;
-		LINES = lines;
 		_orders = new String[LINES];
 		_currentOrder = 0;
 		_currentChar = 0;
 		_timer = 0;
 		_typing = false;
-		_typeWait = 0.01;
+		_typeWait = 0.1;
+		_buffer = "";
 	}
 	
 	public void addOrder(String order) {
@@ -43,6 +45,7 @@ public class OrdersBox {
 			_orders[LINES-1] = order;
 		}
 		_typing = true;
+		_buffer.concat("\n" + order);
 	}
 	
 	private int size() {
@@ -58,15 +61,16 @@ public class OrdersBox {
 		if (_typing) {
 			_timer += dt;
 			if (_timer >= _typeWait) {
+				_timer -= _typeWait;
 				_currentChar += 1;
 				if (_currentChar == _orders[_currentOrder].length() - 1) {
 					_currentChar = 0;
 					_currentOrder += 1;
 					if (_currentOrder == size()) {
 						_typing = false;
+						if (_currentOrder == LINES) _currentOrder -= 1;
 					}
 				}
-				_timer -= _typeWait;
 			}
 		}
 	}
@@ -83,6 +87,8 @@ public class OrdersBox {
 			for (int i = 0; i < _currentChar; i ++) {
 				graphics.print(_orders[_currentOrder].substring(i, i+1), _x + 4 + (8 * i), _y + 4 + (_currentOrder * (_height-8) / LINES));
 			}
+		} else if (size() == LINES) {
+			graphics.print(_orders[_currentOrder], _x + 4, _y + 4 + ((_currentOrder) * (_height-8) / LINES));
 		}
 	}
 
