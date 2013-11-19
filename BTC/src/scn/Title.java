@@ -90,8 +90,6 @@ public class Title extends Scene {
 	public void draw() {
 		drawRadar();
 		drawMenu();
-		
-		graphics.print(input.mouseX() + ", " + input.mouseY(), 0, 0);
 	}
 	
 	private void drawRadar() {
