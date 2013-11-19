@@ -12,6 +12,7 @@ public class Title extends Scene {
 	
 	private double _timer;
 	private audio.Music _beep;
+	private lib.ButtonText[] _buttons;
 
 	public Title(Main main) {
 		super(main);
@@ -22,6 +23,31 @@ public class Title extends Scene {
 		_timer = 0;
 		_beep = audio.newMusic("sfx" + File.separator + "beep.ogg");
 		_beep.setVolume(0.2f);
+		_buttons = new lib.ButtonText[3];
+		// Demo Button
+		lib.ButtonText.Action demo = new lib.ButtonText.Action() {
+			@Override
+			public void action() {
+				_main.setScene(new Demo(_main));
+			}
+		};
+		_buttons[0] = new lib.ButtonText("Play Demo", demo, window.height(), window.height()/2 + 96, window.width() - window.height(), 16, 8, 6);
+		// Game Button
+		lib.ButtonText.Action play = new lib.ButtonText.Action() {
+			@Override
+			public void action() {
+				_main.quit();
+			}
+		};
+		_buttons[1] = new lib.ButtonText("Play Full Game", play, window.height(), window.height()/2 + 126, window.width() - window.height(), 16, 8, 6);
+		// Exit Button
+		lib.ButtonText.Action exit = new lib.ButtonText.Action() {
+			@Override
+			public void action() {
+				_main.quit();
+			}
+		};
+		_buttons[2] = new lib.ButtonText("Exit", exit, window.height(), window.height()/2 + 156, window.width() - window.height(), 16, 8, 6);
 	}
 
 	@Override
@@ -42,14 +68,12 @@ public class Title extends Scene {
 
 	@Override
 	public void mouseReleased(int key, int mx, int my) {
-		int x, y, w, h;
-		x = window.height();
-		y = window.height()/2 + 152;
-		w = window.width() - window.height();
-		h = 28;
-		if (mx >= x && mx <= x + w && my >= y && my <= y + h) {
-			_main.quit();
+		for (lib.ButtonText b : _buttons) {
+			if (b.isMouseOver(mx, my)) {
+				b.act();
+			}
 		}
+		
 	}
 
 	@Override
@@ -64,6 +88,13 @@ public class Title extends Scene {
 
 	@Override
 	public void draw() {
+		drawRadar();
+		drawMenu();
+		
+		graphics.print(input.mouseX() + ", " + input.mouseY(), 0, 0);
+	}
+	
+	private void drawRadar() {
 		// Radar
 		graphics.setColour(0, 128, 0);
 		graphics.circle(false, window.height()/2, window.height()/2, window.height()/2 - 32, 100);
@@ -86,7 +117,6 @@ public class Title extends Scene {
 		graphics.arc(true, window.height()/2, window.height()/2, window.height()/2 - 32, angle, -3 * Math.PI / 8);
 		graphics.arc(true, window.height()/2, window.height()/2, window.height()/2 - 32, angle, -2 * Math.PI / 8);
 		graphics.arc(true, window.height()/2, window.height()/2, window.height()/2 - 32, angle, -1 * Math.PI / 8);
-		
 		// Title
 		String title = "Bear Traffic Controller";
 		double a = angle + (Math.PI * 4 / 5);
@@ -99,8 +129,10 @@ public class Title extends Scene {
 			graphics.setColour(0, 128, 0, opacity);
 			graphics.print(title.substring(i, i+1), 74 + i * 14, 128, 1.8);
 		}
-		
-		// Random Other Stuff
+	}
+	
+	private void drawMenu() {
+		// Draw Random Extras
 		graphics.setColour(0, 128, 0);
 		graphics.line(window.height(), 16, window.height(), window.height() - 16);
 		java.text.DateFormat dateFormat = new java.text.SimpleDateFormat("yyyy/MM/dd");
@@ -109,7 +141,7 @@ public class Title extends Scene {
 		graphics.print(dateFormat.format(date), window.height() + 8, 20);
 		graphics.print(timeFormat.format(date), window.height() + 8, 36);
 		graphics.line(window.height(), 48, window.width() - 16, 48);
-		
+		// Draw Random Statistics
 		graphics.line(window.height(), 108, window.width() - 16, 108);
 		graphics.print("Statistics:", window.height() + 8, 116);
 		graphics.line(window.height(), 130, window.width() - 16, 130);
@@ -125,36 +157,15 @@ public class Title extends Scene {
 		graphics.print("0", window.height() + 8, 186);
 		graphics.print("Current EXP:", window.height() + 8, 202);
 		graphics.print("0", window.height() + 8, 218);
-		
-		// Buttons
+		// Draw Buttons
+		for (lib.ButtonText b : _buttons) {
+			b.draw();
+		}
+		graphics.setColour(0, 128, 0);
 		graphics.line(window.height(), window.height()/2 + 90, window.width() - 16, window.height()/2 + 90);
-		if (input.isMouseInRect(window.height(), window.height()/2 + 92, window.width() - window.height(), 28)) {
-			graphics.setColour(128, 128, 128);
-		} else {
-			graphics.setColour(0, 128, 0);
-		}
-		graphics.print("Play Demo", window.height() + 8, window.height()/2 + 102);
-		graphics.setColour(0, 128, 0);
 		graphics.line(window.height(), window.height()/2 + 120, window.width() - 16, window.height()/2 + 120);
-		if (input.isMouseInRect(window.height(), window.height()/2 + 122, window.width() - window.height(), 28)) {
-			graphics.setColour(128, 128, 128);
-		} else {
-			graphics.setColour(0, 128, 0);
-		}
-		graphics.print("Play Full Game", window.height() + 8, window.height()/2 + 132);
-		graphics.setColour(0, 128, 0);
 		graphics.line(window.height(), window.height()/2 + 150, window.width() - 16, window.height()/2 + 150);
-		if (input.isMouseInRect(window.height(), window.height()/2 + 152, window.width() - window.height(), 28)) {
-			graphics.setColour(128, 128, 128);
-		} else {
-			graphics.setColour(0, 128, 0);
-		}
-		graphics.print("Exit", window.height() + 8, window.height()/2 + 162);
-		graphics.setColour(0, 128, 0);
 		graphics.line(window.height(), window.height()/2 + 180, window.width() - 16, window.height()/2 + 180);
-		
-		
-		graphics.print(input.mouseX() + ", " + input.mouseY(), 0, 0);
 	}
 
 	@Override

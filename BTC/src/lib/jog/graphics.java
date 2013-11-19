@@ -157,7 +157,7 @@ public abstract class graphics {
 	private static Font _font;
 	private static Color _colour;
 	
-	public static void initialise() {
+	static public void initialise() {
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 		glOrtho(0, window.width(), 0, window.height(), -1, 1);
@@ -165,7 +165,12 @@ public abstract class graphics {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	}
-	
+
+	static public void setColor(Color colour) {
+		_colour = colour;
+		glColor4f(_colour.r, _colour.g, _colour.b, _colour.a);
+	}
+
 	static public void setColour(double r, double g, double b, double a) {
 		_colour = new Color((int)r, (int)g, (int)b, (int)a);
 		double red = (Math.max(0, Math.min(255, r)) / 255);
