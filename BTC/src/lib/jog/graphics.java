@@ -166,7 +166,7 @@ public abstract class graphics {
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	}
 
-	static public void setColor(Color colour) {
+	static public void setColour(Color colour) {
 		_colour = colour;
 		glColor4f(_colour.r, _colour.g, _colour.b, _colour.a);
 	}
