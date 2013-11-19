@@ -76,7 +76,6 @@ public class OrdersBox {
 	
 	public void draw() {
 		graphics.setColour(0, 128, 0);
-		graphics.rectangle(false, _x, _y, _width, _height);
 		for (int i = 0; i < size(); i ++) {
 			if (_orders[i] != null) {
 				graphics.print(_orders[i], _x + 4, _y + 4 + (i * (_height-8) / LINES));
