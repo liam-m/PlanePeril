@@ -68,6 +68,11 @@ public class Main implements input.EventHandler {
 		audio.dispose();
 		System.exit(0);
 	}
+	
+	public void setScene(scn.Scene newScene) {
+		_scene.close();
+		_scene = newScene;
+	}
 
 	@Override
 	public void mousePressed(int key, int x, int y) {
