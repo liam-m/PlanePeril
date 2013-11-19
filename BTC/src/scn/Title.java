@@ -4,7 +4,6 @@ import java.io.File;
 
 import lib.jog.audio;
 import lib.jog.graphics;
-import lib.jog.input;
 import lib.jog.window;
 import btc.Main;
 
@@ -36,7 +35,7 @@ public class Title extends Scene {
 		lib.ButtonText.Action play = new lib.ButtonText.Action() {
 			@Override
 			public void action() {
-				_main.quit();
+				System.out.println("The full game is not currently available");
 			}
 		};
 		_buttons[1] = new lib.ButtonText("Play Full Game", play, window.height(), window.height()/2 + 126, window.width() - window.height(), 16, 8, 6);
