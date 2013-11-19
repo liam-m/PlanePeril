@@ -1,4 +1,4 @@
-package Entities;
+package cls;
 
 public class Score {
 	

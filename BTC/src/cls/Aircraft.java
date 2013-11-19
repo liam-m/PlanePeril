@@ -1,4 +1,4 @@
-package Entities;
+package cls;
 
 import org.newdawn.slick.opengl.ImageData;
 
