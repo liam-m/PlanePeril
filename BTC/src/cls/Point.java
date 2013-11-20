@@ -4,14 +4,26 @@ public class Point {
 	
 	private double _x, _y, _z;
 	
-	public double x() {
+	public double getX() {
 		return _x;
 	}
-	public double y() {
+	public double getY() {
 		return _y;
 	}
-	public double z() {
+	public double getZ() {
 		return _z;
+	}
+	
+	public void setX(double x){
+		this._x = x;
+	}
+	
+	public void setY(double y){
+		this._y = y;
+	}
+	
+	public void setZ(double Z){
+		this._z = Z;
 	}
 	
 	public Point(double x, double y, double z) {
@@ -26,7 +38,7 @@ public class Point {
 			return false;
 		} else {
 			Point p = (Point) o;
-			return (_x == p.x()) && (_y == p.y()) && (_z == p.z());
+			return (_x == p.getX()) && (_y == p.getY()) && (_z == p.getZ());
 		}
 	}
 	

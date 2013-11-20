@@ -8,18 +8,18 @@ public class Waypoint {
 	
 	private Point _position;
 	
-	public Waypoint(double x, double y){
-		_position = new Point(x, y, 0);
+	public Waypoint(double x, double y, double z){
+		_position = new Point(x, y, z);
 	}
 	
-	public Point position() {
+	public Point getPosition() {
 		return _position;
 	}
 	
 	public void draw() {
 		graphics.setColour(128, 0, 0, 128);
-		graphics.circle(false, _position.x(), _position.y(), RADIUS);
-		graphics.circle(true, _position.x(), _position.y(), RADIUS - 2);
+		graphics.circle(false, _position.getX(), _position.getY(), RADIUS);
+		graphics.circle(true, _position.getX(), _position.getY(), RADIUS - 2);
 	}
 
 }
