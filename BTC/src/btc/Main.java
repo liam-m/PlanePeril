@@ -22,6 +22,7 @@ public class Main implements input.EventHandler {
 	private double _lastFrame;
 	private double _dt;
 	private scn.Scene _scene;
+	public cls.Score _score;
 	
 	public Main() {
 		start();
@@ -41,6 +42,7 @@ public class Main implements input.EventHandler {
 		graphics.setFont(font);
 		_scene = new scn.Title(this);
 		_scene.start();
+		_score = new cls.Score();
 	}
 	
 	private void update(double dt) {
