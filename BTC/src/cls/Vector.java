@@ -30,4 +30,20 @@ public class Vector {
 		}
 	}
 	
+	private double magnitude () {
+		return Math.sqrt(_x*_x + _y*_y + _z*_z);
+	}
+	
+	public Vector normalise() {
+		return this.mul(1/magnitude());
+	}
+	
+	public Vector mul(double n) {
+		return new Vector(_x * n, _y * n, _z * n);
+	}
+	
+	public Vector add(Vector v) {
+		return new Vector(_x + v.x(), _y + v.y(), _z + v.z());
+	}
+	
 }
