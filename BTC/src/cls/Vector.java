@@ -1,6 +1,6 @@
 package cls;
 
-public class Point {
+public class Vector {
 	
 	private double _x, _y, _z;
 	
@@ -14,7 +14,7 @@ public class Point {
 		return _z;
 	}
 	
-	public Point(double x, double y, double z) {
+	public Vector(double x, double y, double z) {
 		_x = x;
 		_y = y;
 		_z = z;
@@ -22,11 +22,11 @@ public class Point {
 	
 	@Override
 	public boolean equals(Object o) {
-		if (o.getClass() != Point.class) { 
+		if (o.getClass() != Vector.class) { 
 			return false;
 		} else {
-			Point p = (Point) o;
-			return (_x == p.x()) && (_y == p.y()) && (_z == p.z());
+			Vector v = (Vector) o;
+			return (_x == v.x()) && (_y == v.y()) && (_z == v.z());
 		}
 	}
 	
