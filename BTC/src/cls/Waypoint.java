@@ -6,7 +6,7 @@ public class Waypoint {
 	
 	final private int RADIUS = 8;
 	
-	private Point _position;
+	private Vector _position;
 	
 	public Waypoint(double x, double y){
 		_position = new Point(x, y, 0);
