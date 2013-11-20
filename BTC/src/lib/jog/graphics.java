@@ -230,12 +230,34 @@ public abstract class graphics {
 		return new Quad(x, y, quadWidth, quadHeight, imageWidth, imageHeight);
 	}
 	
+	static public void draw(Image drawable, double x, double y, double r, double ox, double oy) {
+		y = window.height() - y;
+		r = -Math.toDegrees(r);
+		
+    	glEnable(GL_TEXTURE_2D);
+    	drawable._texture.bind();
+		glPushMatrix();
+	    glTranslated(x, y, 0);
+	    glRotated(r, 0, 0, 1);
+		glBegin(GL_QUADS);
+			glTexCoord2d(0, 0);
+			glVertex2d(-ox/2, -oy/2);
+			glTexCoord2d(1, 0);
+			glVertex2d(ox/2, -oy/2);
+			glTexCoord2d(1, 1);
+			glVertex2d(ox/2, oy/2);
+			glTexCoord2d(0, 1);
+			glVertex2d(-ox/2, oy/2);
+		glEnd();
+		glPopMatrix();
+		glDisable(GL_TEXTURE_2D);
+	}
 	static public void draw(Image drawable, double x, double y) {
 		y = window.height() - y;
 		double w = drawable.width();
 		double h = -drawable.height();
 		
-    	glEnable(GL_TEXTURE_2D);
+		glEnable(GL_TEXTURE_2D);
     	drawable._texture.bind();
 		glPushMatrix();
 	    glTranslated(x, y, 0);
