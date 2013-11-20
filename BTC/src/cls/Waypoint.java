@@ -9,10 +9,10 @@ public class Waypoint {
 	private Vector _position;
 	
 	public Waypoint(double x, double y){
-		_position = new Point(x, y, 0);
+		_position = new Vector(x, y, 0);
 	}
 	
-	public Point position() {
+	public Vector position() {
 		return _position;
 	}
 	
