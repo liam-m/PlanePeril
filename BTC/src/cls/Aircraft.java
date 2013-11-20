@@ -1,23 +1,25 @@
-package cls;
+package Entities;
 
 import org.newdawn.slick.opengl.ImageData;
 
 public class Aircraft {
 
 	//Variables
-	private double[] position, velocity;
+	private double[] velocity;
+	private Position position;
 	private static int separationRule = 1000;
 	private boolean isManual;
 	private String flightName;
 
 	private Waypoint target, origin, destination;
 	private Waypoint[] route;
+	private int routeIndex;
 
 	private ImageData image;
 
 	//Constructor
 	public Aircraft(String flightName, Waypoint destination, Waypoint origin,
-						Waypoint target, ImageData image,
+							/*ImageData image,*/
 							double posX, double posY, double posZ,
 								double velX, double velY, double velZ){
 
@@ -29,17 +31,21 @@ public class Aircraft {
 		/*Given an Origin Waypoint and a destination Waypoint
 		 * find a path between them and create the aircraft's initial route*/
 		this.route = findRoute(origin, destination);
-
-		this.target = target;
-		this.image = image;
-		this.position = new double[] {posX, posY, posZ};
+		
+		// first waypoint to route to is the start of the route.
+		this.target = route[0];
+		this.routeIndex = 0;
+		
+		
+		//this.image = image;
+		this.position = new Position(posX, posY, posZ);
 		this.velocity = new double[] {velX, velY, velZ};
 		this.isManual = false;
 
 	}
 
 	// Getters //
-	public double[] getPosition() {
+	public Position getPosition() {
 		return this.position;
 	}
 
@@ -81,10 +87,6 @@ public class Aircraft {
 
 	// Setters //
 
-	public void setPosition(double posX, double posY, double posZ) {
-		this.position = new double[] {posX, posY, posZ};
-	}
-
 	public void setVelocity(double velX, double velY, double velZ) {
 		this.velocity = new double[] {velX, velY, velZ};
 	}
@@ -110,5 +112,33 @@ public class Aircraft {
 		/* Basic - go directly from origin to destination. No other path finding. */
 		route = new Waypoint[] {origin, destination};
 		return route;
+	}
+	
+	public void followRoute(){
+		/* follow the defined route.
+		 * Update position
+		 * check position against target waypoint
+		 * if close to target, get next target and route towards it.
+		 * else target remains the same until reached */
+		
+		//check if close to target waypoint
+		double targetX = target.getPosition().getX();
+		double targetY = target.getPosition().getY();
+		double targetZ = target.getPosition().getZ();
+		
+		if (this.position.getX() == (targetX +- 3) && this.position.getY() == (targetY +- 3)
+				&& this.position.getZ() == (targetZ +- 3)) {
+			//target reached, therefore route to next target
+			this.routeIndex ++;
+			this.target = route[routeIndex];
+			// alter velocity to head towards new target
+			this.velocity = new double[] {0, 0, 0};
+		}
+		
+		//update position
+		this.position.setX(this.position.getX() + this.velocity[0]);
+		this.position.setY(this.position.getY() + this.velocity[1]);
+		this.position.setZ(this.position.getZ() + this.velocity[2]);
+		
 	}
 }
