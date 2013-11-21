@@ -45,6 +45,7 @@ public abstract class graphics {
 			double qh = 1;
 			
 	    	glEnable(GL_TEXTURE_2D);
+	    	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	    	_img._texture.bind();
 			glPushMatrix();
 			glTranslated(x, y, 0);
