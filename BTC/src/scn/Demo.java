@@ -41,6 +41,7 @@ public class Demo extends Scene {
 	private Aircraft _selectedAircraft;
 	private java.util.ArrayList<Aircraft> _aircraft;
 	private graphics.Image _airplaneImage;
+	private lib.ButtonText _manualOverrideButton;
 	
 	public Main main() {
 		return _main;
@@ -73,10 +74,18 @@ public class Demo extends Scene {
 		checkCollisions(dt);
 		for (int i = _aircraft.size()-1; i >=0; i --) {
 			if (_aircraft.get(i).isFinished()) {
+				if (_aircraft.get(i) == _selectedAircraft) {
+					_selectedAircraft = null;
+				}
 				_aircraft.remove(i);
 				_main.score().addFlight();
 			}
 		}
+		
+		if (_selectedAircraft != null && input.isKeyDown(input.KEY_W)) {
+			_selectedAircraft.update(-dt);
+		}
+		
 	}
 	
 	private void checkCollisions(double dt) {
@@ -93,19 +102,19 @@ public class Demo extends Scene {
 
 	@Override
 	public void mousePressed(int key, int x, int y) {
-		
-	}
-
-	@Override
-	public void mouseReleased(int key, int x, int y) {
 		if (key == input.MOUSE_LEFT) {
 			for (Aircraft a : _aircraft) {
-				if (a.isMouseOver(x, y)) {
+				if (a.isMouseOver(x-16, y-16)) {
 					_selectedAircraft = a;
 					System.out.println("Selected Flight " + a.name());
 				}
 			}
 		}
+	}
+
+	@Override
+	public void mouseReleased(int key, int x, int y) {
+		
 	}
 
 	@Override
@@ -116,12 +125,15 @@ public class Demo extends Scene {
 	@Override
 	public void keyReleased(int key) {
 		switch (key) {
+		
 			case input.KEY_SPACE :
 				generateFlight();
 			break;
+			
 			case input.KEY_ESCAPE :
 				_main.closeScene();
 			break;
+			
 		}
 	}
 
@@ -147,6 +159,7 @@ public class Demo extends Scene {
 			graphics.rectangle(true, (window.width() - 256) / 2, 32, 256, 32);
 			graphics.setColour(0, 128, 0);
 			graphics.rectangle(false, (window.width() - 256) / 2, 32, 256, 32);
+			_manualOverrideButton.draw();
 		}
 		
 		int hours = (int)(_timer / (60 * 60));
