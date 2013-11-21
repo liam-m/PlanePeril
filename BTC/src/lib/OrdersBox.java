@@ -46,6 +46,10 @@ public class OrdersBox {
 		return LINES;
 	}
 	
+	public boolean isUpToDate() {
+		return !_typing;
+	}
+	
 	public void update(double dt) {
 		if (!_typing) return;
 		_timer += dt;
