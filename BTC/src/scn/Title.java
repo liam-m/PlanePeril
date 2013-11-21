@@ -150,10 +150,8 @@ public class Title extends Scene {
 		java.text.DecimalFormat df = new java.text.DecimalFormat("00.00");
 		String timePlayed = String.format("%d:%02d:", hours, minutes) + df.format(seconds); 
 		graphics.print(timePlayed, window.height() + 8, 154);
-		graphics.print("Current Level:", window.height() + 8, 170);
-		graphics.print("0", window.height() + 8, 186);
-		graphics.print("Current EXP:", window.height() + 8, 202);
-		graphics.print("0", window.height() + 8, 218);
+		graphics.print("Current Score:", window.height() + 8, 170);
+		graphics.print(String.valueOf(_main.score().calculate()), window.height() + 8, 186);
 		// Draw Buttons
 		for (lib.ButtonText b : _buttons) {
 			b.draw();
