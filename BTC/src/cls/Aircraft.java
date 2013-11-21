@@ -9,7 +9,7 @@ public class Aircraft {
 
 	public final static int SEPARATION_RULE = 32;
 	public final static int RADIUS = 8;
-	private final int MOUSE_LENIANCY = 16;
+	public final static int MOUSE_LENIANCY = 16;
 	
 	private double _speed;
 	
