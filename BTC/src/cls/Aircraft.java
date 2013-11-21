@@ -7,7 +7,8 @@ import scn.Demo;
 
 public class Aircraft {
 
-	public final static int separationRule = 1000;
+	public final static int separationRule = 32;
+	public final static int radius = 8;
 	
 	private double _speed;
 	
@@ -19,12 +20,12 @@ public class Aircraft {
 	private String _originName, _destinationName;
 	private Waypoint[] _route;
 	private int _routeStage;
-	private cls.Vector _destination;
+	private Vector _destination;
 	private graphics.Image _image;
 	private boolean _finished;
 
 	//Constructor
-	public Aircraft(String flightName, String originName, String destinationName, cls.Vector origin, cls.Vector destination, graphics.Image image, double speed) {
+	public Aircraft(String flightName, String originName, String destinationName, Vector origin, Vector destination, graphics.Image image, double speed) {
 		_flightName = flightName;
 		_destinationName = destinationName;
 		_originName = originName;
@@ -40,15 +41,20 @@ public class Aircraft {
 		_velocity = new Vector(x, y, 0).normalise().mul(speed);
 		_finished = false;
 		_routeStage = 0;
-		
-		System.out.println("New Flight Created");
-		System.out.println("------------------");
-		System.out.println("Origin:\t\t\t" + _originName + " (" + _position.x() + ", " + _position.y() + ")");
-		System.out.println("Destination:\t\t" + _destinationName + " (" + _destination.x() + ", " + _destination.y() + ")");
-		System.out.println("Flight Path:\t\t(" + _target.x() + ", " + _target.y() + "),");
+	}
+	
+	@Override
+	public String toString() {
+		String repr = "";
+		repr += "<Aircraft> (" + _flightName + ")\n";
+		repr += "------------------\n";
+		repr += "Origin:\t\t\t" + _originName + " (" + _position.x() + ", " + _position.y() + ")\n";
+		repr += "Destination:\t\t" + _destinationName + " (" + _destination.x() + ", " + _destination.y() + ")\n";
+		repr += "Flight Path:\t\t(" + _target.x() + ", " + _target.y() + "),\n";
 		for (int i = 1; i < _route.length; i ++) {
-			System.out.println("\t\t\t(" + _route[i].position().x() + ", " + _route[i].position().y() + "),");
+			repr += "\t\t\t(" + _route[i].position().x() + ", " + _route[i].position().y() + "),\n";
 		}
+		return repr;
 	}
 	
 	public Vector position() {
@@ -63,6 +69,10 @@ public class Aircraft {
 		return _finished;
 	}
 	
+	public boolean isManuallyController() {
+		return _manualControl;
+	}
+	
 	public boolean isMouseOver(int mx, int my) {
 		double dx = _position.x() - mx;
 		double dy = _position.y() - my;
@@ -73,7 +83,7 @@ public class Aircraft {
 	public void update(double dt) {
 		if (_finished) return;
 
-		cls.Vector dv = _velocity.mul(dt);
+		Vector dv = _velocity.mul(dt);
 		_position = _position.add(dv);
 		
 		Vector oldTarget = _target;
@@ -98,12 +108,14 @@ public class Aircraft {
 	}
 	
 	public void draw() {
+		graphics.setColour(128, 128, 128);
 		graphics.draw(_image, _position.x(), _position.y(), bearing(), 8, 8);
+		graphics.setColour(0, 128, 128);
+		graphics.circle(false, _position.x(), _position.y(), separationRule);
 	}
 	
 	public double bearing() {
 		double a = Math.acos( _velocity.x() / Math.sqrt(Math.pow(_velocity.x(), 2) + Math.pow(_velocity.y(), 2)) );
-		if (_velocity.x() < 0) a *= -1;
 		if (_velocity.y() < 0) a *= -1;
 		return a;
 	}
@@ -114,14 +126,31 @@ public class Aircraft {
 		return dy*dy + dx*dx < 16;
 	}
 	
-	private Waypoint[] findRoute(cls.Vector origin, cls.Vector destination) {
+	private Waypoint[] findRoute(Vector origin, Vector destination) {
 		// Placeholder over-simplified version
 		int n = 4;
 		Waypoint[] route = new Waypoint[n];
-		for (int i = 0; i < n; i ++ ){
+		for (int i = 0; i < n; i ++ ) {
 			route[i] = Demo._waypoints[(int)( Math.random() * Demo._waypoints.length )];
-			System.out.println(route[i].position().x() + ", " + route[i].position().y());
 		}
 		return route;
 	}
+
+	public void updateCollisions(double dt, scn.Demo scene) {
+		for (Aircraft plane : scene.aircraftList()) {
+			if (plane != this && isWithin(plane, radius)) {
+				scene.gameOver(this, plane);
+				_finished = true;
+			} else if (plane != this && isWithin(plane, separationRule)) {
+				scene.main().score().addTimeViolated(dt);
+			}
+		}
+	}
+	
+	private boolean isWithin(Aircraft aircraft, int distance) {
+		double dx = aircraft.position().x() - _position.x();
+		double dy = aircraft.position().y() - _position.y();
+		return dx*dx + dy*dy < distance*distance;
+	}
+	
 }
