@@ -21,8 +21,9 @@ public class Main implements input.EventHandler {
 
 	private double _lastFrame;
 	private double _dt;
+	private java.util.Stack<scn.Scene> _sceneStack;
 	private scn.Scene _scene;
-	public cls.Score _score;
+	private cls.Score _score;
 	
 	public Main() {
 		start();
@@ -40,8 +41,8 @@ public class Main implements input.EventHandler {
 		graphics.initialise();
 		graphics.Font font = graphics.newBitmapFont("gfx" + File.separator + "font.png", "ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz1234567890.,_-!?()[]><#~:;/\\^'\"{}£$@@@@@@@@");
 		graphics.setFont(font);
-		_scene = new scn.Title(this);
-		_scene.start();
+		_sceneStack = new java.util.Stack<scn.Scene>();
+		setScene(new scn.Title(this));
 		_score = new cls.Score();
 	}
 	
@@ -71,8 +72,16 @@ public class Main implements input.EventHandler {
 	}
 	
 	public void setScene(scn.Scene newScene) {
+		if (_scene != null) _scene.close();
+		_sceneStack.push(newScene);
+		_scene = _sceneStack.peek();
+		_scene.start();
+	}
+	
+	public void closeScene() {
 		_scene.close();
-		_scene = newScene;
+		_sceneStack.pop();
+		_scene = _sceneStack.peek(); 
 	}
 
 	@Override
@@ -95,4 +104,8 @@ public class Main implements input.EventHandler {
 		_scene.keyReleased(key);
 	}
 
+	public cls.Score score() {
+		return _score;
+	}
+	
 }
