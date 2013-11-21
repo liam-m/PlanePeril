@@ -41,6 +41,14 @@ public class Demo extends Scene {
 	private Aircraft _selectedAircraft;
 	private java.util.ArrayList<Aircraft> _aircraft;
 	private graphics.Image _airplaneImage;
+	
+	public Main main() {
+		return _main;
+	}
+	
+	public java.util.ArrayList<Aircraft> aircraftList() {
+		return _aircraft;
+	}
 
 	public Demo(Main main) {
 		super(main);
@@ -56,14 +64,31 @@ public class Demo extends Scene {
 
 	@Override
 	public void update(double dt) {
+		if (_aircraft.size() > 0) _main.score().addTime(dt); 
 		_ordersBox.update(dt);
 		_timer += dt;
 		for (Aircraft plane : _aircraft) {
 			plane.update(dt);
 		}
+		checkCollisions(dt);
 		for (int i = _aircraft.size()-1; i >=0; i --) {
-			if (_aircraft.get(i).isFinished()) _aircraft.remove(i);
+			if (_aircraft.get(i).isFinished()) {
+				_aircraft.remove(i);
+				_main.score().addFlight();
+			}
 		}
+	}
+	
+	private void checkCollisions(double dt) {
+		for (Aircraft plane : _aircraft) {
+			plane.updateCollisions(dt, this);
+		}
+	}
+	
+	public void gameOver(Aircraft plane1, Aircraft plane2) {
+		_main.closeScene();
+		_main.setScene(new GameOver(_main, plane1, plane2));
+		_main.score().addGameOver();
 	}
 
 	@Override
@@ -95,7 +120,7 @@ public class Demo extends Scene {
 				generateFlight();
 			break;
 			case input.KEY_ESCAPE :
-				_main.setScene(new Title(_main));
+				_main.closeScene();
 			break;
 		}
 	}
@@ -133,7 +158,7 @@ public class Demo extends Scene {
 		graphics.print(timePlayed, window.width() - (timePlayed.length() * 8), 0);
 		int planes = _aircraft.size();
 		graphics.print(String.valueOf(_aircraft.size()) + " plane" + (planes == 1 ? "" : "s") + " in the sky.", 256, 0);
-		graphics.print("Score: ", 0, 0);
+		graphics.print("Score: " + _main.score().calculate(), 0, 0);
 	}
 	
 	private void generateFlight() {
