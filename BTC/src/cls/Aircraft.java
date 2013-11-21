@@ -7,8 +7,9 @@ import scn.Demo;
 
 public class Aircraft {
 
-	public final static int separationRule = 32;
-	public final static int radius = 8;
+	public final static int SEPARATION_RULE = 32;
+	public final static int RADIUS = 8;
+	private final int MOUSE_LENIANCY = 16;
 	
 	private double _speed;
 	
@@ -76,7 +77,7 @@ public class Aircraft {
 	public boolean isMouseOver(int mx, int my) {
 		double dx = _position.x() - mx;
 		double dy = _position.y() - my;
-		return dx*dx + dy*dy < 64;
+		return dx*dx + dy*dy < MOUSE_LENIANCY*MOUSE_LENIANCY;
 	}
 	public boolean isMouseOver() { return isMouseOver(input.mouseX(), input.mouseY()); }
 	
@@ -111,7 +112,7 @@ public class Aircraft {
 		graphics.setColour(128, 128, 128);
 		graphics.draw(_image, _position.x(), _position.y(), bearing(), 8, 8);
 		graphics.setColour(0, 128, 128);
-		graphics.circle(false, _position.x(), _position.y(), separationRule);
+		graphics.circle(false, _position.x(), _position.y(), SEPARATION_RULE);
 	}
 	
 	public double bearing() {
@@ -138,10 +139,10 @@ public class Aircraft {
 
 	public void updateCollisions(double dt, scn.Demo scene) {
 		for (Aircraft plane : scene.aircraftList()) {
-			if (plane != this && isWithin(plane, radius)) {
+			if (plane != this && isWithin(plane, RADIUS)) {
 				scene.gameOver(this, plane);
 				_finished = true;
-			} else if (plane != this && isWithin(plane, separationRule)) {
+			} else if (plane != this && isWithin(plane, SEPARATION_RULE)) {
 				scene.main().score().addTimeViolated(dt);
 			}
 		}
