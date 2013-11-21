@@ -9,9 +9,9 @@ import btc.Main;
 
 public class Title extends Scene {
 	
-	private double _timer;
 	private audio.Music _beep;
 	private lib.ButtonText[] _buttons;
+	private double _angle;
 
 	public Title(Main main) {
 		super(main);
@@ -19,7 +19,6 @@ public class Title extends Scene {
 
 	@Override
 	public void start() {
-		_timer = 0;
 		_beep = audio.newMusic("sfx" + File.separator + "beep.ogg");
 		_beep.setVolume(0.2f);
 		_buttons = new lib.ButtonText[3];
@@ -47,12 +46,13 @@ public class Title extends Scene {
 			}
 		};
 		_buttons[2] = new lib.ButtonText("Exit", exit, window.height(), window.height()/2 + 156, window.width() - window.height(), 16, 8, 6);
+		_angle = 0;
 	}
 
 	@Override
 	public void update(double dt) {
-		_timer += dt;
-		double beepTimer = (_timer * 4) + (Math.PI * 4 / 5);
+		_angle += dt;
+		double beepTimer = (_angle * 4) + (Math.PI * 4 / 5);
 		beepTimer %= (2 * Math.PI);
 		if ( beepTimer <= 0.1 ) {
 			_beep.stop();
@@ -101,7 +101,7 @@ public class Title extends Scene {
 		graphics.circle(false, window.height()/2, window.height()/2, window.height()/9, 100);
 		graphics.circle(false, window.height()/2, window.height()/2, 2, 100);
 		graphics.setColour(0, 128, 0);
-		double angle = (_timer*4) % (2 * Math.PI);
+		double angle = (_angle * 4) % (2 * Math.PI);
 		int w = (int)( Math.cos(angle) * (window.height()/2 - 32) );
 		int h = (int)( Math.sin(angle) * (window.height()/2 - 32) );
 		graphics.line(window.height()/2, window.height()/2, window.height()/2 + w, window.height()/2 + h);
@@ -143,10 +143,10 @@ public class Title extends Scene {
 		graphics.print("Statistics:", window.height() + 8, 116);
 		graphics.line(window.height(), 130, window.width() - 16, 130);
 		graphics.print("Time Played:", window.height() + 8, 138);
-		int hours = (int)(_timer / (60 * 60));
-		int minutes = (int)(_timer / 60);
+		int hours = (int)(_main.score().timePlayed() / (60 * 60));
+		int minutes = (int)(_main.score().timePlayed() / 60);
 		minutes %= 60;
-		double seconds = _timer % 60;
+		double seconds = _main.score().timePlayed() % 60;
 		java.text.DecimalFormat df = new java.text.DecimalFormat("00.00");
 		String timePlayed = String.format("%d:%02d:", hours, minutes) + df.format(seconds); 
 		graphics.print(timePlayed, window.height() + 8, 154);
