@@ -52,7 +52,7 @@ public class GameOver extends Scene {
 	@Override
 	public void draw() {
 		graphics.setColour(0, 128, 0);
-		graphics.print(_crashedPlane1.name() + " crashed into " + _crashedPlane2.name() + ".", 40, 32, 2);
+		graphics.printCentred(_crashedPlane1.name() + " crashed into " + _crashedPlane2.name() + ".", 0, 32, 2, window.width());
 		graphics.printCentred(String.valueOf(_deaths) + " people died in the crash.", 0, 128, 1, window.width());
 		graphics.printCentred(String.valueOf(_injured) + " were severly injured.", 0, 160, 1, window.width());
 	}
