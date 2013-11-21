@@ -1,6 +1,5 @@
 package lib.jog;
 
-import java.awt.FontFormatException;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -23,6 +22,8 @@ public abstract class graphics {
 	public static abstract class Font {
 		
 		protected abstract void print(double x, double y, String text, double size);
+
+		public abstract void printCentred(double x, double y, double width, String text, double size);
 		
 	}
 	
@@ -65,26 +66,37 @@ public abstract class graphics {
 			glDisable(GL_TEXTURE_2D);
 		}
 
-	}
-	
-	private static class FileFont extends Font {
-		
-		private TrueTypeFont _font;
-		
-		private FileFont(String filename, int size) {
-			try {
-				InputStream inputStream = ResourceLoader.getResourceAsStream(filename);
-				java.awt.Font awtFont = java.awt.Font.createFont(java.awt.Font.TRUETYPE_FONT, inputStream);
-				awtFont = awtFont.deriveFont(size);
-				_font =  new TrueTypeFont(awtFont, false);
-			} catch (FontFormatException | IOException e) {
-				e.printStackTrace();
+		@Override
+		public void printCentred(double x, double y, double width, String text, double size) {
+			y = window.height() - y;
+			double w = _img.height();
+			double h = -_img.height();
+			double qw = w / _img.width();
+			double qh = 1;
+			x += (width - (w * text.length() * size)) / 2;
+			
+			glEnable(GL_TEXTURE_2D);
+	    	_img._texture.bind();
+			glPushMatrix();
+			glTranslated(x, y, 0);
+			glScaled(size, size, 1);
+			glBegin(GL_QUADS);
+			for (int i = 0; i < text.length(); i ++) {
+				double qx = _glyphs.indexOf(text.charAt(i)) * w / _img.width();
+				glTexCoord2d(qx, 0);
+				glVertex2d(w * i, 0);
+				glTexCoord2d(qx + qw, 0);
+				glVertex2d(w * (i+1), 0);
+				glTexCoord2d(qx + qw, qh);
+				glVertex2d(w * (i+1), h);
+				glTexCoord2d(qx, qh);
+				glVertex2d(w * i, h);
 			}
+			glEnd();
+			glPopMatrix();
+			glDisable(GL_TEXTURE_2D);
 		}
 
-		protected void print(double x, double y, String text, double size) {
-			_font.drawString((int)x, (int)y, text);
-		}
 	}
 	
 	private static class SystemFont extends Font {
@@ -98,6 +110,17 @@ public abstract class graphics {
 		
 		protected void print(double x, double y, String text, double size) {
 			y = y - window.height();
+			
+			glPushMatrix();
+			glScaled(1, -1, 0);
+			_font.drawString((int)x, (int)y, text);
+			glPopMatrix();
+		}
+
+		@Override
+		public void printCentred(double x, double y, double width, String text, double size) {
+			y = y - window.height();
+			x += (width - _font.getWidth(text)) / 2;
 			
 			glPushMatrix();
 			glScaled(1, -1, 0);
@@ -205,12 +228,7 @@ public abstract class graphics {
 		glPopMatrix();
 		_viewPortEnabled = false;
 	}
-	
-	static public FileFont newFont(String filepath, int size) {
-		return new FileFont(filepath, size);
-	}
-	static public FileFont newFont(String filepath) { return newFont(filepath, 24); }
-	
+
 	static public BitmapFont newBitmapFont(String filepath, String glyphs) {
 		return new BitmapFont(filepath, glyphs);
 	}
@@ -384,6 +402,11 @@ public abstract class graphics {
 	}
 	static public void print(String text, double x, double y){
 		print(text, x, y, 1);
+	}
+	
+	static public void printCentred(String text, double x, double y, double size, double width) {
+		if (_font == null) _font = newSystemFont("Times New Roman");
+		_font.printCentred(x, y, width, text, size);
 	}
 	
 	/**
