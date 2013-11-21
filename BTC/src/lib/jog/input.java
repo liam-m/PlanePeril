@@ -50,9 +50,9 @@ public abstract class input {
 		}
 		int mouseScroll = Mouse.getDWheel();
 		if (mouseScroll < 0) {
-			handler.mouseReleased(MOUSE_WHEEL_DOWN, Mouse.getX(), Mouse.getY());
+			handler.mouseReleased(MOUSE_WHEEL_DOWN, mouseX(), mouseY());
 		} else if (mouseScroll > 0) {
-			handler.mouseReleased(MOUSE_WHEEL_UP, Mouse.getX(), Mouse.getY());
+			handler.mouseReleased(MOUSE_WHEEL_UP, mouseX(), mouseY());
 		}
 	}
 	
