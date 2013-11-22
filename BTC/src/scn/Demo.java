@@ -39,6 +39,8 @@ public class Demo extends Scene {
 	private lib.OrdersBox _ordersBox;
 	private double _timer;
 	private Aircraft _selectedAircraft;
+	private Waypoint _selectedWaypoint;
+	private int _selectedPathpoint;
 	private java.util.ArrayList<Aircraft> _aircraft;
 	private graphics.Image _airplaneImage;
 	private lib.ButtonText _manualOverrideButton;
@@ -60,7 +62,18 @@ public class Demo extends Scene {
 		_ordersBox = new lib.OrdersBox(4, window.height() - 120, window.width()-8, 116, 6);
 		_aircraft = new java.util.ArrayList<Aircraft>();
 		_airplaneImage = graphics.newImage("gfx" + File.separator + "plane.png");
+		lib.ButtonText.Action manual = new lib.ButtonText.Action() {
+			@Override
+			public void action() {
+				// _selectedAircraft.manuallyControl();
+				System.out.println("Assuming manual control of " + _selectedAircraft.name() + ".");
+			}
+		};
+		_manualOverrideButton = new lib.ButtonText("Take Control", manual, (window.width() - 128) / 2, 32, 128, 32, 8, 4);
 		_timer = 0;
+		_selectedAircraft = null;
+		_selectedWaypoint = null;
+		_selectedPathpoint = -1;
 	}
 
 	@Override
@@ -76,6 +89,8 @@ public class Demo extends Scene {
 			if (_aircraft.get(i).isFinished()) {
 				if (_aircraft.get(i) == _selectedAircraft) {
 					_selectedAircraft = null;
+					_selectedWaypoint = null;
+					_selectedPathpoint = -1;
 				}
 				_aircraft.remove(i);
 				_main.score().addFlight();
@@ -109,12 +124,27 @@ public class Demo extends Scene {
 					System.out.println("Selected Flight " + a.name());
 				}
 			}
+			for (Waypoint w : _waypoints) {
+				if (w.isMouseOver(x-16, y-16) && _selectedAircraft.flightPathContains(w) > -1) {
+					_selectedWaypoint = w;
+					_selectedPathpoint = _selectedAircraft.flightPathContains(w);
+				}
+			}
 		}
 	}
 
 	@Override
 	public void mouseReleased(int key, int x, int y) {
-		
+		if (_selectedAircraft != null && _manualOverrideButton.isMouseOver(x, y)) _manualOverrideButton.act();
+		if (key == input.MOUSE_LEFT && _selectedWaypoint != null) {
+			for (Waypoint w : _waypoints) {
+				if (w.isMouseOver(x-16, y-16)) {
+					_selectedAircraft.alterPath(_selectedPathpoint, w);
+					_selectedPathpoint = -1;
+					_selectedWaypoint = null;
+				}
+			}
+		}
 	}
 
 	@Override
@@ -151,16 +181,22 @@ public class Demo extends Scene {
 			aircraft.draw();
 		}
 		
+		if (_selectedAircraft != null) {
+			graphics.setColour(0, 0, 0);
+			graphics.rectangle(true, (window.width() - 128) / 2, 16, 128, 32);
+			graphics.setColour(0, 128, 0);
+			graphics.rectangle(false, (window.width() - 128) / 2, 16, 128, 32);
+			_manualOverrideButton.draw();
+			
+			_selectedAircraft.drawFlightPath();
+			graphics.setColour(0, 128, 0);
+			
+		}
+		
 		graphics.setViewport();
 		graphics.setColour(0, 128, 0);
 		
-		if (_selectedAircraft != null) {
-			graphics.setColour(0, 0, 0);
-			graphics.rectangle(true, (window.width() - 256) / 2, 32, 256, 32);
-			graphics.setColour(0, 128, 0);
-			graphics.rectangle(false, (window.width() - 256) / 2, 32, 256, 32);
-			_manualOverrideButton.draw();
-		}
+		
 		
 		int hours = (int)(_timer / (60 * 60));
 		int minutes = (int)(_timer / 60);
@@ -194,7 +230,7 @@ public class Demo extends Scene {
 			}
 		}
 		// Add to world
-		Aircraft a = new Aircraft(name, originName, destinationName, origin, destination, _airplaneImage, 64);
+		Aircraft a = new Aircraft(name, originName, destinationName, origin, destination, _airplaneImage, 32);
 		_aircraft.add(a);
 		_ordersBox.addOrder("<<< " + name + " incoming from " + originName + " heading towards " + destinationName + ".");
 	}
