@@ -8,10 +8,11 @@ import scn.Demo;
 public class Aircraft {
 
 	public final static int SEPARATION_RULE = 32;
-	public final static int RADIUS = 8;
+	public final static int RADIUS = 16;
 	public final static int MOUSE_LENIANCY = 16;
 	
 	private double _speed;
+	private double _turnSpeed = Math.PI / 2;
 	
 	private Vector _position;
 	private Vector _velocity;
@@ -70,7 +71,7 @@ public class Aircraft {
 		return _finished;
 	}
 	
-	public boolean isManuallyController() {
+	public boolean isManuallyControlled() {
 		return _manualControl;
 	}
 	
@@ -84,6 +85,7 @@ public class Aircraft {
 	
 	public void alterPath(int routeStage, Waypoint newWaypoint) {
 		_route[routeStage] = newWaypoint;
+		if (!_manualControl) resetBearing();
 	}
 	
 	public boolean isMouseOver(int mx, int my) {
@@ -98,6 +100,18 @@ public class Aircraft {
 
 		Vector dv = _velocity.mul(dt);
 		_position = _position.add(dv);
+		
+		if (_manualControl) {
+			double angle = 0;
+			if (input.isKeyDown(input.KEY_RIGHT)) {
+				angle += dt;
+			}
+			if (input.isKeyDown(input.KEY_LEFT)) {
+				angle -= dt;
+			}
+			if (angle != 0) turnBy(angle * _turnSpeed);
+			return;
+		}
 		
 		Vector oldTarget = _target;
 		if (isAt(_target) && _target.equals(_destination)) {
@@ -114,6 +128,14 @@ public class Aircraft {
 		}
 	}
 	
+	public void turnBy(double angle) {
+		double cosA = Math.cos(angle);
+		double sinA = Math.sin(angle);
+		double x = _velocity.x();
+		double y = _velocity.y();
+		_velocity = new Vector(x*cosA - y*sinA, y*cosA + x*sinA, _velocity.z());
+	}
+
 	private void turnTowards(double tx, double ty) {
 		double x = tx - _position.x();
 		double y = ty - _position.y();
@@ -123,10 +145,18 @@ public class Aircraft {
 	public void draw() {
 		graphics.setColour(128, 128, 128);
 		graphics.draw(_image, _position.x(), _position.y(), bearing(), 8, 8);
+		graphics.setColour(128, 128, 128, 96);
+		graphics.print(String.valueOf(altitude()), _position.x()+8, _position.y()-8);
 		graphics.setColour(0, 128, 128);
 		graphics.circle(false, _position.x(), _position.y(), SEPARATION_RULE);
+		graphics.setColour(128, 0, 0);
+		graphics.circle(false, _position.x(), _position.y(), RADIUS);
 	}
 	
+	private double altitude() {
+		return _position.z();
+	}
+
 	public void drawFlightPath() {
 		graphics.setColour(0, 128, 128);
 		if (_target != _destination) {
@@ -140,8 +170,6 @@ public class Aircraft {
 		} else {
 			graphics.line(_route[_route.length-1].position().x(), _route[_route.length-1].position().y(), _destination.x(), _destination.y());
 		}
-		
-		
 	}
 	
 	public double bearing() {
@@ -181,6 +209,18 @@ public class Aircraft {
 		double dx = aircraft.position().x() - _position.x();
 		double dy = aircraft.position().y() - _position.y();
 		return dx*dx + dy*dy < distance*distance;
+	}
+
+	public void toggleManualControl() {
+		_manualControl = !_manualControl;
+		if (!_manualControl) resetBearing();
+	}
+	
+	private void resetBearing() {
+		if (_routeStage < _route.length) {
+			_target = _route[_routeStage].position();
+		}
+		turnTowards(_target.x(), _target.y());
 	}
 	
 }
