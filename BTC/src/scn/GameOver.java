@@ -21,12 +21,15 @@ public class GameOver extends Scene {
 
 	@Override
 	public void start() {
-		_deaths = (int)( Math.random() * 200) + 100;
-		_injured = (int)( Math.random() * 500) + 200;;
+		_deaths = (int)( Math.random() * 500) + 300;
+		_injured = (int)( Math.random() * 90) + 10;
 		_textBox = new lib.OrdersBox(64, 96, window.width() - 128, window.height() - 96, 28);
 		_textBox.addOrder(String.valueOf(_deaths) + " people died in the crash.");
 		_textBox.addOrder("                                 ");
-		_textBox.addOrder(String.valueOf(_injured) + " were severely injured.");
+		_textBox.addOrder(String.valueOf(_injured) + " managed to escape the burning wreckage.                                          ");
+		_textBox.addOrder("Those " + String.valueOf(_injured) + " were rushed to hospital with third degree burns,");
+		_textBox.addOrder("broken and dislocated limbs, and severe bruising.                                                     ");
+		_textBox.addOrder("They later died in hospital.");
 		_textBox.addOrder("                                 ");
 		_textBox.addOrder("British Bearways is facing heavy legal pressure from the");
 		_textBox.addOrder("family and loved-ones of the dead.");
@@ -39,14 +42,10 @@ public class GameOver extends Scene {
 		_textBox.addOrder("will develop a drinking problem to attempt to cope.");
 		_textBox.addOrder("                                 ");
 		_textBox.addOrder("                                 ");
-		_textBox.addOrder("   ");
-		_textBox.addOrder("   ");
-		_textBox.addOrder("   ");
-		_textBox.addOrder("   ");
+		_textBox.addOrder("                                 ");
 		_textBox.addOrder("   ");
 		_textBox.addOrder("                           Game Over.");
-		_textBox.addOrder("   ");
-		_textBox.addOrder("   ");
+		_textBox.addOrder("           ");
 		_textBox.addOrder("   ");
 		_textBox.addOrder("   ");
 		_textBox.addOrder("   ");
