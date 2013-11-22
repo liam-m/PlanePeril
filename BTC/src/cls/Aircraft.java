@@ -74,6 +74,18 @@ public class Aircraft {
 		return _manualControl;
 	}
 	
+	public int flightPathContains(Waypoint waypoint) {
+		int index = -1;
+		for (int i = 0; i < _route.length; i ++) {
+			if (_route[i] == waypoint) index = i;
+		}
+		return index;
+	}
+	
+	public void alterPath(int routeStage, Waypoint newWaypoint) {
+		_route[routeStage] = newWaypoint;
+	}
+	
 	public boolean isMouseOver(int mx, int my) {
 		double dx = _position.x() - mx;
 		double dy = _position.y() - my;
@@ -90,7 +102,7 @@ public class Aircraft {
 		Vector oldTarget = _target;
 		if (isAt(_target) && _target.equals(_destination)) {
 			_finished = true;
-		} else if (isAt(_target) && _target.equals(_route[_route.length-1].position())) {
+		} else if (isAt(_target) && (_routeStage == _route.length-1)) {
 			_routeStage ++;
 			_target = _destination;
 		} else if (isAt(_target)) {
@@ -113,6 +125,23 @@ public class Aircraft {
 		graphics.draw(_image, _position.x(), _position.y(), bearing(), 8, 8);
 		graphics.setColour(0, 128, 128);
 		graphics.circle(false, _position.x(), _position.y(), SEPARATION_RULE);
+	}
+	
+	public void drawFlightPath() {
+		graphics.setColour(0, 128, 128);
+		if (_target != _destination) {
+			graphics.line(_position.x(), _position.y(), _route[_routeStage].position().x(), _route[_routeStage].position().y());
+		}
+		for (int i = _routeStage; i < _route.length-1; i++) {
+			graphics.line(_route[i].position().x(), _route[i].position().y(), _route[i+1].position().x(), _route[i+1].position().y());	
+		}
+		if (_target == _destination) {
+			graphics.line(_position.x(), _position.y(), _destination.x(), _destination.y());
+		} else {
+			graphics.line(_route[_route.length-1].position().x(), _route[_route.length-1].position().y(), _destination.x(), _destination.y());
+		}
+		
+		
 	}
 	
 	public double bearing() {
