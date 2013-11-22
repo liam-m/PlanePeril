@@ -1,0 +1,81 @@
+package lib.jog;
+
+import org.lwjgl.input.Mouse;
+import org.lwjgl.input.Keyboard;
+
+public abstract class input {
+	
+	public final static int MOUSE_LEFT = 0;
+	public final static int MOUSE_RIGHT = 1;
+	public final static int MOUSE_MIDDLE = 2;
+	public final static int MOUSE_WHEEL_UP = 3;
+	public final static int MOUSE_WHEEL_DOWN = 4;
+	
+	public final static int KEY_ESCAPE = Keyboard.KEY_ESCAPE;
+	public final static int KEY_UP = Keyboard.KEY_UP;
+	public final static int KEY_DOWN = Keyboard.KEY_DOWN;
+	public final static int KEY_LEFT = Keyboard.KEY_LEFT;
+	public final static int KEY_RIGHT = Keyboard.KEY_RIGHT;
+	public final static int KEY_SPACE = Keyboard.KEY_SPACE;
+	public final static int KEY_LCRTL = Keyboard.KEY_LCONTROL;
+	public final static int KEY_W = Keyboard.KEY_W;
+	
+	public interface EventHandler {
+		
+		public void mousePressed(int key, int x, int y);
+		public void mouseReleased(int key, int x, int y);
+		public void keyPressed(int key);
+		public void keyReleased(int key);
+
+	}
+
+	public static void update(EventHandler handler) {
+		while (Mouse.next()) {
+			if (Mouse.getEventButtonState()) {
+				if (Mouse.getEventButton() >= 0) {
+					handler.mousePressed(Mouse.getEventButton(), mouseX(), mouseY());
+				}
+			} else {
+				if (Mouse.getEventButton() >= 0) {
+					handler.mouseReleased(Mouse.getEventButton(), mouseX(), mouseY());
+				}
+			}
+		}
+		while (Keyboard.next()) {
+			if (Keyboard.getEventKeyState()) {
+				handler.keyPressed(Keyboard.getEventKey());
+			} else {
+				handler.keyReleased(Keyboard.getEventKey());
+			}
+		}
+		int mouseScroll = Mouse.getDWheel();
+		if (mouseScroll < 0) {
+			handler.mouseReleased(MOUSE_WHEEL_DOWN, mouseX(), mouseY());
+		} else if (mouseScroll > 0) {
+			handler.mouseReleased(MOUSE_WHEEL_UP, mouseX(), mouseY());
+		}
+	}
+	
+	public static boolean isKeyDown(int key) {
+		return Keyboard.isKeyDown(key);
+	}
+	
+	public static boolean isMouseDown(int button) {
+		return Mouse.isButtonDown(button);
+	}
+	
+	public static boolean isMouseInRect(int x, int y, int width, int height) {
+		int mx = mouseX();
+		int my = mouseY();
+		return (mx >= x && mx <= x + width && my >= y && my <= y + height);
+	}
+	
+	public static int mouseX() {
+		return Mouse.getX();
+	}
+	
+	public static int mouseY() {
+		return window.height() - Mouse.getY();
+	}
+	
+}
