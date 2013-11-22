@@ -74,7 +74,7 @@ public class GameOver extends Scene {
 
 	@Override
 	public void keyReleased(int key) {
-		if (_textBox.isUpToDate()) _main.closeScene();
+		_main.closeScene();
 	}
 
 	@Override
