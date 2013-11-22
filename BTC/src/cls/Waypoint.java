@@ -4,6 +4,7 @@ import lib.jog.graphics;
 
 public class Waypoint {
 	
+	public final static int MOUSE_LENIANCY = 16;
 	final private int RADIUS = 8;
 	
 	private Vector _position;
@@ -14,6 +15,12 @@ public class Waypoint {
 	
 	public Vector position() {
 		return _position;
+	}
+	
+	public boolean isMouseOver(int mx, int my) {
+		double dx = _position.x() - mx;
+		double dy = _position.y() - my;
+		return dx*dx + dy*dy < MOUSE_LENIANCY*MOUSE_LENIANCY;
 	}
 	
 	public void draw() {
