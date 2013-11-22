@@ -45,5 +45,5 @@ public class Vector {
 	public Vector add(Vector v) {
 		return new Vector(_x + v.x(), _y + v.y(), _z + v.z());
 	}
-	
+
 }
