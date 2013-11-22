@@ -15,10 +15,14 @@ public class Demo extends Scene {
 	
 	private final cls.Vector[] _locationPoints = new cls.Vector[] {
 		new cls.Vector(-64, 32, 9000),
+		new cls.Vector(-64, 64, 9000),
 		new cls.Vector(window.width() + 32, 32, 9000),
+		new cls.Vector(window.width() + 32, 64, 9000),
 	};
 	private final String[] _locationNames = new String[] {
 		"Moonchoostoor",
+		"Moonchoostoor",
+		"Frooncoo",
 		"Frooncoo",
 	};
 	public static Waypoint[] _waypoints = new Waypoint[] {
@@ -28,9 +32,9 @@ public class Demo extends Scene {
 		new Waypoint(window.width() - 32, 128),
 		new Waypoint(window.width() - 32, 256),
 		new Waypoint(window.width() - 32 / 4, 64),
-		new Waypoint(window.width() - 32 / 2, 64),
-		new Waypoint(3 * window.width() - 32 / 4, 64),
 		*/
+		new Waypoint(128, 256),
+		new Waypoint(416, 64),
 		new Waypoint(344, 192),
 		new Waypoint(256, 256),
 		new Waypoint(128, 128),
@@ -65,14 +69,26 @@ public class Demo extends Scene {
 		lib.ButtonText.Action manual = new lib.ButtonText.Action() {
 			@Override
 			public void action() {
-				// _selectedAircraft.manuallyControl();
-				System.out.println("Assuming manual control of " + _selectedAircraft.name() + ".");
+				toggleManualControl();
 			}
 		};
 		_manualOverrideButton = new lib.ButtonText("Take Control", manual, (window.width() - 128) / 2, 32, 128, 32, 8, 4);
 		_timer = 0;
+		deselectAircraft();
+	}
+	
+	private void toggleManualControl() {
+		if (_selectedAircraft == null) return;
+		_selectedAircraft.toggleManualControl();
+		_manualOverrideButton.setText( (_selectedAircraft.isManuallyControlled() ? "Remove" : "Take") + " Control");
+	}
+	
+	private void deselectAircraft() {
+		if (_selectedAircraft != null && _selectedAircraft.isManuallyControlled()) {
+			_selectedAircraft.toggleManualControl();
+		}
 		_selectedAircraft = null;
-		_selectedWaypoint = null;
+		_selectedWaypoint = null; 
 		_selectedPathpoint = -1;
 	}
 
@@ -88,9 +104,7 @@ public class Demo extends Scene {
 		for (int i = _aircraft.size()-1; i >=0; i --) {
 			if (_aircraft.get(i).isFinished()) {
 				if (_aircraft.get(i) == _selectedAircraft) {
-					_selectedAircraft = null;
-					_selectedWaypoint = null;
-					_selectedPathpoint = -1;
+					deselectAircraft();
 				}
 				_aircraft.remove(i);
 				_main.score().addFlight();
@@ -131,6 +145,7 @@ public class Demo extends Scene {
 				}
 			}
 		}
+		if (key == input.MOUSE_RIGHT) deselectAircraft();
 	}
 
 	@Override
@@ -157,6 +172,10 @@ public class Demo extends Scene {
 		switch (key) {
 		
 			case input.KEY_SPACE :
+				toggleManualControl();
+			break;
+			
+			case input.KEY_LCRTL :
 				generateFlight();
 			break;
 			
