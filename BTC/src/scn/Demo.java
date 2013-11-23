@@ -48,6 +48,7 @@ public class Demo extends Scene {
 	private java.util.ArrayList<Aircraft> _aircraft;
 	private graphics.Image _airplaneImage;
 	private lib.ButtonText _manualOverrideButton;
+	private lib.Altimeter _altimeter;
 	
 	public Main main() {
 		return _main;
@@ -72,7 +73,8 @@ public class Demo extends Scene {
 				toggleManualControl();
 			}
 		};
-		_manualOverrideButton = new lib.ButtonText("Take Control", manual, (window.width() - 128) / 2, 32, 128, 32, 8, 4);
+		_manualOverrideButton = new lib.ButtonText(" Take Control", manual, (window.width() - 128) / 2, 32, 128, 32, 8, 4);
+		_altimeter = new lib.Altimeter(8, 248, 64, 96);
 		_timer = 0;
 		deselectAircraft();
 	}
@@ -80,7 +82,7 @@ public class Demo extends Scene {
 	private void toggleManualControl() {
 		if (_selectedAircraft == null) return;
 		_selectedAircraft.toggleManualControl();
-		_manualOverrideButton.setText( (_selectedAircraft.isManuallyControlled() ? "Remove" : "Take") + " Control");
+		_manualOverrideButton.setText( (_selectedAircraft.isManuallyControlled() ? "Remove" : " Take") + " Control");
 	}
 	
 	private void deselectAircraft() {
@@ -90,6 +92,7 @@ public class Demo extends Scene {
 		_selectedAircraft = null;
 		_selectedWaypoint = null; 
 		_selectedPathpoint = -1;
+		_altimeter.hide();
 	}
 
 	@Override
@@ -110,7 +113,7 @@ public class Demo extends Scene {
 				_main.score().addFlight();
 			}
 		}
-		
+		_altimeter.update(dt);
 		if (_selectedAircraft != null && input.isKeyDown(input.KEY_W)) {
 			_selectedAircraft.update(-dt);
 		}
@@ -135,7 +138,7 @@ public class Demo extends Scene {
 			for (Aircraft a : _aircraft) {
 				if (a.isMouseOver(x-16, y-16)) {
 					_selectedAircraft = a;
-					System.out.println("Selected Flight " + a.name());
+					_altimeter.show(_selectedAircraft);
 				}
 			}
 			for (Waypoint w : _waypoints) {
@@ -146,6 +149,7 @@ public class Demo extends Scene {
 			}
 		}
 		if (key == input.MOUSE_RIGHT) deselectAircraft();
+		_altimeter.mousePressed(key, x, y);
 	}
 
 	@Override
@@ -160,6 +164,7 @@ public class Demo extends Scene {
 				}
 			}
 		}
+		_altimeter.mouseReleased(key, x, y);
 	}
 
 	@Override
@@ -201,21 +206,22 @@ public class Demo extends Scene {
 		}
 		
 		if (_selectedAircraft != null) {
+			// Flight Path
+			_selectedAircraft.drawFlightPath();
+			graphics.setColour(0, 128, 0);
+			// Override Button
 			graphics.setColour(0, 0, 0);
 			graphics.rectangle(true, (window.width() - 128) / 2, 16, 128, 32);
 			graphics.setColour(0, 128, 0);
 			graphics.rectangle(false, (window.width() - 128) / 2, 16, 128, 32);
 			_manualOverrideButton.draw();
-			
-			_selectedAircraft.drawFlightPath();
-			graphics.setColour(0, 128, 0);
-			
+			// Change Altitude
 		}
 		
 		graphics.setViewport();
 		graphics.setColour(0, 128, 0);
 		
-		
+		_altimeter.draw();
 		
 		int hours = (int)(_timer / (60 * 60));
 		int minutes = (int)(_timer / 60);
@@ -233,7 +239,7 @@ public class Demo extends Scene {
 		// Origin and Destination
 		int o = (int)( Math.random() * _locationPoints.length);
 		int d = 0;
-		while (d == o) d = (int)( Math.random() * _locationPoints.length);
+		while (_locationNames[d] == _locationNames[o]) d = (int)( Math.random() * _locationPoints.length);
 		String originName = _locationNames[o];
 		String destinationName = _locationNames[d];
 		cls.Vector origin = _locationPoints[o];
