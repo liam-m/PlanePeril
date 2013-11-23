@@ -2,6 +2,7 @@ package cls;
 
 import lib.jog.graphics;
 import lib.jog.input;
+import lib.jog.window;
 
 import scn.Demo;
 
@@ -102,6 +103,10 @@ public class Aircraft {
 		_position = _position.add(dv);
 		
 		if (_manualControl) {
+			if (outOfBounds()) {
+				_finished = true;
+				return;
+			}
 			double angle = 0;
 			if (input.isKeyDown(input.KEY_RIGHT)) {
 				angle += dt;
@@ -128,6 +133,12 @@ public class Aircraft {
 		}
 	}
 	
+	private boolean outOfBounds() {
+		double x = _position.x();
+		double y = _position.y();
+		return (x < RADIUS || x > window.width() + RADIUS - 32 || y < RADIUS || y > window.height() + RADIUS - 144);
+	}
+
 	public void turnBy(double angle) {
 		double cosA = Math.cos(angle);
 		double sinA = Math.sin(angle);
@@ -146,7 +157,7 @@ public class Aircraft {
 		graphics.setColour(128, 128, 128);
 		graphics.draw(_image, _position.x(), _position.y(), bearing(), 8, 8);
 		graphics.setColour(128, 128, 128, 96);
-		graphics.print(String.valueOf(altitude()), _position.x()+8, _position.y()-8);
+		graphics.print(String.valueOf(altitude()) + "£", _position.x()+8, _position.y()-8);
 		graphics.setColour(0, 128, 128);
 		graphics.circle(false, _position.x(), _position.y(), SEPARATION_RULE);
 		graphics.setColour(128, 0, 0);
@@ -221,6 +232,18 @@ public class Aircraft {
 			_target = _route[_routeStage].position();
 		}
 		turnTowards(_target.x(), _target.y());
+	}
+	
+	public void climb() {
+		changeAltitude(1000);
+	}
+	
+	public void fall() {
+		changeAltitude(-1000);
+	}
+	
+	private void changeAltitude(int height) {
+		_position = new Vector(_position.x(), _position.y(), _position.z() + height);
 	}
 	
 }
