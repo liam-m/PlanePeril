@@ -76,7 +76,7 @@ public class Demo extends Scene {
 	private lib.ButtonText _manualOverrideButton;
 	private lib.Altimeter _altimeter;
 	private static double flightGenerationInterval = 12;
-	private double flightGenerationTimer = 0;
+	private double flightGenerationTimer = flightGenerationInterval;
 	private int maxAircraft = 4;
 	
 	public Main main() {
@@ -175,11 +175,16 @@ public class Demo extends Scene {
 	@Override
 	public void mousePressed(int key, int x, int y) {
 		if (key == input.MOUSE_LEFT) {
+			Aircraft newSelected = _selectedAircraft;
 			for (Aircraft a : _aircraft) {
 				if (a.isMouseOver(x-16, y-16)) {
-					_selectedAircraft = a;
+					newSelected = a;
 					_altimeter.show(_selectedAircraft);
 				}
+			}
+			if (newSelected != _selectedAircraft) {
+				deselectAircraft();
+				_selectedAircraft = newSelected;
 			}
 			for (Waypoint w : _waypoints) {
 				if (_selectedAircraft != null){
@@ -316,9 +321,13 @@ public class Demo extends Scene {
 		_aircraft.add(a);
 	}
 	
+	/**
+	 * Generates a random integer between min and max, in the range [min, max)
+	 * @param min the lower boundary (included) for the random integer
+	 * @param max the upper boundary (not included) for the random integer
+	 * @return a random integer
+	 */
 	private int randInt(int min, int max){
-		// generates a random integer between min and max
-		// not inclusive of max
 		Random rand = new Random();
 		return rand.nextInt((max - min)) + min;
 	}
