@@ -82,7 +82,7 @@ public class Demo extends Scene {
 
 	@Override
 	public void start() {
-		_ordersBox = new lib.OrdersBox(4, window.height() - 120, window.width()-8, 116, 6);
+		_ordersBox = new lib.OrdersBox(window.width()/2 + 5, window.height() - 120, window.width()/2 - 13, 116, 6);
 		_aircraft = new java.util.ArrayList<Aircraft>();
 		_airplaneImage = graphics.newImage("gfx" + File.separator + "plane.png");
 		lib.ButtonText.Action manual = new lib.ButtonText.Action() {
@@ -209,6 +209,8 @@ public class Demo extends Scene {
 	public void draw() {
 		graphics.setColour(0, 128, 0);
 		graphics.rectangle(false, 16, 16, window.width() - 32, window.height() - 144);
+		// Information box for selected plane
+		graphics.rectangle(false, 16, window.height() - 125, window.width()/2 - 21, 109);
 		_ordersBox.draw();
 		graphics.setViewport(16, 16, window.width() - 32, window.height() - 144);
 		for (Waypoint waypoint : _waypoints) {
@@ -232,9 +234,24 @@ public class Demo extends Scene {
 		}
 		
 		graphics.setViewport();
+		
+		if (_selectedAircraft != null) {
+			graphics.setViewport(16, window.height() - 125, window.width()/2 - 21, 109);
+			graphics.printCentred(_selectedAircraft.name(), 0, 5, 2, window.width()/2 - 21);
+			String altitude = String.valueOf(_selectedAircraft.position().z()) + "£";
+			graphics.print("Altitude:", 10, 40);
+			graphics.print(altitude, window.width()/2 - 31 - altitude.length()*8, 40);
+			String speed = String.format("%.2f", _selectedAircraft.speed() * 1.687810) + "$";
+			graphics.print("Speed:", 10, 55);
+			graphics.print(speed, window.width()/2 - 31 - speed.length()*8, 55);
+			graphics.print("Origin:", 10, 70);
+			graphics.print(_selectedAircraft.originName(), window.width()/2 - 31 - _selectedAircraft.originName().length()*8, 70);
+			graphics.print("Destination:", 10, 85);
+			graphics.print(_selectedAircraft.destinationName(), window.width()/2 - 31 - _selectedAircraft.destinationName().length()*8, 85);
+		}
+		
+		graphics.setViewport();
 		graphics.setColour(0, 128, 0);
-		
-		
 		
 		int hours = (int)(_timer / (60 * 60));
 		int minutes = (int)(_timer / 60);
@@ -283,7 +300,7 @@ public class Demo extends Scene {
 		// Add to world
 		_ordersBox.addOrder("<<< " + name + " incoming from " + originName + " heading towards " + destinationName + ".");
 		System.out.println("<<< " + name + " incoming from " + originName + " heading towards " + destinationName + ".");
-		Aircraft a = new Aircraft(name, originName, destinationName, originPoint, destinationPoint, _airplaneImage, 32, _waypoints);
+		Aircraft a = new Aircraft(name, originName, destinationName, originPoint, destinationPoint, _airplaneImage, 32 + (int)(10 * Math.random()), _waypoints);
 		_aircraft.add(a);
 	}
 	

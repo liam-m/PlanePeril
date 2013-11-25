@@ -46,7 +46,7 @@ public class Aircraft {
 		_position = originPoint.position(); //place on spawn waypoint
 		int offset = new Random().nextInt((SEPARATION_RULE - (-SEPARATION_RULE))) + (-SEPARATION_RULE); //generate a small random offset
 		System.out.println("Offset by " + offset);
-		_position = _position.add(new Vector(offset, offset, offset));//offset spawn position. Helps avoid aircraft crashes very soon after spawn
+		_position = _position.add(new Vector(offset, offset, 30000 + (int)(10000 * Math.random())));//offset spawn position. Helps avoid aircraft crashes very soon after spawn
 		
 		_destination = destinationPoint.position();
 		_manualControl = false;
@@ -77,6 +77,14 @@ public class Aircraft {
 	
 	public String name () {
 		return _flightName;
+	}
+	
+	public String originName() {
+		return _originName;
+	}
+	
+	public String destinationName() {
+		return _destinationName;
 	}
 	
 	public boolean isFinished() {
@@ -163,6 +171,10 @@ public class Aircraft {
 		double a = Math.acos( _velocity.x() / Math.sqrt(Math.pow(_velocity.x(), 2) + Math.pow(_velocity.y(), 2)) );
 		if (_velocity.y() < 0) a *= -1;
 		return a;
+	}
+	
+	public double speed() {
+		return _velocity.magnitude();
 	}
 	
 	public boolean isAt(Vector point) {
