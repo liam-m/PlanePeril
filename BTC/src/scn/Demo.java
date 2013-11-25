@@ -151,7 +151,6 @@ public class Demo extends Scene {
 		
 		flightGenerationTimer += dt;
 		if(flightGenerationTimer >= flightGenerationInterval){
-			//zero interval to begin next count
 			flightGenerationTimer -= flightGenerationInterval;
 			if (_aircraft.size() < maxAircraft){
 				generateFlight();
@@ -242,10 +241,22 @@ public class Demo extends Scene {
 	public void draw() {
 		graphics.setColour(0, 128, 0);
 		graphics.rectangle(false, 16, 16, window.width() - 32, window.height() - 144);
-		// Information box for selected plane
-		graphics.rectangle(false, 16, window.height() - 125, window.width()/2 - 21, 109);
-		_ordersBox.draw();
+		
 		graphics.setViewport(16, 16, window.width() - 32, window.height() - 144);
+		drawMap();
+		graphics.setViewport();
+		
+		_ordersBox.draw();
+		_altimeter.draw();
+		
+		drawPlaneInfo();
+		
+		graphics.setColour(0, 128, 0);
+		
+		drawScore();
+	}
+	
+	private void drawMap() {
 		for (Waypoint waypoint : _waypoints) {
 			waypoint.draw();
 		}
@@ -266,10 +277,10 @@ public class Demo extends Scene {
 			_manualOverrideButton.draw();
 			// Change Altitude
 		}
-		
-		graphics.setViewport();
-		
-		_altimeter.draw();
+	}
+	
+	private void drawPlaneInfo() {
+		graphics.rectangle(false, 16, window.height() - 125, window.width()/2 - 21, 109);
 		if (_selectedAircraft != null) {
 			graphics.setViewport(16, window.height() - 125, window.width()/2 - 21, 109);
 			graphics.printCentred(_selectedAircraft.name(), 0, 5, 2, window.width()/2 - 21);
@@ -283,11 +294,11 @@ public class Demo extends Scene {
 			graphics.print(_selectedAircraft.originName(), window.width()/2 - 31 - _selectedAircraft.originName().length()*8, 70);
 			graphics.print("Destination:", 10, 85);
 			graphics.print(_selectedAircraft.destinationName(), window.width()/2 - 31 - _selectedAircraft.destinationName().length()*8, 85);
+			graphics.setViewport();
 		}
-		
-		graphics.setViewport();
-		graphics.setColour(0, 128, 0);
-		
+	}
+	
+	private void drawScore() {
 		int hours = (int)(_timer / (60 * 60));
 		int minutes = (int)(_timer / 60);
 		minutes %= 60;
