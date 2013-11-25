@@ -1,5 +1,9 @@
 package cls;
 
+import java.util.ArrayList;
+import java.util.Random;
+import java.util.Stack;
+
 import lib.jog.graphics;
 import lib.jog.input;
 import lib.jog.window;
@@ -28,20 +32,29 @@ public class Aircraft {
 	private boolean _finished;
 
 	//Constructor
-	public Aircraft(String flightName, String originName, String destinationName, Vector origin, Vector destination, graphics.Image image, double speed) {
+	public Aircraft(String flightName, String originName, String destinationName, Waypoint originPoint, Waypoint destinationPoint, graphics.Image image, double speed, Waypoint[] sceneWaypoints) {
 		_flightName = flightName;
 		_destinationName = destinationName;
 		_originName = originName;
-		_route = findRoute(origin, destination);
+		
+		// Find route
+		//djikstraRoute(originPoint, destinationPoint, sceneWaypoints);
+		_route = findGreedyRoute(originPoint, destinationPoint, sceneWaypoints);
+		
+		
 		_target = _route[0].position();
 		_image = image;
 		_speed = speed;
-		_position = origin;
-		_destination = destination;
+		_position = originPoint.position(); //place on spawn waypoint
+		int offset = new Random().nextInt((SEPARATION_RULE - (-SEPARATION_RULE))) + (-SEPARATION_RULE); //generate a small random offset
+		System.out.println("Offset by " + offset);
+		_position = _position.add(new Vector(offset, offset, offset));//offset spawn position. Helps avoid aircraft crashes very soon after spawn
+		
+		_destination = destinationPoint.position();
 		_manualControl = false;
 		double x = _target.x() - _position.x();
 		double y = _target.y() - _position.y();
-		_velocity = new Vector(x, y, 0).normalise().mul(speed);
+		_velocity = new Vector(x, y, 0).normalise().scaleBy(speed);
 		_finished = false;
 		_routeStage = 0;
 	}
@@ -87,6 +100,10 @@ public class Aircraft {
 	public void alterPath(int routeStage, Waypoint newWaypoint) {
 		_route[routeStage] = newWaypoint;
 		if (!_manualControl) resetBearing();
+		if (routeStage == this._routeStage){
+			_target = newWaypoint.position();
+			turnTowards(newWaypoint.position().x(), newWaypoint.position().y());
+		}
 	}
 	
 	public boolean isMouseOver(int mx, int my) {
@@ -99,7 +116,7 @@ public class Aircraft {
 	public void update(double dt) {
 		if (_finished) return;
 
-		Vector dv = _velocity.mul(dt);
+		Vector dv = _velocity.scaleBy(dt);
 		_position = _position.add(dv);
 		
 		if (_manualControl) {
@@ -150,7 +167,7 @@ public class Aircraft {
 	private void turnTowards(double tx, double ty) {
 		double x = tx - _position.x();
 		double y = ty - _position.y();
-		_velocity = new Vector(x, y, 0).normalise().mul(_speed);
+		_velocity = new Vector(x, y, 0).normalise().scaleBy(_speed);
 	}
 	
 	public void draw() {
@@ -195,7 +212,7 @@ public class Aircraft {
 		return dy*dy + dx*dx < 16;
 	}
 	
-	private Waypoint[] findRoute(Vector origin, Vector destination) {
+	private Waypoint[] findRandomRoute(Vector origin, Vector destination) {
 		// Placeholder over-simplified version
 		int n = 4;
 		Waypoint[] route = new Waypoint[n];
@@ -203,6 +220,183 @@ public class Aircraft {
 			route[i] = Demo._waypoints[(int)( Math.random() * Demo._waypoints.length )];
 		}
 		return route;
+	}
+	
+	public Waypoint[] findGreedyRoute(Waypoint origin, Waypoint destination, Waypoint[] waypoints){
+		// to hold the route as we generate it.
+		ArrayList<Waypoint> selectedWaypoints = new ArrayList<Waypoint>();
+		// initialise the origin as the first point in the route.
+		//selectedWaypoints.add(origin);
+		// to track our position as we generate the route. Initialise to the start of the route
+		Waypoint currentPos = origin;
+		//System.out.println("Begin route finding");
+		//System.out.println("Entered from: " + currentPos.position().x() + " " + currentPos.position().y());
+		// to track the closest next waypoint
+		double cost = 99999999999999.0;
+		Waypoint cheapest = null;
+		//to track if the route is complete
+		boolean atDestination = false;
+		
+		while (! atDestination) {
+			//System.out.println("Entering findRoute while");
+			for (Waypoint point : waypoints) {
+				boolean skip = false;
+				
+				for (Waypoint routePoints : selectedWaypoints){
+					// check we have not already selected the waypoint
+					// if we have, skip evaluating the point
+					// this protects the aircraft from getting stuck looping between points
+					if (routePoints.position().equals(point.position())){
+						skip = true; //flag to skip
+						break; // no need to check rest of list, already found a match.
+					}
+				}
+				// do not consider the waypoint we are currently at or the origin
+				// do not consider offscreen waypoints which are not the destination
+				// also skip if flagged as a previously selected waypoint
+				if (skip == true | point.position().equals(currentPos.position()) | point.position().equals(origin.position())
+						| (point.isOffscreen() == true && (point.position().equals(destination.position()) == false))){
+				//	System.out.println("Skipped");
+					skip = false; //reset flag
+					continue;
+	
+				}  else  {
+					//System.out.println("Evaluating point");
+					/* get cost of visiting waypoint
+					 * compare cost vs current cheapest
+					 * if smaller, replace */	
+					if (point.getCost(currentPos) < cost){
+					//	System.out.println("cost: " + point.getCost(currentPos));
+						//cheaper route found, update
+						cheapest = point;
+						cost = point.getCost(currentPos);
+					}
+				}
+				
+			} //end for - evaluated all waypoints
+			//System.out.println("Exited findRoute for");
+			//The cheapest waypoint must have been found
+			assert cheapest != null : "The cheapest waypoint was not found";
+
+			if (cheapest.position().equals(destination.position())){
+				/* route has reached destination 
+				 * break out of while loop*/
+				atDestination = true;
+				//System.out.println("Found destination");
+			} else {
+				//System.out.println("not destination");
+			}
+			
+			
+			//System.out.println("currentPos: " + currentPos.position().x() + " " + currentPos.position().y() + " " + currentPos.position().z());
+			//System.out.println("Destination: "+ destination.position().x() + " "+ destination.position().y() + " "+ destination.position().z());
+			// update the selected route
+			// consider further points in route from the position of the selected point
+			selectedWaypoints.add(cheapest);
+			currentPos = cheapest;
+			//resaturate cost for next loop
+			cost = 99999999999.0;
+
+		} //end while
+		//System.out.println("Exited findRoute while");
+		//create a Waypoint[] to hold the new route
+		Waypoint[] route = new Waypoint[selectedWaypoints.size()];
+		//fill route with the selected waypoints
+		for (int i = 0; i < selectedWaypoints.size(); i++){
+			route[i] = selectedWaypoints.get(i);
+		}
+		return route;
+	}
+	
+	public void djikstraRoute(Waypoint origin, Waypoint destination, Waypoint[] sceneWaypoints){
+		double[] distance = new double[sceneWaypoints.length]; //distance from source to waypoints
+		boolean[] visited = new boolean[sceneWaypoints.length]; //to check if a waypoint has been visited
+		Waypoint[] previous = new Waypoint[sceneWaypoints.length]; //previous waypoint in optimal path from source to a waypoint
+		ArrayList<Waypoint> queue = new ArrayList<Waypoint>(); // Queue of waypoints to evaluate
+		
+		//initialisation
+		for(int i = 0; i<sceneWaypoints.length; i++){
+			distance[i] = 999999999999.0;
+			visited[i] = false;
+			//previous is initialised with all entries as null when it is created
+		}
+		
+		distance[getIndex(origin, sceneWaypoints)] = 0; //distance from origin to itself is 0
+		queue.add(origin);
+		
+		while(queue.isEmpty() == false){
+			//System.out.println("Enter Djiksta While");
+			//find waypoint in queue with smallest distance and which is unvisited
+			double cost = 9999.0;
+			Waypoint cheapest = queue.get(0);
+			for (int i = 0; i < queue.size(); i++){
+				//System.out.println("Evaluating Queue");
+				if (distance[i] < cost && visited[i] == false){
+					cheapest = queue.get(i);
+					//System.out.println("Found cheaper");
+				}
+			}
+			
+			if (cheapest.position().equals(destination.position())){ //terminate if the next node is the destination
+				//System.out.println("Found Destination");
+				this._route = buildRoute(sceneWaypoints, previous, destination);
+				break;
+			} else {
+				//System.out.println("Not dest");
+				queue.remove(cheapest);
+				int cheapestIndex = getIndex(cheapest, sceneWaypoints);
+				visited[cheapestIndex] = true;
+				double dist;
+
+				for (Waypoint neighbour : sceneWaypoints) {
+					//System.out.println("Evaluating neighbours");
+					dist = distance[cheapestIndex] + Waypoint.getCostBetween(cheapest, neighbour); //accumulate shortest distance from origin
+					int neighbourIndex = getIndex(neighbour, sceneWaypoints);
+
+					if (dist < distance[neighbourIndex] && visited[neighbourIndex] == false){
+						distance[neighbourIndex] = dist; //shortest dist from origin to neighbour
+						previous[neighbourIndex] = cheapest;
+						queue.add(neighbour); //insert into queue for processing
+						//System.out.println("Neighbour added to Queue");
+					} //end if
+				} // end for
+			} // end else
+		} //end while
+	}
+	
+	private Waypoint[] buildRoute(Waypoint[] sceneWaypoints, Waypoint[] previous, Waypoint destination){
+		System.out.println("Begin buildRoute.");
+		Stack<Waypoint> sequence = new Stack<Waypoint>();
+		int currentIndex = getIndex(destination, sceneWaypoints);
+		
+		while (previous[currentIndex] != null) {
+			System.out.println("Waypoints " + previous[currentIndex]);
+			sequence.push(previous[currentIndex]); //build the sequence of waypoints back to the origin
+			currentIndex = getIndex(previous[currentIndex], sceneWaypoints);
+		}
+		System.out.println("Stack size: " + sequence.size());
+		
+		//pop to build the route from origin to destination
+		Waypoint[] route = new Waypoint[sequence.size()];
+		
+		for (int i = 0; i < sequence.size(); i++){
+			route[i] = sequence.pop();
+			System.out.println("[ROUTE] Waypoint: " + i + " Pos: " + route[i].position().x() + " " + route[i].position().y());
+		}
+		//finally add the destination
+		route[route.length - 1] = destination;
+		return route;
+	}
+	
+	private int getIndex(Waypoint point, Waypoint[] sceneWaypoints){
+		int index = 0;
+		for (int i = 0; i < sceneWaypoints.length; i++){
+			if (sceneWaypoints[i].equals(point)){
+				index = i;
+				break;
+			}
+		}
+		return index;
 	}
 
 	public void updateCollisions(double dt, scn.Demo scene) {
