@@ -1,6 +1,7 @@
 package scn;
 
 import java.io.File;
+import java.util.Random;
 
 import lib.jog.graphics;
 import lib.jog.input;
@@ -13,15 +14,22 @@ import btc.Main;
 
 public class Demo extends Scene {
 	
-	private final cls.Vector[] _locationPoints = new cls.Vector[] {
-		new cls.Vector(-64, 32, 9000),
-		new cls.Vector(window.width() + 32, 32, 9000),
-	};
 	private final String[] _locationNames = new String[] {
-		"Moonchoostoor",
-		"Frooncoo",
+		"TopLeft",
+		"BottomLeft",
+		"TopRight",
+		"BottomRight",
 	};
+	
+	public static Waypoint[] _locationWayPoints = new Waypoint[] {
+		new Waypoint(-64, 32, true), //top left
+		new Waypoint(-64, window.height(), true), //bottom left
+		new Waypoint(window.width() + 32, 32, true), // top right
+		new Waypoint(window.width() + 32, window.height(), true), //bottom right
+	};
+
 	public static Waypoint[] _waypoints = new Waypoint[] {
+		
 		/*
 		new Waypoint(0, 128),
 		new Waypoint(0, 256),
@@ -31,10 +39,22 @@ public class Demo extends Scene {
 		new Waypoint(window.width() - 32 / 2, 64),
 		new Waypoint(3 * window.width() - 32 / 4, 64),
 		*/
-		new Waypoint(344, 192),
-		new Waypoint(256, 256),
-		new Waypoint(128, 128),
+		
+		//airspace waypoints
+		new Waypoint(300, 180, false),
+		new Waypoint(110, 200, false),
+		new Waypoint(125, 70, false),
+		new Waypoint(500, 100, false),
+		new Waypoint(470, 300, false),
+		
+		//destination/origin waypoints - present in this list for pathfinding.
+		_locationWayPoints[0],
+		_locationWayPoints[1],
+		_locationWayPoints[2],
+		_locationWayPoints[3],
 	};
+	
+	
 	
 	private lib.OrdersBox _ordersBox;
 	private double _timer;
@@ -44,6 +64,9 @@ public class Demo extends Scene {
 	private java.util.ArrayList<Aircraft> _aircraft;
 	private graphics.Image _airplaneImage;
 	private lib.ButtonText _manualOverrideButton;
+	private static double flightGenerationInterval = 100;
+	private double flightGenerationTimer = 0;
+	private int maxAircraft = 4;
 	
 	public Main main() {
 		return _main;
@@ -74,11 +97,15 @@ public class Demo extends Scene {
 		_selectedAircraft = null;
 		_selectedWaypoint = null;
 		_selectedPathpoint = -1;
+
+		
 	}
 
 	@Override
 	public void update(double dt) {
-		if (_aircraft.size() > 0) _main.score().addTime(dt); 
+		if (_aircraft.size() > 0){
+			_main.score().addTime(dt); 
+		}
 		_ordersBox.update(dt);
 		_timer += dt;
 		for (Aircraft plane : _aircraft) {
@@ -101,6 +128,15 @@ public class Demo extends Scene {
 			_selectedAircraft.update(-dt);
 		}
 		
+		flightGenerationTimer -= dt;
+		if(flightGenerationTimer <= 0){
+			//zero interval to begin next count
+			flightGenerationTimer = flightGenerationInterval;
+			if (_aircraft.size() < maxAircraft){
+				generateFlight();
+			}
+			
+		}
 	}
 	
 	private void checkCollisions(double dt) {
@@ -122,12 +158,14 @@ public class Demo extends Scene {
 				if (a.isMouseOver(x-16, y-16)) {
 					_selectedAircraft = a;
 					System.out.println("Selected Flight " + a.name());
-				}
-			}
+				}//end if
+			}//end for
 			for (Waypoint w : _waypoints) {
-				if (w.isMouseOver(x-16, y-16) && _selectedAircraft.flightPathContains(w) > -1) {
-					_selectedWaypoint = w;
-					_selectedPathpoint = _selectedAircraft.flightPathContains(w);
+				if (_selectedAircraft != null){
+					if (w.isMouseOver(x-16, y-16) && _selectedAircraft.flightPathContains(w) > -1) {
+						_selectedWaypoint = w;
+						_selectedPathpoint = _selectedAircraft.flightPathContains(w);
+					}
 				}
 			}
 		}
@@ -212,13 +250,26 @@ public class Demo extends Scene {
 	
 	private void generateFlight() {
 		// Origin and Destination
-		int o = (int)( Math.random() * _locationPoints.length);
-		int d = 0;
-		while (d == o) d = (int)( Math.random() * _locationPoints.length);
+		int o = randInt(0, _locationWayPoints.length);
+		int d = randInt(0, _locationWayPoints.length);
+		while (d == o){
+			d = randInt(0, _locationWayPoints.length);
+		}
 		String originName = _locationNames[o];
 		String destinationName = _locationNames[d];
-		cls.Vector origin = _locationPoints[o];
-		cls.Vector destination = _locationPoints[d];
+		
+/*		int side = randInt(0,1);
+		switch (side){
+		case 0://enter from left, leave from right
+			break;
+		case 1://enter from right, leave from left
+			break;
+		}*/
+		
+		Waypoint originPoint = _locationWayPoints[o];
+		Waypoint destinationPoint = _locationWayPoints[d];
+		
+
 		// Name
 		String name = "";
 		boolean nameTaken = true;
@@ -230,9 +281,18 @@ public class Demo extends Scene {
 			}
 		}
 		// Add to world
-		Aircraft a = new Aircraft(name, originName, destinationName, origin, destination, _airplaneImage, 32);
-		_aircraft.add(a);
 		_ordersBox.addOrder("<<< " + name + " incoming from " + originName + " heading towards " + destinationName + ".");
+		System.out.println("<<< " + name + " incoming from " + originName + " heading towards " + destinationName + ".");
+		Aircraft a = new Aircraft(name, originName, destinationName, originPoint, destinationPoint, _airplaneImage, 32, _waypoints);
+		_aircraft.add(a);
+	}
+	
+	private int randInt(int min, int max){
+		// generates a random integer between min and max
+		// not inclusive of max
+		Random rand = new Random();
+		int randomNum = rand.nextInt((max - min)) + min;
+		return randomNum;
 	}
 
 	@Override

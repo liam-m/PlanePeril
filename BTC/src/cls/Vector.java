@@ -30,8 +30,8 @@ public class Vector {
 		}
 	}
 	
-	private double magnitude () {
-		return Math.sqrt(_x*_x + _y*_y + _z*_z);
+	public double magnitude () {
+		return Math.sqrt((_x *_x) + (_y*_y) + (_z*_z));
 	}
 	
 	public Vector normalise() {
