@@ -33,7 +33,17 @@ public class OrdersBox {
 	}
 	
 	public void addOrder(String order) {
-		_buffer += order + SEPARATOR;
+		// Word Wrap
+		if (order.length()*8 > _width) {
+			String wrappedOrder = order.substring(0, (_width/8)-1);
+			while (wrappedOrder.charAt(wrappedOrder.length()-1) != ' ') {
+				wrappedOrder = wrappedOrder.substring(0, wrappedOrder.length()-1);
+			}
+			_buffer += wrappedOrder + SEPARATOR;
+			addOrder(order.substring(wrappedOrder.length()));
+		} else {
+			_buffer += order + SEPARATOR;
+		}
 		_typing = true;
 	}
 	

@@ -30,15 +30,19 @@ public class Vector {
 		}
 	}
 	
-	private double magnitude () {
-		return Math.sqrt(_x*_x + _y*_y + _z*_z);
+	public double magnitude() {
+		return Math.sqrt((_x *_x) + (_y*_y) + (_z*_z));
+	}
+	
+	public double magnitudeSquared() {
+		return (_x *_x) + (_y*_y) + (_z*_z);
 	}
 	
 	public Vector normalise() {
-		return this.mul(1/magnitude());
+		return this.scaleBy(1/magnitude());
 	}
 	
-	public Vector mul(double n) {
+	public Vector scaleBy(double n) {
 		return new Vector(_x * n, _y * n, _z * n);
 	}
 	
@@ -46,4 +50,8 @@ public class Vector {
 		return new Vector(_x + v.x(), _y + v.y(), _z + v.z());
 	}
 	
+	public Vector sub(Vector v) {
+		return new Vector(_x - v.x(), _y - v.y(), _z - v.z());
+	}
+
 }

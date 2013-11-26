@@ -3,6 +3,12 @@ package lib.jog;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.input.Keyboard;
 
+/**
+ * <h1>jog.input</h1>
+ * <p>Provides a layer for the LWJGL libraries' Mouse and Keyboard classes.
+ * jog.input gives all necessary methods, abstracting away, but also allowing for extension.</p>
+ * @author IMP1
+ */
 public abstract class input {
 	
 	public final static int MOUSE_LEFT = 0;
@@ -20,6 +26,10 @@ public abstract class input {
 	public final static int KEY_LCRTL = Keyboard.KEY_LCONTROL;
 	public final static int KEY_W = Keyboard.KEY_W;
 	
+	/**
+	 * Interface for a class that is to receive keyboard and mouse events.
+	 * @author IMP1
+	 */
 	public interface EventHandler {
 		
 		public void mousePressed(int key, int x, int y);
@@ -29,6 +39,10 @@ public abstract class input {
 
 	}
 
+	/**
+	 * Updates the input buffer, collecting keyboard and mouse events
+	 * @param handler
+	 */
 	public static void update(EventHandler handler) {
 		while (Mouse.next()) {
 			if (Mouse.getEventButtonState()) {
@@ -56,24 +70,50 @@ public abstract class input {
 		}
 	}
 	
+	/**
+	 * Accesses whether the state of the specified key on the keyboard.
+	 * @param key the integer representation of the keyboard key being pressed
+	 * @return whether the key is currently depressed.
+	 */
 	public static boolean isKeyDown(int key) {
 		return Keyboard.isKeyDown(key);
 	}
 	
+	/**
+	 * Accesses whether the state of the specified button on the mouse.
+	 * @param button the integer representation of the mouse button being pressed
+	 * @return whether the button is currently depressed.
+	 */
 	public static boolean isMouseDown(int button) {
 		return Mouse.isButtonDown(button);
 	}
 	
+	/**
+	 * Accesses the coordinates of the mouse relative to a rectangle on the window
+	 * @param x the rectangle's window x coordinate 
+	 * @param y the rectangle's window y coordinate
+	 * @param width the rectangle's width
+	 * @param height the rectangle's height
+	 * @return whether the mouse's coordinates are in the rectangle
+	 */
 	public static boolean isMouseInRect(int x, int y, int width, int height) {
 		int mx = mouseX();
 		int my = mouseY();
 		return (mx >= x && mx <= x + width && my >= y && my <= y + height);
 	}
 	
+	/**
+	 * Access the horizontal coordinate of the mouse's position, with the upper left being the origin.
+	 * @return the current x coordinate of the mouse
+	 */
 	public static int mouseX() {
 		return Mouse.getX();
 	}
 	
+	/**
+	 * Access the vertical coordinate of the mouse's position, with the upper left being the origin.
+	 * @return the current y coordinate of the mouse
+	 */
 	public static int mouseY() {
 		return window.height() - Mouse.getY();
 	}
