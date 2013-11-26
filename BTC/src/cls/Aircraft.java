@@ -110,7 +110,7 @@ public class Aircraft {
 		if (!_manualControl) resetBearing();
 		if (routeStage == this._routeStage){
 			_target = newWaypoint.position();
-			turnTowards(newWaypoint.position().x(), newWaypoint.position().y());
+			turnTowardsTarget(0);
 		}
 	}
 	
@@ -143,12 +143,13 @@ public class Aircraft {
 			return;
 		}
 		
-//		if ( Math.abs(bearing() - angleToTarget()) > 0.1 ) {
-//			double angleDifference = (angleToTarget() - bearing()) % (2 * Math.PI);
-//			double dr = Math.min((angleDifference * dt * _turnSpeed), angleDifference);
-//			turnBy(dr);
-//			return;
-//		}
+		if ( Math.abs(angleToTarget() - bearing()) > 0.1 ) {
+			double angleDifference = angleToTarget() - bearing();
+			angleDifference /= Math.abs(angleDifference);
+			double dr = Math.min((angleDifference * dt * _turnSpeed), angleDifference);
+			turnBy(dr);
+			return;
+		}
 		
 		Vector oldTarget = _target;
 		if (isAt(_target) && _target.equals(_destination)) {
@@ -161,12 +162,12 @@ public class Aircraft {
 			_target = _route[_routeStage].position();
 		}
 		if (oldTarget != _target) {
-			turnTowards(_target.x(), _target.y());
+			turnTowardsTarget(dt);
 		}
 	}
 	
 	private double angleToTarget() {
-		return _target.sub(_position).angleBetween(_velocity);
+		return Math.atan2(_target.y() - _position.y(), _target.x() - _position.x());
 	}
 	
 	private boolean outOfBounds() {
@@ -183,10 +184,13 @@ public class Aircraft {
 		_velocity = new Vector(x*cosA - y*sinA, y*cosA + x*sinA, _velocity.z());
 	}
 
-	private void turnTowards(double tx, double ty) {
-		double x = tx - _position.x();
-		double y = ty - _position.y();
-		_velocity = new Vector(x, y, 0).normalise().scaleBy(_speed);
+	private void turnTowardsTarget(double dt) {
+		double angleToTurn = ((angleToTarget() - bearing() + Math.PI) % (2 * Math.PI)) - Math.PI;
+		angleToTurn *= dt * _turnSpeed;
+		turnBy(angleToTurn);
+		//int angleDirection = (int)(angleDifference /= Math.abs(angleDifference));
+		//double angleMagnitude = Math.min(Math.abs((dt * _turnSpeed)), Math.abs(angleDifference)); 
+		//turnBy(angleMagnitude * angleDirection);
 	}
 	
 	public void draw() {
@@ -198,6 +202,8 @@ public class Aircraft {
 		graphics.circle(false, _position.x(), _position.y(), SEPARATION_RULE);
 		graphics.setColour(128, 0, 0);
 		graphics.circle(false, _position.x(), _position.y(), RADIUS);
+		graphics.print(String.valueOf(Math.toDegrees(bearing())), 16, 16);
+		graphics.print(String.valueOf(Math.toDegrees(angleToTarget())), 16, 32);
 	}
 	
 	private double altitude() {
@@ -220,9 +226,7 @@ public class Aircraft {
 	}
 	
 	public double bearing() {
-		double a = Math.acos( _velocity.x() / Math.sqrt(Math.pow(_velocity.x(), 2) + Math.pow(_velocity.y(), 2)) );
-		if (_velocity.y() < 0) a *= -1;
-		return a;
+		return Math.atan2(_velocity.y(), _velocity.x());
 	}
 	
 	public double speed() {
@@ -446,7 +450,7 @@ public class Aircraft {
 		if (_routeStage < _route.length) {
 			_target = _route[_routeStage].position();
 		}
-		turnTowards(_target.x(), _target.y());
+		turnTowardsTarget(0);
 	}
 	
 	public void climb() {
