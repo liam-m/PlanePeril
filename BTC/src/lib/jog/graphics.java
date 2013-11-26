@@ -14,7 +14,7 @@ import org.newdawn.slick.util.ResourceLoader;
 
 /**
  * <h1>jog.graphics</h1>
- * <p>Provides a layer for OpenGL methods. jog.graphics allows drawing basic shapes to the screen,
+ * <p>Provides a layer upon OpenGL methods. jog.graphics allows drawing basic shapes to the screen,
  * as well as images and limited font capabilities. jog.graphics (unlike OpenGL) has the graphical origin to be the window's
  * upper-left corner.</p>
  * @author IMP1

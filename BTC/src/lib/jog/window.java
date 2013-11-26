@@ -14,7 +14,8 @@ import org.lwjgl.opengl.DisplayMode;
 import org.newdawn.slick.util.ResourceLoader;
 
 /**
- * 
+ * <h1>jog.window</h1>
+ * <p>Provides a layer upon LWJGL and Slick. jog.window allows a window to be created and managed.</p>
  * @author IMP1
  */
 public abstract class window {
