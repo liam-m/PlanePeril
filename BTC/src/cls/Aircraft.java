@@ -143,6 +143,13 @@ public class Aircraft {
 			return;
 		}
 		
+//		if ( Math.abs(bearing() - angleToTarget()) > 0.1 ) {
+//			double angleDifference = (angleToTarget() - bearing()) % (2 * Math.PI);
+//			double dr = Math.min((angleDifference * dt * _turnSpeed), angleDifference);
+//			turnBy(dr);
+//			return;
+//		}
+		
 		Vector oldTarget = _target;
 		if (isAt(_target) && _target.equals(_destination)) {
 			_finished = true;
@@ -156,6 +163,10 @@ public class Aircraft {
 		if (oldTarget != _target) {
 			turnTowards(_target.x(), _target.y());
 		}
+	}
+	
+	private double angleToTarget() {
+		return _target.sub(_position).angleBetween(_velocity);
 	}
 	
 	private boolean outOfBounds() {
@@ -327,17 +338,14 @@ public class Aircraft {
 		ArrayList<Waypoint> queue = new ArrayList<Waypoint>(); // Queue of waypoints to evaluate
 		
 		//initialisation
-		for(int i = 0; i<sceneWaypoints.length; i++){
-			distance[i] = 999999999999.0;
+		for(int i = 0; i < sceneWaypoints.length; i++){
+			distance[i] = sceneWaypoints[i].getCost(origin);
 			visited[i] = false;
-			//previous is initialised with all entries as null when it is created
 		}
 		
-		distance[getIndex(origin, sceneWaypoints)] = 0; //distance from origin to itself is 0
 		queue.add(origin);
 		
-		while(queue.isEmpty() == false){
-			//System.out.println("Enter Djiksta While");
+		while(!queue.isEmpty()){
 			//find waypoint in queue with smallest distance and which is unvisited
 			double cost = 9999.0;
 			Waypoint cheapest = queue.get(0);
