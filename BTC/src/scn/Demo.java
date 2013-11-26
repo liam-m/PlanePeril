@@ -93,7 +93,7 @@ public class Demo extends Scene {
 
 	@Override
 	public void start() {
-		_ordersBox = new lib.OrdersBox(window.width()/2 + 5, window.height() - 120, window.width()/2 - 13, 116, 6);
+		_ordersBox = new lib.OrdersBox(window.width()/3 + 24, window.height() - 120, window.width() - (window.width()/3 + 32), 116, 6);
 		_aircraft = new java.util.ArrayList<Aircraft>();
 		_airplaneImage = graphics.newImage("gfx" + File.separator + "plane.png");
 		lib.ButtonText.Action manual = new lib.ButtonText.Action() {
@@ -303,20 +303,20 @@ public class Demo extends Scene {
 	}
 	
 	private void drawPlaneInfo() {
-		graphics.rectangle(false, 16, window.height() - 125, window.width()/2 - 21, 109);
+		graphics.rectangle(false, 16, window.height() - 125, window.width()/3, 109);
 		if (_selectedAircraft != null) {
-			graphics.setViewport(16, window.height() - 125, window.width()/2 - 21, 109);
-			graphics.printCentred(_selectedAircraft.name(), 0, 5, 2, window.width()/2 - 21);
+			graphics.setViewport(16, window.height() - 125, window.width()/3, 109);
+			graphics.printCentred(_selectedAircraft.name(), 0, 5, 2, window.width()/3);
 			String altitude = String.valueOf(_selectedAircraft.position().z()) + "£";
 			graphics.print("Altitude:", 10, 40);
-			graphics.print(altitude, window.width()/2 - 31 - altitude.length()*8, 40);
+			graphics.print(altitude, window.width()/3 - 10 - altitude.length()*8, 40);
 			String speed = String.format("%.2f", _selectedAircraft.speed() * 1.687810) + "$";
 			graphics.print("Speed:", 10, 55);
-			graphics.print(speed, window.width()/2 - 31 - speed.length()*8, 55);
+			graphics.print(speed, window.width()/3 - 10 - speed.length()*8, 55);
 			graphics.print("Origin:", 10, 70);
-			graphics.print(_selectedAircraft.originName(), window.width()/2 - 31 - _selectedAircraft.originName().length()*8, 70);
+			graphics.print(_selectedAircraft.originName(), window.width()/3 - 10 - _selectedAircraft.originName().length()*8, 70);
 			graphics.print("Destination:", 10, 85);
-			graphics.print(_selectedAircraft.destinationName(), window.width()/2 - 31 - _selectedAircraft.destinationName().length()*8, 85);
+			graphics.print(_selectedAircraft.destinationName(), window.width()/3 - 10 - _selectedAircraft.destinationName().length()*8, 85);
 			graphics.setViewport();
 		}
 	}
@@ -338,7 +338,7 @@ public class Demo extends Scene {
 		// Origin and Destination
 		int o = randInt(0, _locationWayPoints.length);
 		int d = randInt(0, _locationWayPoints.length);
-		while (d == o){
+		while (_locationNames[d] == _locationNames[o]){
 			d = randInt(0, _locationWayPoints.length);
 		}
 		String originName = _locationNames[o];
@@ -355,7 +355,6 @@ public class Demo extends Scene {
 		Waypoint originPoint = _locationWayPoints[o];
 		Waypoint destinationPoint = _locationWayPoints[d];
 		
-
 		// Name
 		String name = "";
 		boolean nameTaken = true;
