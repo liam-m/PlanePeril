@@ -123,6 +123,9 @@ public class OrdersBox {
 		_orders[LINES-1] = "";
 	}
 	
+	/**
+	 * Prints the currently available characters of the OrdersBox.
+	 */
 	public void draw() {
 		graphics.setColour(0, 128, 0);
 		for (int i = 0; i < linesBeingUsed(); i ++) {
