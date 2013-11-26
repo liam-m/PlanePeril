@@ -16,8 +16,8 @@ public class Main implements input.EventHandler {
 	}
 	
 	final private String TITLE = "Bear Traffic Controller";
-	final private int WIDTH = 640;
-	final private int HEIGHT = 480;
+	final private int WIDTH = 1280;
+	final private int HEIGHT = 960;
 
 	private double _lastFrame;
 	private double _dt;
