@@ -53,5 +53,11 @@ public class Vector {
 	public Vector sub(Vector v) {
 		return new Vector(_x - v.x(), _y - v.y(), _z - v.z());
 	}
+	
+	public double angleBetween(Vector v) {
+		double a = Math.acos( (_x*v._x + _y*v._y + _z*v._z) / (magnitude() * v.magnitude()));
+		if (v._y < _y) a *= -1;
+		return a;
+	}
 
 }
