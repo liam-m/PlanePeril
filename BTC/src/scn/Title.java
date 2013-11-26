@@ -124,7 +124,7 @@ public class Title extends Scene {
 			opacity = 256 - opacity;
 			opacity %= 256;
 			graphics.setColour(0, 128, 0, opacity);
-			graphics.print(title.substring(i, i+1), 74 + i * 14, 128, 1.8);
+			graphics.print(title.substring(i, i+1), 74*4.5 + i * 14, 344, 1.8);
 		}
 	}
 	
