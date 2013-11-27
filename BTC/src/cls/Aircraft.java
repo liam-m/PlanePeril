@@ -14,7 +14,7 @@ import scn.Demo;
 
 public class Aircraft {
 
-	public final static int SEPARATION_RULE = 32;
+	public final static int SEPARATION_RULE = 64;
 	public final static int RADIUS = 16;
 	public final static int MOUSE_LENIANCY = 16;
 	
@@ -33,6 +33,7 @@ public class Aircraft {
 	private graphics.Image _image;
 	private boolean _finished;
 	private double _turnDegree;
+	private java.util.ArrayList<Aircraft> planesTooNear = new java.util.ArrayList<Aircraft>();
 
 	//Constructor
 	public Aircraft(String flightName, String originName, String destinationName, Waypoint originPoint, Waypoint destinationPoint, graphics.Image image, double speed, Waypoint[] sceneWaypoints) {
@@ -112,7 +113,7 @@ public class Aircraft {
 	public void alterPath(int routeStage, Waypoint newWaypoint) {
 		_route[routeStage] = newWaypoint;
 		if (!_manualControl) resetBearing();
-		if (routeStage == this._routeStage){
+		if (routeStage == _routeStage){
 			_target = newWaypoint.position();
 			turnTowardsTarget(0);
 		}
@@ -220,10 +221,18 @@ public class Aircraft {
 	private void drawWarningCircles() {
 		for (Aircraft plane : planesTooNear) {
 			Vector midPoint = _position.add(plane._position).scaleBy(0.5);
-			double radius = _position.sub(midPoint).magnitude() + 16;
+			double radius = _position.sub(midPoint).magnitude() * 2;
 			graphics.setColour(128, 0, 0);
 			graphics.circle(false, midPoint.x(), midPoint.y(), radius);
 		}
+//		if (planesTooNear.size() > 0){
+//			graphics.setColour(128,0,0);
+//			graphics.print("!", _position.x(), _position.y() - 64, 8);
+//		}
+//		graphics.setColour(0, 128, 128);
+//		graphics.circle(false, _position.x(), _position.y(), SEPARATION_RULE);
+//		graphics.setColour(128, 0, 0);
+//		graphics.circle(false, _position.x(), _position.y(), RADIUS);		
 	}
 	
 	private double altitude() {
@@ -312,11 +321,11 @@ public class Aircraft {
 					/* get cost of visiting waypoint
 					 * compare cost vs current cheapest
 					 * if smaller, replace */	
-					if (point.getCost(currentPos) < cost){
+					if (point.getCost(currentPos) + 0.5 * Waypoint.getCostBetween(point, destination) < cost){
 					//	System.out.println("cost: " + point.getCost(currentPos));
 						//cheaper route found, update
 						cheapest = point;
-						cost = point.getCost(currentPos);
+						cost = point.getCost(currentPos) + 0.5 * Waypoint.getCostBetween(point, destination);
 					}
 				}
 				
@@ -383,7 +392,7 @@ public class Aircraft {
 			
 			if (cheapest.position().equals(destination.position())){ //terminate if the next node is the destination
 				//System.out.println("Found Destination");
-				this._route = buildRoute(sceneWaypoints, previous, destination);
+				_route = buildRoute(sceneWaypoints, previous, destination);
 				break;
 			} else {
 				//System.out.println("Not dest");
@@ -443,7 +452,7 @@ public class Aircraft {
 		return index;
 	}
 
-	java.util.ArrayList<Aircraft> planesTooNear = new java.util.ArrayList<Aircraft>();
+	
 	public void updateCollisions(double dt, scn.Demo scene) {
 		planesTooNear.clear();
 		for (Aircraft plane : scene.aircraftList()) {

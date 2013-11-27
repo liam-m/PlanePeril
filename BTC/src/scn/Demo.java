@@ -29,6 +29,7 @@ public class Demo extends Scene {
 	};
 	
 	public static Waypoint[] _locationWayPoints = new Waypoint[] {
+		/* A set of Waypoints which are origin / destination points */
 		new Waypoint(-64, 32, true), //top left
 		new Waypoint(-64, window.height(), true), //bottom left
 		new Waypoint(window.width() + 32, 32, true), // top right
@@ -36,17 +37,24 @@ public class Demo extends Scene {
 	};
 
 	public static Waypoint[] _waypoints = new Waypoint[] {		
+		/* All waypoints in the airspace, including location Way Points*/
+	
 		//airspace waypoints
-		new Waypoint(300, 180, false),
-		new Waypoint(110, 200, false),
-		new Waypoint(125, 70, false),
-		new Waypoint(500, 100, false),
-		new Waypoint(470, 300, false),
+		new Waypoint(125, 70, false),//0
+		new Waypoint(700, 100, false),//1
+		new Waypoint(1050, 80, false),//2
+		new Waypoint(670, 300, false),//3
+		new Waypoint(1050, 400, false),//4
+		new Waypoint(250, 400, false),//5
+		new Waypoint(200, 635, false),//6
+		new Waypoint(500, 655, false),//7
+		new Waypoint(800, 750, false),//8
+		new Waypoint(1200, 750, false),//9
 		//destination/origin waypoints - present in this list for pathfinding.
-		_locationWayPoints[0],
-		_locationWayPoints[1],
-		_locationWayPoints[2],
-		_locationWayPoints[3],
+		_locationWayPoints[0], //10
+		_locationWayPoints[1], //11
+		_locationWayPoints[2],//12
+		_locationWayPoints[3],//13
 	};
 	
 	private final int PLANE_INFO_X = 16;
