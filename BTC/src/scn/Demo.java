@@ -20,6 +20,7 @@ public class Demo extends Scene {
 		new cls.Vector(window.width() + 32, 32, 9000),
 		new cls.Vector(window.width() + 32, 64, 9000),
 	};
+	
 	private final String[] _locationNames = new String[] {
 		"North West Top Leftonia",
 		"Bottom Left",
@@ -34,29 +35,13 @@ public class Demo extends Scene {
 		new Waypoint(window.width() + 32, window.height(), true), //bottom right
 	};
 
-	public static Waypoint[] _waypoints = new Waypoint[] {
-		
-		/*
-		new Waypoint(0, 128),
-		new Waypoint(0, 256),
-		new Waypoint(window.width() - 32, 128),
-		new Waypoint(window.width() - 32, 256),
-		new Waypoint(window.width() - 32 / 4, 64),
-		
-		new Waypoint(128, 256),
-		new Waypoint(416, 64),
-		new Waypoint(344, 192),
-		new Waypoint(256, 256),
-		new Waypoint(128, 128),
-		*/
-		
+	public static Waypoint[] _waypoints = new Waypoint[] {		
 		//airspace waypoints
 		new Waypoint(300, 180, false),
 		new Waypoint(110, 200, false),
 		new Waypoint(125, 70, false),
 		new Waypoint(500, 100, false),
 		new Waypoint(470, 300, false),
-		
 		//destination/origin waypoints - present in this list for pathfinding.
 		_locationWayPoints[0],
 		_locationWayPoints[1],
@@ -64,7 +49,20 @@ public class Demo extends Scene {
 		_locationWayPoints[3],
 	};
 	
+	private final int PLANE_INFO_X = 16;
+	private final int PLANE_INFO_Y = window.height() - 120;
+	private final int PLANE_INFO_W = window.width()/4;
+	private final int PLANE_INFO_H = 112;
 	
+	private final int ALTIMETER_X = PLANE_INFO_X + PLANE_INFO_W + 8;
+	private final int ALTIMETER_Y = window.height() - 120;
+	private final int ALTIMETER_W = 192;
+	private final int ALTIMETER_H = 112;
+	
+	private final int ORDERSBOX_X = ALTIMETER_X + ALTIMETER_W + 8;
+	private final int ORDERSBOX_Y = window.height() - 120;
+	private final int ORDERSBOX_W = window.width() - (ORDERSBOX_X + 16);
+	private final int ORDERSBOX_H = 112;
 	
 	private lib.OrdersBox _ordersBox;
 	private double _timer;
@@ -93,7 +91,7 @@ public class Demo extends Scene {
 
 	@Override
 	public void start() {
-		_ordersBox = new lib.OrdersBox(window.width()/3 + 24, window.height() - 120, window.width() - (window.width()/3 + 32), 116, 6);
+		_ordersBox = new lib.OrdersBox(ORDERSBOX_X, ORDERSBOX_Y, ORDERSBOX_W, ORDERSBOX_H, 6);
 		_aircraft = new java.util.ArrayList<Aircraft>();
 		_airplaneImage = graphics.newImage("gfx" + File.separator + "plane.png");
 		lib.ButtonText.Action manual = new lib.ButtonText.Action() {
@@ -111,7 +109,7 @@ public class Demo extends Scene {
 		_selectedPathpoint = -1;
 		
 		_manualOverrideButton = new lib.ButtonText(" Take Control", manual, (window.width() - 128) / 2, 32, 128, 32, 8, 4);
-		_altimeter = new lib.Altimeter(8, 248, 64, 96);
+		_altimeter = new lib.Altimeter(ALTIMETER_X, ALTIMETER_Y, ALTIMETER_W, ALTIMETER_H);
 		_timer = 0;
 		deselectAircraft();
 	}
@@ -303,20 +301,24 @@ public class Demo extends Scene {
 	}
 	
 	private void drawPlaneInfo() {
-		graphics.rectangle(false, 16, window.height() - 125, window.width()/3, 109);
+		graphics.rectangle(false, PLANE_INFO_X, PLANE_INFO_Y, PLANE_INFO_W, PLANE_INFO_H);
 		if (_selectedAircraft != null) {
-			graphics.setViewport(16, window.height() - 125, window.width()/3, 109);
-			graphics.printCentred(_selectedAircraft.name(), 0, 5, 2, window.width()/3);
+			graphics.setViewport(PLANE_INFO_X, PLANE_INFO_Y, PLANE_INFO_W, PLANE_INFO_H);
+			graphics.printCentred(_selectedAircraft.name(), 0, 5, 2, PLANE_INFO_W);
+			// Altitude
 			String altitude = String.valueOf(_selectedAircraft.position().z()) + "£";
 			graphics.print("Altitude:", 10, 40);
-			graphics.print(altitude, window.width()/3 - 10 - altitude.length()*8, 40);
+			graphics.print(altitude, PLANE_INFO_W - 10 - altitude.length()*8, 40);
+			// Speed
 			String speed = String.format("%.2f", _selectedAircraft.speed() * 1.687810) + "$";
 			graphics.print("Speed:", 10, 55);
-			graphics.print(speed, window.width()/3 - 10 - speed.length()*8, 55);
+			graphics.print(speed, PLANE_INFO_W - 10 - speed.length()*8, 55);
+			// Origin
 			graphics.print("Origin:", 10, 70);
-			graphics.print(_selectedAircraft.originName(), window.width()/3 - 10 - _selectedAircraft.originName().length()*8, 70);
+			graphics.print(_selectedAircraft.originName(), PLANE_INFO_W - 10 - _selectedAircraft.originName().length()*8, 70);
+			// Destination
 			graphics.print("Destination:", 10, 85);
-			graphics.print(_selectedAircraft.destinationName(), window.width()/3 - 10 - _selectedAircraft.destinationName().length()*8, 85);
+			graphics.print(_selectedAircraft.destinationName(), PLANE_INFO_W - 10 - _selectedAircraft.destinationName().length()*8, 85);
 			graphics.setViewport();
 		}
 	}
