@@ -13,7 +13,7 @@ public class OrdersBox {
 	private final int LINES;
 	private final char SEPARATOR = '|';
 	private final double _typeWait = 0.01;
-	private final double _removalWait = 3;
+	private final double _removalWait = 6;
 	
 	private int _x, _y, _width, _height;
 	private String[] _orders;
