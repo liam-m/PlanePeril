@@ -23,6 +23,21 @@ public class Score {
 	public int flightsSuccessful() {
 		return _flightsSuccessful;
 	}
+	
+	public double manualTime()
+	{
+		return _timeManual;
+	}
+	
+	public double timeViolated()
+	{
+		return _timeSeparationViolated;
+	}
+	
+	public int gameOvers()
+	{
+		return _gameOvers;
+	}
 
 	public void addTime(double dt) {
 		_timePlayed += dt;
