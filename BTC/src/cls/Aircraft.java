@@ -51,7 +51,7 @@ public class Aircraft {
 		_position = originPoint.position(); //place on spawn waypoint
 		int offset = new Random().nextInt((SEPARATION_RULE - (-SEPARATION_RULE))) + (-SEPARATION_RULE); //generate a small random offset
 		System.out.println("Offset by " + offset);
-		_position = _position.add(new Vector(offset, offset, 30000 + (int)(10000 * Math.random())));//offset spawn position. Helps avoid aircraft crashes very soon after spawn
+		_position = _position.add(new Vector(offset, offset, 30000));//offset spawn position. Helps avoid aircraft crashes very soon after spawn
 		
 		_destination = destinationPoint.position();
 		_manualControl = false;
@@ -214,10 +214,16 @@ public class Aircraft {
 		graphics.draw(_image, _position.x(), _position.y(), bearing(), 8, 8);
 		graphics.setColour(128, 128, 128, 96);
 		graphics.print(String.valueOf(altitude()) + "£", _position.x()+8, _position.y()-8);
-		graphics.setColour(0, 128, 128);
-		graphics.circle(false, _position.x(), _position.y(), SEPARATION_RULE);
-		graphics.setColour(128, 0, 0);
-		graphics.circle(false, _position.x(), _position.y(), RADIUS);
+		drawWarningCircles();
+	}
+	
+	private void drawWarningCircles() {
+		for (Aircraft plane : planesTooNear) {
+			Vector midPoint = _position.add(plane._position).scaleBy(0.5);
+			double radius = _position.sub(midPoint).magnitude() + 16;
+			graphics.setColour(128, 0, 0);
+			graphics.circle(false, midPoint.x(), midPoint.y(), radius);
+		}
 	}
 	
 	private double altitude() {
@@ -437,13 +443,16 @@ public class Aircraft {
 		return index;
 	}
 
+	java.util.ArrayList<Aircraft> planesTooNear = new java.util.ArrayList<Aircraft>();
 	public void updateCollisions(double dt, scn.Demo scene) {
+		planesTooNear.clear();
 		for (Aircraft plane : scene.aircraftList()) {
 			if (plane != this && isWithin(plane, RADIUS)) {
 				scene.gameOver(this, plane);
 				_finished = true;
 			} else if (plane != this && isWithin(plane, SEPARATION_RULE)) {
 				scene.main().score().addTimeViolated(dt);
+				planesTooNear.add(plane);
 			}
 		}
 	}
