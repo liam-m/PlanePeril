@@ -20,6 +20,7 @@ public class Altimeter implements EventHandler {
 	}
 	
 	public void show(cls.Aircraft aircraft) {
+		if (aircraft == null) return;
 		_aircraft = aircraft;
 		_visible = true;
 	}
@@ -75,13 +76,9 @@ public class Altimeter implements EventHandler {
 	}
 	
 	public void draw() {
-		if (!_visible) return;
-//		graphics.setColour(0, 128, 128);
-//		graphics.rectangle(true, _x, _y, _width, _height / 2);
-//		graphics.setColour(128, 128, 0);
-//		graphics.rectangle(true, _x, _y + _height / 2, _width, _height / 2);
 		graphics.setColour(0, 128, 0);
 		graphics.rectangle(false, _x, _y, _width, _height);
+		if (!_visible) return;
 		double r = 0;
 		if (_aircraft.isTurningLeft()) {
 			r = -Math.PI / 12;
@@ -89,7 +86,7 @@ public class Altimeter implements EventHandler {
 			r = Math.PI / 12;
 		}
 		double x = _x + (_width / 2);
-		double y = _y + (_height / 2);
+		double y = _y + (_height / 2) - 16;
 		double wingLength = _width / 3;
 		double tailLength = _width / 9;
 		graphics.line(x, y, x + wingLength * Math.cos(r), y + wingLength * Math.sin(r));
@@ -98,9 +95,10 @@ public class Altimeter implements EventHandler {
 		r -= Math.PI / 2;
 		graphics.line(x, y, x + wingLength * Math.cos(r), y + wingLength * Math.sin(r));
 		graphics.setColour(0, 0, 0);
-		graphics.circle(true, _x + (_width / 2), _y + (_height / 2), 4);graphics.setColour(0, 128, 0);
-		graphics.circle(false, _x + (_width / 2), _y + (_height / 2), 4);
-		
+		graphics.circle(true, x, y, 4);
+		graphics.setColour(0, 128, 0);
+		graphics.circle(false, x, y, 4);
+		graphics.printCentred(String.valueOf(_aircraft.position().z()), _x, y+32, 1, _width);
 	}
 
 }
