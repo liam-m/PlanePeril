@@ -11,8 +11,9 @@ public class ButtonText {
 
 	private int _x, _y, _width, _height, _ox, _oy;
 	private String _text;
-	private org.newdawn.slick.Color _colourDefault, _colourHover;
+	private org.newdawn.slick.Color _colourDefault, _colourHover, _colourUnavailable;
 	private Action _action;
+	private boolean _available;
 	
 	public ButtonText(String text, Action action, int x, int y, int w, int h, int ox, int oy) {
 		_text = text;
@@ -25,6 +26,8 @@ public class ButtonText {
 		_oy = oy;
 		_colourDefault = new org.newdawn.slick.Color(0, 128, 0);
 		_colourHover = new org.newdawn.slick.Color(128, 128, 128);
+		_colourUnavailable = new org.newdawn.slick.Color(64, 64, 64);
+		_available = true;
 	}
 	
 	public boolean isMouseOver(int mx, int my) {
@@ -36,12 +39,20 @@ public class ButtonText {
 		_text = newText;
 	}
 	
+	public void setAvailability(boolean available) {
+		_available = available;
+	}
+	
 	public void act() {
+		if (!_available) return;
 		_action.action();
 	}
 	
 	public void draw() {
-		if (isMouseOver()) {
+		if (!_available) {
+			graphics.setColour(_colourUnavailable);
+		}
+		else if (isMouseOver()) {
 			graphics.setColour(_colourHover);
 		} else {
 			graphics.setColour(_colourDefault);
