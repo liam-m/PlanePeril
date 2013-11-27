@@ -121,6 +121,7 @@ public class Demo extends Scene {
 	}
 	
 	private void deselectAircraft() {
+		System.out.println("Deselecting Aircraft");
 		if (_selectedAircraft != null && _selectedAircraft.isManuallyControlled()) {
 			_selectedAircraft.toggleManualControl();
 			_manualOverrideButton.setText(" Take Control");
@@ -190,13 +191,13 @@ public class Demo extends Scene {
 			for (Aircraft a : _aircraft) {
 				if (a.isMouseOver(x-16, y-16)) {
 					newSelected = a;
-					_altimeter.show(_selectedAircraft);
 				}
 			}
 			if (newSelected != _selectedAircraft) {
 				deselectAircraft();
 				_selectedAircraft = newSelected;
 			}
+			_altimeter.show(_selectedAircraft);
 			for (Waypoint w : _waypoints) {
 				if (_selectedAircraft != null){
 					if (w.isMouseOver(x-16, y-16) && _selectedAircraft.flightPathContains(w) > -1) {
