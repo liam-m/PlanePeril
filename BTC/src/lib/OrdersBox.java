@@ -120,7 +120,7 @@ public class OrdersBox {
 			_orders[i] = _orders[i+1];
 		}
 		_orders[LINES-1] = "";
-		_currentOrder -= 1;
+		_currentOrder = Math.max(0,  _currentOrder - 1);
 	}
 	
 	/**
