@@ -76,12 +76,31 @@ public class Altimeter implements EventHandler {
 	
 	public void draw() {
 		if (!_visible) return;
-		graphics.setColour(0, 128, 128);
-		graphics.rectangle(true, _x, _y, _width, _height / 2);
-		graphics.setColour(128, 128, 0);
-		graphics.rectangle(true, _x, _y + _height / 2, _width, _height / 2);
+//		graphics.setColour(0, 128, 128);
+//		graphics.rectangle(true, _x, _y, _width, _height / 2);
+//		graphics.setColour(128, 128, 0);
+//		graphics.rectangle(true, _x, _y + _height / 2, _width, _height / 2);
 		graphics.setColour(0, 128, 0);
 		graphics.rectangle(false, _x, _y, _width, _height);
+		double r = 0;
+		if (_aircraft.isTurningLeft()) {
+			r = -Math.PI / 12;
+		} else if (_aircraft.isTurningRight()) {
+			r = Math.PI / 12;
+		}
+		double x = _x + (_width / 2);
+		double y = _y + (_height / 2);
+		double wingLength = _width / 3;
+		double tailLength = _width / 9;
+		graphics.line(x, y, x + wingLength * Math.cos(r), y + wingLength * Math.sin(r));
+		r -= Math.PI / 2;
+		graphics.line(x, y, x + tailLength * Math.cos(r), y + tailLength * Math.sin(r));
+		r -= Math.PI / 2;
+		graphics.line(x, y, x + wingLength * Math.cos(r), y + wingLength * Math.sin(r));
+		graphics.setColour(0, 0, 0);
+		graphics.circle(true, _x + (_width / 2), _y + (_height / 2), 4);graphics.setColour(0, 128, 0);
+		graphics.circle(false, _x + (_width / 2), _y + (_height / 2), 4);
+		
 	}
 
 }
