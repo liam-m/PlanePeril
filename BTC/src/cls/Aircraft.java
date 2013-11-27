@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.Stack;
 
+import org.newdawn.slick.AngelCodeFont;
+
 import lib.jog.graphics;
 import lib.jog.input;
 import lib.jog.window;
@@ -17,7 +19,7 @@ public class Aircraft {
 	public final static int MOUSE_LENIANCY = 16;
 	
 	private double _speed;
-	private double _turnSpeed = Math.PI / 2;
+	private double _turnSpeed = Math.PI / 4;
 	
 	private Vector _position;
 	private Vector _velocity;
@@ -123,10 +125,12 @@ public class Aircraft {
 	
 	public void update(double dt) {
 		if (_finished) return;
-
+		
+		// Update position
 		Vector dv = _velocity.scaleBy(dt);
 		_position = _position.add(dv);
 		
+		// Update input if manually controlled
 		if (_manualControl) {
 			if (outOfBounds()) {
 				_finished = true;
@@ -142,15 +146,8 @@ public class Aircraft {
 			if (angle != 0) turnBy(angle * _turnSpeed);
 			return;
 		}
-		
-		if ( Math.abs(angleToTarget() - bearing()) > 0.1 ) {
-			double angleDifference = angleToTarget() - bearing();
-			angleDifference /= Math.abs(angleDifference);
-			double dr = Math.min((angleDifference * dt * _turnSpeed), angleDifference);
-			turnBy(dr);
-			return;
-		}
-		
+
+		// Update target
 		Vector oldTarget = _target;
 		if (isAt(_target) && _target.equals(_destination)) {
 			_finished = true;
@@ -161,7 +158,9 @@ public class Aircraft {
 			_routeStage ++;
 			_target = _route[_routeStage].position();
 		}
-		if (oldTarget != _target) {
+		
+		// Update bearing
+		if ( Math.abs(angleToTarget() - bearing()) > 0.1 ) {
 			turnTowardsTarget(dt);
 		}
 	}
@@ -185,12 +184,18 @@ public class Aircraft {
 	}
 
 	private void turnTowardsTarget(double dt) {
-		double angleToTurn = ((angleToTarget() - bearing() + Math.PI) % (2 * Math.PI)) - Math.PI;
-		angleToTurn *= dt * _turnSpeed;
-		turnBy(angleToTurn);
-		//int angleDirection = (int)(angleDifference /= Math.abs(angleDifference));
-		//double angleMagnitude = Math.min(Math.abs((dt * _turnSpeed)), Math.abs(angleDifference)); 
-		//turnBy(angleMagnitude * angleDirection);
+		// Get difference in angle
+		double angleDifference = (angleToTarget() % (2 * Math.PI)) - (bearing() % (2 * Math.PI));
+		boolean crossesPosativeNegativeDivide = angleDifference < -Math.PI * 7 / 8;
+		// Correct difference
+		angleDifference += Math.PI;
+		angleDifference %= (2 * Math.PI);
+		angleDifference -= Math.PI;
+		// Get which way to turn.
+		int angleDirection = (int)(angleDifference /= Math.abs(angleDifference));
+		if (crossesPosativeNegativeDivide) angleDirection *= -1;  
+		double angleMagnitude = Math.min(Math.abs((dt * _turnSpeed)), Math.abs(angleDifference)); 
+		turnBy(angleMagnitude * angleDirection);
 	}
 	
 	public void draw() {
@@ -202,8 +207,6 @@ public class Aircraft {
 		graphics.circle(false, _position.x(), _position.y(), SEPARATION_RULE);
 		graphics.setColour(128, 0, 0);
 		graphics.circle(false, _position.x(), _position.y(), RADIUS);
-		graphics.print(String.valueOf(Math.toDegrees(bearing())), 16, 16);
-		graphics.print(String.valueOf(Math.toDegrees(angleToTarget())), 16, 32);
 	}
 	
 	private double altitude() {
