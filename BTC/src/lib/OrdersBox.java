@@ -65,6 +65,7 @@ public class OrdersBox {
 			_buffer += order + SEPARATOR;
 		}
 		_typing = true;
+		_removalTimer = 0;
 	}
 	
 	private int linesBeingUsed() {
