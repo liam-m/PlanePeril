@@ -33,6 +33,8 @@ public class Aircraft {
 	private graphics.Image _image;
 	private boolean _finished;
 	private double _turnDegree;
+	private boolean collision_alert;
+
 
 	//Constructor
 	public Aircraft(String flightName, String originName, String destinationName, Waypoint originPoint, Waypoint destinationPoint, graphics.Image image, double speed, Waypoint[] sceneWaypoints) {
@@ -61,6 +63,7 @@ public class Aircraft {
 		_finished = false;
 		_routeStage = 0;
 		_turnDegree = 0;
+		this.collision_alert = false;
 	}
 	
 	@Override
@@ -218,6 +221,12 @@ public class Aircraft {
 		graphics.circle(false, _position.x(), _position.y(), SEPARATION_RULE);
 		graphics.setColour(128, 0, 0);
 		graphics.circle(false, _position.x(), _position.y(), RADIUS);
+		
+		if (this.collision_alert == true){
+			graphics.print("!", _position.x(), _position.y(), 16);
+			graphics.setColour(128,0,0);
+			graphics.circle(false, _position.x(), _position.y(), SEPARATION_RULE);
+		}
 	}
 	
 	private double altitude() {
@@ -306,11 +315,11 @@ public class Aircraft {
 					/* get cost of visiting waypoint
 					 * compare cost vs current cheapest
 					 * if smaller, replace */	
-					if (point.getCost(currentPos) < cost){
+					if (point.getCost(currentPos) + 0.5 * point.getCostBetween(point, destination) < cost){
 					//	System.out.println("cost: " + point.getCost(currentPos));
 						//cheaper route found, update
 						cheapest = point;
-						cost = point.getCost(currentPos);
+						cost = point.getCost(currentPos) + 0.5 * point.getCostBetween(point, destination);
 					}
 				}
 				
@@ -444,6 +453,15 @@ public class Aircraft {
 				_finished = true;
 			} else if (plane != this && isWithin(plane, SEPARATION_RULE)) {
 				scene.main().score().addTimeViolated(dt);
+				this.collision_alert = true;
+			}
+			
+			//if separation circles are coming close to intersecting
+			if (plane != this && isWithin(plane, (SEPARATION_RULE * 3))){
+				this.collision_alert = true;
+				//System.out.println("Intersecting");
+			} else {
+				this.collision_alert = false;
 			}
 		}
 	}
