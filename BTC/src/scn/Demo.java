@@ -133,11 +133,11 @@ public class Demo extends Scene {
 
 	@Override
 	public void update(double dt) {
+		_timer += dt;
 		if (_aircraft.size() > 0){
 			_main.score().addTime(dt); 
 		}
 		_ordersBox.update(dt);
-		_timer += dt;
 		for (Aircraft plane : _aircraft) {
 			plane.update(dt);
 		}
@@ -152,8 +152,13 @@ public class Demo extends Scene {
 			}
 		}
 		_altimeter.update(dt);
-		if (_selectedAircraft != null && input.isKeyDown(input.KEY_W)) {
-			_selectedAircraft.update(-dt);
+		
+		if (_selectedAircraft != null && _selectedAircraft.isManuallyControlled()) {
+			if (input.isKeyDown(input.KEY_LEFT)) {
+				_selectedAircraft.turnLeft(dt);
+			} else if (input.isKeyDown(input.KEY_RIGHT)) {
+				_selectedAircraft.turnRight(dt);
+			}
 		}
 		
 		flightGenerationTimer += dt;

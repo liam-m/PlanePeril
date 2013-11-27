@@ -32,6 +32,7 @@ public class Aircraft {
 	private Vector _destination;
 	private graphics.Image _image;
 	private boolean _finished;
+	private double _turnDegree;
 
 	//Constructor
 	public Aircraft(String flightName, String originName, String destinationName, Waypoint originPoint, Waypoint destinationPoint, graphics.Image image, double speed, Waypoint[] sceneWaypoints) {
@@ -59,6 +60,7 @@ public class Aircraft {
 		_velocity = new Vector(x, y, 0).normalise().scaleBy(speed);
 		_finished = false;
 		_routeStage = 0;
+		_turnDegree = 0;
 	}
 	
 	@Override
@@ -130,20 +132,13 @@ public class Aircraft {
 		Vector dv = _velocity.scaleBy(dt);
 		_position = _position.add(dv);
 		
+		_turnDegree = 0;
 		// Update input if manually controlled
 		if (_manualControl) {
 			if (outOfBounds()) {
 				_finished = true;
 				return;
 			}
-			double angle = 0;
-			if (input.isKeyDown(input.KEY_RIGHT)) {
-				angle += dt;
-			}
-			if (input.isKeyDown(input.KEY_LEFT)) {
-				angle -= dt;
-			}
-			if (angle != 0) turnBy(angle * _turnSpeed);
 			return;
 		}
 
@@ -173,8 +168,25 @@ public class Aircraft {
 		double y = _position.y();
 		return (x < RADIUS || x > window.width() + RADIUS - 32 || y < RADIUS || y > window.height() + RADIUS - 144);
 	}
+	
+	public boolean isTurningLeft() {
+		return _turnDegree < 0;
+	}
+	
+	public boolean isTurningRight() {
+		return _turnDegree > 0;
+	}
+	
+	public void turnLeft(double dt) {
+		turnBy(-dt * _turnSpeed);
+	}
+	
+	public void turnRight(double dt) {
+		turnBy(dt * _turnSpeed);
+	}
 
-	public void turnBy(double angle) {
+	private void turnBy(double angle) {
+		_turnDegree = angle;
 		double cosA = Math.cos(angle);
 		double sinA = Math.sin(angle);
 		double x = _velocity.x();
