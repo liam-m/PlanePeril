@@ -108,7 +108,6 @@ public class OrdersBox {
 			} else {
 				if (_currentOrder >= LINES) {
 					ripple();
-					_currentOrder = LINES - 1;
 				}
 				_orders[_currentOrder] += _buffer.substring(0, 1);
 				_buffer = _buffer.substring(1);
@@ -121,6 +120,7 @@ public class OrdersBox {
 			_orders[i] = _orders[i+1];
 		}
 		_orders[LINES-1] = "";
+		_currentOrder -= 1;
 	}
 	
 	/**
