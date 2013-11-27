@@ -148,7 +148,6 @@ public class Aircraft {
 		}
 
 		// Update target
-		Vector oldTarget = _target;
 		if (isAt(_target) && _target.equals(_destination)) {
 			_finished = true;
 		} else if (isAt(_target) && (_routeStage == _route.length-1)) {
