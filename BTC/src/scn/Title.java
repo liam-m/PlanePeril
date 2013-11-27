@@ -34,10 +34,11 @@ public class Title extends Scene {
 		lib.ButtonText.Action play = new lib.ButtonText.Action() {
 			@Override
 			public void action() {
-				System.out.println("The full game is not currently available");
+//				_main.setScene(new Game(_main));
 			}
 		};
 		_buttons[1] = new lib.ButtonText("Play Full Game", play, window.height(), window.height()/2 + 126, window.width() - window.height(), 16, 8, 6);
+		_buttons[1].setAvailability(false);
 		// Exit Button
 		lib.ButtonText.Action exit = new lib.ButtonText.Action() {
 			@Override
