@@ -8,61 +8,101 @@ import cls.Vector;
 
 public class VectorTest {		
 	
-	@Test // Test getX function
+	// Test get functions
+	// Test getX function
+	@Test 
 	public void testGetX() {
 		Vector testVector = new Vector(1.0, 1.1, 1.2);
 		assertTrue("x = 1.0", 1.0 == testVector.x());
 	}
 	
-	@Test // Test getY function
+	// Test getY function
+	@Test 
 	public void testGetY() {
 		Vector testVector = new Vector(1.0, 1.1, 1.2);
 		assertTrue("y = 1.1", 1.1 == testVector.y());
 		
 	}
 	
-	@Test // Test getZ function
+	// Test getZ function
+	@Test 
 	public void testGetZ() {
 		Vector testVector = new Vector(1.0, 1.1, 1.2);
 		assertTrue("z = 1.2", 1.2 == testVector.z());		
 	}
 	
-	@Test // Test magnitude function
+	// Test magnitude function
+	@Test 
 	public void testMagnitude() {
 		Vector testVector = new Vector(1.0, 2.0, 2.0);
 		assertTrue("Magnitude = 3", 3.0 == testVector.magnitude());	
 	}
+	@Test 
+	public void testMagnitude2() {
+		Vector testVector = new Vector(12, 16, 21);
+		assertTrue("Magnitude = 29", 29 == testVector.magnitude());	
+	}
 	
-	@Test // Test magnitudeSquared function
+	// Test magnitudeSquared function
+	@Test 
 	public void testMagnitudeSquared() {
 		Vector testVector = new Vector(1.0, 2.0, 2.0);
 		assertTrue("Magnitude = 9", 9.0 == testVector.magnitudeSquared());	
 	}
+	@Test 
+	public void testMagnitudeSquared2() {
+		Vector testVector = new Vector(12, 16, 21);
+		assertTrue("Magnitude = 841", 841 == testVector.magnitudeSquared());	
+	}
 	
-	@Test // Test equals function
+	// Test equals function
+	@Test 
 	public void testEquals() {
 		Vector testVector = new Vector(1.9, 2.2, 7.4);
 		Vector testVector2 = new Vector(1.9, 2.2, 7.4);
 		assertTrue("Equals = true", testVector.equals(testVector2));	
 	}
+	@Test 
+	public void testEquals2() {
+		Vector testVector = new Vector(9, 4.2, 10/2);
+		Vector testVector2 = new Vector(9.0, 4.2, 5);
+		assertTrue("Equals = true", testVector.equals(testVector2));	
+	}
 	
-	@Test // Test addition function
+	// Test addition function
+	@Test 
 	public void testAddition() {
 		Vector testVector = new Vector(2.0, 2.0, 4.0);
 		Vector testVector2 = new Vector(1.0, 3.0, 2.0);
 		Vector resultVector = testVector.add(testVector2);
 		assertTrue("Result =  3.0, 4.0, 6.0", (3.0 == resultVector.x()) && (5.0 == resultVector.y()) && (6.0 == resultVector.z()));	
 	}
+	@Test 
+	public void testAddition2() {
+		Vector testVector = new Vector(6.0, 8.1, 16);
+		Vector testVector2 = new Vector(1.0, 2.0, 3.0);
+		Vector resultVector = testVector.add(testVector2);
+		assertTrue("Result =  7.0, 10.1, 19.0", (7.0 == resultVector.x()) && (10.1 == resultVector.y()) && (19.0 == resultVector.z()));	
+	}
 	
-	@Test // Test subtraction function
+	// Test subtraction function
+	@Test 
 	public void testSubtraction() {
 		Vector testVector = new Vector(2.0, 3.0, 4.0);
 		Vector testVector2 = new Vector(1.0, 1.0, 2.0);
 		Vector resultVector = testVector.sub(testVector2);
 		assertTrue("Result = 1.0, 2.0, 2.0", (1.0 == resultVector.x()) && (2.0 == resultVector.y()) && (2.0 == resultVector.z()));	
 	}
+	@Test 
+	public void testSubtraction2() {
+		Vector testVector = new Vector(14.0, 6, 100);
+		Vector testVector2 = new Vector(1.0, 6.0, 0);
+		Vector resultVector = testVector.sub(testVector2);
+		assertTrue("Result = 13.0, 0, 100.0", (13.0 == resultVector.x()) && (0 == resultVector.y()) && (100.0 == resultVector.z()));	
+	}
 	
-	@Test // Test normalise function
+	// Test normalise function
+	@Test 
 	public void testNormalise() {
 		Vector testVector = new Vector(1.0, 2.0, 2.0);
 		Vector resultVector = testVector.normalise();
@@ -70,7 +110,8 @@ public class VectorTest {
 		assertTrue("Normalise = 1/3, 2/3, 2/3",  (1/3 == resultVector.x()) && (2/3 == resultVector.y()) && (2/3 == resultVector.z()));	
 	}
 	
-	@Test // Test angle between function
+	// Test angle between function
+	@Test 
 	public void testAngle() {
 		Vector testVector = new Vector(2.0, 2.0, 4.0);
 		Vector testVector2 = new Vector(1.0, 3.0, 2.0);
