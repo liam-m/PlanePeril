@@ -101,6 +101,20 @@ public class VectorTest {
 		assertTrue("Result = 13.0, 0, 100.0", (13.0 == resultVector.x()) && (0 == resultVector.y()) && (100.0 == resultVector.z()));	
 	}
 	
+	// Test scaleBy function
+	@Test
+	public void testScaleBy(){
+		Vector testVector = new Vector(1, 2, 3);
+		Vector resultVector = testVector.scaleBy(1.0);
+		assertTrue("Equals = true",  (1 == resultVector.x()) && (2 == resultVector.y()) && (3 == resultVector.z()));
+	}
+	@Test
+	public void testScaleBy2(){
+		Vector testVector = new Vector(1, 2, 3);
+		Vector resultVector = testVector.scaleBy(2.0);
+		assertTrue("Equals = true",  (2 == resultVector.x()) && (4 == resultVector.y()) && (6 == resultVector.z()));
+	}
+	
 	// Test normalise function
 	@Test 
 	public void testNormalise() {
@@ -109,6 +123,7 @@ public class VectorTest {
 		// This is wrong
 		assertTrue("Normalise = 1/3, 2/3, 2/3",  (1/3 == resultVector.x()) && (2/3 == resultVector.y()) && (2/3 == resultVector.z()));	
 	}
+	
 	
 	// Test angle between function
 	@Test 
