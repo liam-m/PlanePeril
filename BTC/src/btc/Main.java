@@ -19,29 +19,29 @@ public class Main implements input.EventHandler {
 	final private int WIDTH = 1280;
 	final private int HEIGHT = 960;
 
-	private double _lastFrame;
-	private double _dt;
-	private java.util.Stack<scn.Scene> _sceneStack;
-	private scn.Scene _scene;
+	private double lastFrameTime;
+	private double dt;
+	private java.util.Stack<scn.Scene> sceneStack;
+	private scn.Scene currentScene;
 	private cls.Score _score;
 	
 	public Main() {
 		start();
 		while(!window.isClosed()) {
-			_dt = getDeltaTime();
-			update(_dt);
+			dt = getDeltaTime();
+			update(dt);
 			draw();
 		}
 		quit();
 	}
 	
 	private void start() {
-		_lastFrame = (double)(Sys.getTime()) / Sys.getTimerResolution();
+		lastFrameTime = (double)(Sys.getTime()) / Sys.getTimerResolution();
 		window.initialise(TITLE, WIDTH, HEIGHT);
 		graphics.initialise();
 		graphics.Font font = graphics.newBitmapFont("gfx" + File.separator + "font.png", "ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz1234567890.,_-!?()[]><#~:;/\\^'\"{}£$@@@@@@@@");
 		graphics.setFont(font);
-		_sceneStack = new java.util.Stack<scn.Scene>();
+		sceneStack = new java.util.Stack<scn.Scene>();
 		setScene(new scn.Title(this));
 		_score = new cls.Score();
 	}
@@ -49,59 +49,59 @@ public class Main implements input.EventHandler {
 	private void update(double dt) {
 		input.update(this);
 		window.update();
-		_scene.update(dt);
+		currentScene.update(dt);
 	}
 	
 	private double getDeltaTime() {
 		double time = (double)(Sys.getTime()) / Sys.getTimerResolution();
-	    double delta = (time - _lastFrame);
-	    _lastFrame = time;
+	    double delta = (time - lastFrameTime);
+	    lastFrameTime = time;
 	    return delta;
 	}
 	
 	private void draw() {
 		graphics.clear();
-		_scene.draw();
+		currentScene.draw();
 	}
 	
 	public void quit() {
-		_scene.close();
+		currentScene.close();
 		window.dispose();
 		audio.dispose();
 		System.exit(0);
 	}
 	
 	public void setScene(scn.Scene newScene) {
-		if (_scene != null) _scene.close();
-		_sceneStack.push(newScene);
-		_scene = _sceneStack.peek();
-		_scene.start();
+		if (currentScene != null) currentScene.close();
+		sceneStack.push(newScene);
+		currentScene = sceneStack.peek();
+		currentScene.start();
 	}
 	
 	public void closeScene() {
-		_scene.close();
-		_sceneStack.pop();
-		_scene = _sceneStack.peek(); 
+		currentScene.close();
+		sceneStack.pop();
+		currentScene = sceneStack.peek(); 
 	}
 
 	@Override
 	public void mousePressed(int key, int x, int y) {
-		_scene.mousePressed(key, x, y);
+		currentScene.mousePressed(key, x, y);
 	}
 
 	@Override
 	public void mouseReleased(int key, int x, int y) {
-		_scene.mouseReleased(key, x, y);
+		currentScene.mouseReleased(key, x, y);
 	}
 
 	@Override
 	public void keyPressed(int key) {
-		_scene.keyPressed(key);
+		currentScene.keyPressed(key);
 	}
 
 	@Override
 	public void keyReleased(int key) {
-		_scene.keyReleased(key);
+		currentScene.keyReleased(key);
 	}
 
 	public cls.Score score() {
