@@ -6,7 +6,6 @@ public abstract class Scene implements lib.jog.input.EventHandler {
 	
 	protected Scene(btc.Main main) {
 		_main = main;
-		start();
 	}
 	
 	abstract public void start();
