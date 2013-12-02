@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.Stack;
 
-import org.newdawn.slick.AngelCodeFont;
-
 import lib.jog.graphics;
 import lib.jog.input;
 import lib.jog.window;
@@ -18,140 +16,138 @@ public class Aircraft {
 	public final static int RADIUS = 16;
 	public final static int MOUSE_LENIANCY = 16;
 	
-	private double _speed;
-	private double _turnSpeed = Math.PI / 4;
+	private double turnSpeed = Math.PI / 4; // How much it can turn in per second.
 	
-	private Vector _position;
-	private Vector _velocity;
-	private boolean _manualControl;
-	private String _flightName;
-	private Vector _target;
-	private String _originName, _destinationName;
-	private Waypoint[] _route;
-	private int _routeStage;
-	private Vector _destination;
-	private graphics.Image _image;
-	private boolean _finished;
-	private double _turnDegree;
+	private Vector position;
+	private Vector velocity;
+	private boolean isManuallyControlled;
+	private String flightName;
+	private Vector currentTarget;
+	private String originName, destinationName;
+	private Waypoint[] route;
+	private int currentRouteStage;
+	private Vector destination;
+	private graphics.Image image;
+	private boolean hasFinished;
+	private double currentlyTurningBy;
 	private java.util.ArrayList<Aircraft> planesTooNear = new java.util.ArrayList<Aircraft>();
 
 	//Constructor
-	public Aircraft(String flightName, String originName, String destinationName, Waypoint originPoint, Waypoint destinationPoint, graphics.Image image, double speed, Waypoint[] sceneWaypoints) {
-		_flightName = flightName;
-		_destinationName = destinationName;
-		_originName = originName;
+	public Aircraft(String name, String nameOrigin, String nameDestination, Waypoint originPoint, Waypoint destinationPoint, graphics.Image img, double speed, Waypoint[] sceneWaypoints) {
+		flightName = name;
+		destinationName = nameOrigin;
+		originName = nameDestination;
 		
 		// Find route
 		//djikstraRoute(originPoint, destinationPoint, sceneWaypoints);
-		_route = findGreedyRoute(originPoint, destinationPoint, sceneWaypoints);
+		route = findGreedyRoute(originPoint, destinationPoint, sceneWaypoints);
 		
 		
-		_target = _route[0].position();
-		_image = image;
-		_speed = speed;
-		_position = originPoint.position(); //place on spawn waypoint
+		currentTarget = route[0].position();
+		image = img;
+		position = originPoint.position(); //place on spawn waypoint
 		int offset = new Random().nextInt((SEPARATION_RULE - (-SEPARATION_RULE))) + (-SEPARATION_RULE); //generate a small random offset
 		System.out.println("Offset by " + offset);
-		_position = _position.add(new Vector(offset, offset, 30000));//offset spawn position. Helps avoid aircraft crashes very soon after spawn
+		position = position.add(new Vector(offset, offset, 30000));//offset spawn position. Helps avoid aircraft crashes very soon after spawn
 		
-		_destination = destinationPoint.position();
-		_manualControl = false;
-		double x = _target.x() - _position.x();
-		double y = _target.y() - _position.y();
-		_velocity = new Vector(x, y, 0).normalise().scaleBy(speed);
-		_finished = false;
-		_routeStage = 0;
-		_turnDegree = 0;
+		destination = destinationPoint.position();
+		isManuallyControlled = false;
+		double x = currentTarget.x() - position.x();
+		double y = currentTarget.y() - position.y();
+		velocity = new Vector(x, y, 0).normalise().scaleBy(speed);
+		hasFinished = false;
+		currentRouteStage = 0;
+		currentlyTurningBy = 0;
 	}
 	
 	@Override
 	public String toString() {
 		String repr = "";
-		repr += "<Aircraft> (" + _flightName + ")\n";
+		repr += "<Aircraft> (" + flightName + ")\n";
 		repr += "------------------\n";
-		repr += "Origin:\t\t\t" + _originName + " (" + _position.x() + ", " + _position.y() + ")\n";
-		repr += "Destination:\t\t" + _destinationName + " (" + _destination.x() + ", " + _destination.y() + ")\n";
-		repr += "Flight Path:\t\t(" + _target.x() + ", " + _target.y() + "),\n";
-		for (int i = 1; i < _route.length; i ++) {
-			repr += "\t\t\t(" + _route[i].position().x() + ", " + _route[i].position().y() + "),\n";
+		repr += "Origin:\t\t\t" + originName + " (" + position.x() + ", " + position.y() + ")\n";
+		repr += "Destination:\t\t" + destinationName + " (" + destination.x() + ", " + destination.y() + ")\n";
+		repr += "Flight Path:\t\t(" + currentTarget.x() + ", " + currentTarget.y() + "),\n";
+		for (int i = 1; i < route.length; i ++) {
+			repr += "\t\t\t(" + route[i].position().x() + ", " + route[i].position().y() + "),\n";
 		}
 		return repr;
 	}
 	
 	public Vector position() {
-		return _position;
+		return position;
 	}
 	
 	public String name () {
-		return _flightName;
+		return flightName;
 	}
 	
 	public String originName() {
-		return _originName;
+		return originName;
 	}
 	
 	public String destinationName() {
-		return _destinationName;
+		return destinationName;
 	}
 	
 	public boolean isFinished() {
-		return _finished;
+		return hasFinished;
 	}
 	
 	public boolean isManuallyControlled() {
-		return _manualControl;
+		return isManuallyControlled;
 	}
 	
 	public int flightPathContains(Waypoint waypoint) {
 		int index = -1;
-		for (int i = 0; i < _route.length; i ++) {
-			if (_route[i] == waypoint) index = i;
+		for (int i = 0; i < route.length; i ++) {
+			if (route[i] == waypoint) index = i;
 		}
 		return index;
 	}
 	
 	public void alterPath(int routeStage, Waypoint newWaypoint) {
-		_route[routeStage] = newWaypoint;
-		if (!_manualControl) resetBearing();
-		if (routeStage == _routeStage){
-			_target = newWaypoint.position();
+		route[routeStage] = newWaypoint;
+		if (!isManuallyControlled) resetBearing();
+		if (routeStage == currentRouteStage){
+			currentTarget = newWaypoint.position();
 			turnTowardsTarget(0);
 		}
 	}
 	
 	public boolean isMouseOver(int mx, int my) {
-		double dx = _position.x() - mx;
-		double dy = _position.y() - my;
+		double dx = position.x() - mx;
+		double dy = position.y() - my;
 		return dx*dx + dy*dy < MOUSE_LENIANCY*MOUSE_LENIANCY;
 	}
 	public boolean isMouseOver() { return isMouseOver(input.mouseX(), input.mouseY()); }
 	
 	public void update(double dt) {
-		if (_finished) return;
+		if (hasFinished) return;
 		
 		// Update position
-		Vector dv = _velocity.scaleBy(dt);
-		_position = _position.add(dv);
+		Vector dv = velocity.scaleBy(dt);
+		position = position.add(dv);
 		
-		_turnDegree = 0;
+		currentlyTurningBy = 0;
 		// Update input if manually controlled
-		if (_manualControl) {
+		if (isManuallyControlled) {
 			if (outOfBounds()) {
-				_finished = true;
+				hasFinished = true;
 				return;
 			}
 			return;
 		}
 
 		// Update target
-		if (isAt(_target) && _target.equals(_destination)) {
-			_finished = true;
-		} else if (isAt(_target) && (_routeStage == _route.length-1)) {
-			_routeStage ++;
-			_target = _destination;
-		} else if (isAt(_target)) {
-			_routeStage ++;
-			_target = _route[_routeStage].position();
+		if (isAt(currentTarget) && currentTarget.equals(destination)) {
+			hasFinished = true;
+		} else if (isAt(currentTarget) && (currentRouteStage == route.length-1)) {
+			currentRouteStage ++;
+			currentTarget = destination;
+		} else if (isAt(currentTarget)) {
+			currentRouteStage ++;
+			currentTarget = route[currentRouteStage].position();
 		}
 		
 		// Update bearing
@@ -161,38 +157,38 @@ public class Aircraft {
 	}
 	
 	private double angleToTarget() {
-		return Math.atan2(_target.y() - _position.y(), _target.x() - _position.x());
+		return Math.atan2(currentTarget.y() - position.y(), currentTarget.x() - position.x());
 	}
 	
 	private boolean outOfBounds() {
-		double x = _position.x();
-		double y = _position.y();
+		double x = position.x();
+		double y = position.y();
 		return (x < RADIUS || x > window.width() + RADIUS - 32 || y < RADIUS || y > window.height() + RADIUS - 144);
 	}
 	
 	public boolean isTurningLeft() {
-		return _turnDegree < 0;
+		return currentlyTurningBy < 0;
 	}
 	
 	public boolean isTurningRight() {
-		return _turnDegree > 0;
+		return currentlyTurningBy > 0;
 	}
 	
 	public void turnLeft(double dt) {
-		turnBy(-dt * _turnSpeed);
+		turnBy(-dt * turnSpeed);
 	}
 	
 	public void turnRight(double dt) {
-		turnBy(dt * _turnSpeed);
+		turnBy(dt * turnSpeed);
 	}
 
 	private void turnBy(double angle) {
-		_turnDegree = angle;
+		currentlyTurningBy = angle;
 		double cosA = Math.cos(angle);
 		double sinA = Math.sin(angle);
-		double x = _velocity.x();
-		double y = _velocity.y();
-		_velocity = new Vector(x*cosA - y*sinA, y*cosA + x*sinA, _velocity.z());
+		double x = velocity.x();
+		double y = velocity.y();
+		velocity = new Vector(x*cosA - y*sinA, y*cosA + x*sinA, velocity.z());
 	}
 
 	private void turnTowardsTarget(double dt) {
@@ -206,22 +202,22 @@ public class Aircraft {
 		// Get which way to turn.
 		int angleDirection = (int)(angleDifference /= Math.abs(angleDifference));
 		if (crossesPosativeNegativeDivide) angleDirection *= -1;  
-		double angleMagnitude = Math.min(Math.abs((dt * _turnSpeed)), Math.abs(angleDifference)); 
+		double angleMagnitude = Math.min(Math.abs((dt * turnSpeed)), Math.abs(angleDifference)); 
 		turnBy(angleMagnitude * angleDirection);
 	}
 	
 	public void draw() {
 		graphics.setColour(128, 128, 128);
-		graphics.draw(_image, _position.x(), _position.y(), bearing(), 8, 8);
+		graphics.draw(image, position.x(), position.y(), bearing(), 8, 8);
 		graphics.setColour(128, 128, 128, 96);
-		graphics.print(String.valueOf(altitude()) + "£", _position.x()+8, _position.y()-8);
+		graphics.print(String.valueOf(altitude()) + "£", position.x()+8, position.y()-8);
 		drawWarningCircles();
 	}
 	
 	private void drawWarningCircles() {
 		for (Aircraft plane : planesTooNear) {
-			Vector midPoint = _position.add(plane._position).scaleBy(0.5);
-			double radius = _position.sub(midPoint).magnitude() * 2;
+			Vector midPoint = position.add(plane.position).scaleBy(0.5);
+			double radius = position.sub(midPoint).magnitude() * 2;
 			graphics.setColour(128, 0, 0);
 			graphics.circle(false, midPoint.x(), midPoint.y(), radius);
 		}
@@ -236,35 +232,35 @@ public class Aircraft {
 	}
 	
 	private double altitude() {
-		return _position.z();
+		return position.z();
 	}
 	
 	public void drawFlightPath() {
 		graphics.setColour(0, 128, 128);
-		if (_target != _destination) {
-			graphics.line(_position.x(), _position.y(), _route[_routeStage].position().x(), _route[_routeStage].position().y());
+		if (currentTarget != destination) {
+			graphics.line(position.x(), position.y(), route[currentRouteStage].position().x(), route[currentRouteStage].position().y());
 		}
-		for (int i = _routeStage; i < _route.length-1; i++) {
-			graphics.line(_route[i].position().x(), _route[i].position().y(), _route[i+1].position().x(), _route[i+1].position().y());	
+		for (int i = currentRouteStage; i < route.length-1; i++) {
+			graphics.line(route[i].position().x(), route[i].position().y(), route[i+1].position().x(), route[i+1].position().y());	
 		}
-		if (_target == _destination) {
-			graphics.line(_position.x(), _position.y(), _destination.x(), _destination.y());
+		if (currentTarget == destination) {
+			graphics.line(position.x(), position.y(), destination.x(), destination.y());
 		} else {
-			graphics.line(_route[_route.length-1].position().x(), _route[_route.length-1].position().y(), _destination.x(), _destination.y());
+			graphics.line(route[route.length-1].position().x(), route[route.length-1].position().y(), destination.x(), destination.y());
 		}
 	}
 	
 	public double bearing() {
-		return Math.atan2(_velocity.y(), _velocity.x());
+		return Math.atan2(velocity.y(), velocity.x());
 	}
 	
 	public double speed() {
-		return _velocity.magnitude();
+		return velocity.magnitude();
 	}
 	
 	public boolean isAt(Vector point) {
-		double dy = point.y() - _position.y();
-		double dx = point.x() - _position.x();
+		double dy = point.y() - position.y();
+		double dx = point.x() - position.x();
 		return dy*dy + dx*dx < 16;
 	}
 	
@@ -273,7 +269,7 @@ public class Aircraft {
 		int n = 4;
 		Waypoint[] route = new Waypoint[n];
 		for (int i = 0; i < n; i ++ ) {
-			route[i] = Demo._waypoints[(int)( Math.random() * Demo._waypoints.length )];
+			route[i] = Demo.airspaceWaypoints[(int)( Math.random() * Demo.airspaceWaypoints.length )];
 		}
 		return route;
 	}
@@ -392,7 +388,7 @@ public class Aircraft {
 			
 			if (cheapest.position().equals(destination.position())){ //terminate if the next node is the destination
 				//System.out.println("Found Destination");
-				_route = buildRoute(sceneWaypoints, previous, destination);
+				route = buildRoute(sceneWaypoints, previous, destination);
 				break;
 			} else {
 				//System.out.println("Not dest");
@@ -458,7 +454,7 @@ public class Aircraft {
 		for (Aircraft plane : scene.aircraftList()) {
 			if (plane != this && isWithin(plane, RADIUS)) {
 				scene.gameOver(this, plane);
-				_finished = true;
+				hasFinished = true;
 			} else if (plane != this && isWithin(plane, SEPARATION_RULE)) {
 				scene.main().score().addTimeViolated(dt);
 				planesTooNear.add(plane);
@@ -467,20 +463,20 @@ public class Aircraft {
 	}
 	
 	private boolean isWithin(Aircraft aircraft, int distance) {
-		double dx = aircraft.position().x() - _position.x();
-		double dy = aircraft.position().y() - _position.y();
-		double dz = aircraft.position().z() - _position.z();
+		double dx = aircraft.position().x() - position.x();
+		double dy = aircraft.position().y() - position.y();
+		double dz = aircraft.position().z() - position.z();
 		return dx*dx + dy*dy + dz*dz < distance*distance;
 	}
 
 	public void toggleManualControl() {
-		_manualControl = !_manualControl;
-		if (!_manualControl) resetBearing();
+		isManuallyControlled = !isManuallyControlled;
+		if (!isManuallyControlled) resetBearing();
 	}
 	
 	private void resetBearing() {
-		if (_routeStage < _route.length) {
-			_target = _route[_routeStage].position();
+		if (currentRouteStage < route.length) {
+			currentTarget = route[currentRouteStage].position();
 		}
 		turnTowardsTarget(0);
 	}
@@ -494,7 +490,7 @@ public class Aircraft {
 	}
 	
 	private void changeAltitude(int height) {
-		_position = new Vector(_position.x(), _position.y(), _position.z() + height);
+		position = new Vector(position.x(), position.y(), position.z() + height);
 	}
 	
 }

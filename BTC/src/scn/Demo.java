@@ -14,21 +14,21 @@ import btc.Main;
 
 public class Demo extends Scene {
 	
-	private final cls.Vector[] _locationPoints = new cls.Vector[] {
+	private final cls.Vector[] LOCATION_POSITIONS = new cls.Vector[] {
 		new cls.Vector(-64, 32, 9000),
 		new cls.Vector(-64, 64, 9000),
 		new cls.Vector(window.width() + 32, 32, 9000),
 		new cls.Vector(window.width() + 32, 64, 9000),
 	};
 	
-	private final String[] _locationNames = new String[] {
+	private final String[] LOCATION_NAMES = new String[] {
 		"North West Top Leftonia",
 		"Bottom Left",
 		"Top Right",
 		"Bottom Right",
 	};
 	
-	public static Waypoint[] _locationWayPoints = new Waypoint[] {
+	public static Waypoint[] locationWaypoints = new Waypoint[] {
 		/* A set of Waypoints which are origin / destination points */
 		new Waypoint(-64, 32, true), //top left
 		new Waypoint(-64, window.height(), true), //bottom left
@@ -36,7 +36,7 @@ public class Demo extends Scene {
 		new Waypoint(window.width() + 32, window.height(), true), //bottom right
 	};
 
-	public static Waypoint[] _waypoints = new Waypoint[] {		
+	public static Waypoint[] airspaceWaypoints = new Waypoint[] {		
 		/* All waypoints in the airspace, including location Way Points*/
 	
 		//airspace waypoints
@@ -51,10 +51,10 @@ public class Demo extends Scene {
 		new Waypoint(800, 750, false),//8
 		new Waypoint(1200, 750, false),//9
 		//destination/origin waypoints - present in this list for pathfinding.
-		_locationWayPoints[0], //10
-		_locationWayPoints[1], //11
-		_locationWayPoints[2],//12
-		_locationWayPoints[3],//13
+		locationWaypoints[0], //10
+		locationWaypoints[1], //11
+		locationWaypoints[2],//12
+		locationWaypoints[3],//13
 	};
 	
 	private final int PLANE_INFO_X = 16;
@@ -72,17 +72,17 @@ public class Demo extends Scene {
 	private final int ORDERSBOX_W = window.width() - (ORDERSBOX_X + 16);
 	private final int ORDERSBOX_H = 112;
 	
-	private lib.OrdersBox _ordersBox;
-	private double _timer;
-	private Aircraft _selectedAircraft;
-	private Waypoint _selectedWaypoint;
-	private int _selectedPathpoint;
-	private java.util.ArrayList<Aircraft> _aircraft;
-	private graphics.Image _airplaneImage;
+	private lib.OrdersBox ordersBox;
+	private double timeElapsed;
+	private Aircraft selectedAircraft;
+	private Waypoint selectedWaypoint;
+	private int selectedPathpoint;
+	private java.util.ArrayList<Aircraft> aircraftInAirspace;
+	private graphics.Image aircraftImage;
 	private lib.ButtonText _manualOverrideButton;
-	private lib.Altimeter _altimeter;
+	private lib.Altimeter altimeter;
 	private static double flightGenerationInterval = 12;
-	private double flightGenerationTimer = flightGenerationInterval;
+	private double flightGenerationTimeElapsed = flightGenerationInterval;
 	private int maxAircraft = 4;
 	
 	public Main main() {
@@ -90,7 +90,7 @@ public class Demo extends Scene {
 	}
 	
 	public java.util.ArrayList<Aircraft> aircraftList() {
-		return _aircraft;
+		return aircraftInAirspace;
 	}
 
 	public Demo(Main main) {
@@ -99,81 +99,81 @@ public class Demo extends Scene {
 
 	@Override
 	public void start() {
-		_ordersBox = new lib.OrdersBox(ORDERSBOX_X, ORDERSBOX_Y, ORDERSBOX_W, ORDERSBOX_H, 6);
-		_aircraft = new java.util.ArrayList<Aircraft>();
-		_airplaneImage = graphics.newImage("gfx" + File.separator + "plane.png");
+		ordersBox = new lib.OrdersBox(ORDERSBOX_X, ORDERSBOX_Y, ORDERSBOX_W, ORDERSBOX_H, 6);
+		aircraftInAirspace = new java.util.ArrayList<Aircraft>();
+		aircraftImage = graphics.newImage("gfx" + File.separator + "plane.png");
 		lib.ButtonText.Action manual = new lib.ButtonText.Action() {
 			@Override
 			public void action() {
 				// _selectedAircraft.manuallyControl();
-				System.out.println("Assuming manual control of " + _selectedAircraft.name() + ".");
+				System.out.println("Assuming manual control of " + selectedAircraft.name() + ".");
 				toggleManualControl();
 			}
 		};
 		_manualOverrideButton = new lib.ButtonText("Take Control", manual, (window.width() - 128) / 2, 32, 128, 32, 8, 4);
-		_timer = 0;
-		_selectedAircraft = null;
-		_selectedWaypoint = null;
-		_selectedPathpoint = -1;
+		timeElapsed = 0;
+		selectedAircraft = null;
+		selectedWaypoint = null;
+		selectedPathpoint = -1;
 		
 		_manualOverrideButton = new lib.ButtonText(" Take Control", manual, (window.width() - 128) / 2, 32, 128, 32, 8, 4);
-		_altimeter = new lib.Altimeter(ALTIMETER_X, ALTIMETER_Y, ALTIMETER_W, ALTIMETER_H);
-		_timer = 0;
+		altimeter = new lib.Altimeter(ALTIMETER_X, ALTIMETER_Y, ALTIMETER_W, ALTIMETER_H);
+		timeElapsed = 0;
 		deselectAircraft();
 	}
 	
 	private void toggleManualControl() {
-		if (_selectedAircraft == null) return;
-		_selectedAircraft.toggleManualControl();
-		_manualOverrideButton.setText( (_selectedAircraft.isManuallyControlled() ? "Remove" : " Take") + " Control");
+		if (selectedAircraft == null) return;
+		selectedAircraft.toggleManualControl();
+		_manualOverrideButton.setText( (selectedAircraft.isManuallyControlled() ? "Remove" : " Take") + " Control");
 	}
 	
 	private void deselectAircraft() {
 		System.out.println("Deselecting Aircraft");
-		if (_selectedAircraft != null && _selectedAircraft.isManuallyControlled()) {
-			_selectedAircraft.toggleManualControl();
+		if (selectedAircraft != null && selectedAircraft.isManuallyControlled()) {
+			selectedAircraft.toggleManualControl();
 			_manualOverrideButton.setText(" Take Control");
 		}
-		_selectedAircraft = null;
-		_selectedWaypoint = null; 
-		_selectedPathpoint = -1;
-		_altimeter.hide();
+		selectedAircraft = null;
+		selectedWaypoint = null; 
+		selectedPathpoint = -1;
+		altimeter.hide();
 	}
 
 	@Override
 	public void update(double dt) {
-		_timer += dt;
-		if (_aircraft.size() > 0){
+		timeElapsed += dt;
+		if (aircraftInAirspace.size() > 0){
 			_main.score().addTime(dt); 
 		}
-		_ordersBox.update(dt);
-		for (Aircraft plane : _aircraft) {
+		ordersBox.update(dt);
+		for (Aircraft plane : aircraftInAirspace) {
 			plane.update(dt);
 		}
 		checkCollisions(dt);
-		for (int i = _aircraft.size()-1; i >=0; i --) {
-			if (_aircraft.get(i).isFinished()) {
-				if (_aircraft.get(i) == _selectedAircraft) {
+		for (int i = aircraftInAirspace.size()-1; i >=0; i --) {
+			if (aircraftInAirspace.get(i).isFinished()) {
+				if (aircraftInAirspace.get(i) == selectedAircraft) {
 					deselectAircraft();
 				}
-				_aircraft.remove(i);
+				aircraftInAirspace.remove(i);
 				_main.score().addFlight();
 			}
 		}
-		_altimeter.update(dt);
+		altimeter.update(dt);
 		
-		if (_selectedAircraft != null && _selectedAircraft.isManuallyControlled()) {
+		if (selectedAircraft != null && selectedAircraft.isManuallyControlled()) {
 			if (input.isKeyDown(input.KEY_LEFT)) {
-				_selectedAircraft.turnLeft(dt);
+				selectedAircraft.turnLeft(dt);
 			} else if (input.isKeyDown(input.KEY_RIGHT)) {
-				_selectedAircraft.turnRight(dt);
+				selectedAircraft.turnRight(dt);
 			}
 		}
 		
-		flightGenerationTimer += dt;
-		if(flightGenerationTimer >= flightGenerationInterval){
-			flightGenerationTimer -= flightGenerationInterval;
-			if (_aircraft.size() < maxAircraft){
+		flightGenerationTimeElapsed += dt;
+		if(flightGenerationTimeElapsed >= flightGenerationInterval){
+			flightGenerationTimeElapsed -= flightGenerationInterval;
+			if (aircraftInAirspace.size() < maxAircraft){
 				generateFlight();
 			}
 			
@@ -181,7 +181,7 @@ public class Demo extends Scene {
 	}
 	
 	private void checkCollisions(double dt) {
-		for (Aircraft plane : _aircraft) {
+		for (Aircraft plane : aircraftInAirspace) {
 			plane.updateCollisions(dt, this);
 		}
 	}
@@ -195,49 +195,49 @@ public class Demo extends Scene {
 	@Override
 	public void mousePressed(int key, int x, int y) {
 		if (key == input.MOUSE_LEFT) {
-			Aircraft newSelected = _selectedAircraft;
-			for (Aircraft a : _aircraft) {
+			Aircraft newSelected = selectedAircraft;
+			for (Aircraft a : aircraftInAirspace) {
 				if (a.isMouseOver(x-16, y-16)) {
 					newSelected = a;
 				}
 			}
-			if (newSelected != _selectedAircraft) {
+			if (newSelected != selectedAircraft) {
 				deselectAircraft();
-				_selectedAircraft = newSelected;
+				selectedAircraft = newSelected;
 			}
-			_altimeter.show(_selectedAircraft);
-			for (Waypoint w : _waypoints) {
-				if (_selectedAircraft != null){
-					if (w.isMouseOver(x-16, y-16) && _selectedAircraft.flightPathContains(w) > -1) {
-						_selectedWaypoint = w;
-						_selectedPathpoint = _selectedAircraft.flightPathContains(w);
+			altimeter.show(selectedAircraft);
+			for (Waypoint w : airspaceWaypoints) {
+				if (selectedAircraft != null){
+					if (w.isMouseOver(x-16, y-16) && selectedAircraft.flightPathContains(w) > -1) {
+						selectedWaypoint = w;
+						selectedPathpoint = selectedAircraft.flightPathContains(w);
 					}
 				}
 			}
-			for (Waypoint w : _waypoints) {
-				if (w.isMouseOver(x-16, y-16) && _selectedAircraft.flightPathContains(w) > -1) {
-					_selectedWaypoint = w;
-					_selectedPathpoint = _selectedAircraft.flightPathContains(w);
+			for (Waypoint w : airspaceWaypoints) {
+				if (w.isMouseOver(x-16, y-16) && selectedAircraft.flightPathContains(w) > -1) {
+					selectedWaypoint = w;
+					selectedPathpoint = selectedAircraft.flightPathContains(w);
 				}
 			}
 		}
 		if (key == input.MOUSE_RIGHT) deselectAircraft();
-		_altimeter.mousePressed(key, x, y);
+		altimeter.mousePressed(key, x, y);
 	}
 
 	@Override
 	public void mouseReleased(int key, int x, int y) {
-		if (_selectedAircraft != null && _manualOverrideButton.isMouseOver(x, y)) _manualOverrideButton.act();
-		if (key == input.MOUSE_LEFT && _selectedWaypoint != null) {
-			for (Waypoint w : _waypoints) {
+		if (selectedAircraft != null && _manualOverrideButton.isMouseOver(x, y)) _manualOverrideButton.act();
+		if (key == input.MOUSE_LEFT && selectedWaypoint != null) {
+			for (Waypoint w : airspaceWaypoints) {
 				if (w.isMouseOver(x-16, y-16)) {
-					_selectedAircraft.alterPath(_selectedPathpoint, w);
-					_selectedPathpoint = -1;
-					_selectedWaypoint = null;
+					selectedAircraft.alterPath(selectedPathpoint, w);
+					selectedPathpoint = -1;
+					selectedWaypoint = null;
 				}
 			}
 		}
-		_altimeter.mouseReleased(key, x, y);
+		altimeter.mouseReleased(key, x, y);
 	}
 
 	@Override
@@ -273,8 +273,8 @@ public class Demo extends Scene {
 		drawMap();
 		graphics.setViewport();
 		
-		_ordersBox.draw();
-		_altimeter.draw();
+		ordersBox.draw();
+		altimeter.draw();
 		
 		drawPlaneInfo();
 		
@@ -284,17 +284,17 @@ public class Demo extends Scene {
 	}
 	
 	private void drawMap() {
-		for (Waypoint waypoint : _waypoints) {
+		for (Waypoint waypoint : airspaceWaypoints) {
 			waypoint.draw();
 		}
 		graphics.setColour(255, 255, 255);
-		for (Aircraft aircraft : _aircraft) {
+		for (Aircraft aircraft : aircraftInAirspace) {
 			aircraft.draw();
 		}
 		
-		if (_selectedAircraft != null) {
+		if (selectedAircraft != null) {
 			// Flight Path
-			_selectedAircraft.drawFlightPath();
+			selectedAircraft.drawFlightPath();
 			graphics.setColour(0, 128, 0);
 			// Override Button
 			graphics.setColour(0, 0, 0);
@@ -303,7 +303,7 @@ public class Demo extends Scene {
 			graphics.rectangle(false, (window.width() - 128) / 2, 16, 128, 32);
 			_manualOverrideButton.draw();
 			
-			_selectedAircraft.drawFlightPath();
+			selectedAircraft.drawFlightPath();
 			graphics.setColour(0, 128, 0);
 			
 		}
@@ -316,49 +316,49 @@ public class Demo extends Scene {
 	
 	private void drawPlaneInfo() {
 		graphics.rectangle(false, PLANE_INFO_X, PLANE_INFO_Y, PLANE_INFO_W, PLANE_INFO_H);
-		if (_selectedAircraft != null) {
+		if (selectedAircraft != null) {
 			graphics.setViewport(PLANE_INFO_X, PLANE_INFO_Y, PLANE_INFO_W, PLANE_INFO_H);
-			graphics.printCentred(_selectedAircraft.name(), 0, 5, 2, PLANE_INFO_W);
+			graphics.printCentred(selectedAircraft.name(), 0, 5, 2, PLANE_INFO_W);
 			// Altitude
-			String altitude = String.valueOf(_selectedAircraft.position().z()) + "£";
+			String altitude = String.valueOf(selectedAircraft.position().z()) + "£";
 			graphics.print("Altitude:", 10, 40);
 			graphics.print(altitude, PLANE_INFO_W - 10 - altitude.length()*8, 40);
 			// Speed
-			String speed = String.format("%.2f", _selectedAircraft.speed() * 1.687810) + "$";
+			String speed = String.format("%.2f", selectedAircraft.speed() * 1.687810) + "$";
 			graphics.print("Speed:", 10, 55);
 			graphics.print(speed, PLANE_INFO_W - 10 - speed.length()*8, 55);
 			// Origin
 			graphics.print("Origin:", 10, 70);
-			graphics.print(_selectedAircraft.originName(), PLANE_INFO_W - 10 - _selectedAircraft.originName().length()*8, 70);
+			graphics.print(selectedAircraft.originName(), PLANE_INFO_W - 10 - selectedAircraft.originName().length()*8, 70);
 			// Destination
 			graphics.print("Destination:", 10, 85);
-			graphics.print(_selectedAircraft.destinationName(), PLANE_INFO_W - 10 - _selectedAircraft.destinationName().length()*8, 85);
+			graphics.print(selectedAircraft.destinationName(), PLANE_INFO_W - 10 - selectedAircraft.destinationName().length()*8, 85);
 			graphics.setViewport();
 		}
 	}
 	
 	private void drawScore() {
-		int hours = (int)(_timer / (60 * 60));
-		int minutes = (int)(_timer / 60);
+		int hours = (int)(timeElapsed / (60 * 60));
+		int minutes = (int)(timeElapsed / 60);
 		minutes %= 60;
-		double seconds = _timer % 60;
+		double seconds = timeElapsed % 60;
 		java.text.DecimalFormat df = new java.text.DecimalFormat("00.00");
 		String timePlayed = String.format("%d:%02d:", hours, minutes) + df.format(seconds); 
 		graphics.print(timePlayed, window.width() - (timePlayed.length() * 8), 0);
-		int planes = _aircraft.size();
-		graphics.print(String.valueOf(_aircraft.size()) + " plane" + (planes == 1 ? "" : "s") + " in the sky.", 256, 0);
+		int planes = aircraftInAirspace.size();
+		graphics.print(String.valueOf(aircraftInAirspace.size()) + " plane" + (planes == 1 ? "" : "s") + " in the sky.", 256, 0);
 		graphics.print("Score: " + _main.score().calculate(), 0, 0);
 	}
 	
 	private void generateFlight() {
 		// Origin and Destination
-		int o = randInt(0, _locationWayPoints.length);
-		int d = randInt(0, _locationWayPoints.length);
-		while (_locationNames[d] == _locationNames[o]){
-			d = randInt(0, _locationWayPoints.length);
+		int o = randInt(0, locationWaypoints.length);
+		int d = randInt(0, locationWaypoints.length);
+		while (LOCATION_NAMES[d] == LOCATION_NAMES[o]){
+			d = randInt(0, locationWaypoints.length);
 		}
-		String originName = _locationNames[o];
-		String destinationName = _locationNames[d];
+		String originName = LOCATION_NAMES[o];
+		String destinationName = LOCATION_NAMES[d];
 		
 /*		int side = randInt(0,1);
 		switch (side){
@@ -368,8 +368,8 @@ public class Demo extends Scene {
 			break;
 		}*/
 		
-		Waypoint originPoint = _locationWayPoints[o];
-		Waypoint destinationPoint = _locationWayPoints[d];
+		Waypoint originPoint = locationWaypoints[o];
+		Waypoint destinationPoint = locationWaypoints[d];
 		
 		// Name
 		String name = "";
@@ -377,15 +377,15 @@ public class Demo extends Scene {
 		while (nameTaken) {
 			name = "Flight " + (int)(900 * Math.random() + 100);
 			nameTaken = false;
-			for (Aircraft a : _aircraft) {
+			for (Aircraft a : aircraftInAirspace) {
 				if (a.name() == name) nameTaken = true;
 			}
 		}
 		// Add to world
-		_ordersBox.addOrder("<<< " + name + " incoming from " + originName + " heading towards " + destinationName + ".");
+		ordersBox.addOrder("<<< " + name + " incoming from " + originName + " heading towards " + destinationName + ".");
 		System.out.println("<<< " + name + " incoming from " + originName + " heading towards " + destinationName + ".");
-		Aircraft a = new Aircraft(name, originName, destinationName, originPoint, destinationPoint, _airplaneImage, 32 + (int)(10 * Math.random()), _waypoints);
-		_aircraft.add(a);
+		Aircraft a = new Aircraft(name, originName, destinationName, originPoint, destinationPoint, aircraftImage, 32 + (int)(10 * Math.random()), airspaceWaypoints);
+		aircraftInAirspace.add(a);
 	}
 	
 	/**
