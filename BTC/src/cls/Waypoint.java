@@ -12,7 +12,7 @@ public class Waypoint {
 	
 	public Waypoint(double x, double y, boolean entryOrExit){
 		position = new Vector(x, y, 0);
-		entryOrExit = entryOrExit;
+		this.entryOrExit = entryOrExit;
 	}
 	
 	public Vector position() {
