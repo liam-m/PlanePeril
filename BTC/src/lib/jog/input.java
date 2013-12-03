@@ -32,9 +32,32 @@ public abstract class input {
 	 */
 	public interface EventHandler {
 		
+		/**
+		 * Called when a mouse button has been depressed.
+		 * @param key the button being pressed.
+		 * @param x the horizontal position of the mouse.
+		 * @param y the vertical position of the mouse.
+		 */
 		public void mousePressed(int key, int x, int y);
+		
+		/**
+		 * Called when a mouse button has been released.
+		 * @param key the button being released.
+		 * @param x the horizontal position of the mouse.
+		 * @param y the vertical position of the mouse.
+		 */
 		public void mouseReleased(int key, int x, int y);
+		
+		/**
+		 * Called when a keyboard key has been depressed.
+		 * @param key the key being pressed.
+		 */
 		public void keyPressed(int key);
+		
+		/**
+		 * Called when a keyboard key has been released. 
+		 * @param key the key being released.
+		 */
 		public void keyReleased(int key);
 
 	}
