@@ -128,9 +128,9 @@ public class VectorTest {
 	// Test angle between function
 	@Test 
 	public void testAngle() {
-		Vector testVector = new Vector(2.0, 2.0, 4.0);
-		Vector testVector2 = new Vector(1.0, 3.0, 2.0);
+		Vector testVector = new Vector(0, 0, 0);
+		Vector testVector2 = new Vector(0, 0, 0);
 		// This is wrong
-		assertTrue("Angle = 0",  0 == testVector.angleBetween(testVector2));	
+		assertTrue("Angle = 0", 0 == testVector.angleBetween(testVector2));	
 	}
 }
