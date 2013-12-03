@@ -84,6 +84,9 @@ public class Aircraft {
 	/**
 	 * A list of planes that are too near.
 	 */
+	
+	private int difficulty = 0;
+	
 	private java.util.ArrayList<Aircraft> planesTooNear = new java.util.ArrayList<Aircraft>();
 
 	/**
@@ -97,7 +100,7 @@ public class Aircraft {
 	 * @param speed the speed the plane will travel at.
 	 * @param sceneWaypoints the waypoints on the map.
 	 */
-	public Aircraft(String name, String nameOrigin, String nameDestination, Waypoint originPoint, Waypoint destinationPoint, graphics.Image img, double speed, Waypoint[] sceneWaypoints) {
+	public Aircraft(String name, String nameOrigin, String nameDestination, Waypoint originPoint, Waypoint destinationPoint, graphics.Image img, double speed, Waypoint[] sceneWaypoints, int difficulty) {
 		flightName = name;
 		destinationName = nameOrigin;
 		originName = nameDestination;
@@ -109,9 +112,19 @@ public class Aircraft {
 		currentTarget = route[0].position();
 		image = img;
 		position = originPoint.position(); //place on spawn waypoint
-		int offset = new Random().nextInt((separationRule - (-separationRule))) + (-separationRule); //generate a small random offset
+		
+		int side = randInt(0, 1);
+		int offset = 0;
+		switch (side){ //offset spawn point to left
+		case 0:
+			offset = randInt(-separationRule, -10);
+			break;
+		case 1: //offset spawn point to right
+			offset = randInt(10, separationRule);
+			break;
+		}
 		System.out.println("Offset by " + offset);
-		position = position.add(new Vector(offset, offset, 30000));//offset spawn position. Helps avoid aircraft crashes very soon after spawn
+		position = position.add(new Vector(offset, 0, 30000));//offset spawn position. Helps avoid aircraft crashes very soon after spawn
 		
 		destination = destinationPoint.position();
 		isManuallyControlled = false;
@@ -121,6 +134,23 @@ public class Aircraft {
 		hasFinished = false;
 		currentRouteStage = 0;
 		currentlyTurningBy = 0;
+		
+		switch (difficulty){
+		case 0:
+			separationRule = 64;
+			break;
+		case 1:
+			separationRule = 96;
+			velocity = velocity.scaleBy(2);
+			break;
+		case 2:
+			separationRule = 128;
+			velocity = velocity.scaleBy(3);
+			turnSpeed = Math.PI / 2;
+			break;
+		}
+		
+		
 	}
 
 	/**
@@ -458,7 +488,7 @@ public class Aircraft {
 				// do not consider offscreen waypoints which are not the destination
 				// also skip if flagged as a previously selected waypoint
 				if (skip == true | point.position().equals(currentPos.position()) | point.position().equals(origin.position())
-						| (point.isOffscreen() == true && (point.position().equals(destination.position()) == false))){
+						| (point.isEntryOrExit() == true && (point.position().equals(destination.position()) == false))){
 				//	System.out.println("Skipped");
 					skip = false; //reset flag
 					continue;
@@ -687,4 +717,9 @@ public class Aircraft {
 		position = new Vector(position.x(), position.y(), position.z() + height);
 	}
 	
+	private int randInt(int min, int max){
+		Random rand = new Random();
+		return rand.nextInt((max - min)) + min;
+	}
+
 }

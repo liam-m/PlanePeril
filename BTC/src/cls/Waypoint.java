@@ -8,11 +8,11 @@ public class Waypoint {
 	final private int RADIUS = 8;
 	
 	private Vector position;
-	private boolean offScreen;
+	private boolean entryOrExit;
 	
-	public Waypoint(double x, double y, boolean offscreen){
+	public Waypoint(double x, double y, boolean entryOrExit){
 		position = new Vector(x, y, 0);
-		offScreen = offscreen;
+		entryOrExit = entryOrExit;
 	}
 	
 	public Vector position() {
@@ -25,8 +25,8 @@ public class Waypoint {
 		return dx*dx + dy*dy < MOUSE_LENIANCY*MOUSE_LENIANCY;
 	}
 	
-	public boolean isOffscreen(){
-		return offScreen;
+	public boolean isEntryOrExit(){
+		return this.entryOrExit;
 	}
 	
 	public double getCost(Waypoint fromPoint){

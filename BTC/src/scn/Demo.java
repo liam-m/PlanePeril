@@ -14,49 +14,6 @@ import btc.Main;
 
 public class Demo extends Scene {
 	
-	private final cls.Vector[] LOCATION_POSITIONS = new cls.Vector[] {
-		new cls.Vector(-64, 32, 9000),
-		new cls.Vector(-64, 64, 9000),
-		new cls.Vector(window.width() + 32, 32, 9000),
-		new cls.Vector(window.width() + 32, 64, 9000),
-	};
-	
-	private final String[] LOCATION_NAMES = new String[] {
-		"North West Top Leftonia",
-		"Bottom Left",
-		"Top Right",
-		"Bottom Right",
-	};
-	
-	public static Waypoint[] locationWaypoints = new Waypoint[] {
-		/* A set of Waypoints which are origin / destination points */
-		new Waypoint(-64, 32, true), //top left
-		new Waypoint(-64, window.height(), true), //bottom left
-		new Waypoint(window.width() + 32, 32, true), // top right
-		new Waypoint(window.width() + 32, window.height(), true), //bottom right
-	};
-
-	public static Waypoint[] airspaceWaypoints = new Waypoint[] {		
-		/* All waypoints in the airspace, including location Way Points*/
-	
-		//airspace waypoints
-		new Waypoint(125, 70, false),//0
-		new Waypoint(700, 100, false),//1
-		new Waypoint(1050, 80, false),//2
-		new Waypoint(670, 300, false),//3
-		new Waypoint(1050, 400, false),//4
-		new Waypoint(250, 400, false),//5
-		new Waypoint(200, 635, false),//6
-		new Waypoint(500, 655, false),//7
-		new Waypoint(800, 750, false),//8
-		new Waypoint(1200, 750, false),//9
-		//destination/origin waypoints - present in this list for pathfinding.
-		locationWaypoints[0], //10
-		locationWaypoints[1], //11
-		locationWaypoints[2],//12
-		locationWaypoints[3],//13
-	};
-	
 	private final int PLANE_INFO_X = 16;
 	private final int PLANE_INFO_Y = window.height() - 120;
 	private final int PLANE_INFO_W = window.width()/4;
@@ -68,9 +25,14 @@ public class Demo extends Scene {
 	private final int ALTIMETER_H = 112;
 	
 	private final int ORDERSBOX_X = ALTIMETER_X + ALTIMETER_W + 8;
-	private final int ORDERSBOX_Y = window.height() - 120;
+	private final static int ORDERSBOX_Y = window.height() - 120;
 	private final int ORDERSBOX_W = window.width() - (ORDERSBOX_X + 16);
-	private final int ORDERSBOX_H = 112;
+	private final static int ORDERSBOX_H = 112;
+	
+	public static int difficultyEasy = 0;
+	public static int difficultyMedium = 1;
+	public static int difficultyHard = 2;
+	private int difficulty = 0;
 	
 	private lib.OrdersBox ordersBox;
 	private double timeElapsed;
@@ -82,10 +44,46 @@ public class Demo extends Scene {
 	private lib.ButtonText _manualOverrideButton;
 	private lib.Altimeter altimeter;
 	private static double flightGenerationInterval = 12;
-	private double flightGenerationTimeElapsed = flightGenerationInterval;
+	private double flightGenerationTimeElapsed = 6;
 	private int maxAircraft = 4;
 	private int controlAltitude = 30000;
 	
+	private final String[] LOCATION_NAMES = new String[] {
+		"North West Top Leftonia",
+		"100 Acre Woods",
+		"City of Rightson",
+		"South Sea",
+	};
+	
+	public static Waypoint[] locationWaypoints = new Waypoint[] {
+		/* A set of Waypoints which are origin / destination points */
+		new Waypoint(8, 8, true), //top left
+		new Waypoint(8, window.height() - ORDERSBOX_H - 40, true), //bottom left
+		new Waypoint(window.width() - 40, 8, true), // top right
+		new Waypoint(window.width() - 40, window.height() - ORDERSBOX_H - 40, true), //bottom right
+	};
+
+	public static Waypoint[] airspaceWaypoints = new Waypoint[] {		
+		/* All waypoints in the airspace, including location Way Points*/
+	
+		//airspace waypoints
+		new Waypoint(125, 70, false),//0
+		new Waypoint(700, 100, false),//1
+		new Waypoint(1050, 80, false),//2
+		new Waypoint(670, 400, false),//3
+		new Waypoint(1050, 400, false),//4
+		new Waypoint(250, 400, false),//5
+		new Waypoint(200, 635, false),//6
+		new Waypoint(500, 655, false),//7
+		new Waypoint(800, 750, false),//8
+		new Waypoint(1000, 750, false),//9
+		//destination/origin waypoints - present in this list for pathfinding.
+		locationWaypoints[0], //10
+		locationWaypoints[1], //11
+		locationWaypoints[2],//12
+		locationWaypoints[3],//13
+	};
+		
 	public Main main() {
 		return _main;
 	}
@@ -94,8 +92,9 @@ public class Demo extends Scene {
 		return aircraftInAirspace;
 	}
 
-	public Demo(Main main) {
+	public Demo(Main main, int difficulty) {
 		super(main);
+		this.difficulty = difficulty;
 	}
 
 	@Override
@@ -121,6 +120,17 @@ public class Demo extends Scene {
 		altimeter = new lib.Altimeter(ALTIMETER_X, ALTIMETER_Y, ALTIMETER_W, ALTIMETER_H);
 		timeElapsed = 0;
 		deselectAircraft();
+		
+		switch (difficulty){
+		case 0:
+			break;
+		case 1:
+			flightGenerationInterval = flightGenerationInterval / 1.3;
+			break;
+		case 2:
+			flightGenerationInterval = flightGenerationInterval / 2;
+			break;
+		}
 	}
 	
 	private void toggleManualControl() {
@@ -311,7 +321,11 @@ public class Demo extends Scene {
 		
 		graphics.setViewport();
 		graphics.setColour(0, 128, 0);
-		
+		graphics.print(LOCATION_NAMES[0], 20, 20);
+		graphics.print(LOCATION_NAMES[1], 20, window.height() - ORDERSBOX_H - 30);
+		graphics.print(LOCATION_NAMES[2], window.width() - 90, 20);
+		graphics.print(LOCATION_NAMES[3], window.width() - 120, window.height() - ORDERSBOX_H - 30);
+
 			// Change Altitude
 	}
 	
@@ -386,7 +400,7 @@ public class Demo extends Scene {
 		// Add to world
 		ordersBox.addOrder("<<< " + name + " incoming from " + originName + " heading towards " + destinationName + ".");
 		System.out.println("<<< " + name + " incoming from " + originName + " heading towards " + destinationName + ".");
-		Aircraft a = new Aircraft(name, originName, destinationName, originPoint, destinationPoint, aircraftImage, 32 + (int)(10 * Math.random()), airspaceWaypoints);
+		Aircraft a = new Aircraft(name, originName, destinationName, originPoint, destinationPoint, aircraftImage, 32 + (int)(10 * Math.random()), airspaceWaypoints, difficulty);
 		aircraftInAirspace.add(a);
 	}
 	
