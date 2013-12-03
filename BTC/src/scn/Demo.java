@@ -42,7 +42,7 @@ public class Demo extends Scene {
 	private java.util.ArrayList<Aircraft> aircraftInAirspace;
 	private graphics.Image aircraftImage;
 	private lib.ButtonText _manualOverrideButton;
-	private lib.Altimeter altimeter;
+	private cls.Altimeter altimeter;
 	private static double flightGenerationInterval = 12;
 	private double flightGenerationTimeElapsed = 6;
 	private int maxAircraft = 4;
@@ -117,7 +117,7 @@ public class Demo extends Scene {
 		selectedPathpoint = -1;
 		
 		_manualOverrideButton = new lib.ButtonText(" Take Control", manual, (window.width() - 128) / 2, 32, 128, 32, 8, 4);
-		altimeter = new lib.Altimeter(ALTIMETER_X, ALTIMETER_Y, ALTIMETER_W, ALTIMETER_H);
+		altimeter = new cls.Altimeter(ALTIMETER_X, ALTIMETER_Y, ALTIMETER_W, ALTIMETER_H);
 		timeElapsed = 0;
 		deselectAircraft();
 		
