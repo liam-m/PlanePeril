@@ -2,22 +2,22 @@ package cls;
 
 public class Vector {
 	
-	private double _x, _y, _z;
+	private double x, y, z;
 	
 	public double x() {
-		return _x;
+		return x;
 	}
 	public double y() {
-		return _y;
+		return y;
 	}
 	public double z() {
-		return _z;
+		return z;
 	}
 	
 	public Vector(double x, double y, double z) {
-		_x = x;
-		_y = y;
-		_z = z;
+		this.x = x;
+		this.y = y;
+		this.z = z;
 	}
 	
 	@Override
@@ -26,16 +26,16 @@ public class Vector {
 			return false;
 		} else {
 			Vector v = (Vector) o;
-			return (_x == v.x()) && (_y == v.y()) && (_z == v.z());
+			return (x == v.x()) && (y == v.y()) && (z == v.z());
 		}
 	}
 	
 	public double magnitude() {
-		return Math.sqrt((_x *_x) + (_y*_y) + (_z*_z));
+		return Math.sqrt((x*x) + (y*y) + (z*z));
 	}
 	
 	public double magnitudeSquared() {
-		return (_x *_x) + (_y*_y) + (_z*_z);
+		return (x*x) + (y*y) + (z*z);
 	}
 	
 	public Vector normalise() {
@@ -43,20 +43,20 @@ public class Vector {
 	}
 	
 	public Vector scaleBy(double n) {
-		return new Vector(_x * n, _y * n, _z * n);
+		return new Vector(x * n, y * n, z * n);
 	}
 	
 	public Vector add(Vector v) {
-		return new Vector(_x + v.x(), _y + v.y(), _z + v.z());
+		return new Vector(x + v.x(), y + v.y(), z + v.z());
 	}
 	
 	public Vector sub(Vector v) {
-		return new Vector(_x - v.x(), _y - v.y(), _z - v.z());
+		return new Vector(x - v.x(), y - v.y(), z - v.z());
 	}
 	
 	public double angleBetween(Vector v) {
-		double a = Math.acos( (_x*v._x + _y*v._y + _z*v._z) / (magnitude() * v.magnitude()));
-		if (v._y < _y) a *= -1;
+		double a = Math.acos( (x*v.x + y*v.y + z*v.z) / (magnitude() * v.magnitude()));
+		if (v.y < y) a *= -1;
 		return a;
 	}
 
