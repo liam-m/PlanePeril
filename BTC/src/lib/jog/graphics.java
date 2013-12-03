@@ -446,6 +446,30 @@ public abstract class graphics {
 		glDisable(GL_TEXTURE_2D);
 	}
 	
+	static public void draw(Image drawable, double scale, double x, double y, double r, double ox, double oy) {
+		y = window.height() - y;
+		r = -Math.toDegrees(r);
+		
+    	glEnable(GL_TEXTURE_2D);
+    	drawable.texture.bind();
+		glPushMatrix();
+	    glTranslated(x, y, 0);
+	    glRotated(r, 0, 0, 1);
+	    glScaled(scale, scale, 1);
+		glBegin(GL_QUADS);
+			glTexCoord2d(0, 0);
+			glVertex2d(-ox/2, -oy/2);
+			glTexCoord2d(1, 0);
+			glVertex2d(ox/2, -oy/2);
+			glTexCoord2d(1, 1);
+			glVertex2d(ox/2, oy/2);
+			glTexCoord2d(0, 1);
+			glVertex2d(-ox/2, oy/2);
+		glEnd();
+		glPopMatrix();
+		glDisable(GL_TEXTURE_2D);
+	}
+	
 	/**
 	 * Draws the texture image at the specified coordinates.
 	 * @param drawable the image to be drawn.

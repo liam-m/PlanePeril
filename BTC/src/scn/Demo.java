@@ -84,6 +84,7 @@ public class Demo extends Scene {
 	private static double flightGenerationInterval = 12;
 	private double flightGenerationTimeElapsed = flightGenerationInterval;
 	private int maxAircraft = 4;
+	private int controlAltitude = 30000;
 	
 	public Main main() {
 		return _main;
@@ -197,7 +198,7 @@ public class Demo extends Scene {
 		if (key == input.MOUSE_LEFT) {
 			Aircraft newSelected = selectedAircraft;
 			for (Aircraft a : aircraftInAirspace) {
-				if (a.isMouseOver(x-16, y-16)) {
+				if (a.isMouseOver(x-16, y-16) && a.position().z() == controlAltitude) {
 					newSelected = a;
 				}
 			}
@@ -206,18 +207,12 @@ public class Demo extends Scene {
 				selectedAircraft = newSelected;
 			}
 			altimeter.show(selectedAircraft);
-			for (Waypoint w : airspaceWaypoints) {
-				if (selectedAircraft != null){
+			if (selectedAircraft != null) {
+				for (Waypoint w : airspaceWaypoints) {
 					if (w.isMouseOver(x-16, y-16) && selectedAircraft.flightPathContains(w) > -1) {
 						selectedWaypoint = w;
 						selectedPathpoint = selectedAircraft.flightPathContains(w);
 					}
-				}
-			}
-			for (Waypoint w : airspaceWaypoints) {
-				if (w.isMouseOver(x-16, y-16) && selectedAircraft.flightPathContains(w) > -1) {
-					selectedWaypoint = w;
-					selectedPathpoint = selectedAircraft.flightPathContains(w);
 				}
 			}
 		}
@@ -236,6 +231,12 @@ public class Demo extends Scene {
 					selectedWaypoint = null;
 				}
 			}
+		}
+		if (selectedAircraft == null) {
+			if (key == input.MOUSE_WHEEL_UP && controlAltitude < 30000)
+				controlAltitude += 2000;
+			if (key == input.MOUSE_WHEEL_DOWN && controlAltitude > 28000)
+				controlAltitude -= 2000;
 		}
 		altimeter.mouseReleased(key, x, y);
 	}
@@ -289,7 +290,7 @@ public class Demo extends Scene {
 		}
 		graphics.setColour(255, 255, 255);
 		for (Aircraft aircraft : aircraftInAirspace) {
-			aircraft.draw();
+			aircraft.draw(controlAltitude);
 		}
 		
 		if (selectedAircraft != null) {
@@ -347,6 +348,7 @@ public class Demo extends Scene {
 		graphics.print(timePlayed, window.width() - (timePlayed.length() * 8), 0);
 		int planes = aircraftInAirspace.size();
 		graphics.print(String.valueOf(aircraftInAirspace.size()) + " plane" + (planes == 1 ? "" : "s") + " in the sky.", 256, 0);
+		graphics.print("Control Altitude: " + String.valueOf(controlAltitude), 650, 0);
 		graphics.print("Score: " + _main.score().calculate(), 0, 0);
 	}
 	

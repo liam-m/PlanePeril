@@ -367,10 +367,12 @@ public class Aircraft {
 	/**
 	 * Draws the plane and any warning circles if necessary. 
 	 */
-	public void draw() {
-		graphics.setColour(128, 128, 128);
-		graphics.draw(image, position.x(), position.y(), bearing(), 8, 8);
-		graphics.setColour(128, 128, 128, 96);
+	public void draw(int controlAltitude) {
+		double alpha = 255/((Math.abs(position.z() - controlAltitude) + 1000)/1000);
+		double scale = 2*(position.z()/30000);
+		graphics.setColour(128, 128, 128, alpha);
+		graphics.draw(image, scale, position.x(), position.y(), bearing(), 8, 8);
+		graphics.setColour(128, 128, 128, alpha/2.5);
 		graphics.print(String.valueOf(position.z()) + "£", position.x()+8, position.y()-8);
 		drawWarningCircles();
 	}
@@ -665,18 +667,20 @@ public class Aircraft {
 	 * Increases the plane's altitude.
 	 */
 	public void climb() {
-		changeAltitude(1000);
+		if (position.z() < 30000)
+			changeAltitude(2000);
 	}
 	
 	/**
 	 * Decreases the plane's altitude.
 	 */
 	public void fall() {
-		changeAltitude(-1000);
+		if (position.z() > 28000)
+			changeAltitude(-2000);
 	}
 	
 	/**
-	 * Changes the plane's altitude by a given amout.
+	 * Changes the plane's altitude by a given amount.
 	 * @param height the height by which to change altitude.
 	 */
 	private void changeAltitude(int height) {
