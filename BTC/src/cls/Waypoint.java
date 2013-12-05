@@ -10,9 +10,9 @@ public class Waypoint {
 	private Vector position;
 	private boolean entryOrExit;
 	
-	public Waypoint(double x, double y, boolean entryOrExit){
+	public Waypoint(double x, double y, boolean inputEntryOrExit){
 		position = new Vector(x, y, 0);
-		entryOrExit = entryOrExit;
+		entryOrExit = inputEntryOrExit;
 	}
 	
 	public Vector position() {

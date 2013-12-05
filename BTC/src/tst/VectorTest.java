@@ -120,8 +120,14 @@ public class VectorTest {
 	public void testNormalise() {
 		Vector testVector = new Vector(1.0, 2.0, 2.0);
 		Vector resultVector = testVector.normalise();
-		// This is wrong
-		assertTrue("Normalise = 1/3, 2/3, 2/3",  (1/3 == resultVector.x()) && (2/3 == resultVector.y()) && (2/3 == resultVector.z()));	
+		assertTrue("Normalise = 1/3, 2/3, 2/3",  (1 == (resultVector.x()* 3)) && (2 == (resultVector.y()*3)) && (2 == (resultVector.z()*3)));
+		
+	}
+	@Test 
+	public void testNormalise2() {
+		Vector testVector = new Vector(1, 4, 8);
+		Vector resultVector = testVector.normalise();
+		assertTrue("Normalise = 1/9, 4/9, 8/9",  (1 == (resultVector.x()*9)) && (4 == (resultVector.y()*9)) && (8 == (resultVector.z()*9)));	
 	}
 	
 	
