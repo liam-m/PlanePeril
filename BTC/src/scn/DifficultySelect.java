@@ -7,7 +7,7 @@ import btc.Main;
 public class DifficultySelect extends Scene {
 	
 	private lib.ButtonText[] _buttons;
-	private lib.OrdersBox intro;
+	private lib.TextBox intro;
 	private static final String placeName = "Moscow";
 
 	protected DifficultySelect(Main main) {
@@ -73,14 +73,15 @@ public class DifficultySelect extends Scene {
 		};
 		_buttons[2] = new lib.ButtonText("Hard", hard, 3*window.width()/4, 2*window.height()/3, 
 				window.width() - window.height(), 8, 8, 6);
-		intro = new lib.OrdersBox(64, 96, window.width() - 128, window.height() - 96, 32);
-		intro.addOrder("You are a 500kg ferocious Grizzly Bear.");
-		intro.addOrder("The Humans are not aware of your hidden identity.");
-		intro.addOrder("You have become an air traffic controller at " + this.placeName + " international.");
-		intro.addOrder("in order to provide for your family during the harsh winters ahead");
-		intro.addOrder("Guide planes to their destination successfully and you will be rewarded");
-		intro.addOrder("Fail and the humans may discover your secret identity and put you in a zoo");
-		intro.addOrder("Or worse, they may shoot you and your family.");
+		intro = new lib.TextBox(64, 96, window.width() - 128, window.height() - 96, 32);
+		intro.addText("You are a 500kg ferocious Grizzly Bear.");
+		intro.addText("The Humans are not aware of your hidden identity.");
+		intro.delay(2);
+		intro.addText("You have become an air traffic controller at " + DifficultySelect.placeName + " international.");
+		intro.addText("in order to provide for your family during the harsh winters ahead");
+		intro.addText("Guide planes to their destination successfully and you will be rewarded");
+		intro.addText("Fail and the humans may discover your secret identity and put you in a zoo");
+		intro.addText("Or worse, they may shoot you and your family.");
 	}
 
 	@Override
