@@ -76,7 +76,7 @@ public class DifficultySelect extends Scene {
 		intro = new lib.TextBox(64, 96, window.width() - 128, window.height() - 96, 32);
 		intro.addText("You are a 500kg ferocious Grizzly Bear.");
 		intro.addText("The Humans are not aware of your hidden identity.");
-		intro.delay(2);
+		intro.delay(0.5);
 		intro.addText("You have become an air traffic controller at " + DifficultySelect.placeName + " international.");
 		intro.addText("in order to provide for your family during the harsh winters ahead");
 		intro.addText("Guide planes to their destination successfully and you will be rewarded");

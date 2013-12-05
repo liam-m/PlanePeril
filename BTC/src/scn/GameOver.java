@@ -7,7 +7,7 @@ import btc.Main;
 
 public class GameOver extends Scene {
 	
-	private lib.OrdersBox _textBox;
+	private lib.TextBox _textBox;
 	private Aircraft _crashedPlane1;
 	private Aircraft _crashedPlane2;
 	private int _deaths;
@@ -23,28 +23,39 @@ public class GameOver extends Scene {
 	public void start() {
 		_deaths = (int)( Math.random() * 500) + 300;
 		_injured = (int)( Math.random() * 90) + 10;
-		_textBox = new lib.OrdersBox(64, 96, window.width() - 128, window.height() - 96, 32);
-		_textBox.addOrder(String.valueOf(_deaths) + " people died in the crash.");
-		_textBox.addOrder("                                 ");
-		_textBox.addOrder(String.valueOf(_injured) + " managed to escape the burning wreckage.                                          ");
-		_textBox.addOrder("Those " + String.valueOf(_injured) + " were rushed to hospital with third degree burns, broken and dislocated limbs, and severe bruising.");
-		_textBox.addOrder("They later died in hospital.");
-		_textBox.addOrder("                                 ");
-		_textBox.addOrder("British Bearways is facing heavy legal pressure from the family and loved-ones of the dead.");
-		_textBox.addOrder("                                 ");
-		_textBox.addOrder("The investigation into your incompetance will lead to humanity discovering your true bear nature.");
-		_textBox.addOrder("                                 ");
-		_textBox.addOrder("Your guilt for the deaths you caused, and your failure to pass as a human, will gnaw at you and you will revert to your drinking problem to attempt to cope.");
-		_textBox.addOrder("                                 ");
-		_textBox.addOrder("                                 ");
-		_textBox.addOrder("                                 ");
-		_textBox.addOrder("   ");
-		_textBox.addOrder("                           Game Over.");
-		_textBox.addOrder("           ");
-		_textBox.addOrder("   ");
-		_textBox.addOrder("   ");
-		_textBox.addOrder("   ");
-		_textBox.addOrder("                    Press any key to continue");
+		_textBox = new lib.TextBox(64, 96, window.width() - 128, window.height() - 96, 32);
+		_textBox.addText(String.valueOf(_deaths) + " people died in the crash.");
+		_textBox.delay(0.4);
+		_textBox.addText(String.valueOf(_injured) + " managed to escape the burning wreckage.");
+		_textBox.delay(0.8);
+		_textBox.addText("Those " + String.valueOf(_injured) + " were rushed to hospital with third degree burns, broken and dislocated limbs, and severe bruising.");
+		_textBox.delay(0.4);
+		_textBox.addText("They later died in hospital.");
+		_textBox.delay(0.8);
+		_textBox.addText("British Bearways is facing heavy legal pressure from the family and loved-ones of the dead.");
+		_textBox.delay(0.8);
+		_textBox.addText("The investigation into your incompetance will lead to humanity discovering your true bear nature.");
+		_textBox.delay(0.8);
+		_textBox.addText("Your guilt for the deaths you caused, and your failure to pass as a human, will gnaw at you and you will revert to your drinking problem to attempt to cope.");
+		_textBox.addText(" ");
+		_textBox.addText(" ");
+		_textBox.addText(" ");
+		_textBox.addText(" ");
+		_textBox.delay(0.8);
+		
+		String centredGameOver = "";
+		for (int i = 0; i < (window.width() - 80) / 2; i ++) centredGameOver += " ";
+		centredGameOver += "Game Over.";
+		_textBox.addText(centredGameOver);
+		_textBox.addText(" ");
+		_textBox.addText(" ");
+		_textBox.addText(" ");
+		_textBox.addText(" ");
+		_textBox.delay(0.2);
+		String centredPrompt = "";
+		for (int i = 0; i < (window.width() - 200) / 2; i ++) centredGameOver += " ";
+		centredPrompt += "Press any key to continue";
+		_textBox.addText(centredPrompt);
 	}
 
 	@Override
