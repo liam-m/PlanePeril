@@ -32,17 +32,16 @@ public class GameOver extends Scene {
 		_textBox.delay(0.4);
 		_textBox.addText("They later died in hospital.");
 		_textBox.delay(0.8);
-		_textBox.addText("British Bearways is facing heavy legal pressure from the family and loved-ones of the dead.");
+		_textBox.addText("British Bearways is facing heavy legal pressure from the family and loved-ones of the dead and an investigation into the incident will be performed.");
 		_textBox.delay(0.8);
-		_textBox.addText("The investigation into your incompetance will lead to humanity discovering your true bear nature.");
+		_textBox.addText("The inquery into your incompetance will lead to humanity discovering your true bear nature.");
 		_textBox.delay(0.8);
-		_textBox.addText("Your guilt for the deaths you caused, and your failure to pass as a human, will gnaw at you and you will revert to your drinking problem to attempt to cope.");
+		_textBox.addText("Your guilt for the deaths you caused, and your failure to pass as a human, will gnaw at you and you will have to revert to your drinking problem to attempt to cope.");
 		_textBox.addText(" ");
 		_textBox.addText(" ");
 		_textBox.addText(" ");
 		_textBox.addText(" ");
 		_textBox.delay(0.8);
-		
 		String centredGameOver = "";
 		for (int i = 0; i < (window.width() - 80) / 2; i ++) centredGameOver += " ";
 		centredGameOver += "Game Over.";
@@ -64,19 +63,13 @@ public class GameOver extends Scene {
 	}
 
 	@Override
-	public void mousePressed(int key, int x, int y) {
-		
-	}
+	public void mousePressed(int key, int x, int y) {}
 
 	@Override
-	public void mouseReleased(int key, int x, int y) {
-		
-	}
+	public void mouseReleased(int key, int x, int y) {}
 
 	@Override
-	public void keyPressed(int key) {
-		
-	}
+	public void keyPressed(int key) {}
 
 	@Override
 	public void keyReleased(int key) {
