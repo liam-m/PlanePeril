@@ -12,8 +12,8 @@ public class TextBox {
 	
 	protected final int LINES;
 	protected final char SEPARATOR = '|';
-	protected final char DELAY_START = '{';
-	protected final char DELAY_END = '}';
+	public static final char DELAY_START = '{';
+	public static final char DELAY_END = '}';
 	protected final double _typeWait = 0.01;
 	
 	protected int _x, _y, _width, _height;
