@@ -29,7 +29,7 @@ public class Title extends Scene {
 				_main.setScene(new DifficultySelect(_main));
 			}
 		};
-		_buttons[0] = new lib.ButtonText("Play Demo", demo, window.height(), window.height()/2 + 96, window.width() - window.height(), 16, 8, 6);
+		_buttons[0] = new lib.ButtonText("Play Demo", demo, window.height(), window.height()/2 + 96, window.width() - window.height(), 24, 8, 6);
 		// Game Button
 		lib.ButtonText.Action play = new lib.ButtonText.Action() {
 			@Override
@@ -37,7 +37,7 @@ public class Title extends Scene {
 //				_main.setScene(new Game(_main));
 			}
 		};
-		_buttons[1] = new lib.ButtonText("Play Full Game", play, window.height(), window.height()/2 + 126, window.width() - window.height(), 16, 8, 6);
+		_buttons[1] = new lib.ButtonText("Play Full Game", play, window.height(), window.height()/2 + 126, window.width() - window.height(), 24, 8, 6);
 		_buttons[1].setAvailability(false);
 		// Exit Button
 		lib.ButtonText.Action exit = new lib.ButtonText.Action() {
@@ -46,7 +46,7 @@ public class Title extends Scene {
 				_main.quit();
 			}
 		};
-		_buttons[2] = new lib.ButtonText("Exit", exit, window.height(), window.height()/2 + 156, window.width() - window.height(), 16, 8, 6);
+		_buttons[2] = new lib.ButtonText("Exit", exit, window.height(), window.height()/2 + 156, window.width() - window.height(), 24, 8, 6);
 		_angle = 0;
 	}
 
@@ -62,9 +62,7 @@ public class Title extends Scene {
 	}
 
 	@Override
-	public void mousePressed(int key, int x, int y) {
-		
-	}
+	public void mousePressed(int key, int x, int y) {}
 
 	@Override
 	public void mouseReleased(int key, int mx, int my) {
@@ -77,14 +75,10 @@ public class Title extends Scene {
 	}
 
 	@Override
-	public void keyPressed(int key) {
-		
-	}
+	public void keyPressed(int key) {}
 
 	@Override
-	public void keyReleased(int key) {
-		
-	}
+	public void keyReleased(int key) {}
 
 	@Override
 	public void draw() {
