@@ -30,6 +30,21 @@ public class ButtonText {
 		_available = true;
 	}
 	
+	public ButtonText(String text, Action action, int x, int y, int w, int h) {
+		_text = text;
+		_action = action;
+		_x = x;
+		_y = y;
+		_width = w;
+		_height = h;
+		_ox = (w - (text.length() * 8)) / 2;
+		_oy = (h - 8) / 2;
+		_colourDefault = new org.newdawn.slick.Color(0, 128, 0);
+		_colourHover = new org.newdawn.slick.Color(128, 128, 128);
+		_colourUnavailable = new org.newdawn.slick.Color(64, 64, 64);
+		_available = true;
+	}
+	
 	public boolean isMouseOver(int mx, int my) {
 		return (mx >= _x && mx <= _x + _width && my >= _y && my <= _y + _height);
 	}
