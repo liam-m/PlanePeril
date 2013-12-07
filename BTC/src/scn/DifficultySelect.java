@@ -2,6 +2,7 @@ package scn;
 
 import lib.TextBox;
 import lib.jog.graphics;
+import lib.jog.input;
 import lib.jog.window;
 import btc.Main;
 
@@ -47,7 +48,11 @@ public class DifficultySelect extends Scene {
 	public void keyPressed(int key) {}
 
 	@Override
-	public void keyReleased(int key) {}
+	public void keyReleased(int key) {
+		if (key == input.KEY_ESCAPE) {
+			_main.closeScene();
+		}
+	}
 
 	@Override
 	public void start() {
