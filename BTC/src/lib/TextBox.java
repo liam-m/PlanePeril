@@ -69,7 +69,27 @@ public class TextBox {
 		}
 		_typing = true;
 	}
+
+	/**
+	 * Adds a delay, making the textbox wait before continuing.
+	 * @param duration the length of the delay in seconds.
+	 */
+	public void delay(double duration) {
+		_buffer += DELAY_START + String.valueOf(duration) + DELAY_END;
+	}
 	
+	/**
+	 * Adds a newline to the textbox.
+	 */
+	public void newline() {
+		addText(" ");
+//		_buffer += SEPARATOR;
+	}
+	
+	/**
+	 * Accesses how many lines we are currently using.
+	 * @return the amount of used lines.
+	 */
 	protected int linesBeingUsed() {
 		for (int i = 0; i < LINES; i ++) {
 			if (_orders[i] == null || _orders[i] == "") {
@@ -80,7 +100,7 @@ public class TextBox {
 	}
 	
 	/**
-	 * Accessed whether we have stopped typing and have no orders queued up.
+	 * Accesses whether we have stopped typing and have no orders queued up.
 	 * @return whether the TextBox is up to date.
 	 */
 	public boolean isUpToDate() {
@@ -92,6 +112,7 @@ public class TextBox {
 	 * @param dt time since the last update call.
 	 */
 	public void update(double dt) {
+		// Update delay
 		if (_isDelaying) {
 			if (_delayTimer <= 0) {
 				_isDelaying = false;
@@ -100,11 +121,14 @@ public class TextBox {
 				return;
 			}
 		}
+		// Update timer
 		_timer += dt;
 		if (_timer >= _typeWait) {
 			_timer -= _typeWait;
+			// Finished
 			if (_buffer.isEmpty()) {
 				_typing = false;
+			// Delay
 			} else if (_buffer.charAt(0) == DELAY_START) {
 				_buffer = _buffer.substring(1);
 				_isDelaying = true;
@@ -115,10 +139,12 @@ public class TextBox {
 				}
 				_buffer = _buffer.substring(1);
 				_delayTimer = Double.parseDouble(delay);
+			// New Line
 			} else if (_buffer.charAt(0) == SEPARATOR) {
 				_currentOrder += 1;
 				_buffer = _buffer.substring(1);
 			} else {
+				// Too many lines
 				if (_currentOrder >= LINES) {
 					ripple();
 				}
@@ -128,10 +154,9 @@ public class TextBox {
 		}
 	}
 	
-	public void delay(double duration) {
-		_buffer += DELAY_START + String.valueOf(duration) + DELAY_END;
-	}
-	
+	/**
+	 * Cycle through the lines, removing the first, and moving the rest up by one.
+	 */
 	protected void ripple() {
 		for (int i = 0; i < LINES-1; i ++) {
 			_orders[i] = _orders[i+1];
