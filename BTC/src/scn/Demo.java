@@ -29,10 +29,10 @@ public class Demo extends Scene {
 	private final int ORDERSBOX_W = window.width() - (ORDERSBOX_X + 16);
 	private final static int ORDERSBOX_H = 112;
 	
-	public static int difficultyEasy = 0;
-	public static int difficultyMedium = 1;
-	public static int difficultyHard = 2;
-	private int difficulty = 0;
+	public final static int DIFFICULTY_EASY = 0;
+	public final static int DIFFICULTY_MEDIUM = 1;
+	public final static int DIFFICULTY_HARD = 2;
+	public static int difficulty = DIFFICULTY_EASY;
 	
 	private lib.OrdersBox ordersBox;
 	private double timeElapsed;
@@ -94,7 +94,7 @@ public class Demo extends Scene {
 
 	public Demo(Main main, int difficulty) {
 		super(main);
-		this.difficulty = difficulty;
+		Demo.difficulty = difficulty;
 	}
 
 	@Override
