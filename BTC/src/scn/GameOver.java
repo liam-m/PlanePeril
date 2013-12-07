@@ -2,6 +2,7 @@ package scn;
 
 import cls.Aircraft;
 import lib.jog.graphics;
+import lib.jog.input;
 import lib.jog.window;
 import btc.Main;
 
@@ -37,19 +38,19 @@ public class GameOver extends Scene {
 		_textBox.addText("The inquery into your incompetance will lead to humanity discovering your true bear nature.");
 		_textBox.delay(0.8);
 		_textBox.addText("Your guilt for the deaths you caused, and your failure to pass as a human, will gnaw at you and you will have to revert to your drinking problem to attempt to cope.");
-		_textBox.addText(" ");
-		_textBox.addText(" ");
-		_textBox.addText(" ");
-		_textBox.addText(" ");
+		_textBox.newline();
+		_textBox.newline();
+		_textBox.newline();
+		_textBox.newline();
 		_textBox.delay(0.8);
 		String centredGameOver = "";
 		for (int i = 0; i < (window.width() - 80) / 2; i ++) centredGameOver += " ";
 		centredGameOver += "Game Over.";
 		_textBox.addText(centredGameOver);
-		_textBox.addText(" ");
-		_textBox.addText(" ");
-		_textBox.addText(" ");
-		_textBox.addText(" ");
+		_textBox.newline();
+		_textBox.newline();
+		_textBox.newline();
+		_textBox.newline();
 		_textBox.delay(0.2);
 		String centredPrompt = "";
 		for (int i = 0; i < (window.width() - 200) / 2; i ++) centredGameOver += " ";
@@ -73,7 +74,13 @@ public class GameOver extends Scene {
 
 	@Override
 	public void keyReleased(int key) {
-		_main.closeScene();
+		if (key == input.KEY_SPACE) { 
+			_main.closeScene();
+			_main.setScene(new Demo(_main, Demo.difficulty));
+		} else if (key == input.KEY_ESCAPE) {
+			_main.closeScene();
+			_main.closeScene();
+		}
 	}
 
 	@Override
@@ -84,8 +91,6 @@ public class GameOver extends Scene {
 	}
 
 	@Override
-	public void close() {
-		
-	}
+	public void close() {}
 
 }
