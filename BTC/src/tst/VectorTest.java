@@ -64,9 +64,9 @@ public class VectorTest {
 	}
 	@Test 
 	public void testEquals2() {
-		Vector testVector = new Vector(9, 4.2, 10/2);
+		Vector testVector = new Vector(9, 4.2, 5.1);
 		Vector testVector2 = new Vector(9.0, 4.2, 5);
-		assertTrue("Equals = true", testVector.equals(testVector2));	
+		assertTrue("Equals = false", !testVector.equals(testVector2));	
 	}
 	
 	// Test addition function
@@ -106,13 +106,13 @@ public class VectorTest {
 	public void testScaleBy(){
 		Vector testVector = new Vector(1, 2, 3);
 		Vector resultVector = testVector.scaleBy(1.0);
-		assertTrue("Equals = true",  (1 == resultVector.x()) && (2 == resultVector.y()) && (3 == resultVector.z()));
+		assertTrue("ScaledBy = (1 , 2, 3)",  (1 == resultVector.x()) && (2 == resultVector.y()) && (3 == resultVector.z()));
 	}
 	@Test
 	public void testScaleBy2(){
 		Vector testVector = new Vector(1, 2, 3);
-		Vector resultVector = testVector.scaleBy(2.0);
-		assertTrue("Equals = true",  (2 == resultVector.x()) && (4 == resultVector.y()) && (6 == resultVector.z()));
+		Vector resultVector = testVector.scaleBy(-2.0);
+		assertTrue("ScaledBy = (-2 , -4, -6)",  (-2 == resultVector.x()) && (-4 == resultVector.y()) && (-6 == resultVector.z()));
 	}
 	
 	// Test normalise function
@@ -134,9 +134,8 @@ public class VectorTest {
 	// Test angle between function
 	@Test 
 	public void testAngle() {
-		Vector testVector = new Vector(0, 0, 0);
-		Vector testVector2 = new Vector(0, 0, 0);
-		// This is wrong
-		assertTrue("Angle = 0", 0 == testVector.angleBetween(testVector2));	
+		Vector testVector = new Vector(0, 1, 0);
+		Vector testVector2 = new Vector(1, 0, 0);
+		assertTrue("Angle = pi/2", Math.PI  ==  (testVector.angleBetween(testVector2) * 2));	
 	}
 }

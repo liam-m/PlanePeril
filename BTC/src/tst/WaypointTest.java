@@ -40,7 +40,6 @@ public class WaypointTest {
 	@Test
 	public void testIsMouseOver2(){
 		Waypoint testWaypoint = new Waypoint(25,25, true);
-		// Not sure what is wrong here
 		assertTrue("Mouse over = false", false == testWaypoint.isMouseOver(10,10));
 	}
 	
