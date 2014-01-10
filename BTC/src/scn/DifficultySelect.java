@@ -23,13 +23,13 @@ public class DifficultySelect extends Scene {
 	private final int HARD_BUTTON_W = EASY_BUTTON_W;
 	private final int HARD_BUTTON_H = EASY_BUTTON_H;
 	
-	private lib.ButtonText[] _buttons;
+	private lib.ButtonText[] buttons;
 	private lib.TextBox textBox;
 	private static final String placeName = "Moscow";
 
 	protected DifficultySelect(Main main) {
 		super(main);
-		_buttons = new lib.ButtonText[3];
+		buttons = new lib.ButtonText[3];
 	}
 
 	@Override
@@ -37,7 +37,7 @@ public class DifficultySelect extends Scene {
 
 	@Override
 	public void mouseReleased(int key, int x, int y) {
-		for (lib.ButtonText b : _buttons) {
+		for (lib.ButtonText b : buttons) {
 			if (b.isMouseOver(x, y)) {
 				b.act();
 			}
@@ -50,7 +50,7 @@ public class DifficultySelect extends Scene {
 	@Override
 	public void keyReleased(int key) {
 		if (key == input.KEY_ESCAPE) {
-			_main.closeScene();
+			main.closeScene();
 		}
 	}
 
@@ -59,26 +59,26 @@ public class DifficultySelect extends Scene {
 		lib.ButtonText.Action easy = new lib.ButtonText.Action() {
 			@Override
 			public void action() {
-				_main.setScene(new Demo(_main, Demo.DIFFICULTY_EASY));
+				main.setScene(new Demo(main, Demo.DIFFICULTY_EASY));
 			}
 		};
-		_buttons[0] = new lib.ButtonText("Easy", easy, EASY_BUTTON_X, EASY_BUTTON_Y, EASY_BUTTON_W, EASY_BUTTON_H);
+		buttons[0] = new lib.ButtonText("Easy", easy, EASY_BUTTON_X, EASY_BUTTON_Y, EASY_BUTTON_W, EASY_BUTTON_H);
 		
 		lib.ButtonText.Action medium = new lib.ButtonText.Action() {
 			@Override
 			public void action() {
-				_main.setScene(new Demo(_main, Demo.DIFFICULTY_MEDIUM));
+				main.setScene(new Demo(main, Demo.DIFFICULTY_MEDIUM));
 			}
 		};
-		_buttons[1] = new lib.ButtonText("Medium", medium, MEDIUM_BUTTON_X, MEDIUM_BUTTON_Y, MEDIUM_BUTTON_W, MEDIUM_BUTTON_H);
+		buttons[1] = new lib.ButtonText("Medium", medium, MEDIUM_BUTTON_X, MEDIUM_BUTTON_Y, MEDIUM_BUTTON_W, MEDIUM_BUTTON_H);
 		
 		lib.ButtonText.Action hard = new lib.ButtonText.Action() {
 			@Override
 			public void action() {
-				_main.setScene(new Demo(_main, Demo.DIFFICULTY_HARD));
+				main.setScene(new Demo(main, Demo.DIFFICULTY_HARD));
 			}
 		};
-		_buttons[2] = new lib.ButtonText("Hard", hard, HARD_BUTTON_X, HARD_BUTTON_Y, HARD_BUTTON_W, HARD_BUTTON_H);
+		buttons[2] = new lib.ButtonText("Hard", hard, HARD_BUTTON_X, HARD_BUTTON_Y, HARD_BUTTON_W, HARD_BUTTON_H);
 		
 		textBox = new lib.TextBox(128, 96, window.width() - 256, window.height() - 96, 32);
 		textBox.addText("You are a 500 kilogram ferocious Grizzly Bear." + TextBox.DELAY_START + "0.5" + TextBox.DELAY_END + " The Humans are not aware of your hidden identity.");
@@ -107,7 +107,7 @@ public class DifficultySelect extends Scene {
 		graphics.rectangle(false, EASY_BUTTON_X, EASY_BUTTON_Y, EASY_BUTTON_W, EASY_BUTTON_H);
 		graphics.rectangle(false, MEDIUM_BUTTON_X, MEDIUM_BUTTON_Y, MEDIUM_BUTTON_W, MEDIUM_BUTTON_H);
 		graphics.rectangle(false, HARD_BUTTON_X, HARD_BUTTON_Y, HARD_BUTTON_W, HARD_BUTTON_H);
-		for (lib.ButtonText b : _buttons) {
+		for (lib.ButtonText b : buttons) {
 			b.draw();
 		}
 		textBox.draw();
