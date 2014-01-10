@@ -37,10 +37,14 @@ public class Waypoint {
 		return target.getCost(source);
 	}
 	
+	public void draw(double x, double y) {
+		graphics.setColour(128, 0, 0, 128); 
+		graphics.circle(false, x, y, RADIUS);
+		graphics.circle(true, x, y, RADIUS - 2);
+	}
+
 	public void draw() {
-		graphics.setColour(128, 0, 0, 128);
-		graphics.circle(false, position.x(), position.y(), RADIUS);
-		graphics.circle(true, position.x(), position.y(), RADIUS - 2);
+		draw(position.x(), position.y());
 	}
 
 }
