@@ -67,27 +67,23 @@ public class Demo extends Scene {
 		/* All waypoints in the airspace, including location Way Points*/
 	
 		//airspace waypoints
-		new Waypoint(125, 70, false),//0
-		new Waypoint(700, 100, false),//1
-		new Waypoint(1050, 80, false),//2
-		new Waypoint(670, 400, false),//3
-		new Waypoint(1050, 400, false),//4
-		new Waypoint(250, 400, false),//5
-		new Waypoint(200, 635, false),//6
-		new Waypoint(500, 655, false),//7
-		new Waypoint(800, 750, false),//8
-		new Waypoint(1000, 750, false),//9
+		new Waypoint(125, 70, false),   // 0
+		new Waypoint(700, 100, false),  // 1
+		new Waypoint(1050, 80, false),  // 2
+		new Waypoint(670, 400, false),  // 3
+		new Waypoint(1050, 400, false), // 4
+		new Waypoint(250, 400, false),  // 5
+		new Waypoint(200, 635, false),  // 6
+		new Waypoint(500, 655, false),  // 7
+		new Waypoint(800, 750, false),  // 8
+		new Waypoint(1000, 750, false), // 9
 		//destination/origin waypoints - present in this list for pathfinding.
-		locationWaypoints[0], //10
-		locationWaypoints[1], //11
-		locationWaypoints[2],//12
-		locationWaypoints[3],//13
+		locationWaypoints[0],           // 10
+		locationWaypoints[1],           // 11
+		locationWaypoints[2],           // 12
+		locationWaypoints[3],           // 13
 	};
-		
-	public Main main() {
-		return _main;
-	}
-	
+
 	public java.util.ArrayList<Aircraft> aircraftList() {
 		return aircraftInAirspace;
 	}
@@ -154,9 +150,6 @@ public class Demo extends Scene {
 	@Override
 	public void update(double dt) {
 		timeElapsed += dt;
-		if (aircraftInAirspace.size() > 0){
-			_main.score().addTime(dt); 
-		}
 		ordersBox.update(dt);
 		for (Aircraft plane : aircraftInAirspace) {
 			plane.update(dt);
@@ -168,7 +161,6 @@ public class Demo extends Scene {
 					deselectAircraft();
 				}
 				aircraftInAirspace.remove(i);
-				_main.score().addFlight();
 			}
 		}
 		altimeter.update(dt);
@@ -198,9 +190,8 @@ public class Demo extends Scene {
 	}
 	
 	public void gameOver(Aircraft plane1, Aircraft plane2) {
-		_main.closeScene();
-		_main.setScene(new GameOver(_main, plane1, plane2));
-		_main.score().addGameOver();
+		main.closeScene();
+		main.setScene(new GameOver(main, plane1, plane2));
 	}
 
 	@Override
@@ -237,6 +228,8 @@ public class Demo extends Scene {
 			for (Waypoint w : airspaceWaypoints) {
 				if (w.isMouseOver(x-16, y-16)) {
 					selectedAircraft.alterPath(selectedPathpoint, w);
+					ordersBox.addOrder(">>> Flight " + selectedAircraft.name() + " please alter your course");
+					ordersBox.addOrder("<<< Roger that. Altering course now.");
 					selectedPathpoint = -1;
 					selectedWaypoint = null;
 				}
@@ -269,7 +262,7 @@ public class Demo extends Scene {
 			break;
 			
 			case input.KEY_ESCAPE :
-				_main.closeScene();
+				main.closeScene();
 			break;
 			
 		}
@@ -290,7 +283,6 @@ public class Demo extends Scene {
 		drawPlaneInfo();
 		
 		graphics.setColour(0, 128, 0);
-		
 		drawScore();
 	}
 	
@@ -317,6 +309,10 @@ public class Demo extends Scene {
 			selectedAircraft.drawFlightPath();
 			graphics.setColour(0, 128, 0);
 			
+		}
+		
+		if (selectedWaypoint != null) {
+			selectedAircraft.drawModifiedPath(selectedPathpoint, input.mouseX() - 16, input.mouseY() - 16);
 		}
 		
 		graphics.setViewport();
@@ -363,7 +359,6 @@ public class Demo extends Scene {
 		int planes = aircraftInAirspace.size();
 		graphics.print(String.valueOf(aircraftInAirspace.size()) + " plane" + (planes == 1 ? "" : "s") + " in the sky.", 256, 0);
 		graphics.print("Control Altitude: " + String.valueOf(controlAltitude), 650, 0);
-		graphics.print("Score: " + _main.score().calculate(), 0, 0);
 	}
 	
 	private void generateFlight() {
