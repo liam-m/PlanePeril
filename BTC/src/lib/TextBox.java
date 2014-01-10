@@ -16,14 +16,14 @@ public class TextBox {
 	public static final char DELAY_END = '}';
 	protected final double _typeWait = 0.01;
 	
-	protected int _x, _y, _width, _height;
-	protected String[] _orders;
-	protected int _currentOrder;
-	protected double _timer;
-	protected double _delayTimer;
-	protected boolean _isDelaying;
-	protected boolean _typing;
-	protected String _buffer;
+	protected int x, y, width, height;
+	protected String[] orders;
+	protected int currentOrder;
+	protected double timer;
+	protected double delayTimer;
+	protected boolean isDelaying;
+	protected boolean isTyping;
+	protected String buffer;
 
 	/**
 	 * Constructor of a TextBox.
@@ -35,20 +35,20 @@ public class TextBox {
 	 */
 	public TextBox(int x, int y, int width, int height, int lines) {
 		LINES = lines;
-		_x = x;
-		_y = y;
-		_width = width;
-		_height = height;
-		_orders = new String[LINES];
-		_currentOrder = 0;
+		this.x = x;
+		this.y = y;
+		this.width = width;
+		this.height = height;
+		orders = new String[LINES];
+		currentOrder = 0;
 		for (int i = 0; i < LINES; i ++) {
-			_orders[i] = "";
+			orders[i] = "";
 		}
-		_timer = 0;
-		_delayTimer = 0;
-		_isDelaying = false;
-		_typing = false;
-		_buffer = "";
+		timer = 0;
+		delayTimer = 0;
+		isDelaying = false;
+		isTyping = false;
+		buffer = "";
 	}
 	
 	/**
@@ -57,17 +57,17 @@ public class TextBox {
 	 */
 	public void addText(String order) {
 		// Word Wrap
-		if (order.length()*8 > _width) {
-			String wrappedOrder = order.substring(0, (_width/8)-1);
+		if (order.length()*8 > width) {
+			String wrappedOrder = order.substring(0, (width/8)-1);
 			while (wrappedOrder.charAt(wrappedOrder.length()-1) != ' ') {
 				wrappedOrder = wrappedOrder.substring(0, wrappedOrder.length()-1);
 			}
-			_buffer += wrappedOrder + SEPARATOR;
+			buffer += wrappedOrder + SEPARATOR;
 			addText(order.substring(wrappedOrder.length()));
 		} else {
-			_buffer += order + SEPARATOR;
+			buffer += order + SEPARATOR;
 		}
-		_typing = true;
+		isTyping = true;
 	}
 
 	/**
@@ -75,7 +75,7 @@ public class TextBox {
 	 * @param duration the length of the delay in seconds.
 	 */
 	public void delay(double duration) {
-		_buffer += DELAY_START + String.valueOf(duration) + DELAY_END;
+		buffer += DELAY_START + String.valueOf(duration) + DELAY_END;
 	}
 	
 	/**
@@ -92,7 +92,7 @@ public class TextBox {
 	 */
 	protected int linesBeingUsed() {
 		for (int i = 0; i < LINES; i ++) {
-			if (_orders[i] == null || _orders[i] == "") {
+			if (orders[i] == null || orders[i] == "") {
 				return i;
 			}
 		}
@@ -104,7 +104,7 @@ public class TextBox {
 	 * @return whether the TextBox is up to date.
 	 */
 	public boolean isUpToDate() {
-		return !_typing;
+		return !isTyping;
 	}
 	
 	/**
@@ -113,43 +113,43 @@ public class TextBox {
 	 */
 	public void update(double dt) {
 		// Update delay
-		if (_isDelaying) {
-			if (_delayTimer <= 0) {
-				_isDelaying = false;
+		if (isDelaying) {
+			if (delayTimer <= 0) {
+				isDelaying = false;
 			} else {
-				_delayTimer = Math.max(0, _delayTimer - dt);
+				delayTimer = Math.max(0, delayTimer - dt);
 				return;
 			}
 		}
 		// Update timer
-		_timer += dt;
-		if (_timer >= _typeWait) {
-			_timer -= _typeWait;
+		timer += dt;
+		if (timer >= _typeWait) {
+			timer -= _typeWait;
 			// Finished
-			if (_buffer.isEmpty()) {
-				_typing = false;
+			if (buffer.isEmpty()) {
+				isTyping = false;
 			// Delay
-			} else if (_buffer.charAt(0) == DELAY_START) {
-				_buffer = _buffer.substring(1);
-				_isDelaying = true;
+			} else if (buffer.charAt(0) == DELAY_START) {
+				buffer = buffer.substring(1);
+				isDelaying = true;
 				String delay = "";
-				while (_buffer.charAt(0) != DELAY_END) {
-					delay += _buffer.charAt(0);
-					_buffer = _buffer.substring(1);
+				while (buffer.charAt(0) != DELAY_END) {
+					delay += buffer.charAt(0);
+					buffer = buffer.substring(1);
 				}
-				_buffer = _buffer.substring(1);
-				_delayTimer = Double.parseDouble(delay);
+				buffer = buffer.substring(1);
+				delayTimer = Double.parseDouble(delay);
 			// New Line
-			} else if (_buffer.charAt(0) == SEPARATOR) {
-				_currentOrder += 1;
-				_buffer = _buffer.substring(1);
+			} else if (buffer.charAt(0) == SEPARATOR) {
+				currentOrder += 1;
+				buffer = buffer.substring(1);
 			} else {
 				// Too many lines
-				if (_currentOrder >= LINES) {
+				if (currentOrder >= LINES) {
 					ripple();
 				}
-				_orders[_currentOrder] += _buffer.substring(0, 1);
-				_buffer = _buffer.substring(1);
+				orders[currentOrder] += buffer.substring(0, 1);
+				buffer = buffer.substring(1);
 			}
 		}
 	}
@@ -159,10 +159,10 @@ public class TextBox {
 	 */
 	protected void ripple() {
 		for (int i = 0; i < LINES-1; i ++) {
-			_orders[i] = _orders[i+1];
+			orders[i] = orders[i+1];
 		}
-		_orders[LINES-1] = "";
-		_currentOrder = Math.max(0,  _currentOrder - 1);
+		orders[LINES-1] = "";
+		currentOrder = Math.max(0, currentOrder - 1);
 	}
 	
 	/**
@@ -171,7 +171,7 @@ public class TextBox {
 	public void draw() {
 		graphics.setColour(0, 128, 0);
 		for (int i = 0; i < linesBeingUsed(); i ++) {
-			graphics.print(_orders[i], _x + 4, _y + 4 + (i * (_height-8) / LINES));
+			graphics.print(orders[i], x + 4, y + 4 + (i * (height-8) / LINES));
 		}
 	}
 
