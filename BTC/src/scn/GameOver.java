@@ -8,59 +8,59 @@ import btc.Main;
 
 public class GameOver extends Scene {
 	
-	private lib.TextBox _textBox;
-	private Aircraft _crashedPlane1;
-	private Aircraft _crashedPlane2;
-	private int _deaths;
-	private int _injured;
+	private lib.TextBox textBox;
+	private Aircraft crashedPlane1;
+	private Aircraft crashedPlane2;
+	private int deaths;
+	private int injured;
 
 	public GameOver(Main main, Aircraft plane1, Aircraft plane2) {
 		super(main);
-		_crashedPlane1 = plane1;
-		_crashedPlane2 = plane2;
+		crashedPlane1 = plane1;
+		crashedPlane2 = plane2;
 	}
 
 	@Override
 	public void start() {
-		_deaths = (int)( Math.random() * 500) + 300;
-		_injured = (int)( Math.random() * 90) + 10;
-		_textBox = new lib.TextBox(64, 96, window.width() - 128, window.height() - 96, 32);
-		_textBox.addText(String.valueOf(_deaths) + " people died in the crash.");
-		_textBox.delay(0.4);
-		_textBox.addText(String.valueOf(_injured) + " managed to escape the burning wreckage.");
-		_textBox.delay(0.8);
-		_textBox.addText("Those " + String.valueOf(_injured) + " were rushed to hospital with third degree burns, broken and dislocated limbs, and severe bruising.");
-		_textBox.delay(0.4);
-		_textBox.addText("They later died in hospital.");
-		_textBox.delay(0.8);
-		_textBox.addText("British Bearways is facing heavy legal pressure from the family and loved-ones of the dead and an investigation into the incident will be performed.");
-		_textBox.delay(0.8);
-		_textBox.addText("The inquery into your incompetance will lead to humanity discovering your true bear nature.");
-		_textBox.delay(0.8);
-		_textBox.addText("Your guilt for the deaths you caused, and your failure to pass as a human, will gnaw at you and you will have to revert to your drinking problem to attempt to cope.");
-		_textBox.newline();
-		_textBox.newline();
-		_textBox.newline();
-		_textBox.newline();
-		_textBox.delay(0.8);
+		deaths = (int)( Math.random() * 500) + 300;
+		injured = (int)( Math.random() * 90) + 10;
+		textBox = new lib.TextBox(64, 96, window.width() - 128, window.height() - 96, 32);
+		textBox.addText(String.valueOf(deaths) + " people died in the crash.");
+		textBox.delay(0.4);
+		textBox.addText(String.valueOf(injured) + " managed to escape the burning wreckage.");
+		textBox.delay(0.8);
+		textBox.addText("Those " + String.valueOf(injured) + " were rushed to hospital with third degree burns, broken and dislocated limbs, and severe bruising.");
+		textBox.delay(0.4);
+		textBox.addText("They later died in hospital.");
+		textBox.delay(0.8);
+		textBox.addText("British Bearways is facing heavy legal pressure from the family and loved-ones of the dead and an investigation into the incident will be performed.");
+		textBox.delay(0.8);
+		textBox.addText("The inquery into your incompetance will lead to humanity discovering your true bear nature.");
+		textBox.delay(0.8);
+		textBox.addText("Your guilt for the deaths you caused, and your failure to pass as a human, will gnaw at you and you will have to revert to your drinking problem to attempt to cope.");
+		textBox.newline();
+		textBox.newline();
+		textBox.newline();
+		textBox.newline();
+		textBox.delay(0.8);
 		String centredGameOver = "";
 		for (int i = 0; i < (window.width() - 80) / 2; i ++) centredGameOver += " ";
 		centredGameOver += "Game Over.";
-		_textBox.addText(centredGameOver);
-		_textBox.newline();
-		_textBox.newline();
-		_textBox.newline();
-		_textBox.newline();
-		_textBox.delay(0.2);
+		textBox.addText(centredGameOver);
+		textBox.newline();
+		textBox.newline();
+		textBox.newline();
+		textBox.newline();
+		textBox.delay(0.2);
 		String centredPrompt = "";
 		for (int i = 0; i < (window.width() - 200) / 2; i ++) centredGameOver += " ";
 		centredPrompt += "Press any key to continue";
-		_textBox.addText(centredPrompt);
+		textBox.addText(centredPrompt);
 	}
 
 	@Override
 	public void update(double dt) {
-		_textBox.update(dt);
+		textBox.update(dt);
 	}
 
 	@Override
@@ -75,19 +75,19 @@ public class GameOver extends Scene {
 	@Override
 	public void keyReleased(int key) {
 		if (key == input.KEY_SPACE) { 
-			_main.closeScene();
-			_main.setScene(new Demo(_main, Demo.difficulty));
+			main.closeScene();
+			main.setScene(new Demo(main, Demo.difficulty));
 		} else if (key == input.KEY_ESCAPE) {
-			_main.closeScene();
-			_main.closeScene();
+			main.closeScene();
+			main.closeScene();
 		}
 	}
 
 	@Override
 	public void draw() {
 		graphics.setColour(0, 128, 0);
-		graphics.printCentred(_crashedPlane1.name() + " crashed into " + _crashedPlane2.name() + ".", 0, 32, 2, window.width());
-		_textBox.draw();
+		graphics.printCentred(crashedPlane1.name() + " crashed into " + crashedPlane2.name() + ".", 0, 32, 2, window.width());
+		textBox.draw();
 	}
 
 	@Override
