@@ -9,9 +9,9 @@ import btc.Main;
 
 public class Title extends Scene {
 	
-	private audio.Music _beep;
-	private lib.ButtonText[] _buttons;
-	private double _angle;
+	private audio.Music beep;
+	private lib.ButtonText[] buttons;
+	private double angle;
 
 	public Title(Main main) {
 		super(main);
@@ -19,17 +19,17 @@ public class Title extends Scene {
 
 	@Override
 	public void start() {
-		_beep = audio.newMusic("sfx" + File.separator + "beep.ogg");
-		_beep.setVolume(0.2f);
-		_buttons = new lib.ButtonText[3];
+		beep = audio.newMusic("sfx" + File.separator + "beep.ogg");
+		beep.setVolume(0.2f);
+		buttons = new lib.ButtonText[3];
 		// Demo Button
 		lib.ButtonText.Action demo = new lib.ButtonText.Action() {
 			@Override
 			public void action() {
-				_main.setScene(new DifficultySelect(_main));
+				main.setScene(new DifficultySelect(main));
 			}
 		};
-		_buttons[0] = new lib.ButtonText("Play Demo", demo, window.height(), window.height()/2 + 96, window.width() - window.height(), 24, 8, 6);
+		buttons[0] = new lib.ButtonText("Play Demo", demo, window.height(), window.height()/2 + 96, window.width() - window.height(), 24, 8, 6);
 		// Game Button
 		lib.ButtonText.Action play = new lib.ButtonText.Action() {
 			@Override
@@ -37,27 +37,27 @@ public class Title extends Scene {
 //				_main.setScene(new Game(_main));
 			}
 		};
-		_buttons[1] = new lib.ButtonText("Play Full Game", play, window.height(), window.height()/2 + 126, window.width() - window.height(), 24, 8, 6);
-		_buttons[1].setAvailability(false);
+		buttons[1] = new lib.ButtonText("Play Full Game", play, window.height(), window.height()/2 + 126, window.width() - window.height(), 24, 8, 6);
+		buttons[1].setAvailability(false);
 		// Exit Button
 		lib.ButtonText.Action exit = new lib.ButtonText.Action() {
 			@Override
 			public void action() {
-				_main.quit();
+				main.quit();
 			}
 		};
-		_buttons[2] = new lib.ButtonText("Exit", exit, window.height(), window.height()/2 + 156, window.width() - window.height(), 24, 8, 6);
-		_angle = 0;
+		buttons[2] = new lib.ButtonText("Exit", exit, window.height(), window.height()/2 + 156, window.width() - window.height(), 24, 8, 6);
+		angle = 0;
 	}
 
 	@Override
 	public void update(double dt) {
-		_angle += dt;
-		double beepTimer = (_angle * 4) + (Math.PI * 4 / 5);
+		angle += dt;
+		double beepTimer = (angle * 4) + (Math.PI * 4 / 5);
 		beepTimer %= (2 * Math.PI);
 		if ( beepTimer <= 0.1 ) {
-			_beep.stop();
-			_beep.play();
+			beep.stop();
+			beep.play();
 		}
 	}
 
@@ -66,7 +66,7 @@ public class Title extends Scene {
 
 	@Override
 	public void mouseReleased(int key, int mx, int my) {
-		for (lib.ButtonText b : _buttons) {
+		for (lib.ButtonText b : buttons) {
 			if (b.isMouseOver(mx, my)) {
 				b.act();
 			}
@@ -96,22 +96,22 @@ public class Title extends Scene {
 		graphics.circle(false, window.height()/2, window.height()/2, window.height()/9, 100);
 		graphics.circle(false, window.height()/2, window.height()/2, 2, 100);
 		graphics.setColour(0, 128, 0);
-		double angle = (_angle * 4) % (2 * Math.PI);
-		int w = (int)( Math.cos(angle) * (window.height()/2 - 32) );
-		int h = (int)( Math.sin(angle) * (window.height()/2 - 32) );
+		double radarAngle = (angle * 4) % (2 * Math.PI);
+		int w = (int)( Math.cos(radarAngle) * (window.height()/2 - 32) );
+		int h = (int)( Math.sin(radarAngle) * (window.height()/2 - 32) );
 		graphics.line(window.height()/2, window.height()/2, window.height()/2 + w, window.height()/2 + h);
 		graphics.setColour(0, 128, 0, 8);
-		graphics.arc(true, window.height()/2, window.height()/2, window.height()/2 - 32, angle, -8 * Math.PI / 8);
-		graphics.arc(true, window.height()/2, window.height()/2, window.height()/2 - 32, angle, -7 * Math.PI / 8);
-		graphics.arc(true, window.height()/2, window.height()/2, window.height()/2 - 32, angle, -6 * Math.PI / 8);
-		graphics.arc(true, window.height()/2, window.height()/2, window.height()/2 - 32, angle, -5 * Math.PI / 8);
-		graphics.arc(true, window.height()/2, window.height()/2, window.height()/2 - 32, angle, -4 * Math.PI / 8);
-		graphics.arc(true, window.height()/2, window.height()/2, window.height()/2 - 32, angle, -3 * Math.PI / 8);
-		graphics.arc(true, window.height()/2, window.height()/2, window.height()/2 - 32, angle, -2 * Math.PI / 8);
-		graphics.arc(true, window.height()/2, window.height()/2, window.height()/2 - 32, angle, -1 * Math.PI / 8);
+		graphics.arc(true, window.height()/2, window.height()/2, window.height()/2 - 32, radarAngle, -8 * Math.PI / 8);
+		graphics.arc(true, window.height()/2, window.height()/2, window.height()/2 - 32, radarAngle, -7 * Math.PI / 8);
+		graphics.arc(true, window.height()/2, window.height()/2, window.height()/2 - 32, radarAngle, -6 * Math.PI / 8);
+		graphics.arc(true, window.height()/2, window.height()/2, window.height()/2 - 32, radarAngle, -5 * Math.PI / 8);
+		graphics.arc(true, window.height()/2, window.height()/2, window.height()/2 - 32, radarAngle, -4 * Math.PI / 8);
+		graphics.arc(true, window.height()/2, window.height()/2, window.height()/2 - 32, radarAngle, -3 * Math.PI / 8);
+		graphics.arc(true, window.height()/2, window.height()/2, window.height()/2 - 32, radarAngle, -2 * Math.PI / 8);
+		graphics.arc(true, window.height()/2, window.height()/2, window.height()/2 - 32, radarAngle, -1 * Math.PI / 8);
 		// Title
 		String title = "Bear Traffic Controller";
-		double a = angle + (Math.PI * 4 / 5);
+		double a = radarAngle + (Math.PI * 4 / 5);
 		for (int i = 0; i < title.length(); i++) {
 			a -= Math.PI / 32;
 			double opacity = a %= (2 * Math.PI);
@@ -133,24 +133,8 @@ public class Title extends Scene {
 		graphics.print(dateFormat.format(date), window.height() + 8, 20);
 		graphics.print(timeFormat.format(date), window.height() + 8, 36);
 		graphics.line(window.height(), 48, window.width() - 16, 48);
-		// Draw Random Statistics
-		graphics.line(window.height(), 108, window.width() - 16, 108);
-		graphics.print("Statistics:", window.height() + 8, 116);
-		graphics.line(window.height(), 130, window.width() - 16, 130);
-		graphics.print("Time Played:", window.height() + 8, 138);
-		int hours = (int)(_main.score().timePlayed() / (60 * 60));
-		int minutes = (int)(_main.score().timePlayed() / 60);
-		minutes %= 60;
-		double seconds = _main.score().timePlayed() % 60;
-		java.text.DecimalFormat df = new java.text.DecimalFormat("00.00");
-		String timePlayed = String.format("%d:%02d:", hours, minutes) + df.format(seconds); 
-		graphics.print(timePlayed, window.height() + 8, 154);
-		graphics.print("Current Score:", window.height() + 8, 170);
-		graphics.print(String.valueOf(_main.score().calculate()), window.height() + 8, 186);
 		// Draw Buttons
-		for (lib.ButtonText b : _buttons) {
-			b.draw();
-		}
+		for (lib.ButtonText b : buttons) b.draw();
 		graphics.setColour(0, 128, 0);
 		graphics.line(window.height(), window.height()/2 + 90, window.width() - 16, window.height()/2 + 90);
 		graphics.line(window.height(), window.height()/2 + 120, window.width() - 16, window.height()/2 + 120);
@@ -160,7 +144,7 @@ public class Title extends Scene {
 
 	@Override
 	public void close() {
-		
+
 	}
 
 }
