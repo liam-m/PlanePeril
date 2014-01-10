@@ -2,10 +2,10 @@ package scn;
 
 public abstract class Scene implements lib.jog.input.EventHandler {
 
-	protected btc.Main _main;
+	protected btc.Main main;
 	
 	protected Scene(btc.Main main) {
-		_main = main;
+		this.main = main;
 	}
 	
 	abstract public void start();
