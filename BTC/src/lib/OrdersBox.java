@@ -37,7 +37,7 @@ public class OrdersBox extends TextBox {
 	 * @param dt time since the last update call.
 	 */
 	public void update(double dt) {
-		if (!_typing) {
+		if (!isTyping) {
 			_removalTimer += dt;
 			if (_removalTimer >= REMOVAL_WAIT) {
 				_removalTimer -= REMOVAL_WAIT;
