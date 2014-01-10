@@ -437,6 +437,25 @@ public class Aircraft {
 		}
 	}
 	
+	/**
+	 * Visually represents the pathpoint being moved.
+	 * @param mouseX current position of mouse
+	 * @param mouseY current position of mouse
+	 */
+	public void drawModifiedPath(int modified, double mouseX, double mouseY) {
+		graphics.setColour(0, 128, 128, 128);
+		if (currentRouteStage > modified-1) {
+			graphics.line(position().x(), position().y(), mouseX, mouseY);
+		} else {
+			graphics.line(route[modified-1].position().x(), route[modified-1].position().y(), mouseX, mouseY);
+		}
+		if (currentTarget == destination) {
+			graphics.line(mouseX, mouseY, destination.x(), destination.y());
+		} else {
+			graphics.line(mouseX, mouseY, route[modified+1].position().x(), route[modified+1].position().y());
+		}
+	}
+	
 	@Deprecated
 	private Waypoint[] findRandomRoute(Vector origin, Vector destination) {
 		// Placeholder over-simplified version
@@ -656,7 +675,6 @@ public class Aircraft {
 				scene.gameOver(this, plane);
 				hasFinished = true;
 			} else if (plane != this && isWithin(plane, separationRule)) {
-				scene.main().score().addTimeViolated(dt);
 				planesTooNear.add(plane);
 			}
 		}
