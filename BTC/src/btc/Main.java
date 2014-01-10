@@ -32,7 +32,6 @@ public class Main implements input.EventHandler {
 	private double dt;
 	private java.util.Stack<scn.Scene> sceneStack;
 	private scn.Scene currentScene;
-	private cls.Score _score;
 	
 	/**
 	 * Constructor for Main. Initialises the jog library classes, and then
@@ -61,7 +60,6 @@ public class Main implements input.EventHandler {
 		graphics.setFont(font);
 		sceneStack = new java.util.Stack<scn.Scene>();
 		setScene(new scn.Title(this));
-		_score = new cls.Score();
 	}
 	
 	/**
@@ -143,8 +141,4 @@ public class Main implements input.EventHandler {
 		currentScene.keyReleased(key);
 	}
 
-	public cls.Score score() {
-		return _score;
-	}
-	
 }
