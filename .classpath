@@ -2,7 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="BTC/src">
 		<attributes>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="//userfs/slw546/w2k/bear_traffic_controller/BTC/ext/natives"/>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="bear_traffic_controller/BTC/ext/natives/windows"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>

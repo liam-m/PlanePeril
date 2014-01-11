@@ -69,7 +69,7 @@ public class Demo extends Scene {
 		//airspace waypoints
 		new Waypoint(125, 70, false),   // 0
 		new Waypoint(700, 100, false),  // 1
-		new Waypoint(1050, 80, false),  // 2
+		new Waypoint(1040, 80, false),  // 2
 		new Waypoint(670, 400, false),  // 3
 		new Waypoint(1050, 400, false), // 4
 		new Waypoint(250, 400, false),  // 5
@@ -370,15 +370,7 @@ public class Demo extends Scene {
 		}
 		String originName = LOCATION_NAMES[o];
 		String destinationName = LOCATION_NAMES[d];
-		
-/*		int side = randInt(0,1);
-		switch (side){
-		case 0://enter from left, leave from right
-			break;
-		case 1://enter from right, leave from left
-			break;
-		}*/
-		
+				
 		Waypoint originPoint = locationWaypoints[o];
 		Waypoint destinationPoint = locationWaypoints[d];
 		

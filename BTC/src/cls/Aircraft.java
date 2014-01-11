@@ -105,26 +105,40 @@ public class Aircraft {
 		destinationName = nameOrigin;
 		originName = nameDestination;
 		
-		// Find route
-		//djikstraRoute(originPoint, destinationPoint, sceneWaypoints);
+		// Find a route between the origin waypoint and the destination, via waypoints in the current scene.
 		route = findGreedyRoute(originPoint, destinationPoint, sceneWaypoints);
-		
+		//set the current target waypoint to the first waypoint in the route, ie. begin flying towards origin
 		currentTarget = route[0].position();
 		image = img;
-		position = originPoint.position(); //place on spawn waypoint
+		position = originPoint.position(); //place the new aircraft on the origin waypoint
 		
-		int side = randInt(0, 1);
+		int altitudeOffset = randInt(0,1);
+		switch(altitudeOffset){
+		case 0:
+			this.changeAltitude(28000);
+			break;
+		case 1:
+			this.changeAltitude(30000);
+			break;
+		}
+		
+		//Offsets the spawn location of the aircraft around the origin waypoint, for variety
+		//This also prevents collisions between just-spawned aircraft and existing aircraft flying to the waypoint.
+		int side = randInt(0, 1); // pick a random int to determine an offset around the spawnpoint.
 		int offset = 0;
 		switch (side){ //offset spawn point to left
 		case 0:
 			offset = randInt(-separationRule, -10);
+			System.out.println("Offset by left");
 			break;
 		case 1: //offset spawn point to right
 			offset = randInt(10, separationRule);
+			System.out.println("Offset right");
 			break;
 		}
 		System.out.println("Offset by " + offset);
-		position = position.add(new Vector(offset, 0, 30000));//offset spawn position. Helps avoid aircraft crashes very soon after spawn
+		
+		position = position.add(new Vector(offset, 0, 0));//offset spawn position. Helps avoid aircraft crashes very soon after spawn
 		
 		destination = destinationPoint.position();
 		isManuallyControlled = false;
@@ -136,6 +150,9 @@ public class Aircraft {
 		currentlyTurningBy = 0;
 		
 		switch (difficulty){
+		//adjust the aircraft's attributes according to the difficulty of the parent scene.
+		// 0 has the easiest attributes (slower aircraft, more forgiving separation rules.
+		// 2 has the hardest attributes (faster aircrft, least forgiving separation rules.
 		case 0:
 			separationRule = 64;
 			break;
@@ -146,6 +163,8 @@ public class Aircraft {
 		case 2:
 			separationRule = 128;
 			velocity = velocity.scaleBy(3);
+			//At high velocities, the aircraft is allowed to turn faster
+			//this helps keep the aircraft on track.
 			turnSpeed = Math.PI / 2;
 			break;
 		}
@@ -735,9 +754,16 @@ public class Aircraft {
 		position = new Vector(position.x(), position.y(), position.z() + height);
 	}
 	
-	private int randInt(int min, int max){
+	private static int randInt(int min, int max){
+		/**
+		 * Generates a random integer between min and max, in the range [min, max]
+		 * This method is inclusive of min AND max.
+		 * @param min the lower boundary (included) for the random integer
+		 * @param max the upper boundary (included) for the random integer
+		 * @return a random integer
+		 */
 		Random rand = new Random();
-		return rand.nextInt((max - min)) + min;
+		return rand.nextInt((max - min) + 1) + min;
 	}
 
 }
