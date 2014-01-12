@@ -317,10 +317,10 @@ public class Demo extends Scene {
 		
 		graphics.setViewport();
 		graphics.setColour(0, 128, 0);
-		graphics.print(LOCATION_NAMES[0], 20, 20);
-		graphics.print(LOCATION_NAMES[1], 20, window.height() - ORDERSBOX_H - 30);
-		graphics.print(LOCATION_NAMES[2], window.width() - 90, 20);
-		graphics.print(LOCATION_NAMES[3], window.width() - 120, window.height() - ORDERSBOX_H - 30);
+		graphics.print(LOCATION_NAMES[0], locationWaypoints[0].position().x() + 25, locationWaypoints[0].position().y() + 10);
+		graphics.print(LOCATION_NAMES[1], locationWaypoints[1].position().x() + 25, locationWaypoints[1].position().y() + 10);
+		graphics.print(LOCATION_NAMES[2], locationWaypoints[2].position().x() - 125, locationWaypoints[2].position().y() + 10);
+		graphics.print(LOCATION_NAMES[3], locationWaypoints[3].position().x() - 75, locationWaypoints[3].position().y() + 10);
 
 			// Change Altitude
 	}

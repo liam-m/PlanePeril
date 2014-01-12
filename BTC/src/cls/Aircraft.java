@@ -338,15 +338,7 @@ public class Aircraft {
 		position = position.add(dv);
 		
 		currentlyTurningBy = 0;
-		// Update input if manually controlled
-		if (isManuallyControlled) {
-			if (outOfBounds()) {
-				hasFinished = true;
-				return;
-			}
-			return;
-		}
-
+		
 		// Update target
 		if (isAt(currentTarget) && currentTarget.equals(destination)) {
 			hasFinished = true;
@@ -357,7 +349,16 @@ public class Aircraft {
 			currentRouteStage ++;
 			currentTarget = route[currentRouteStage].position();
 		}
-		
+
+		// Update input if manually controlled
+		if (isManuallyControlled) {
+			if (outOfBounds()) {
+				hasFinished = true;
+				return;
+			}
+			return;
+		}
+
 		// Update bearing
 		if ( Math.abs(angleToTarget() - bearing()) > 0.1 ) {
 			turnTowardsTarget(dt);
