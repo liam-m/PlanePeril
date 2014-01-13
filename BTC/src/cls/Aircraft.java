@@ -117,15 +117,31 @@ public class Aircraft {
 		//place on spawn waypoint
 		position = originPoint.position(); 
 		//offset spawn position. Helps avoid aircraft crashes very soon after spawn
+		
+		//Offsets the spawn location of the aircraft around the origin waypoint, for variety
+		//This also prevents collisions between just-spawned aircraft and existing aircraft flying to the waypoint.
 		int offset;
 		if (randInt(0, 1) == 0) {
 			offset = randInt(-separationRule, -10);
 		} else {
 			offset = randInt(10, separationRule);
 		}
-		position = position.add(new Vector(offset, 0, 30000));
+		
+		int altitudeOffset;
+		if (randInt(0, 1) == 0) {
+			altitudeOffset = 28000;
+		} else {
+			altitudeOffset = 30000;
+		}
+		
+		position = position.add(new Vector(offset, 0, altitudeOffset));
 		// Calculate inital velocity (direction)
 		currentTarget = route[0].position();
+		
+		position = position.add(new Vector(offset, 0, 0));//offset spawn position. Helps avoid aircraft crashes very soon after spawn
+		
+		destination = destinationPoint.position();
+		isManuallyControlled = false;
 		double x = currentTarget.x() - position.x();
 		double y = currentTarget.y() - position.y();
 		velocity = new Vector(x, y, 0).normalise().scaleBy(speed);
@@ -137,6 +153,9 @@ public class Aircraft {
 		
 		// Speed up plane for higher difficulties
 		switch (difficulty){
+		//adjust the aircraft's attributes according to the difficulty of the parent scene.
+		// 0 has the easiest attributes (slower aircraft, more forgiving separation rules.
+		// 2 has the hardest attributes (faster aircrft, least forgiving separation rules.
 		case 0:
 			separationRule = 64;
 			break;
@@ -147,6 +166,8 @@ public class Aircraft {
 		case 2:
 			separationRule = 128;
 			velocity = velocity.scaleBy(3);
+			//At high velocities, the aircraft is allowed to turn faster
+			//this helps keep the aircraft on track.
 			turnSpeed = Math.PI / 2;
 			break;
 		}
@@ -319,15 +340,7 @@ public class Aircraft {
 		position = position.add(dv);
 		
 		currentlyTurningBy = 0;
-		// Update input if manually controlled
-		if (isManuallyControlled) {
-			if (outOfBounds()) {
-				hasFinished = true;
-				return;
-			}
-			return;
-		}
-
+		
 		// Update target
 		if (isAt(currentTarget) && currentTarget.equals(destination)) {
 			hasFinished = true;
@@ -338,7 +351,16 @@ public class Aircraft {
 			currentRouteStage ++;
 			currentTarget = route[currentRouteStage].position();
 		}
-		
+
+		// Update input if manually controlled
+		if (isManuallyControlled) {
+			if (outOfBounds()) {
+				hasFinished = true;
+				return;
+			}
+			return;
+		}
+
 		// Update bearing
 		if ( Math.abs(angleToTarget() - bearing()) > 0.1 ) {
 			turnTowardsTarget(dt);
@@ -487,7 +509,7 @@ public class Aircraft {
 	 * @param origin the waypoint from which to begin.
 	 * @param destination the waypoint at which to end.
 	 * @param waypoints the waypoints to be used.
-	 * @return the optimal route between the origin and the destination, using a sensible amount of waypoint.
+	 * @return a sensible route between the origin and the destination, using a sensible amount of waypoint.
 	 */
 	public Waypoint[] findGreedyRoute(Waypoint origin, Waypoint destination, Waypoint[] waypoints){
 		// to hold the route as we generate it.
@@ -496,8 +518,7 @@ public class Aircraft {
 		//selectedWaypoints.add(origin);
 		// to track our position as we generate the route. Initialise to the start of the route
 		Waypoint currentPos = origin;
-		//System.out.println("Begin route finding");
-		//System.out.println("Entered from: " + currentPos.position().x() + " " + currentPos.position().y());
+
 		// to track the closest next waypoint
 		double cost = 99999999999999.0;
 		Waypoint cheapest = null;
@@ -505,7 +526,6 @@ public class Aircraft {
 		boolean atDestination = false;
 		
 		while (! atDestination) {
-			//System.out.println("Entering findRoute while");
 			for (Waypoint point : waypoints) {
 				boolean skip = false;
 				
@@ -523,17 +543,14 @@ public class Aircraft {
 				// also skip if flagged as a previously selected waypoint
 				if (skip == true | point.position().equals(currentPos.position()) | point.position().equals(origin.position())
 						| (point.isEntryOrExit() == true && (point.position().equals(destination.position()) == false))){
-				//	System.out.println("Skipped");
 					skip = false; //reset flag
 					continue;
 	
 				}  else  {
-					//System.out.println("Evaluating point");
 					/* get cost of visiting waypoint
 					 * compare cost vs current cheapest
 					 * if smaller, replace */	
 					if (point.getCost(currentPos) + 0.5 * Waypoint.getCostBetween(point, destination) < cost){
-					//	System.out.println("cost: " + point.getCost(currentPos));
 						//cheaper route found, update
 						cheapest = point;
 						cost = point.getCost(currentPos) + 0.5 * Waypoint.getCostBetween(point, destination);
@@ -541,7 +558,6 @@ public class Aircraft {
 				}
 				
 			} //end for - evaluated all waypoints
-			//System.out.println("Exited findRoute for");
 			//The cheapest waypoint must have been found
 			assert cheapest != null : "The cheapest waypoint was not found";
 
@@ -549,14 +565,7 @@ public class Aircraft {
 				/* route has reached destination 
 				 * break out of while loop*/
 				atDestination = true;
-				//System.out.println("Found destination");
-			} else {
-				//System.out.println("not destination");
 			}
-			
-			
-			//System.out.println("currentPos: " + currentPos.position().x() + " " + currentPos.position().y() + " " + currentPos.position().z());
-			//System.out.println("Destination: "+ destination.position().x() + " "+ destination.position().y() + " "+ destination.position().z());
 			// update the selected route
 			// consider further points in route from the position of the selected point
 			selectedWaypoints.add(cheapest);
@@ -565,7 +574,6 @@ public class Aircraft {
 			cost = 99999999999.0;
 
 		} //end while
-		//System.out.println("Exited findRoute while");
 		//create a Waypoint[] to hold the new route
 		Waypoint[] route = new Waypoint[selectedWaypoints.size()];
 		//fill route with the selected waypoints
@@ -595,26 +603,21 @@ public class Aircraft {
 			double cost = 9999.0;
 			Waypoint cheapest = queue.get(0);
 			for (int i = 0; i < queue.size(); i++){
-				//System.out.println("Evaluating Queue");
 				if (distance[i] < cost && visited[i] == false){
 					cheapest = queue.get(i);
-					//System.out.println("Found cheaper");
 				}
 			}
 			
 			if (cheapest.position().equals(destination.position())){ //terminate if the next node is the destination
-				//System.out.println("Found Destination");
 				route = buildRoute(sceneWaypoints, previous, destination);
 				break;
 			} else {
-				//System.out.println("Not dest");
 				queue.remove(cheapest);
 				int cheapestIndex = getIndex(cheapest, sceneWaypoints);
 				visited[cheapestIndex] = true;
 				double dist;
 
 				for (Waypoint neighbour : sceneWaypoints) {
-					//System.out.println("Evaluating neighbours");
 					dist = distance[cheapestIndex] + Waypoint.getCostBetween(cheapest, neighbour); //accumulate shortest distance from origin
 					int neighbourIndex = getIndex(neighbour, sceneWaypoints);
 
@@ -622,7 +625,6 @@ public class Aircraft {
 						distance[neighbourIndex] = dist; //shortest dist from origin to neighbour
 						previous[neighbourIndex] = cheapest;
 						queue.add(neighbour); //insert into queue for processing
-						//System.out.println("Neighbour added to Queue");
 					} //end if
 				} // end for
 			} // end else
@@ -636,24 +638,21 @@ public class Aircraft {
 	 * @param destination
 	 * @return
 	 */
+	@Deprecated
 	private Waypoint[] buildRoute(Waypoint[] sceneWaypoints, Waypoint[] previous, Waypoint destination){
-		System.out.println("Begin buildRoute.");
 		Stack<Waypoint> sequence = new Stack<Waypoint>();
 		int currentIndex = getIndex(destination, sceneWaypoints);
 		
 		while (previous[currentIndex] != null) {
-			System.out.println("Waypoints " + previous[currentIndex]);
 			sequence.push(previous[currentIndex]); //build the sequence of waypoints back to the origin
 			currentIndex = getIndex(previous[currentIndex], sceneWaypoints);
 		}
-		System.out.println("Stack size: " + sequence.size());
 		
 		//pop to build the route from origin to destination
 		Waypoint[] route = new Waypoint[sequence.size()];
 		
 		for (int i = 0; i < sequence.size(); i++){
 			route[i] = sequence.pop();
-			System.out.println("[ROUTE] Waypoint: " + i + " Pos: " + route[i].position().x() + " " + route[i].position().y());
 		}
 		//finally add the destination
 		route[route.length - 1] = destination;
@@ -750,9 +749,16 @@ public class Aircraft {
 		position = new Vector(position.x(), position.y(), position.z() + height);
 	}
 	
-	private int randInt(int min, int max){
+	private static int randInt(int min, int max){
+		/**
+		 * Generates a random integer between min and max, in the range [min, max]
+		 * This method is inclusive of min AND max.
+		 * @param min the lower boundary (included) for the random integer
+		 * @param max the upper boundary (included) for the random integer
+		 * @return a random integer
+		 */
 		Random rand = new Random();
-		return rand.nextInt((max - min)) + min;
+		return rand.nextInt((max - min) + 1) + min;
 	}
 
 }

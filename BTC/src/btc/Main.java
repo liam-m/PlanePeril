@@ -30,6 +30,9 @@ public class Main implements input.EventHandler {
 	private java.util.Stack<scn.Scene> sceneStack;
 	private scn.Scene currentScene;
 	
+	private int fps;
+	private long lastfps;
+	
 	/**
 	 * Constructor for Main. Initialises the jog library classes, and then
 	 * begins the game loop, calculating time between frames, and then when
@@ -57,6 +60,7 @@ public class Main implements input.EventHandler {
 		graphics.setFont(font);
 		sceneStack = new java.util.Stack<scn.Scene>();
 		setScene(new scn.Title(this));
+		lastfps = ((Sys.getTime()* 1000) / Sys.getTimerResolution()); //set lastFPS to current Time
 	}
 	
 	/**
@@ -65,6 +69,7 @@ public class Main implements input.EventHandler {
 	 */
 	private void update(double dt) {
 		input.update(this);
+		updateFPS();
 		window.update();
 		currentScene.update(dt);
 	}
@@ -117,6 +122,22 @@ public class Main implements input.EventHandler {
 		sceneStack.pop();
 		currentScene = sceneStack.peek(); 
 	}
+	
+	/** 
+	 * Updates the fps
+	 */
+	public void updateFPS()
+	{
+		long time = ((Sys.getTime()* 1000) / Sys.getTimerResolution()); //set lastFPS to current Time
+		if (time - lastfps > 1000) 
+		{
+			window.setTitle("Bear Traffic Controller - FPS: " + fps);
+			fps = 0; //reset the FPS counter
+			lastfps += 1000; //add one second
+		}
+		fps++;
+	}
+	
 
 	@Override
 	public void mousePressed(int key, int x, int y) {

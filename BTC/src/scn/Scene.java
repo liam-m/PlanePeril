@@ -16,4 +16,6 @@ public abstract class Scene implements lib.jog.input.EventHandler {
 	
 	abstract public void close();
 	
+	
 }
+

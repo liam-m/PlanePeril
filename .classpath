@@ -2,34 +2,42 @@
 <classpath>
 	<classpathentry kind="src" path="BTC/src">
 		<attributes>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="//userfs/slw546/w2k/bear_traffic_controller/BTC/ext/natives"/>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="Bear Traffic Control/BTC/ext/natives"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="BTC/ext/hamcrest-core-1.3.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="Bear Traffic Control/BTC/ext/natives/windows"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="BTC/ext/hamcrest-core-1.3.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="Bear Traffic Control/BTC/ext/natives/windows"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="BTC/ext/jogg-0.0.7.jar">
 		<attributes>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="//userfs/slw546/w2k/bear_traffic_controller/BTC/ext/natives/windows"/>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="Bear Traffic Control/BTC/ext/natives/windows"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="BTC/ext/jorbis-0.0.15.jar">
 		<attributes>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="//userfs/slw546/w2k/bear_traffic_controller/BTC/ext/natives/windows"/>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="Bear Traffic Control/BTC/ext/natives/windows"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="BTC/ext/junit-4.11.jar">
 		<attributes>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="//userfs/slw546/w2k/bear_traffic_controller/BTC/ext/natives/windows"/>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="Bear Traffic Control/BTC/ext/natives/windows"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="BTC/ext/lwjgl.jar">
 		<attributes>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="//userfs/slw546/w2k/bear_traffic_controller/BTC/ext/natives/windows"/>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="Bear Traffic Control/BTC/ext/natives/windows"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="BTC/ext/slick.jar">
 		<attributes>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="//userfs/slw546/w2k/bear_traffic_controller/BTC/ext/natives/windows"/>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="Bear Traffic Control/BTC/ext/natives/windows"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="output" path="BTC/bin"/>

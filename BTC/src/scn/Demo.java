@@ -69,7 +69,7 @@ public class Demo extends Scene {
 		//airspace waypoints
 		new Waypoint(125, 70, false),   // 0
 		new Waypoint(700, 100, false),  // 1
-		new Waypoint(1050, 80, false),  // 2
+		new Waypoint(1040, 80, false),  // 2
 		new Waypoint(670, 400, false),  // 3
 		new Waypoint(1050, 400, false), // 4
 		new Waypoint(250, 400, false),  // 5
@@ -323,10 +323,10 @@ public class Demo extends Scene {
 		
 		graphics.setViewport();
 		graphics.setColour(0, 128, 0);
-		graphics.print(LOCATION_NAMES[0], 20, 20);
-		graphics.print(LOCATION_NAMES[1], 20, window.height() - ORDERSBOX_H - 30);
-		graphics.print(LOCATION_NAMES[2], window.width() - 90, 20);
-		graphics.print(LOCATION_NAMES[3], window.width() - 120, window.height() - ORDERSBOX_H - 30);
+		graphics.print(LOCATION_NAMES[0], locationWaypoints[0].position().x() + 25, locationWaypoints[0].position().y() + 10);
+		graphics.print(LOCATION_NAMES[1], locationWaypoints[1].position().x() + 25, locationWaypoints[1].position().y() + 10);
+		graphics.print(LOCATION_NAMES[2], locationWaypoints[2].position().x() - 125, locationWaypoints[2].position().y() + 10);
+		graphics.print(LOCATION_NAMES[3], locationWaypoints[3].position().x() - 75, locationWaypoints[3].position().y() + 10);
 
 			// Change Altitude
 	}
@@ -376,15 +376,7 @@ public class Demo extends Scene {
 		}
 		String originName = LOCATION_NAMES[o];
 		String destinationName = LOCATION_NAMES[d];
-		
-/*		int side = randInt(0,1);
-		switch (side){
-		case 0://enter from left, leave from right
-			break;
-		case 1://enter from right, leave from left
-			break;
-		}*/
-		
+				
 		Waypoint originPoint = locationWaypoints[o];
 		Waypoint destinationPoint = locationWaypoints[d];
 		
