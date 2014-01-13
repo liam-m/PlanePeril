@@ -9,7 +9,7 @@ package lib;
 public class OrdersBox extends TextBox {
 	
 	private final double REMOVAL_WAIT = 6;
-	private double _removalTimer;
+	private double removalTimer;
 
 	/**
 	 * Constructor of a OrdersBox.
@@ -21,7 +21,7 @@ public class OrdersBox extends TextBox {
 	 */
 	public OrdersBox(int x, int y, int width, int height, int lines) {
 		super(x, y, width, height, lines);
-		_removalTimer = 0;
+		removalTimer = 0;
 	}
 	
 	/**
@@ -38,9 +38,9 @@ public class OrdersBox extends TextBox {
 	 */
 	public void update(double dt) {
 		if (!isTyping) {
-			_removalTimer += dt;
-			if (_removalTimer >= REMOVAL_WAIT) {
-				_removalTimer -= REMOVAL_WAIT;
+			removalTimer += dt;
+			if (removalTimer >= REMOVAL_WAIT) {
+				removalTimer -= REMOVAL_WAIT;
 				ripple();
 			}
 			return;
