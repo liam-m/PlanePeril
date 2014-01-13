@@ -4,10 +4,7 @@ import java.io.File;
 
 import org.lwjgl.Sys;
 
-import lib.jog.audio;
-import lib.jog.graphics;
-import lib.jog.input;
-import lib.jog.window;
+import lib.jog.*;
 
 /**
  * <h1>Main</h1>
