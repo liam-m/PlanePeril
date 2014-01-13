@@ -57,6 +57,10 @@ public class Aircraft {
 	 */
 	private Vector currentTarget;
 	/**
+	 * The target the player has told the plane to fly at when manually controlled.
+	 */
+	private double manualBearingTarget;
+	/**
 	 * The name of the location the plane is flying from.
 	 */
 	private String originName;
@@ -126,22 +130,16 @@ public class Aircraft {
 		} else {
 			offset = randInt(10, separationRule);
 		}
-		
 		int altitudeOffset;
 		if (randInt(0, 1) == 0) {
 			altitudeOffset = 28000;
 		} else {
 			altitudeOffset = 30000;
 		}
-		
 		position = position.add(new Vector(offset, 0, altitudeOffset));
+		
 		// Calculate inital velocity (direction)
 		currentTarget = route[0].position();
-		
-		position = position.add(new Vector(offset, 0, 0));//offset spawn position. Helps avoid aircraft crashes very soon after spawn
-		
-		destination = destinationPoint.position();
-		isManuallyControlled = false;
 		double x = currentTarget.x() - position.x();
 		double y = currentTarget.y() - position.y();
 		velocity = new Vector(x, y, 0).normalise().scaleBy(speed);
@@ -150,6 +148,7 @@ public class Aircraft {
 		hasFinished = false;
 		currentRouteStage = 0;
 		currentlyTurningBy = 0;
+		manualBearingTarget = Double.NaN;
 		
 		// Speed up plane for higher difficulties
 		switch (difficulty){
@@ -227,7 +226,11 @@ public class Aircraft {
 	 * @return an angle in radians to the plane's current target.
 	 */
 	private double angleToTarget() {
-		return Math.atan2(currentTarget.y() - position.y(), currentTarget.x() - position.x());
+		if (isManuallyControlled) {
+			return (manualBearingTarget == Double.NaN) ? bearing() : manualBearingTarget;
+		} else {
+			return Math.atan2(currentTarget.y() - position.y(), currentTarget.x() - position.x());
+		}
 	}
 	
 	/**
@@ -358,11 +361,10 @@ public class Aircraft {
 				hasFinished = true;
 				return;
 			}
-			return;
 		}
 
 		// Update bearing
-		if ( Math.abs(angleToTarget() - bearing()) > 0.1 ) {
+		if ( Math.abs(angleToTarget() - bearing()) > 0.01 ) {
 			turnTowardsTarget(dt);
 		}
 	}
@@ -435,12 +437,34 @@ public class Aircraft {
 	public void drawCompass() {
 		graphics.setColour(0, 128, 0);
 		graphics.circle(false, position.x() + 16, position.y() + 16, COMPASS_RADIUS);
-		for (int i = 0; i < 360; i += 10) {
+		for (int i = 0; i < 360; i += 60) {
 			double r = Math.toRadians(i - 90);
-			double x = position.x() + 16 + (COMPASS_RADIUS * Math.cos(r));
-			double y = position.y() + 16 + (COMPASS_RADIUS * Math.sin(r));
+			double x = position.x() + 16 + (1.1 * COMPASS_RADIUS * Math.cos(r));
+			double y = position.y() + 14 + (1.1 * COMPASS_RADIUS * Math.sin(r));
+			if (i > 170) x -= 24;
+			if (i == 180) x += 12;
 			graphics.print(String.valueOf(i), x, y);
 		}
+		double x, y;
+		if (isManuallyControlled && input.isMouseDown(input.MOUSE_LEFT)) {
+			graphics.setColour(0, 128, 0, 32);
+			double r = Math.atan2(input.mouseY() - position.y(), input.mouseX() - position.x());
+			x = 16 + position.x() + (COMPASS_RADIUS * Math.cos(r));
+			y = 16 + position.y() + (COMPASS_RADIUS * Math.sin(r));
+			graphics.line(position.x() + 16, position.y() + 16, x, y);
+			graphics.line(position.x() + 15, position.y() + 16, x, y);
+			graphics.line(position.x() + 16, position.y() + 15, x, y);
+			graphics.line(position.x() + 17, position.y() + 16, x, y);
+			graphics.line(position.x() + 17, position.y() + 17, x, y);
+		}
+		x = 16 + position.x() + (COMPASS_RADIUS * Math.cos(bearing()));
+		y = 16 + position.y() + (COMPASS_RADIUS * Math.sin(bearing()));
+		graphics.line(position.x() + 16, position.y() + 16, x, y);
+		graphics.line(position.x() + 15, position.y() + 16, x, y);
+		graphics.line(position.x() + 16, position.y() + 15, x, y);
+		graphics.line(position.x() + 17, position.y() + 16, x, y);
+		graphics.line(position.x() + 17, position.y() + 17, x, y);
+		
 	}
 	
 	/**
@@ -714,7 +738,15 @@ public class Aircraft {
 		isManuallyControlled = !isManuallyControlled;
 		if (!isManuallyControlled) resetBearing();
 	}
-	
+
+	/**
+	 * Changes the direction the plane is going towards.
+	 * @param newHeading
+	 */
+	public void setBearing(double newHeading) {
+		manualBearingTarget = newHeading;
+	}
+
 	/**
 	 * Resets the direction towards which the plane will head.
 	 */
