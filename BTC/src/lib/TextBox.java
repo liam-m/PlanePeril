@@ -14,7 +14,7 @@ public class TextBox {
 	protected final char SEPARATOR = '|';
 	public static final char DELAY_START = '{';
 	public static final char DELAY_END = '}';
-	protected final double _typeWait = 0.01;
+	protected static final double TYPE_WAIT = 0.01;
 	
 	protected int x, y, width, height;
 	protected String[] orders;
@@ -123,8 +123,8 @@ public class TextBox {
 		}
 		// Update timer
 		timer += dt;
-		if (timer >= _typeWait) {
-			timer -= _typeWait;
+		if (timer >= TYPE_WAIT) {
+			timer -= TYPE_WAIT;
 			// Finished
 			if (buffer.isEmpty()) {
 				isTyping = false;
