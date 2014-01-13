@@ -10,6 +10,10 @@ import lib.jog.window;
 
 import scn.Demo;
 
+/**
+ * <h1>Aircraft</h1>
+ * <p>Represents an in-game aircraft. Calculates velocity, route-following, etc.</p>
+ */
 public class Aircraft {
 
 	/**
@@ -20,7 +24,10 @@ public class Aircraft {
 	 * How far away (in pixels) the mouse can be from the plane but still select it.
 	 */
 	public final static int MOUSE_LENIANCY = 16; 
-	
+	/**
+	 * How large to draw the bearing circle.
+	 */
+	public final static int COMPASS_RADIUS = 64;
 	/**
 	 * How far (in pixels) planes have to be away to not cause a separation violation.
 	 */
@@ -85,8 +92,6 @@ public class Aircraft {
 	 * A list of planes that are too near.
 	 */
 	
-	private int difficulty = 0;
-	
 	private java.util.ArrayList<Aircraft> planesTooNear = new java.util.ArrayList<Aircraft>();
 
 	/**
@@ -104,37 +109,33 @@ public class Aircraft {
 		flightName = name;
 		destinationName = nameOrigin;
 		originName = nameDestination;
+		image = img;
 		
 		// Find route
-		//djikstraRoute(originPoint, destinationPoint, sceneWaypoints);
 		route = findGreedyRoute(originPoint, destinationPoint, sceneWaypoints);
-		
-		currentTarget = route[0].position();
-		image = img;
-		position = originPoint.position(); //place on spawn waypoint
-		
-		int side = randInt(0, 1);
-		int offset = 0;
-		switch (side){ //offset spawn point to left
-		case 0:
-			offset = randInt(-separationRule, -10);
-			break;
-		case 1: //offset spawn point to right
-			offset = randInt(10, separationRule);
-			break;
-		}
-		System.out.println("Offset by " + offset);
-		position = position.add(new Vector(offset, 0, 30000));//offset spawn position. Helps avoid aircraft crashes very soon after spawn
-		
 		destination = destinationPoint.position();
-		isManuallyControlled = false;
+		//place on spawn waypoint
+		position = originPoint.position(); 
+		//offset spawn position. Helps avoid aircraft crashes very soon after spawn
+		int offset;
+		if (randInt(0, 1) == 0) {
+			offset = randInt(-separationRule, -10);
+		} else {
+			offset = randInt(10, separationRule);
+		}
+		position = position.add(new Vector(offset, 0, 30000));
+		// Calculate inital velocity (direction)
+		currentTarget = route[0].position();
 		double x = currentTarget.x() - position.x();
 		double y = currentTarget.y() - position.y();
 		velocity = new Vector(x, y, 0).normalise().scaleBy(speed);
+		
+		isManuallyControlled = false;
 		hasFinished = false;
 		currentRouteStage = 0;
 		currentlyTurningBy = 0;
 		
+		// Speed up plane for higher difficulties
 		switch (difficulty){
 		case 0:
 			separationRule = 64;
@@ -149,7 +150,6 @@ public class Aircraft {
 			turnSpeed = Math.PI / 2;
 			break;
 		}
-		
 		
 	}
 
@@ -408,6 +408,20 @@ public class Aircraft {
 	}
 	
 	/**
+	 * Draws the compass around this plane
+	 */
+	public void drawCompass() {
+		graphics.setColour(0, 128, 0);
+		graphics.circle(false, position.x() + 16, position.y() + 16, COMPASS_RADIUS);
+		for (int i = 0; i < 360; i += 10) {
+			double r = Math.toRadians(i - 90);
+			double x = position.x() + 16 + (COMPASS_RADIUS * Math.cos(r));
+			double y = position.y() + 16 + (COMPASS_RADIUS * Math.sin(r));
+			graphics.print(String.valueOf(i), x, y);
+		}
+	}
+	
+	/**
 	 * Draws warning circles around this plane and any others that are too near.
 	 */
 	private void drawWarningCircles() {
@@ -457,6 +471,7 @@ public class Aircraft {
 	}
 	
 	@Deprecated
+	@SuppressWarnings("unused")
 	private Waypoint[] findRandomRoute(Vector origin, Vector destination) {
 		// Placeholder over-simplified version
 		int n = 4;
