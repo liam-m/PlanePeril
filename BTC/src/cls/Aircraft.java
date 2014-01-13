@@ -447,7 +447,7 @@ public class Aircraft {
 		}
 		double x, y;
 		if (isManuallyControlled && input.isMouseDown(input.MOUSE_LEFT)) {
-			graphics.setColour(0, 128, 0, 32);
+			graphics.setColour(0, 128, 0, 128);
 			double r = Math.atan2(input.mouseY() - position.y(), input.mouseX() - position.x());
 			x = 16 + position.x() + (COMPASS_RADIUS * Math.cos(r));
 			y = 16 + position.y() + (COMPASS_RADIUS * Math.sin(r));
@@ -456,6 +456,7 @@ public class Aircraft {
 			graphics.line(position.x() + 16, position.y() + 15, x, y);
 			graphics.line(position.x() + 17, position.y() + 16, x, y);
 			graphics.line(position.x() + 17, position.y() + 17, x, y);
+			graphics.setColour(0, 128, 0, 16);
 		}
 		x = 16 + position.x() + (COMPASS_RADIUS * Math.cos(bearing()));
 		y = 16 + position.y() + (COMPASS_RADIUS * Math.sin(bearing()));
