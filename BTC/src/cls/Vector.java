@@ -1,5 +1,9 @@
 package cls;
 
+/**
+ * Simplified 3D vector class with basic operations
+ * @author Huw Taylor
+ */
 public class Vector {
 	
 	private double x, y, z;
