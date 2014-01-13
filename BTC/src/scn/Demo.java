@@ -274,11 +274,17 @@ public class Demo extends Scene {
 		graphics.rectangle(false, 16, 16, window.width() - 32, window.height() - 144);
 		
 		graphics.setViewport(16, 16, window.width() - 32, window.height() - 144);
-		drawMap();
+		drawMap();		
 		graphics.setViewport();
+		
+		if (selectedAircraft != null && selectedAircraft.isManuallyControlled()) {
+			selectedAircraft.drawCompass();
+		}
 		
 		ordersBox.draw();
 		altimeter.draw();
+		
+		
 		
 		drawPlaneInfo();
 		
