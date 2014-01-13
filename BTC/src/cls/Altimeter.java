@@ -4,6 +4,10 @@ import lib.jog.graphics;
 import lib.jog.input;
 import lib.jog.input.EventHandler;
 
+/**
+ * Shows the planes height in feet (whatever units you want). And the current banking of the plane.
+ * @author Huw Taylor
+ */
 public class Altimeter implements EventHandler {
 	
 	private boolean isVisible;
@@ -60,8 +64,9 @@ public class Altimeter implements EventHandler {
 	
 	public void draw() {
 		drawRectangle();
-		if (!isVisible) return;
-		drawPlaneIcon();
+		if (isVisible) {
+			drawPlaneIcon();
+		}
 	}
 	
 	private void drawRectangle() {
@@ -70,6 +75,7 @@ public class Altimeter implements EventHandler {
 	}
 	
 	private void drawPlaneIcon() {
+		// angle to draw plane
 		double r = 0;
 		if (currentAircraft.isTurningLeft()) {
 			r = -Math.PI / 12;
