@@ -9,70 +9,70 @@ public class ButtonText {
 		public void action();
 	}
 
-	private int _x, _y, _width, _height, _ox, _oy;
-	private String _text;
-	private org.newdawn.slick.Color _colourDefault, _colourHover, _colourUnavailable;
-	private Action _action;
-	private boolean _available;
+	private int x, y, width, height, ox, oy;
+	private String text;
+	private org.newdawn.slick.Color colourDefault, colourHover, colourUnavailable;
+	private Action action;
+	private boolean available;
 	
 	public ButtonText(String text, Action action, int x, int y, int w, int h, int ox, int oy) {
-		_text = text;
-		_action = action;
-		_x = x;
-		_y = y;
-		_width = w;
-		_height = h;
-		_ox = ox;
-		_oy = oy;
-		_colourDefault = new org.newdawn.slick.Color(0, 128, 0);
-		_colourHover = new org.newdawn.slick.Color(128, 128, 128);
-		_colourUnavailable = new org.newdawn.slick.Color(64, 64, 64);
-		_available = true;
+		this.text = text;
+		this.action = action;
+		this.x = x;
+		this.y = y;
+		width = w;
+		height = h;
+		this.ox = ox;
+		this.oy = oy;
+		colourDefault = new org.newdawn.slick.Color(0, 128, 0);
+		colourHover = new org.newdawn.slick.Color(128, 128, 128);
+		colourUnavailable = new org.newdawn.slick.Color(64, 64, 64);
+		available = true;
 	}
 	
 	public ButtonText(String text, Action action, int x, int y, int w, int h) {
-		_text = text;
-		_action = action;
-		_x = x;
-		_y = y;
-		_width = w;
-		_height = h;
-		_ox = (w - (text.length() * 8)) / 2;
-		_oy = (h - 8) / 2;
-		_colourDefault = new org.newdawn.slick.Color(0, 128, 0);
-		_colourHover = new org.newdawn.slick.Color(128, 128, 128);
-		_colourUnavailable = new org.newdawn.slick.Color(64, 64, 64);
-		_available = true;
+		this.text = text;
+		this.action = action;
+		this.x = x;
+		this.y = y;
+		width = w;
+		height = h;
+		this.ox = (w - (text.length() * 8)) / 2;
+		this.oy = (h - 8) / 2;
+		colourDefault = new org.newdawn.slick.Color(0, 128, 0);
+		colourHover = new org.newdawn.slick.Color(128, 128, 128);
+		colourUnavailable = new org.newdawn.slick.Color(64, 64, 64);
+		available = true;
 	}
 	
 	public boolean isMouseOver(int mx, int my) {
-		return (mx >= _x && mx <= _x + _width && my >= _y && my <= _y + _height);
+		return (mx >= x && mx <= x + width && my >= y && my <= y + height);
 	}
 	public boolean isMouseOver() { return isMouseOver(input.mouseX(), input.mouseY()); }
 	
 	public void setText(String newText) {
-		_text = newText;
+		text = newText;
 	}
 	
 	public void setAvailability(boolean available) {
-		_available = available;
+		this.available = available;
 	}
 	
 	public void act() {
-		if (!_available) return;
-		_action.action();
+		if (!available) return;
+		action.action();
 	}
 	
 	public void draw() {
-		if (!_available) {
-			graphics.setColour(_colourUnavailable);
+		if (!available) {
+			graphics.setColour(colourUnavailable);
 		}
 		else if (isMouseOver()) {
-			graphics.setColour(_colourHover);
+			graphics.setColour(colourHover);
 		} else {
-			graphics.setColour(_colourDefault);
+			graphics.setColour(colourDefault);
 		}
-		graphics.print(_text, _x + _ox, _y + _oy);
+		graphics.print(text, x + ox, y + oy);
 	}
 
 }
