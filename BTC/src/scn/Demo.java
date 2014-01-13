@@ -42,6 +42,7 @@ public class Demo extends Scene {
 	private java.util.ArrayList<Aircraft> aircraftInAirspace;
 	private graphics.Image aircraftImage;
 	private lib.ButtonText _manualOverrideButton;
+	private boolean compassDragged;
 	private cls.Altimeter altimeter;
 	private static double flightGenerationInterval = 12;
 	private double flightGenerationTimeElapsed = 6;
@@ -108,6 +109,7 @@ public class Demo extends Scene {
 		};
 		_manualOverrideButton = new lib.ButtonText("Take Control", manual, (window.width() - 128) / 2, 32, 128, 32, 8, 4);
 		timeElapsed = 0;
+		compassDragged = false;
 		selectedAircraft = null;
 		selectedWaypoint = null;
 		selectedPathpoint = -1;
@@ -215,6 +217,15 @@ public class Demo extends Scene {
 						selectedPathpoint = selectedAircraft.flightPathContains(w);
 					}
 				}
+				if (selectedWaypoint == null && selectedAircraft.isManuallyControlled()) {
+					// If mouse is over compass
+					double dx = selectedAircraft.position().x() - input.mouseX();
+					double dy = selectedAircraft.position().y() - input.mouseY();
+					int r = Aircraft.COMPASS_RADIUS;
+					if (dx*dx + dy*dy < r*r) {
+						compassDragged = true;
+					}
+				}
 			}
 		}
 		if (key == input.MOUSE_RIGHT) deselectAircraft();
@@ -232,6 +243,8 @@ public class Demo extends Scene {
 					ordersBox.addOrder("<<< Roger that. Altering course now.");
 					selectedPathpoint = -1;
 					selectedWaypoint = null;
+				} else {
+					selectedWaypoint = null;
 				}
 			}
 		}
@@ -242,6 +255,13 @@ public class Demo extends Scene {
 				controlAltitude -= 2000;
 		}
 		altimeter.mouseReleased(key, x, y);
+		if (compassDragged && selectedAircraft != null) {
+			double dx = input.mouseX() - selectedAircraft.position().x();
+			double dy = input.mouseY() - selectedAircraft.position().y();
+			double newHeading = Math.atan2(dy, dx);
+			selectedAircraft.setBearing(newHeading);
+		}
+		compassDragged = false;
 	}
 
 	@Override
@@ -283,9 +303,6 @@ public class Demo extends Scene {
 		
 		ordersBox.draw();
 		altimeter.draw();
-		
-		
-		
 		drawPlaneInfo();
 		
 		graphics.setColour(0, 128, 0);
