@@ -13,7 +13,8 @@ public class GameOver extends Scene {
 	private Aircraft crashedPlane2;
 	private int deaths;
 	private int injured;
-
+	private double timer;
+	
 	public GameOver(Main main, Aircraft plane1, Aircraft plane2) {
 		super(main);
 		crashedPlane1 = plane1;
@@ -22,6 +23,7 @@ public class GameOver extends Scene {
 
 	@Override
 	public void start() {
+		timer = 0;
 		deaths = (int)( Math.random() * 500) + 300;
 		injured = (int)( Math.random() * 90) + 10;
 		textBox = new lib.TextBox(64, 96, window.width() - 128, window.height() - 96, 32);
@@ -52,14 +54,11 @@ public class GameOver extends Scene {
 		textBox.newline();
 		textBox.newline();
 		textBox.delay(0.2);
-		String centredPrompt = "";
-		for (int i = 0; i < (window.width() - 200) / 2; i ++) centredGameOver += " ";
-		centredPrompt += "Press any key to continue";
-		textBox.addText(centredPrompt);
 	}
 
 	@Override
 	public void update(double dt) {
+		timer += dt;
 		textBox.update(dt);
 	}
 
@@ -88,6 +87,9 @@ public class GameOver extends Scene {
 		graphics.setColour(0, 128, 0);
 		graphics.printCentred(crashedPlane1.name() + " crashed into " + crashedPlane2.name() + ".", 0, 32, 2, window.width());
 		textBox.draw();
+		int opacity = (int)( 255 * Math.sin(timer) );
+		graphics.setColour(0, 128, 0, opacity);
+		graphics.printCentred("Press [space] to continue.", 0, window.height() - 256, 1, window.width());
 	}
 
 	@Override
