@@ -14,8 +14,8 @@ public class TextBox {
 	protected final char SEPARATOR = '|';
 	public static final char DELAY_START = '{';
 	public static final char DELAY_END = '}';
-	protected static final double TYPE_WAIT = 0.01;
 	
+	protected double typeWait;
 	protected int x, y, width, height;
 	protected String[] orders;
 	protected int currentOrder;
@@ -39,6 +39,7 @@ public class TextBox {
 		this.y = y;
 		this.width = width;
 		this.height = height;
+		typeWait = 0.01;
 		orders = new String[LINES];
 		currentOrder = 0;
 		for (int i = 0; i < LINES; i ++) {
@@ -49,6 +50,14 @@ public class TextBox {
 		isDelaying = false;
 		isTyping = false;
 		buffer = "";
+	}
+	
+	/**
+	 * Changes the speed at which text is 'typed;.
+	 * @param delay the new wait in seconds between each character.
+	 */
+	public void setSpeed(double delay) {
+		typeWait = delay;
 	}
 	
 	/**
@@ -123,8 +132,8 @@ public class TextBox {
 		}
 		// Update timer
 		timer += dt;
-		if (timer >= TYPE_WAIT) {
-			timer -= TYPE_WAIT;
+		if (timer >= typeWait) {
+			timer -= typeWait;
 			// Finished
 			if (buffer.isEmpty()) {
 				isTyping = false;
