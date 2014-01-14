@@ -22,7 +22,7 @@ public class Title extends Scene {
 		beep = audio.newSoundEffect("sfx" + File.separator + "beep.ogg");
 		beep.setVolume(0.2f);
 		
-		buttons = new lib.ButtonText[3];
+		buttons = new lib.ButtonText[4];
 		// Demo Button
 		lib.ButtonText.Action demo = new lib.ButtonText.Action() {
 			@Override
@@ -35,7 +35,7 @@ public class Title extends Scene {
 		lib.ButtonText.Action play = new lib.ButtonText.Action() {
 			@Override
 			public void action() {
-//				_main.setScene(new Game(_main));
+//				main.setScene(new Game(main));
 			}
 		};
 		buttons[1] = new lib.ButtonText("Play Full Game", play, window.height(), window.height()/2 + 126, window.width() - window.height(), 24, 8, 6);
@@ -48,6 +48,13 @@ public class Title extends Scene {
 			}
 		};
 		buttons[2] = new lib.ButtonText("Exit", exit, window.height(), window.height()/2 + 156, window.width() - window.height(), 24, 8, 6);
+		lib.ButtonText.Action credits = new lib.ButtonText.Action() {
+			@Override
+			public void action() {
+				main.setScene(new Credits(main));
+			}
+		};
+		buttons[3] = new lib.ButtonText("Credits", credits, window.height(), window.height()/2 + 186, window.width() - window.height(), 24, 8, 6);
 		angle = 0;
 	}
 
