@@ -68,6 +68,7 @@ public class Main implements input.EventHandler {
 	 * @param dt the time elapsed since the last frame.
 	 */
 	private void update(double dt) {
+		audio.update();
 		input.update(this);
 		updateFPS();
 		window.update();
