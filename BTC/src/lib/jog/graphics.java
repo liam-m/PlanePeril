@@ -690,5 +690,17 @@ public abstract class graphics {
 		if (currentFont == null) currentFont = newSystemFont("Times New Roman");
 		return currentFont;
 	}
+	
+	public static void push() {
+		glPushMatrix();
+	}
+
+	public static void translate(double x, double y) {
+		glTranslated(x, y, 0);
+	}
+	
+	public static void pop() {
+		glPopMatrix();
+	}
 
 }
