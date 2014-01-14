@@ -141,7 +141,6 @@ public class Demo extends Scene {
 	}
 	
 	private void deselectAircraft() {
-		System.out.println("Deselecting Aircraft");
 		if (selectedAircraft != null && selectedAircraft.isManuallyControlled()) {
 			selectedAircraft.toggleManualControl();
 			_manualOverrideButton.setText(" Take Control");
@@ -175,6 +174,9 @@ public class Demo extends Scene {
 				selectedAircraft.turnLeft(dt);
 			} else if (input.isKeyDown(input.KEY_RIGHT)) {
 				selectedAircraft.turnRight(dt);
+			}
+			if (selectedAircraft.outOfBounds()) {
+				deselectAircraft();
 			}
 		}
 		
