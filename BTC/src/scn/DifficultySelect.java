@@ -29,7 +29,6 @@ public class DifficultySelect extends Scene {
 
 	protected DifficultySelect(Main main) {
 		super(main);
-		buttons = new lib.ButtonText[3];
 	}
 
 	@Override
@@ -56,6 +55,7 @@ public class DifficultySelect extends Scene {
 
 	@Override
 	public void start() {
+		buttons = new lib.ButtonText[3];
 		lib.ButtonText.Action easy = new lib.ButtonText.Action() {
 			@Override
 			public void action() {
