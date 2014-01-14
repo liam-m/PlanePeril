@@ -9,7 +9,7 @@ import btc.Main;
 
 public class Title extends Scene {
 	
-	private audio.Music beep;
+	private audio.Sound beep;
 	private lib.ButtonText[] buttons;
 	private double angle;
 
@@ -19,8 +19,9 @@ public class Title extends Scene {
 
 	@Override
 	public void start() {
-		beep = audio.newMusic("sfx" + File.separator + "beep.ogg");
+		beep = audio.newSoundEffect("sfx" + File.separator + "beep.ogg");
 		beep.setVolume(0.2f);
+		
 		buttons = new lib.ButtonText[3];
 		// Demo Button
 		lib.ButtonText.Action demo = new lib.ButtonText.Action() {
