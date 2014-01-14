@@ -686,4 +686,9 @@ public abstract class graphics {
 		GL11.glColor3d(1, 1, 1);
 	}
 
+	public static Font getFont() {
+		if (currentFont == null) currentFont = newSystemFont("Times New Roman");
+		return currentFont;
+	}
+
 }
