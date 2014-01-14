@@ -97,7 +97,7 @@ public class Demo extends Scene {
 
 	@Override
 	public void start() {
-		audio.Music music = audio.newMusic("sfx" + File.separator + "piano.ogg");
+		audio.Music music = audio.newMusic("sfx" + File.separator + "Gypsy_Shoegazer.ogg");
 		music.play();
 		ordersBox = new lib.OrdersBox(ORDERSBOX_X, ORDERSBOX_Y, ORDERSBOX_W, ORDERSBOX_H, 6);
 		aircraftInAirspace = new java.util.ArrayList<Aircraft>();
