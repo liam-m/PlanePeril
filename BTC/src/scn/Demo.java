@@ -53,6 +53,7 @@ public class Demo extends Scene {
 	private int controlAltitude = 30000;
 	private boolean gameOverFlag = false;
 	private Vector crash;
+	private audio.Music music;
 	
 	private final String[] LOCATION_NAMES = new String[] {
 		"North West Top Leftonia",
@@ -101,7 +102,7 @@ public class Demo extends Scene {
 
 	@Override
 	public void start() {
-		audio.Music music = audio.newMusic("sfx" + File.separator + "Gypsy_Shoegazer.ogg");
+		music = audio.newMusic("sfx" + File.separator + "Gypsy_Shoegazer.ogg");
 		music.play();
 		ordersBox = new lib.OrdersBox(ORDERSBOX_X, ORDERSBOX_Y, ORDERSBOX_W, ORDERSBOX_H, 6);
 		aircraftInAirspace = new java.util.ArrayList<Aircraft>();
@@ -449,7 +450,7 @@ public class Demo extends Scene {
 	
 	@Override
 	public void close() {
-		
+		music.stop();
 	}
 
 }
