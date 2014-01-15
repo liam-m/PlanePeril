@@ -99,13 +99,8 @@ public class GameOver extends Scene {
 
 	@Override
 	public void keyReleased(int key) {
-		if (key == input.KEY_SPACE) { 
 			main.closeScene();
-			main.setScene(new Demo(main, Demo.difficulty));
-		} else if (key == input.KEY_ESCAPE) {
-			main.closeScene();
-			main.closeScene();
-		}
+			main.setScene(new Title(main));
 	}
 
 	@Override
