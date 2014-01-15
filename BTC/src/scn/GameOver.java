@@ -22,7 +22,7 @@ public class GameOver extends Scene {
 	private int injured;
 	private Vector crash;
 	private long startTime, endTime;
-	private SpriteAnimation sprite;
+	private SpriteAnimation explosionAnim;
 	private Image explosion;
 	private double timeElapsed = 0;
 
@@ -35,8 +35,9 @@ public class GameOver extends Scene {
 		endTime = startTime + 3000;
 		//playSound(audio.newSoundEffect("sfx" + File.separator + "crash.ogg"));
 		explosion = graphics.newImage("gfx" + File.separator + "explosionFrames.png");
-		Vector midPoint = crash.add(crashedPlane2.position()).scaleBy(0.5);
-		sprite = new SpriteAnimation(explosion, (int) midPoint.x(), (int) midPoint.y(), 6, 18);
+		Vector midPoint = crashedPlane1.position().add(crashedPlane2.position()).scaleBy(0.5);
+		Vector explosionPos = midPoint.sub( new Vector(explosion.width()/72, explosion.height()/3, 0) );
+		explosionAnim = new SpriteAnimation(explosion, (int) explosionPos.x(), (int) explosionPos.y(), 6, 18);
 	}
 
 	@Override
@@ -83,7 +84,7 @@ public class GameOver extends Scene {
 			textBox.update(dt);
 		} else {
 			startTime = System.currentTimeMillis();
-			sprite.update(dt);
+			explosionAnim.update(dt);
 		}
 
 	}
@@ -117,7 +118,7 @@ public class GameOver extends Scene {
 			double radius = 20;
 			graphics.setColour(128,0,0);
 			graphics.circle(false, midPoint.x(), midPoint.y(), radius);
-			sprite.draw();
+			explosionAnim.draw();
 		}
 		
 	}

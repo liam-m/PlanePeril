@@ -28,7 +28,6 @@ public class SpriteAnimation {
 		this.x = x;
 		this.y = y;
 		
-		
 		currentFrame = 0;
 		frameNr = frameCount;
 		spriteWidth = 140;
@@ -37,15 +36,9 @@ public class SpriteAnimation {
 		gameTime = 0;
 		quad = getQuad(0);
 	}
-	
-
 
 	public Quad getQuad(int currentFrame){
-		/*Quad quad = new Quad(currentFrame * spriteWidth, currentFrame * spriteHeight, spriteHeight, spriteWidth, image.width(), image.height());*/
-		//System.out.println("\n getQuad");
-		//System.out.printf("%d %d %f %f %f %f", x, y, spriteWidth, spriteHeight, imageW, imageH);
-		//System.out.println("\n Quad");
-		return graphics.newQuad(currentFrame * x, currentFrame * y, spriteWidth, spriteHeight, imageW, imageH);
+		return graphics.newQuad(currentFrame * spriteWidth, 0, spriteWidth, spriteHeight, imageW * 1.62, imageH);
 	}
 	
 	public void update(double dt) {
