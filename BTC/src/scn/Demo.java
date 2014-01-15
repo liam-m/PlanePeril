@@ -180,6 +180,7 @@ public class Demo extends Scene {
 				selectedAircraft.turnRight(dt);
 			}
 			if (selectedAircraft.outOfBounds()) {
+				ordersBox.addOrder(">>> " + selectedAircraft.name() + " out of bounds, returning to route");
 				deselectAircraft();
 			}
 		}
