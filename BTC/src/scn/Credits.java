@@ -92,12 +92,12 @@ public class Credits extends Scene {
 		graphics.printCentred("_____", 0, currentHeight + 8, 2, window.width());
 		graphics.printCentred("____", 4, currentHeight + 8, 2, window.width());
 		currentHeight += gap;
-		graphics.printCentred("Gypsy Shoegazer", 0, currentHeight, 2, window.width()/2);
-		graphics.printCentred("Beep SFX", window.width()/2, currentHeight, 2, window.width()/2);
+		graphics.printCentred("Gypsy Shoegazer", 0, currentHeight, 2, window.width()/3);
+		graphics.printCentred("Beep SFX", window.width()/3, currentHeight, 2, window.width()/3);
 		currentHeight += gap / 2;
-		graphics.printCentred("Kevin MacLeod", 0, currentHeight, 2, window.width()/2);
-		graphics.printCentred("Partners in Rhyme", window.width()/2, currentHeight, 2, window.width()/2);
-		graphics.printCentred("FreeSound", window.width()/2, currentHeight, 2, window.width()/2);
+		graphics.printCentred("Kevin MacLeod", 0, currentHeight, 2, window.width()/3);
+		graphics.printCentred("Partners in Rhyme", 2*window.width()/3, currentHeight, 2, window.width()/3);
+		graphics.printCentred("FreeSound", window.width()/3, currentHeight, 2, window.width()/3);
 		currentHeight += gap * 2;
 		
 		graphics.printCentred("External Libraries", 0, currentHeight, 2, window.width());
