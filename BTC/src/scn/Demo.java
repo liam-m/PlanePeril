@@ -9,7 +9,6 @@ import lib.jog.input;
 import lib.jog.window;
 
 import cls.Aircraft;
-import cls.Vector;
 import cls.Waypoint;
 
 import btc.Main;
@@ -51,8 +50,6 @@ public class Demo extends Scene {
 	private double flightGenerationTimeElapsed = 6;
 	private int maxAircraft = 4;
 	private int controlAltitude = 30000;
-	private boolean gameOverFlag = false;
-	private Vector crash;
 	private audio.Music music;
 	
 	private final String[] LOCATION_NAMES = new String[] {
