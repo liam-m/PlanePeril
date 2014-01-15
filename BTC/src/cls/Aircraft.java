@@ -102,7 +102,7 @@ public class Aircraft {
 	
 	private java.util.ArrayList<Aircraft> planesTooNear = new java.util.ArrayList<Aircraft>();
 	
-	private final static audio.Sound warning = audio.newSoundEffect("sfx" + File.separator + "beep.ogg"); 
+	private final static audio.Sound WARNING_SOUND = audio.newSoundEffect("sfx" + File.separator + "beep.ogg"); 
 
 	/**
 	 * Constructor for an aircraft.
@@ -724,7 +724,7 @@ public class Aircraft {
 				planesTooNear.add(plane);
 				if (collisionWarningSoundFlag == false){
 					collisionWarningSoundFlag = true;
-					scene.playSound(warning);
+					scene.playSound(WARNING_SOUND);
 				}
 			}
 		}
