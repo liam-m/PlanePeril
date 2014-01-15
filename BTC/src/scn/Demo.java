@@ -268,15 +268,19 @@ public class Demo extends Scene {
 	public void mouseReleased(int key, int x, int y) {
 		if (selectedAircraft != null && _manualOverrideButton.isMouseOver(x, y)) _manualOverrideButton.act();
 		if (key == input.MOUSE_LEFT && selectedWaypoint != null) {
-			for (Waypoint w : airspaceWaypoints) {
-				if (w.isMouseOver(x-16, y-16)) {
-					selectedAircraft.alterPath(selectedPathpoint, w);
-					ordersBox.addOrder(">>> Flight " + selectedAircraft.name() + " please alter your course");
-					ordersBox.addOrder("<<< Roger that. Altering course now.");
-					selectedPathpoint = -1;
-					selectedWaypoint = null;
-				} else {
-					selectedWaypoint = null;
+			if (selectedAircraft.isManuallyControlled() == true){
+				return;
+			} else {
+				for (Waypoint w : airspaceWaypoints) {
+					if (w.isMouseOver(x-16, y-16)) {
+						selectedAircraft.alterPath(selectedPathpoint, w);
+						ordersBox.addOrder(">>> Flight " + selectedAircraft.name() + " please alter your course");
+						ordersBox.addOrder("<<< Roger that. Altering course now.");
+						selectedPathpoint = -1;
+						selectedWaypoint = null;
+					} else {
+						selectedWaypoint = null;
+					}
 				}
 			}
 		}
@@ -365,7 +369,7 @@ public class Demo extends Scene {
 			
 		}
 		
-		if (selectedWaypoint != null) {
+		if (selectedWaypoint != null && selectedAircraft.isManuallyControlled() == false) {
 			selectedAircraft.drawModifiedPath(selectedPathpoint, input.mouseX() - 16, input.mouseY() - 16);
 		}
 		
