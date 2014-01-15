@@ -4,7 +4,9 @@ import java.io.File;
 
 import org.lwjgl.Sys;
 
+import lib.SpriteAnimation;
 import lib.jog.*;
+import lib.jog.graphics.Image;
 
 /**
  * <h1>Main</h1>
@@ -29,7 +31,6 @@ public class Main implements input.EventHandler {
 	private double dt;
 	private java.util.Stack<scn.Scene> sceneStack;
 	private scn.Scene currentScene;
-	
 	private int fps;
 	private long lastfps;
 	

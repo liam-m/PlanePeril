@@ -18,9 +18,13 @@ public class Title extends Scene {
 	private audio.Sound beep;
 	private lib.ButtonText[] buttons;
 	private double angle;
+	private SpriteAnimation sprite;
+	private Image explosion;
 	
 	public Title(Main main) {
 		super(main);
+		explosion = graphics.newImage("gfx" + File.separator + "explosionFrames.png");
+		sprite = new SpriteAnimation(explosion, (int) window.width()/2, (int) window.height()/2, 9, 18);
 
 	}
 
@@ -67,7 +71,7 @@ public class Title extends Scene {
 
 	@Override
 	public void update(double dt) {
-		
+		sprite.update(dt);
 		angle += dt;
 		double beepTimer = (angle * 4) + (Math.PI * 4 / 5);
 		beepTimer %= (2 * Math.PI);
@@ -99,6 +103,7 @@ public class Title extends Scene {
 	public void draw() {
 		drawRadar();
 		drawMenu();
+		sprite.draw();
 	}
 	
 	private void drawRadar() {

@@ -19,31 +19,45 @@ public class SpriteAnimation {
 	private int x;				// the X coordinate of the object (top left of the image)
 	private int y;				// the Y coordinate of the object (top left of the image)
 	private double gameTime;
+	private double imageW, imageH;
 	
 	public SpriteAnimation(Image image, int x, int y, int fps, int frameCount){
 		this.image = image;
+		imageW = 2520;
+		imageH = 200;
 		this.x = x;
 		this.y = y;
 		
+		
 		currentFrame = 0;
 		frameNr = frameCount;
-		spriteWidth = image.width() / frameCount;
-		spriteHeight = image.height();
-		framePeriod = 8/fps;
+		spriteWidth = 140;
+		spriteHeight = 200;
+		framePeriod = 1000/fps;
 		gameTime = 0;
-		quad = new Quad(currentFrame * spriteWidth, currentFrame * spriteHeight, spriteWidth, spriteHeight, image.width(), image.height());
+		quad = getQuad(0);
+	}
+	
+
+
+	public Quad getQuad(int currentFrame){
+		/*Quad quad = new Quad(currentFrame * spriteWidth, currentFrame * spriteHeight, spriteHeight, spriteWidth, image.width(), image.height());*/
+		//System.out.println("\n getQuad");
+		//System.out.printf("%d %d %f %f %f %f", x, y, spriteWidth, spriteHeight, imageW, imageH);
+		//System.out.println("\n Quad");
+		return graphics.newQuad(currentFrame * x, currentFrame * y, spriteWidth, spriteHeight, imageW, imageH);
 	}
 	
 	public void update(double dt) {
-		gameTime += dt;
+		gameTime += dt * 1000;
 		if (gameTime > framePeriod) {
 			gameTime = 0;
 			// increment the frame
 			currentFrame++;
-			quad = new Quad(currentFrame* spriteWidth, currentFrame * spriteHeight, spriteWidth, spriteHeight, image.width(), image.height());
-			if (currentFrame >= frameNr) {
+			if (currentFrame > frameNr) {
 				currentFrame = 0;
 			}
+			quad = getQuad(currentFrame);
 		}
 	}
 	
