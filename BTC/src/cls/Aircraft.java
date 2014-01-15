@@ -373,6 +373,7 @@ public class Aircraft {
 	 */
 	public void turnLeft(double dt) {
 		turnBy(-dt * turnSpeed);
+		manualBearingTarget = Double.NaN;
 	}
 	
 	/**
@@ -381,6 +382,7 @@ public class Aircraft {
 	 */
 	public void turnRight(double dt) {
 		turnBy(dt * turnSpeed);
+		manualBearingTarget = Double.NaN;
 	}
 
 	/**
