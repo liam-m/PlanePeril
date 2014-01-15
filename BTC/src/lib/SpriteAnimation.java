@@ -45,7 +45,7 @@ public class SpriteAnimation {
 		//System.out.println("\n getQuad");
 		//System.out.printf("%d %d %f %f %f %f", x, y, spriteWidth, spriteHeight, imageW, imageH);
 		//System.out.println("\n Quad");
-		return graphics.newQuad(currentFrame * x, currentFrame * y, spriteWidth, spriteHeight, imageW, imageH);
+		return graphics.newQuad(currentFrame * spriteWidth, 0, spriteWidth, spriteHeight, imageW*1.62, imageH);
 	}
 	
 	public void update(double dt) {
@@ -62,6 +62,8 @@ public class SpriteAnimation {
 	}
 	
 	public void draw() {
+		//quad = getQuad(currentFrame);
+		//System.out.println("Current frame: " + currentFrame + "\n");
 		graphics.drawq(image, quad, x, y);
 	}
 
