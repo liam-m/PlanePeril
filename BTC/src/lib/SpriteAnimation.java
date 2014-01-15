@@ -7,14 +7,15 @@ import lib.jog.graphics.Quad;
 public class SpriteAnimation {
 
 	private Image image;		// the animation sequence
-	private Quad quad;	// the rectangle to be drawn from the animation bitmap
-	private int frameNr;		// number of frames in animation
+	private Quad quad;	        // the rectangle to be drawn from the animation bitmap
+	private int frameCount;		// number of frames in animation
 	private int currentFrame;	// the current frame
-	private double frameTicker;	// the time of the last frame update
 	private double framePeriod;	// milliseconds between each frame (1000/fps)
 
 	private double spriteWidth;	// the width of the sprite to calculate the cut out rectangle
 	private double spriteHeight;	// the height of the sprite
+	
+	private boolean hasFinished;
 
 	private int x;				// the X coordinate of the object (top left of the image)
 	private int y;				// the Y coordinate of the object (top left of the image)
@@ -27,14 +28,14 @@ public class SpriteAnimation {
 		imageH = 200;
 		this.x = x;
 		this.y = y;
-		
+		this.frameCount = frameCount;
 		currentFrame = 0;
-		frameNr = frameCount;
 		spriteWidth = 140;
 		spriteHeight = 200;
-		framePeriod = 1000/fps;
+		framePeriod = 1.0/fps;
 		gameTime = 0;
 		quad = getQuad(0);
+		hasFinished = false;
 	}
 
 	public Quad getQuad(int currentFrame){
@@ -42,22 +43,25 @@ public class SpriteAnimation {
 	}
 	
 	public void update(double dt) {
-		gameTime += dt * 1000;
+		if (hasFinished) return;
+		gameTime += dt;
 		if (gameTime > framePeriod) {
 			gameTime = 0;
-			// increment the frame
 			currentFrame++;
-			if (currentFrame > frameNr) {
-				currentFrame = 0;
+			if (currentFrame > frameCount) {
+				hasFinished = true;
 			}
 			quad = getQuad(currentFrame);
 		}
 	}
 	
 	public void draw() {
-		//quad = getQuad(currentFrame);
-		//System.out.println("Current frame: " + currentFrame + "\n");
+		if (hasFinished) return;
 		graphics.drawq(image, quad, x, y);
+	}
+	
+	public boolean hasFinished() {
+		return hasFinished;
 	}
 
 }
