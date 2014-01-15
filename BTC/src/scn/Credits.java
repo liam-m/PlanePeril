@@ -97,6 +97,7 @@ public class Credits extends Scene {
 		currentHeight += gap / 2;
 		graphics.printCentred("Kevin MacLeod", 0, currentHeight, 2, window.width()/2);
 		graphics.printCentred("Partners in Rhyme", window.width()/2, currentHeight, 2, window.width()/2);
+		graphics.printCentred("FreeSound", window.width()/2, currentHeight, 2, window.width()/2);
 		currentHeight += gap * 2;
 		
 		graphics.printCentred("External Libraries", 0, currentHeight, 2, window.width());

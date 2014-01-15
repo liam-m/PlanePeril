@@ -33,7 +33,7 @@ public class GameOver extends Scene {
 		crash = new Vector(plane1.position().x(), plane1.position().y(), 0);
 		startTime = System.currentTimeMillis();
 		endTime = startTime + 3000;
-		playSound(audio.newSoundEffect("sfx" + File.separator + "beep.ogg")); //replace with explosion sound effect
+		//playSound(audio.newSoundEffect("sfx" + File.separator + "crash.ogg"));
 		explosion = graphics.newImage("gfx" + File.separator + "explosionFrames.png");
 		Vector midPoint = crash.add(crashedPlane2.position()).scaleBy(0.5);
 		sprite = new SpriteAnimation(explosion, (int) midPoint.x(), (int) midPoint.y(), 6, 18);

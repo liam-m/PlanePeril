@@ -207,6 +207,7 @@ public class Demo extends Scene {
 	}
 	
 	public void gameOver(Aircraft plane1, Aircraft plane2) {
+		playSound(audio.newSoundEffect("sfx" + File.separator + "crash.ogg"));
 		main.closeScene();
 		main.setScene(new GameOver(main, plane1, plane2));
 	}
