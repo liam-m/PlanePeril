@@ -2,9 +2,9 @@ package cls;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.Stack;
 
+import lib.RandomNumber;
 import lib.jog.audio;
 import lib.jog.graphics;
 import lib.jog.input;
@@ -131,13 +131,13 @@ public class Aircraft {
 		//Offsets the spawn location of the aircraft around the origin waypoint, for variety
 		//This also prevents collisions between just-spawned aircraft and existing aircraft flying to the waypoint.
 		int offset;
-		if (randInt(0, 1) == 0) {
-			offset = randInt(-separationRule, -10);
+		if (RandomNumber.randInclusiveInt(0, 1) == 0) {
+			offset = RandomNumber.randInclusiveInt(-separationRule, -10);
 		} else {
-			offset = randInt(10, separationRule);
+			offset = RandomNumber.randInclusiveInt(10, separationRule);
 		}
 		int altitudeOffset;
-		if (randInt(0, 1) == 0) {
+		if (RandomNumber.randInclusiveInt(0, 1) == 0) {
 			altitudeOffset = 28000;
 		} else {
 			altitudeOffset = 30000;
@@ -794,18 +794,6 @@ public class Aircraft {
 	 */
 	private void changeAltitude(int height) {
 		position = new Vector(position.x(), position.y(), position.z() + height);
-	}
-	
-	private static int randInt(int min, int max){
-		/**
-		 * Generates a random integer between min and max, in the range [min, max]
-		 * This method is inclusive of min AND max.
-		 * @param min the lower boundary (included) for the random integer
-		 * @param max the upper boundary (included) for the random integer
-		 * @return a random integer
-		 */
-		Random rand = new Random();
-		return rand.nextInt((max - min) + 1) + min;
 	}
 	
 }

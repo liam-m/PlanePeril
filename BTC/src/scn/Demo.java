@@ -1,7 +1,7 @@
 package scn;
 
 import java.io.File;
-import java.util.Random;
+import lib.RandomNumber;
 
 import lib.jog.audio;
 import lib.jog.graphics;
@@ -110,7 +110,6 @@ public class Demo extends Scene {
 			@Override
 			public void action() {
 				// _selectedAircraft.manuallyControl();
-				System.out.println("Assuming manual control of " + selectedAircraft.name() + ".");
 				toggleManualControl();
 			}
 		};
@@ -146,7 +145,6 @@ public class Demo extends Scene {
 	}
 	
 	private void deselectAircraft() {
-		System.out.println("Deselecting Aircraft");
 		if (selectedAircraft != null && selectedAircraft.isManuallyControlled()) {
 			selectedAircraft.toggleManualControl();
 			_manualOverrideButton.setText(" Take Control");
@@ -416,10 +414,10 @@ public class Demo extends Scene {
 	
 	private void generateFlight() {
 		// Origin and Destination
-		int o = randInt(0, locationWaypoints.length);
-		int d = randInt(0, locationWaypoints.length);
+		int o = RandomNumber.randInclusiveInt(0, locationWaypoints.length - 1);
+		int d = RandomNumber.randInclusiveInt(0, locationWaypoints.length - 1);
 		while (LOCATION_NAMES[d] == LOCATION_NAMES[o]){
-			d = randInt(0, locationWaypoints.length);
+			d = RandomNumber.randInclusiveInt(0, locationWaypoints.length - 1);
 		}
 		String originName = LOCATION_NAMES[o];
 		String destinationName = LOCATION_NAMES[d];
@@ -443,17 +441,6 @@ public class Demo extends Scene {
 		aircraftInAirspace.add(a);
 	}
 	
-	/**
-	 * Generates a random integer between min and max, in the range [min, max)
-	 * @param min the lower boundary (included) for the random integer
-	 * @param max the upper boundary (not included) for the random integer
-	 * @return a random integer
-	 */
-	private int randInt(int min, int max){
-		Random rand = new Random();
-		return rand.nextInt((max - min)) + min;
-	}
-
 	@Override
 	public void close() {
 		
