@@ -243,7 +243,7 @@ public class Aircraft {
 	 * Checks whether the plane lies outside of the airspace.
 	 * @return true, if the plane is out of the airspace. False, otherwise.
 	 */
-	private boolean outOfBounds() {
+	public boolean outOfBounds() {
 		double x = position.x();
 		double y = position.y();
 		return (x < RADIUS || x > window.width() + RADIUS - 32 || y < RADIUS || y > window.height() + RADIUS - 144);
@@ -359,14 +359,6 @@ public class Aircraft {
 		} else if (isAt(currentTarget)) {
 			currentRouteStage ++;
 			currentTarget = route[currentRouteStage].position();
-		}
-
-		// Update input if manually controlled
-		if (isManuallyControlled) {
-			if (outOfBounds()) {
-				hasFinished = true;
-				return;
-			}
 		}
 
 		// Update bearing

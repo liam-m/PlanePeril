@@ -181,6 +181,9 @@ public class Demo extends Scene {
 			} else if (input.isKeyDown(input.KEY_RIGHT)) {
 				selectedAircraft.turnRight(dt);
 			}
+			if (selectedAircraft.outOfBounds()) {
+				deselectAircraft();
+			}
 		}
 		
 		flightGenerationTimeElapsed += dt;
