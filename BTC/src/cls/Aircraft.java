@@ -519,7 +519,8 @@ public class Aircraft {
 		if (currentTarget == destination) {
 			graphics.line(mouseX, mouseY, destination.x(), destination.y());
 		} else {
-			graphics.line(mouseX, mouseY, route[(modified+1) % route.length].position().x(), route[(modified+1) % route.length].position().y());
+			int index = Math.max((modified + 1) % route.length, modified);
+			graphics.line(mouseX, mouseY, route[index].position().x(), route[index].position().y());
 		}
 	}
 	
