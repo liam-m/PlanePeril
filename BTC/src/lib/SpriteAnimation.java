@@ -55,6 +55,8 @@ public class SpriteAnimation {
 	}
 	
 	public void draw() {
+		//quad = getQuad(currentFrame);
+		//System.out.println("Current frame: " + currentFrame + "\n");
 		graphics.drawq(image, quad, x, y);
 	}
 
