@@ -713,24 +713,27 @@ public class Aircraft {
 	 * and also checks for crashes.
 	 * @param dt the time elapsed since the last frame.
 	 * @param scene the game scene object.
+	 * @return 0 if no collisions, 1 if separation violation, 2 if crash
 	 */
-	public void updateCollisions(double dt, scn.Demo scene) {
+	public int updateCollisions(double dt, ArrayList<Aircraft> aircraftList) {
 		planesTooNear.clear();
-		for (Aircraft plane : scene.aircraftList()) {
+		for (int i = 0; i < aircraftList.size(); i ++) {
+			Aircraft plane = aircraftList.get(i);
 			if (plane != this && isWithin(plane, RADIUS)) {
-				scene.gameOver(this, plane);
 				hasFinished = true;
+				return i;
 			} else if (plane != this && isWithin(plane, separationRule)) {
 				planesTooNear.add(plane);
 				if (collisionWarningSoundFlag == false){
 					collisionWarningSoundFlag = true;
-					scene.playSound(WARNING_SOUND);
+					WARNING_SOUND.play();
 				}
 			}
 		}
 		if (planesTooNear.isEmpty()){
 			collisionWarningSoundFlag = false;
 		}
+		return -1;
 	}
 	
 	/**

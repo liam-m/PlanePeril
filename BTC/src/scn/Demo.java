@@ -197,7 +197,10 @@ public class Demo extends Scene {
 	
 	private void checkCollisions(double dt) {
 		for (Aircraft plane : aircraftInAirspace) {
-			plane.updateCollisions(dt, this);
+			int collisionState = plane.updateCollisions(dt, aircraftList());
+			if (collisionState >= 0) {
+				gameOver(plane, aircraftList().get(collisionState));
+			}
 		}
 	}
 	
