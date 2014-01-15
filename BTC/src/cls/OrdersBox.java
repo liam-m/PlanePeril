@@ -1,4 +1,4 @@
-package lib;
+package cls;
 
 /**
  * Class for a visual representation of orders given
@@ -6,7 +6,7 @@ package lib;
  * orders character by character in a retro style.
  * @author Huw Taylor
  */
-public class OrdersBox extends TextBox {
+public class OrdersBox extends lib.TextBox {
 	
 	private final double REMOVAL_WAIT = 6;
 	private double removalTimer;

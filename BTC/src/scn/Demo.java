@@ -37,7 +37,7 @@ public class Demo extends Scene {
 	public static int difficulty = DIFFICULTY_EASY;
 	
 	
-	private lib.OrdersBox ordersBox;
+	private cls.OrdersBox ordersBox;
 	private double timeElapsed;
 	private Aircraft selectedAircraft;
 	private Waypoint selectedWaypoint;
@@ -104,7 +104,7 @@ public class Demo extends Scene {
 	public void start() {
 		music = audio.newMusic("sfx" + File.separator + "Gypsy_Shoegazer.ogg");
 		music.play();
-		ordersBox = new lib.OrdersBox(ORDERSBOX_X, ORDERSBOX_Y, ORDERSBOX_W, ORDERSBOX_H, 6);
+		ordersBox = new cls.OrdersBox(ORDERSBOX_X, ORDERSBOX_Y, ORDERSBOX_W, ORDERSBOX_H, 6);
 		aircraftInAirspace = new java.util.ArrayList<Aircraft>();
 		aircraftImage = graphics.newImage("gfx" + File.separator + "plane.png");
 		lib.ButtonText.Action manual = new lib.ButtonText.Action() {
