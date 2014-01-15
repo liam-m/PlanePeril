@@ -6,10 +6,8 @@ import cls.Aircraft;
 import cls.Vector;
 import lib.SpriteAnimation;
 import lib.jog.audio.Sound;
-import lib.jog.audio;
 import lib.jog.graphics;
 import lib.jog.graphics.Image;
-import lib.jog.input;
 import lib.jog.window;
 import btc.Main;
 
@@ -21,18 +19,14 @@ public class GameOver extends Scene {
 	private int deaths;
 	private int injured;
 	private Vector crash;
-	private long startTime, endTime;
 	private SpriteAnimation explosionAnim;
 	private Image explosion;
-	private double timeElapsed = 0;
 
 	public GameOver(Main main, Aircraft plane1, Aircraft plane2) {
 		super(main);
 		crashedPlane1 = plane1;
 		crashedPlane2 = plane2;
 		crash = new Vector(plane1.position().x(), plane1.position().y(), 0);
-		startTime = System.currentTimeMillis();
-		endTime = startTime + 3000;
 		//playSound(audio.newSoundEffect("sfx" + File.separator + "crash.ogg"));
 		explosion = graphics.newImage("gfx" + File.separator + "explosionFrames.png");
 		Vector midPoint = crashedPlane1.position().add(crashedPlane2.position()).scaleBy(0.5);
@@ -80,13 +74,11 @@ public class GameOver extends Scene {
 
 	@Override
 	public void update(double dt) {
-		if (startTime > endTime){
+		if (explosionAnim.hasFinished()){
 			textBox.update(dt);
 		} else {
-			startTime = System.currentTimeMillis();
 			explosionAnim.update(dt);
 		}
-
 	}
 
 	@Override
@@ -109,7 +101,7 @@ public class GameOver extends Scene {
 		graphics.setColour(0, 128, 0);
 		graphics.printCentred(crashedPlane1.name() + 
 				" crashed into " + crashedPlane2.name() + ".", 0, 32, 2, window.width());
-		if (startTime > endTime) {
+		if (explosionAnim.hasFinished()) {
 			textBox.draw();
 		} else {
 			crashedPlane1.draw((int) crashedPlane1.position().z());
