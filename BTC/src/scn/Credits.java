@@ -3,6 +3,7 @@ package scn;
 import java.io.File;
 
 import lib.jog.audio;
+import lib.jog.audio.Sound;
 import lib.jog.graphics;
 import lib.jog.input;
 import lib.jog.window;
@@ -115,6 +116,12 @@ public class Credits extends Scene {
 	@Override
 	public void close() {
 		music.stop();
+	}
+
+	@Override
+	public void playSound(Sound sound) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

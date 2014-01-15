@@ -1,7 +1,14 @@
 package scn;
 
+import java.io.File;
+
 import cls.Aircraft;
+import cls.Vector;
+import lib.SpriteAnimation;
+import lib.jog.audio.Sound;
+import lib.jog.audio;
 import lib.jog.graphics;
+import lib.jog.graphics.Image;
 import lib.jog.input;
 import lib.jog.window;
 import btc.Main;
@@ -13,17 +20,27 @@ public class GameOver extends Scene {
 	private Aircraft crashedPlane2;
 	private int deaths;
 	private int injured;
-	private double timer;
-	
+	private Vector crash;
+	private long startTime, endTime;
+	private SpriteAnimation sprite;
+	private Image explosion;
+	private double timeElapsed = 0;
+
 	public GameOver(Main main, Aircraft plane1, Aircraft plane2) {
 		super(main);
 		crashedPlane1 = plane1;
 		crashedPlane2 = plane2;
+		crash = new Vector(plane1.position().x(), plane1.position().y(), 0);
+		startTime = System.currentTimeMillis();
+		endTime = startTime + 3000;
+		playSound(audio.newSoundEffect("sfx" + File.separator + "beep.ogg")); //replace with explosion sound effect
+		explosion = graphics.newImage("gfx" + File.separator + "explosionFrames.png");
+		Vector midPoint = crash.add(crashedPlane2.position()).scaleBy(0.5);
+		sprite = new SpriteAnimation(explosion, (int) midPoint.x(), (int) midPoint.y(), 6, 18);
 	}
 
 	@Override
 	public void start() {
-		timer = 0;
 		deaths = (int)( Math.random() * 500) + 300;
 		injured = (int)( Math.random() * 90) + 10;
 		textBox = new lib.TextBox(64, 96, window.width() - 128, window.height() - 96, 32);
@@ -54,12 +71,21 @@ public class GameOver extends Scene {
 		textBox.newline();
 		textBox.newline();
 		textBox.delay(0.2);
+		String centredPrompt = "";
+		for (int i = 0; i < (window.width() - 200) / 2; i ++) centredGameOver += " ";
+		centredPrompt += "Press any key to continue";
+		textBox.addText(centredPrompt);
 	}
 
 	@Override
 	public void update(double dt) {
-		timer += dt;
-		textBox.update(dt);
+		if (startTime > endTime){
+			textBox.update(dt);
+		} else {
+			startTime = System.currentTimeMillis();
+			sprite.update(dt);
+		}
+
 	}
 
 	@Override
@@ -85,14 +111,29 @@ public class GameOver extends Scene {
 	@Override
 	public void draw() {
 		graphics.setColour(0, 128, 0);
-		graphics.printCentred(crashedPlane1.name() + " crashed into " + crashedPlane2.name() + ".", 0, 32, 2, window.width());
-		textBox.draw();
-		int opacity = (int)( 255 * Math.sin(timer) );
-		graphics.setColour(0, 128, 0, opacity);
-		graphics.printCentred("Press [space] to continue.", 0, window.height() - 256, 1, window.width());
+		graphics.printCentred(crashedPlane1.name() + 
+				" crashed into " + crashedPlane2.name() + ".", 0, 32, 2, window.width());
+		if (startTime > endTime) {
+			textBox.draw();
+		} else {
+			crashedPlane1.draw((int) crashedPlane1.position().z());
+			crashedPlane2.draw((int) crashedPlane1.position().z());
+			Vector midPoint = crash.add(crashedPlane2.position()).scaleBy(0.5);
+			double radius = 20;
+			graphics.setColour(128,0,0);
+			graphics.circle(false, midPoint.x(), midPoint.y(), radius);
+			sprite.draw();
+		}
+		
 	}
 
 	@Override
 	public void close() {}
+
+	@Override
+	public void playSound(Sound sound) {
+		sound.stop();
+		sound.play();
+	}
 
 }

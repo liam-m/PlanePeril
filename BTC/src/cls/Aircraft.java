@@ -1,9 +1,11 @@
 package cls;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Stack;
 
+import lib.jog.audio;
 import lib.jog.graphics;
 import lib.jog.input;
 import lib.jog.window;
@@ -96,7 +98,11 @@ public class Aircraft {
 	 * A list of planes that are too near.
 	 */
 	
+	private boolean collisionWarningSoundFlag = false;
+	
 	private java.util.ArrayList<Aircraft> planesTooNear = new java.util.ArrayList<Aircraft>();
+	
+	private final static audio.Sound warning = audio.newSoundEffect("sfx" + File.separator + "beep.ogg"); 
 
 	/**
 	 * Constructor for an aircraft.
@@ -237,7 +243,7 @@ public class Aircraft {
 	 * Checks whether the plane lies outside of the airspace.
 	 * @return true, if the plane is out of the airspace. False, otherwise.
 	 */
-	public boolean outOfBounds() {
+	private boolean outOfBounds() {
 		double x = position.x();
 		double y = position.y();
 		return (x < RADIUS || x > window.width() + RADIUS - 32 || y < RADIUS || y > window.height() + RADIUS - 144);
@@ -353,6 +359,14 @@ public class Aircraft {
 		} else if (isAt(currentTarget)) {
 			currentRouteStage ++;
 			currentTarget = route[currentRouteStage].position();
+		}
+
+		// Update input if manually controlled
+		if (isManuallyControlled) {
+			if (outOfBounds()) {
+				hasFinished = true;
+				return;
+			}
 		}
 
 		// Update bearing
@@ -505,7 +519,7 @@ public class Aircraft {
 		if (currentTarget == destination) {
 			graphics.line(mouseX, mouseY, destination.x(), destination.y());
 		} else {
-			graphics.line(mouseX, mouseY, route[modified+1].position().x(), route[modified+1].position().y());
+			graphics.line(mouseX, mouseY, route[(modified+1) % route.length].position().x(), route[(modified+1) % route.length].position().y());
 		}
 	}
 	
@@ -682,6 +696,7 @@ public class Aircraft {
 	 * @param sceneWaypoints
 	 * @return
 	 */
+	@Deprecated
 	private int getIndex(Waypoint point, Waypoint[] sceneWaypoints){
 		int index = 0;
 		for (int i = 0; i < sceneWaypoints.length; i++){
@@ -707,7 +722,14 @@ public class Aircraft {
 				hasFinished = true;
 			} else if (plane != this && isWithin(plane, separationRule)) {
 				planesTooNear.add(plane);
+				if (collisionWarningSoundFlag == false){
+					collisionWarningSoundFlag = true;
+					scene.playSound(warning);
+				}
 			}
+		}
+		if (planesTooNear.isEmpty()){
+			collisionWarningSoundFlag = false;
 		}
 	}
 	
@@ -785,5 +807,5 @@ public class Aircraft {
 		Random rand = new Random();
 		return rand.nextInt((max - min) + 1) + min;
 	}
-
+	
 }

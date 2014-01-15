@@ -1,5 +1,7 @@
 package scn;
 
+import lib.jog.audio;
+
 public abstract class Scene implements lib.jog.input.EventHandler {
 
 	protected btc.Main main;
@@ -15,6 +17,8 @@ public abstract class Scene implements lib.jog.input.EventHandler {
 	abstract public void draw();
 	
 	abstract public void close();
+	
+	abstract public void playSound(audio.Sound sound);
 	
 	
 }

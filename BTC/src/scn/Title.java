@@ -2,7 +2,13 @@ package scn;
 
 import java.io.File;
 
+import cls.Aircraft;
+import cls.Vector;
+
+import lib.SpriteAnimation;
 import lib.jog.audio;
+import lib.jog.audio.Sound;
+import lib.jog.graphics.Image;
 import lib.jog.graphics;
 import lib.jog.window;
 import btc.Main;
@@ -12,9 +18,10 @@ public class Title extends Scene {
 	private audio.Sound beep;
 	private lib.ButtonText[] buttons;
 	private double angle;
-
+	
 	public Title(Main main) {
 		super(main);
+
 	}
 
 	@Override
@@ -35,7 +42,7 @@ public class Title extends Scene {
 		lib.ButtonText.Action play = new lib.ButtonText.Action() {
 			@Override
 			public void action() {
-//				main.setScene(new Game(main));
+//				_main.setScene(new Game(main));
 			}
 		};
 		buttons[1] = new lib.ButtonText("Play Full Game", play, window.height(), window.height()/2 + 126, window.width() - window.height(), 24, 8, 6);
@@ -52,20 +59,20 @@ public class Title extends Scene {
 			@Override
 			public void action() {
 				main.setScene(new Credits(main));
-			}
-		};
+				}
+			};
 		buttons[3] = new lib.ButtonText("Credits", credits, window.height(), window.height()/2 + 186, window.width() - window.height(), 24, 8, 6);
 		angle = 0;
 	}
 
 	@Override
 	public void update(double dt) {
+		
 		angle += dt;
 		double beepTimer = (angle * 4) + (Math.PI * 4 / 5);
 		beepTimer %= (2 * Math.PI);
 		if ( beepTimer <= 0.1 ) {
-			beep.stop();
-			beep.play();
+			playSound(beep);
 		}
 	}
 
@@ -132,7 +139,7 @@ public class Title extends Scene {
 	}
 	
 	private void drawMenu() {
-		// Draw Random Extras
+		// Draw Extras e.g. Date, Time, Credits
 		graphics.setColour(0, 128, 0);
 		graphics.line(window.height(), 16, window.height(), window.height() - 16);
 		java.text.DateFormat dateFormat = new java.text.SimpleDateFormat("yyyy/MM/dd");
@@ -141,6 +148,9 @@ public class Title extends Scene {
 		graphics.print(dateFormat.format(date), window.height() + 8, 20);
 		graphics.print(timeFormat.format(date), window.height() + 8, 36);
 		graphics.line(window.height(), 48, window.width() - 16, 48);
+		graphics.print("Created by:", window.height() + 8, 50);
+		graphics.print("TEAM FLR", window.height() + 8, 60);
+		
 		// Draw Buttons
 		for (lib.ButtonText b : buttons) b.draw();
 		graphics.setColour(0, 128, 0);
@@ -153,6 +163,12 @@ public class Title extends Scene {
 	@Override
 	public void close() {
 
+	}
+
+	@Override
+	public void playSound(Sound sound) {
+		sound.stop();
+		sound.play();
 	}
 
 }

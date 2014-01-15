@@ -1,6 +1,7 @@
 package scn;
 
 import lib.TextBox;
+import lib.jog.audio.Sound;
 import lib.jog.graphics;
 import lib.jog.input;
 import lib.jog.window;
@@ -116,5 +117,11 @@ public class DifficultySelect extends Scene {
 
 	@Override
 	public void close() {}
+
+	@Override
+	public void playSound(Sound sound) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

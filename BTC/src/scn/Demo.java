@@ -9,6 +9,7 @@ import lib.jog.input;
 import lib.jog.window;
 
 import cls.Aircraft;
+import cls.Vector;
 import cls.Waypoint;
 
 import btc.Main;
@@ -35,6 +36,7 @@ public class Demo extends Scene {
 	public final static int DIFFICULTY_HARD = 2;
 	public static int difficulty = DIFFICULTY_EASY;
 	
+	
 	private lib.OrdersBox ordersBox;
 	private double timeElapsed;
 	private Aircraft selectedAircraft;
@@ -49,6 +51,8 @@ public class Demo extends Scene {
 	private double flightGenerationTimeElapsed = 6;
 	private int maxAircraft = 4;
 	private int controlAltitude = 30000;
+	private boolean gameOverFlag = false;
+	private Vector crash;
 	
 	private final String[] LOCATION_NAMES = new String[] {
 		"North West Top Leftonia",
@@ -119,10 +123,11 @@ public class Demo extends Scene {
 		
 		_manualOverrideButton = new lib.ButtonText(" Take Control", manual, (window.width() - 128) / 2, 32, 128, 32, 8, 4);
 		altimeter = new cls.Altimeter(ALTIMETER_X, ALTIMETER_Y, ALTIMETER_W, ALTIMETER_H);
-		timeElapsed = 0;
 		deselectAircraft();
 		
 		switch (difficulty){
+		// Set attributes according to the selected difficulty
+		// Flights spawn more often on harder difficulties.
 		case 0:
 			break;
 		case 1:
@@ -141,6 +146,7 @@ public class Demo extends Scene {
 	}
 	
 	private void deselectAircraft() {
+		System.out.println("Deselecting Aircraft");
 		if (selectedAircraft != null && selectedAircraft.isManuallyControlled()) {
 			selectedAircraft.toggleManualControl();
 			_manualOverrideButton.setText(" Take Control");
@@ -175,9 +181,6 @@ public class Demo extends Scene {
 			} else if (input.isKeyDown(input.KEY_RIGHT)) {
 				selectedAircraft.turnRight(dt);
 			}
-			if (selectedAircraft.outOfBounds()) {
-				deselectAircraft();
-			}
 		}
 		
 		flightGenerationTimeElapsed += dt;
@@ -186,7 +189,6 @@ public class Demo extends Scene {
 			if (aircraftInAirspace.size() < maxAircraft){
 				generateFlight();
 			}
-			
 		}
 	}
 	
@@ -196,9 +198,31 @@ public class Demo extends Scene {
 		}
 	}
 	
+	@Override
+	public void playSound(audio.Sound sound){
+		sound.stop();
+		sound.play();
+	}
+	
 	public void gameOver(Aircraft plane1, Aircraft plane2) {
 		main.closeScene();
 		main.setScene(new GameOver(main, plane1, plane2));
+	}
+	
+	/**
+	 * Causes the scene to pause execution for the specified number of seconds
+	 * @param seconds the number of seconds to wait.
+	 */
+	public void wait(int seconds){
+		long startTime, endTime;
+		startTime = System.currentTimeMillis();
+		endTime = startTime + (seconds * 1000);
+		
+		while (startTime < endTime){
+			startTime = System.currentTimeMillis();
+		}
+		
+		return;
 	}
 
 	@Override
@@ -271,7 +295,6 @@ public class Demo extends Scene {
 
 	@Override
 	public void keyPressed(int key) {
-		
 	}
 
 	@Override
@@ -350,7 +373,6 @@ public class Demo extends Scene {
 		graphics.print(LOCATION_NAMES[2], locationWaypoints[2].position().x() - 125, locationWaypoints[2].position().y() + 10);
 		graphics.print(LOCATION_NAMES[3], locationWaypoints[3].position().x() - 75, locationWaypoints[3].position().y() + 10);
 
-			// Change Altitude
 	}
 	
 	private void drawPlaneInfo() {
@@ -414,7 +436,6 @@ public class Demo extends Scene {
 		}
 		// Add to world
 		ordersBox.addOrder("<<< " + name + " incoming from " + originName + " heading towards " + destinationName + ".");
-		System.out.println("<<< " + name + " incoming from " + originName + " heading towards " + destinationName + ".");
 		Aircraft a = new Aircraft(name, originName, destinationName, originPoint, destinationPoint, aircraftImage, 32 + (int)(10 * Math.random()), airspaceWaypoints, difficulty);
 		aircraftInAirspace.add(a);
 	}
