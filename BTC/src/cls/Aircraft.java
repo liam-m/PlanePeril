@@ -513,8 +513,13 @@ public class Aircraft {
 		if (currentTarget == destination) {
 			graphics.line(mouseX, mouseY, destination.x(), destination.y());
 		} else {
-			int index = Math.max((modified + 1) % route.length, modified);
-			graphics.line(mouseX, mouseY, route[index].position().x(), route[index].position().y());
+			int index = modified + 1;
+			if (index == route.length){ //modifying final waypoint in route
+				//line drawn to final waypoint
+				graphics.line(mouseX, mouseY, destination.x(), destination.y());
+			} else {
+				graphics.line(mouseX, mouseY, route[index].position().x(), route[index].position().y());
+			}
 		}
 	}
 	
