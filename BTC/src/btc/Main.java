@@ -4,9 +4,7 @@ import java.io.File;
 
 import org.lwjgl.Sys;
 
-import lib.SpriteAnimation;
 import lib.jog.*;
-import lib.jog.graphics.Image;
 
 /**
  * <h1>Main</h1>
