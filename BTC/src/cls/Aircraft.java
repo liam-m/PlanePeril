@@ -114,6 +114,7 @@ public class Aircraft {
 	 * @param img the image to draw to represent the plane.
 	 * @param speed the speed the plane will travel at.
 	 * @param sceneWaypoints the waypoints on the map.
+	 * @param difficulty the difficulty the game is set to
 	 */
 	public Aircraft(String name, String nameOrigin, String nameDestination, Waypoint originPoint, Waypoint destinationPoint, graphics.Image img, double speed, Waypoint[] sceneWaypoints, int difficulty) {
 		flightName = name;
