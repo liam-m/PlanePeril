@@ -24,6 +24,11 @@ public class Main implements input.EventHandler {
 	final private String TITLE = "Bear Traffic Controller";
 	final private int WIDTH = 1280;
 	final private int HEIGHT = 960;
+	final private String[] ICONS = {
+		"gfx" + File.separator + "icon16.png", // 16
+		"gfx" + File.separator + "icon32.png", // 32
+		"gfx" + File.separator + "icon64.png", // 64
+	};
 
 	private double lastFrameTime;
 	private double dt;
@@ -54,6 +59,7 @@ public class Main implements input.EventHandler {
 	private void start() {
 		lastFrameTime = (double)(Sys.getTime()) / Sys.getTimerResolution();
 		window.initialise(TITLE, WIDTH, HEIGHT);
+		window.setIcon(ICONS);
 		graphics.initialise();
 		graphics.Font font = graphics.newBitmapFont("gfx" + File.separator + "font.png", "ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz1234567890.,_-!?()[]><#~:;/\\^'\"{}£$@@@@@@@@");
 		graphics.setFont(font);
