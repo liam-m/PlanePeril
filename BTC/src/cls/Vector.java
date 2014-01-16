@@ -35,7 +35,7 @@ public class Vector {
 	}
 	
 	public double magnitude() {
-		return Math.sqrt((x*x) + (y*y) + (z*z));
+		return Math.sqrt((x*x) + (y*y) + (z));
 	}
 	
 	public double magnitudeSquared() {
@@ -62,6 +62,10 @@ public class Vector {
 		double a = Math.acos( (x*v.x + y*v.y + z*v.z) / (magnitude() * v.magnitude()));
 		if (v.y < y) a *= -1;
 		return a;
+	}
+	
+	public void setZ(double z){
+		this.z = z;
 	}
 
 }

@@ -47,10 +47,10 @@ public class Altimeter implements EventHandler {
 	public void mouseReleased(int key, int x, int y) {
 		if (!isVisible) return;
 		if (key == input.MOUSE_WHEEL_DOWN) {
-			currentAircraft.fall();
+			currentAircraft.setAltitudeState(Aircraft.altitudeFall);
 		}
 		if (key == input.MOUSE_WHEEL_UP) {
-			currentAircraft.climb();
+			currentAircraft.setAltitudeState(Aircraft.altitudeClimb);
 		}
 	}
 
@@ -95,7 +95,7 @@ public class Altimeter implements EventHandler {
 		graphics.circle(true, x, y, 4);
 		graphics.setColour(0, 128, 0);
 		graphics.circle(false, x, y, 4);
-		graphics.printCentred(String.valueOf(currentAircraft.position().z()), positionX, y+32, 1, width);
+		graphics.printCentred(String.format("%.0f", currentAircraft.position().z()), positionX, y+32, 1, width);
 	}
 
 }

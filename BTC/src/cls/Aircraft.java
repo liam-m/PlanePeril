@@ -98,6 +98,12 @@ public class Aircraft {
 	 * A list of planes that are too near.
 	 */
 	
+	private int altitudeState;
+	private int altitudeChangeSpeed = 300;
+	public static final int altitudeClimb = 1;
+	public static final int altitudeFall = -1;
+	public static final int altitudeLevel = 0;
+	
 	private boolean collisionWarningSoundFlag = false;
 	
 	private java.util.ArrayList<Aircraft> planesTooNear = new java.util.ArrayList<Aircraft>();
@@ -168,6 +174,7 @@ public class Aircraft {
 		case 1:
 			separationRule = 96;
 			velocity = velocity.scaleBy(2);
+			altitudeChangeSpeed = 200;
 			break;
 		case 2:
 			separationRule = 128;
@@ -175,6 +182,7 @@ public class Aircraft {
 			//At high velocities, the aircraft is allowed to turn faster
 			//this helps keep the aircraft on track.
 			turnSpeed = Math.PI / 2;
+			altitudeChangeSpeed = 100;
 			break;
 		}
 		
@@ -345,6 +353,16 @@ public class Aircraft {
 	public void update(double dt) {
 		if (hasFinished) return;
 		
+		switch (altitudeState){
+		case -1:
+			fall();
+			break;
+		case 0:
+			break;
+		case 1:
+			climb();
+			break;
+		}
 		// Update position
 		Vector dv = velocity.scaleBy(dt);
 		position = position.add(dv);
@@ -428,7 +446,7 @@ public class Aircraft {
 		graphics.setColour(128, 128, 128, alpha);
 		graphics.draw(image, scale, position.x(), position.y(), bearing(), 8, 8);
 		graphics.setColour(128, 128, 128, alpha/2.5);
-		graphics.print(String.valueOf(position.z()) + "£", position.x()+8, position.y()-8);
+		graphics.print(String.format("%.0f", position.z()) + "£", position.x()+8, position.y()-8);
 		drawWarningCircles();
 	}
 	
@@ -526,6 +544,8 @@ public class Aircraft {
 	
 	/**
 	 * Creates a sensible route from an origin to a destination from an array of waypoints. 
+	 * Waypoint costs are considered according to distance from current aircraft location
+	 * Costs are further weighted by distance from waypoint to destination.
 	 * @param origin the waypoint from which to begin.
 	 * @param destination the waypoint at which to end.
 	 * @param waypoints the waypoints to be used.
@@ -674,16 +694,26 @@ public class Aircraft {
 	 * Increases the plane's altitude.
 	 */
 	public void climb() {
-		if (position.z() < 30000)
-			changeAltitude(2000);
+		if (position.z() < 30000 && altitudeState == altitudeClimb)
+			changeAltitude(altitudeChangeSpeed);
+		if (position.z() >= 30000){
+			changeAltitude(0);
+			altitudeState = altitudeLevel;
+			position = new Vector(position.x(), position.y(), 30000);
+		}
 	}
 	
 	/**
 	 * Decreases the plane's altitude.
 	 */
 	public void fall() {
-		if (position.z() > 28000)
-			changeAltitude(-2000);
+		if (position.z() > 28000 && altitudeState == altitudeFall)
+			changeAltitude(-altitudeChangeSpeed);
+		if (position.z() <= 28000){
+			changeAltitude(0);
+			altitudeState = altitudeLevel;
+			position = new Vector(position.x(), position.y(), 28000);
+		}
 	}
 	
 	/**
@@ -691,7 +721,12 @@ public class Aircraft {
 	 * @param height the height by which to change altitude.
 	 */
 	private void changeAltitude(int height) {
-		position = new Vector(position.x(), position.y(), position.z() + height);
+		//velocity = velocity.add(new Vector(0,0, height));
+		velocity.setZ(height);
+	}
+	
+	public void setAltitudeState(int state){
+		this.altitudeState = state;
 	}
 	
 }
