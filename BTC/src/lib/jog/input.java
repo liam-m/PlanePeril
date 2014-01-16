@@ -11,21 +11,6 @@ import org.lwjgl.input.Keyboard;
  */
 public abstract class input {
 	
-	public final static int MOUSE_LEFT = 0;
-	public final static int MOUSE_RIGHT = 1;
-	public final static int MOUSE_MIDDLE = 2;
-	public final static int MOUSE_WHEEL_UP = 3;
-	public final static int MOUSE_WHEEL_DOWN = 4;
-	
-	public final static int KEY_ESCAPE = Keyboard.KEY_ESCAPE;
-	public final static int KEY_UP = Keyboard.KEY_UP;
-	public final static int KEY_DOWN = Keyboard.KEY_DOWN;
-	public final static int KEY_LEFT = Keyboard.KEY_LEFT;
-	public final static int KEY_RIGHT = Keyboard.KEY_RIGHT;
-	public final static int KEY_SPACE = Keyboard.KEY_SPACE;
-	public final static int KEY_LCRTL = Keyboard.KEY_LCONTROL;
-	public final static int KEY_W = Keyboard.KEY_W;
-	
 	/**
 	 * Interface for a class that is to receive keyboard and mouse events.
 	 * @author IMP1
@@ -140,5 +125,93 @@ public abstract class input {
 	public static int mouseY() {
 		return window.height() - Mouse.getY();
 	}
+	
+	/*
+	 * Static Mouse Constants
+	 */
+	public final static int MOUSE_LEFT = 0;
+	public final static int MOUSE_RIGHT = 1;
+	public final static int MOUSE_MIDDLE = 2;
+	public final static int MOUSE_WHEEL_UP = 3;
+	public final static int MOUSE_WHEEL_DOWN = 4;
+	
+	/*
+	 * Static Keyboard Constants
+	 */
+	public final static int KEY_A = Keyboard.KEY_A;
+	public final static int KEY_B = Keyboard.KEY_B;
+	public final static int KEY_C = Keyboard.KEY_C;
+	public final static int KEY_D = Keyboard.KEY_D;
+	public final static int KEY_E = Keyboard.KEY_E;
+	public final static int KEY_F = Keyboard.KEY_F;
+	public final static int KEY_G = Keyboard.KEY_G;
+	public final static int KEY_H = Keyboard.KEY_H;
+	public final static int KEY_I = Keyboard.KEY_I;
+	public final static int KEY_J = Keyboard.KEY_J;
+	public final static int KEY_K = Keyboard.KEY_K;
+	public final static int KEY_L = Keyboard.KEY_L;
+	public final static int KEY_M = Keyboard.KEY_M;
+	public final static int KEY_N = Keyboard.KEY_N;
+	public final static int KEY_O = Keyboard.KEY_O;
+	public final static int KEY_P = Keyboard.KEY_P;
+	public final static int KEY_Q = Keyboard.KEY_Q;
+	public final static int KEY_R = Keyboard.KEY_R;
+	public final static int KEY_S = Keyboard.KEY_S;
+	public final static int KEY_T = Keyboard.KEY_T;
+	public final static int KEY_U = Keyboard.KEY_U;
+	public final static int KEY_V = Keyboard.KEY_V;
+	public final static int KEY_W = Keyboard.KEY_W;
+	public final static int KEY_X = Keyboard.KEY_X;
+	public final static int KEY_Y = Keyboard.KEY_Y;
+	public final static int KEY_Z = Keyboard.KEY_Z;
+	public final static int KEY_SPACE = Keyboard.KEY_SPACE;
+	public final static int KEY_1 = Keyboard.KEY_1;
+	public final static int KEY_2 = Keyboard.KEY_2;
+	public final static int KEY_3 = Keyboard.KEY_3;
+	public final static int KEY_4 = Keyboard.KEY_4;
+	public final static int KEY_5 = Keyboard.KEY_5;
+	public final static int KEY_6 = Keyboard.KEY_6;
+	public final static int KEY_7 = Keyboard.KEY_7;
+	public final static int KEY_8 = Keyboard.KEY_8;
+	public final static int KEY_9 = Keyboard.KEY_9;
+	public final static int KEY_0 = Keyboard.KEY_0;
+	
+	public final static int KEY_F1 = Keyboard.KEY_F1;
+	public final static int KEY_F2 = Keyboard.KEY_F2;
+	public final static int KEY_F3 = Keyboard.KEY_F3;
+	public final static int KEY_F4 = Keyboard.KEY_F4;
+	public final static int KEY_F5 = Keyboard.KEY_F5;
+	public final static int KEY_F6 = Keyboard.KEY_F6;
+	public final static int KEY_F7 = Keyboard.KEY_F7;
+	public final static int KEY_F8 = Keyboard.KEY_F8;
+	public final static int KEY_F9 = Keyboard.KEY_F9;
+	public final static int KEY_F10 = Keyboard.KEY_F10;
+	public final static int KEY_F11 = Keyboard.KEY_F11;
+	public final static int KEY_F12 = Keyboard.KEY_F12;
+	public final static int KEY_F13 = Keyboard.KEY_F13;
+	public final static int KEY_F14 = Keyboard.KEY_F14;
+	public final static int KEY_F15 = Keyboard.KEY_F15;
+	public final static int KEY_F16 = Keyboard.KEY_F16;
+	public final static int KEY_F17 = Keyboard.KEY_F17;
+	public final static int KEY_F18 = Keyboard.KEY_F18;
+	public final static int KEY_F19 = Keyboard.KEY_F19;
+	
+	public final static int KEY_ESCAPE = Keyboard.KEY_ESCAPE;
+	public final static int KEY_SCROLL_LOCK = Keyboard.KEY_SCROLL;
+	public final static int KEY_PAUSE = Keyboard.KEY_PAUSE;
+	
+	public final static int KEY_LCRTL = Keyboard.KEY_LCONTROL;
+	public final static int KEY_RCRTL = Keyboard.KEY_RCONTROL;
+	public final static int KEY_LSHIFT = Keyboard.KEY_LSHIFT;
+	public final static int KEY_RSHIFT = Keyboard.KEY_RSHIFT;
+	public final static int KEY_CAPS_LOCK = Keyboard.KEY_CAPITAL;
+	public final static int KEY_TAB = Keyboard.KEY_TAB;
+	public final static int KEY_RETURN = Keyboard.KEY_RETURN;
+	public final static int KEY_BACKSPACE = Keyboard.KEY_BACK;
+	
+	public final static int KEY_UP = Keyboard.KEY_UP;
+	public final static int KEY_DOWN = Keyboard.KEY_DOWN;
+	public final static int KEY_LEFT = Keyboard.KEY_LEFT;
+	public final static int KEY_RIGHT = Keyboard.KEY_RIGHT;
 	
 }
