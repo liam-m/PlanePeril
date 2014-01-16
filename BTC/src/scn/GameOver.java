@@ -21,13 +21,14 @@ public class GameOver extends Scene {
 	private Vector crash;
 	private SpriteAnimation explosionAnim;
 	private Image explosion;
+	private int keyPressed;
 
 	public GameOver(Main main, Aircraft plane1, Aircraft plane2) {
 		super(main);
 		crashedPlane1 = plane1;
 		crashedPlane2 = plane2;
 		crash = new Vector(plane1.position().x(), plane1.position().y(), 0);
-		//playSound(audio.newSoundEffect("sfx" + File.separator + "crash.ogg"));
+//		playSound(audio.newSoundEffect("sfx" + File.separator + "crash.ogg"));
 		explosion = graphics.newImage("gfx" + File.separator + "explosionFrames.png");
 		Vector midPoint = crashedPlane1.position().add(crashedPlane2.position()).scaleBy(0.5);
 		Vector explosionPos = midPoint.sub( new Vector(explosion.width()/72, explosion.height()/3, 0) );
@@ -88,12 +89,16 @@ public class GameOver extends Scene {
 	public void mouseReleased(int key, int x, int y) {}
 
 	@Override
-	public void keyPressed(int key) {}
+	public void keyPressed(int key) {
+		keyPressed = key;
+	}
 
 	@Override
 	public void keyReleased(int key) {
+		if (key == keyPressed) {
 			main.closeScene();
 			main.setScene(new Title(main));
+		}
 	}
 
 	@Override
