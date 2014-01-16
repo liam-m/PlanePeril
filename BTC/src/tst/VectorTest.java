@@ -134,8 +134,9 @@ public class VectorTest {
 	// Test angle between function
 	@Test 
 	public void testAngle() {
-		Vector testVector = new Vector(0, 1, 0);
-		Vector testVector2 = new Vector(1, 0, 0);
-		assertTrue("Angle = pi/2", Math.PI  ==  (testVector.angleBetween(testVector2) * 2));	
+		Vector testVector = new Vector(1, 0, 0);
+		Vector testVector2 = new Vector(0, 1, 0);
+		double angle = Math.PI / 2;
+		assertTrue("Angle = pi/2", angle  ==  testVector.angleBetween(testVector2));	
 	}
 }

@@ -46,14 +46,16 @@ public class WaypointTest {
 	// Test getCost function - incorrect
 	@Test
 	public void testGetCost(){
-		Waypoint testWaypoint = new Waypoint(3, 4, false);
+		Waypoint testWaypoint = new Waypoint(2, 4, false);
 		Waypoint testWaypoint2 = new Waypoint(2, 2, true);
-		assertTrue("Cost = 3", 3 == testWaypoint.getCost(testWaypoint2));
+		double result = testWaypoint.getCost(testWaypoint2);
+		assertTrue("Cost = 2", 2 == result);
 	}@Test
 	public void testGetCost2(){
 		Waypoint testWaypoint = new Waypoint(6, 15, false);
 		Waypoint testWaypoint2 = new Waypoint(15, 15, true);
-		assertTrue("Cost = 2", 2 == testWaypoint.getCost(testWaypoint2));
+		double result = testWaypoint.getCost(testWaypoint2);
+		assertTrue("Cost = 9", 9 == result);
 	}
 	
 	
