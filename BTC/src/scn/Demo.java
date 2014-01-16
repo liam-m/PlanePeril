@@ -443,10 +443,10 @@ public class Demo extends Scene {
 		double seconds = timeElapsed % 60;
 		java.text.DecimalFormat df = new java.text.DecimalFormat("00.00");
 		String timePlayed = String.format("%d:%02d:", hours, minutes) + df.format(seconds); 
-		graphics.print(timePlayed, window.width() - (timePlayed.length() * 8), 0);
+		graphics.print(timePlayed, window.width() - (timePlayed.length() * 8 + 32), 0);
 		int planes = aircraftInAirspace.size();
-		graphics.print(String.valueOf(aircraftInAirspace.size()) + " plane" + (planes == 1 ? "" : "s") + " in the sky.", 256, 0);
-		graphics.print("Control Altitude: " + String.valueOf(controlAltitude), 650, 0);
+		graphics.print(String.valueOf(aircraftInAirspace.size()) + " plane" + (planes == 1 ? "" : "s") + " in the sky.", 32, 0);
+		graphics.print("Control Altitude: " + String.valueOf(controlAltitude), 544, 0);
 	}
 	
 	private void generateFlight() {
