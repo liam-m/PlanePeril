@@ -11,9 +11,24 @@ import lib.jog.input.EventHandler;
 public class Altimeter implements EventHandler {
 	
 	private boolean isVisible;
+	/**
+	 * Whether or not the Altimeter should be drawn
+	 */
+	
 	private cls.Aircraft currentAircraft;
+	/**
+	 * The current aircraft associated with the altimeter
+	 */
+	
 	private double positionX, positionY, width, height;
-
+	
+	/**
+	 * Constructor for the altimeter
+	 * @param x the x coord to draw at
+	 * @param y the y coord to draw at
+	 * @param w the width of the altimeter
+	 * @param h the height of the altimeter
+	 */
 	public Altimeter(double x, double y, double w, double h) {
 		positionX = x;
 		positionY = y;
@@ -22,28 +37,47 @@ public class Altimeter implements EventHandler {
 		hide();
 	}
 	
+	/**
+	 * Makes the altimeter visible
+	 * @param aircraft The aircraft to associate with the altimeter
+	 */
 	public void show(cls.Aircraft aircraft) {
 		if (aircraft == null) return;
 		currentAircraft = aircraft;
 		isVisible = true;
 	}
 	
+	/**
+	 * Makes the altimeter invisible
+	 */
 	public void hide() {
 		currentAircraft = null;
 		isVisible = false;
 	}
 	
+	/**
+	 * Checks if the mouse is over the altimeter
+	 * @param mx the x coord of the mouse location
+	 * @param my the y coord of the mouse location
+	 * @return boolean marking if the mouse is over the altimeter
+	 */
 	public boolean isMouseOver(int mx, int my) {
 		return (mx >= positionX && mx <= positionX + width && my >= positionY && my <= positionY + height);
 	}
 	public boolean isMouseOver() { return isMouseOver(input.mouseX(), input.mouseY()); }
 
 	@Override
+	/**
+	 * Handler for mouse clicks
+	 */
 	public void mousePressed(int key, int x, int y) {
 		if (!isVisible) return;
 	}
 
 	@Override
+	/**
+	 * Handler for mouse releases
+	 */
 	public void mouseReleased(int key, int x, int y) {
 		if (!isVisible) return;
 		if (key == input.MOUSE_WHEEL_DOWN) {
@@ -62,6 +96,9 @@ public class Altimeter implements EventHandler {
 	
 	public void update(double dt) {}
 	
+	/**
+	 * Draws the altimeter to the screen
+	 */
 	public void draw() {
 		drawRectangle();
 		if (isVisible) {
@@ -69,11 +106,18 @@ public class Altimeter implements EventHandler {
 		}
 	}
 	
+	/**
+	 * Draws the box around the altimeter
+	 */
 	private void drawRectangle() {
 		graphics.setColour(0, 128, 0);
 		graphics.rectangle(false, positionX, positionY, width, height);
 	}
 	
+	/**
+	 * Draws the icon on the altimeter
+	 * Icon depicts plane orientation
+	 */
 	private void drawPlaneIcon() {
 		// angle to draw plane
 		double r = 0;
