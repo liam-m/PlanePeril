@@ -35,6 +35,38 @@ public class AircraftTest {
 		Waypoint[] waypointList = new Waypoint[]{new Waypoint(0, 0, true), new Waypoint(100, 100, true), new Waypoint(25, 75, false), new Waypoint(75, 25, false), new Waypoint(50,50, false)};
 		Aircraft testAircraft = new Aircraft("testAircraft", "Berlin", "Dublin", new Waypoint(100,100, true), new Waypoint(0,0, true), null, 10.0, waypointList, 1);
 		String name = testAircraft.originName();
-		assertTrue("Origin name = Berlin", "Berlin" == name);
-		}
+		assertTrue("Origin name = Dublin", "Dublin" == name);
+	}
+	// Test getDestinationName function
+	@Test
+	public void testGetDestinationName(){
+		Waypoint[] waypointList = new Waypoint[]{new Waypoint(0, 0, true), new Waypoint(100, 100, true), new Waypoint(25, 75, false), new Waypoint(75, 25, false), new Waypoint(50,50, false)};
+		Aircraft testAircraft = new Aircraft("testAircraft", "Berlin", "Dublin", new Waypoint(100,100, true), new Waypoint(0,0, true), null, 10.0, waypointList, 1);
+		String name = testAircraft.destinationName();
+		assertTrue("Destination name = Berlin", "Berlin" == name);
+	}
+	// Test getIsFinished function
+	@Test
+	public void testGetIsFinishedName(){
+		Waypoint[] waypointList = new Waypoint[]{new Waypoint(0, 0, true), new Waypoint(100, 100, true), new Waypoint(25, 75, false), new Waypoint(75, 25, false), new Waypoint(50,50, false)};
+		Aircraft testAircraft = new Aircraft("testAircraft", "Berlin", "Dublin", new Waypoint(100,100, true), new Waypoint(0,0, true), null, 10.0, waypointList, 1);
+		boolean status = testAircraft.isFinished();
+		assertTrue("Finished = false", false == status);
+	}
+	// Test getIsManuallyControlled function
+	@Test
+	public void testIsManuallyControlled(){
+		Waypoint[] waypointList = new Waypoint[]{new Waypoint(0, 0, true), new Waypoint(100, 100, true), new Waypoint(25, 75, false), new Waypoint(75, 25, false), new Waypoint(50,50, false)};
+		Aircraft testAircraft = new Aircraft("testAircraft", "Berlin", "Dublin", new Waypoint(100,100, true), new Waypoint(0,0, true), null, 10.0, waypointList, 1);
+		boolean status = testAircraft.isManuallyControlled();
+		assertTrue("Manually controlled = false", false == status);
+	}
+	// Test getSpeed function
+	@Test
+	public void testGetSpeed(){
+		Waypoint[] waypointList = new Waypoint[]{new Waypoint(0, 0, true), new Waypoint(100, 100, true), new Waypoint(25, 75, false), new Waypoint(75, 25, false), new Waypoint(50,50, false)};
+		Aircraft testAircraft = new Aircraft("testAircraft", "Berlin", "Dublin", new Waypoint(100,100, true), new Waypoint(0,0, true), null, 10.0, waypointList, 1);
+		double speed = testAircraft.speed();
+		assertTrue("Speed = 10", speed == 10.0);
+	}
 }
