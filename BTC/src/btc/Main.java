@@ -120,7 +120,7 @@ public class Main implements input.EventHandler {
 	public void closeScene() {
 		currentScene.close();
 		sceneStack.pop();
-		currentScene = sceneStack.peek(); 
+		currentScene = sceneStack.peek();
 	}
 	
 	/** 

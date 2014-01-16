@@ -449,8 +449,6 @@ public class Demo extends Scene {
 	}
 	
 	@Override
-	public void close() {
-		music.stop();
-	}
+	public void close() {}
 
 }
