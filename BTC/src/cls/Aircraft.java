@@ -10,7 +10,7 @@ import lib.jog.graphics;
 import lib.jog.input;
 import lib.jog.window;
 
-import scn.Demo;
+
 
 /**
  * <h1>Aircraft</h1>
@@ -524,18 +524,6 @@ public class Aircraft {
 		}
 	}
 	
-	@Deprecated
-	@SuppressWarnings("unused")
-	private Waypoint[] findRandomRoute(Vector origin, Vector destination) {
-		// Placeholder over-simplified version
-		int n = 4;
-		Waypoint[] route = new Waypoint[n];
-		for (int i = 0; i < n; i ++ ) {
-			route[i] = Demo.airspaceWaypoints[(int)( Math.random() * Demo.airspaceWaypoints.length )];
-		}
-		return route;
-	}
-	
 	/**
 	 * Creates a sensible route from an origin to a destination from an array of waypoints. 
 	 * @param origin the waypoint from which to begin.
@@ -613,100 +601,6 @@ public class Aircraft {
 			route[i] = selectedWaypoints.get(i);
 		}
 		return route;
-	}
-	
-	@Deprecated
-	public void djikstraRoute(Waypoint origin, Waypoint destination, Waypoint[] sceneWaypoints){
-		double[] distance = new double[sceneWaypoints.length]; //distance from source to waypoints
-		boolean[] visited = new boolean[sceneWaypoints.length]; //to check if a waypoint has been visited
-		Waypoint[] previous = new Waypoint[sceneWaypoints.length]; //previous waypoint in optimal path from source to a waypoint
-		ArrayList<Waypoint> queue = new ArrayList<Waypoint>(); // Queue of waypoints to evaluate
-		
-		//initialisation
-		for(int i = 0; i < sceneWaypoints.length; i++){
-			distance[i] = sceneWaypoints[i].getCost(origin);
-			visited[i] = false;
-		}
-		
-		queue.add(origin);
-		
-		while(!queue.isEmpty()){
-			//find waypoint in queue with smallest distance and which is unvisited
-			double cost = 9999.0;
-			Waypoint cheapest = queue.get(0);
-			for (int i = 0; i < queue.size(); i++){
-				if (distance[i] < cost && visited[i] == false){
-					cheapest = queue.get(i);
-				}
-			}
-			
-			if (cheapest.position().equals(destination.position())){ //terminate if the next node is the destination
-				route = buildRoute(sceneWaypoints, previous, destination);
-				break;
-			} else {
-				queue.remove(cheapest);
-				int cheapestIndex = getIndex(cheapest, sceneWaypoints);
-				visited[cheapestIndex] = true;
-				double dist;
-
-				for (Waypoint neighbour : sceneWaypoints) {
-					dist = distance[cheapestIndex] + Waypoint.getCostBetween(cheapest, neighbour); //accumulate shortest distance from origin
-					int neighbourIndex = getIndex(neighbour, sceneWaypoints);
-
-					if (dist < distance[neighbourIndex] && visited[neighbourIndex] == false){
-						distance[neighbourIndex] = dist; //shortest dist from origin to neighbour
-						previous[neighbourIndex] = cheapest;
-						queue.add(neighbour); //insert into queue for processing
-					} //end if
-				} // end for
-			} // end else
-		} //end while
-	}
-	
-	/**
-	 * 
-	 * @param sceneWaypoints
-	 * @param previous
-	 * @param destination
-	 * @return
-	 */
-	@Deprecated
-	private Waypoint[] buildRoute(Waypoint[] sceneWaypoints, Waypoint[] previous, Waypoint destination){
-		Stack<Waypoint> sequence = new Stack<Waypoint>();
-		int currentIndex = getIndex(destination, sceneWaypoints);
-		
-		while (previous[currentIndex] != null) {
-			sequence.push(previous[currentIndex]); //build the sequence of waypoints back to the origin
-			currentIndex = getIndex(previous[currentIndex], sceneWaypoints);
-		}
-		
-		//pop to build the route from origin to destination
-		Waypoint[] route = new Waypoint[sequence.size()];
-		
-		for (int i = 0; i < sequence.size(); i++){
-			route[i] = sequence.pop();
-		}
-		//finally add the destination
-		route[route.length - 1] = destination;
-		return route;
-	}
-	
-	/**
-	 * 
-	 * @param point
-	 * @param sceneWaypoints
-	 * @return
-	 */
-	@Deprecated
-	private int getIndex(Waypoint point, Waypoint[] sceneWaypoints){
-		int index = 0;
-		for (int i = 0; i < sceneWaypoints.length; i++){
-			if (sceneWaypoints[i].equals(point)){
-				index = i;
-				break;
-			}
-		}
-		return index;
 	}
 
 	/**

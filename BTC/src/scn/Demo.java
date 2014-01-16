@@ -133,7 +133,7 @@ public class Demo extends Scene {
 			flightGenerationInterval = flightGenerationInterval / 1.3;
 			break;
 		case 2:
-			flightGenerationInterval = flightGenerationInterval / 2;
+			flightGenerationInterval = flightGenerationInterval / 1.6;
 			break;
 		}
 	}

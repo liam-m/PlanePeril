@@ -268,7 +268,7 @@ public abstract class graphics {
 		 * @param imgHeight the height of the image the quad will be a part of.
 		 */
 		private Quad(double x, double y, double w, double h, double imgWidth, double imgHeight) {
-			this.x = x / imgWidth;
+			this.x = x / imgWidth; //Quad coordinates are from 0 to 1, hence division by image size attributes
 			this.y = y / imgHeight;
 			this.width = w / imgWidth;
 			this.height = h / imgHeight;
