@@ -354,12 +354,14 @@ public class Demo extends Scene {
 
 	@Override
 	public void draw() {
-		graphics.setColour(255, 255, 255, 32);
-		graphics.draw(background, 0, 0);
+		
+		
 		graphics.setColour(0, 128, 0);
 		graphics.rectangle(false, 16, 16, window.width() - 32, window.height() - 144);
 		
 		graphics.setViewport(16, 16, window.width() - 32, window.height() - 144);
+		graphics.setColour(255, 255, 255, 32);
+		graphics.draw(background, 0, 0);
 		drawMap();		
 		graphics.setViewport();
 		
