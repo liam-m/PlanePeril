@@ -99,16 +99,36 @@ public class Aircraft {
 	 */
 	
 	private int altitudeState;
+	/**
+	 * the current state of the plane's altitude, ie if the plane is climbing or falling
+	 */
 	private int altitudeChangeSpeed = 300;
+	/**
+	 * the speed to climb or fall by. Default 300 for easy mode
+	 */
+	
 	public static final int altitudeClimb = 1;
 	public static final int altitudeFall = -1;
 	public static final int altitudeLevel = 0;
+	/**
+	 * Static ints for use where altitude state is to be changed.
+	 */
 	
 	private boolean collisionWarningSoundFlag = false;
+	/**
+	 * Flags whether the collision warning sound has been played before.
+	 * If set, plane will not play warning again until it the separation violation involving it ends
+	 */
 	
 	private java.util.ArrayList<Aircraft> planesTooNear = new java.util.ArrayList<Aircraft>();
+	/**
+	 * Holds a list of planes currently in violation of separation rules with this plane
+	 */
 	
 	private final static audio.Sound WARNING_SOUND = audio.newSoundEffect("sfx" + File.separator + "beep.ogg"); 
+	/**
+	 * A warning sound to be played when the plane enters separation violation.
+	 */
 
 	/**
 	 * Constructor for an aircraft.
@@ -725,6 +745,10 @@ public class Aircraft {
 		velocity.setZ(height);
 	}
 	
+	/**
+	 * Sets the plane's altitude state, e.g. climbing or falling
+	 * @param state
+	 */
 	public void setAltitudeState(int state){
 		this.altitudeState = state;
 	}
