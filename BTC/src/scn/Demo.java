@@ -321,6 +321,12 @@ public class Demo extends Scene {
 				main.closeScene();
 			break;
 			
+			case input.KEY_F5 :
+				Aircraft a1 = createAircraft();
+				Aircraft a2 = createAircraft();
+				gameOver(a1, a2);
+			break;
+			
 		}
 	}
 
@@ -420,6 +426,12 @@ public class Demo extends Scene {
 	}
 	
 	private void generateFlight() {
+		Aircraft a = createAircraft();
+		ordersBox.addOrder("<<< " + a.name() + " incoming from " + a.originName() + " heading towards " + a.destinationName() + ".");
+		aircraftInAirspace.add(a);
+	}
+	
+	private Aircraft createAircraft() {
 		// Origin and Destination
 		int o = RandomNumber.randInclusiveInt(0, locationWaypoints.length - 1);
 		int d = RandomNumber.randInclusiveInt(0, locationWaypoints.length - 1);
@@ -428,7 +440,6 @@ public class Demo extends Scene {
 		}
 		String originName = LOCATION_NAMES[o];
 		String destinationName = LOCATION_NAMES[d];
-				
 		Waypoint originPoint = locationWaypoints[o];
 		Waypoint destinationPoint = locationWaypoints[d];
 		
@@ -442,13 +453,12 @@ public class Demo extends Scene {
 				if (a.name() == name) nameTaken = true;
 			}
 		}
-		// Add to world
-		ordersBox.addOrder("<<< " + name + " incoming from " + originName + " heading towards " + destinationName + ".");
-		Aircraft a = new Aircraft(name, originName, destinationName, originPoint, destinationPoint, aircraftImage, 32 + (int)(10 * Math.random()), airspaceWaypoints, difficulty);
-		aircraftInAirspace.add(a);
+		return new Aircraft(name, originName, destinationName, originPoint, destinationPoint, aircraftImage, 32 + (int)(10 * Math.random()), airspaceWaypoints, difficulty);
 	}
 	
 	@Override
-	public void close() {}
+	public void close() {
+		music.stop();
+	}
 
 }
