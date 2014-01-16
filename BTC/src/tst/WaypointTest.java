@@ -43,7 +43,7 @@ public class WaypointTest {
 		assertTrue("Mouse over = false", false == testWaypoint.isMouseOver(10,10));
 	}
 	
-	// Test getCost function - incorrect
+	// Test getCost function
 	@Test
 	public void testGetCost(){
 		Waypoint testWaypoint = new Waypoint(2, 4, false);
@@ -55,6 +55,21 @@ public class WaypointTest {
 		Waypoint testWaypoint = new Waypoint(6, 15, false);
 		Waypoint testWaypoint2 = new Waypoint(15, 15, true);
 		double result = testWaypoint.getCost(testWaypoint2);
+		assertTrue("Cost = 9", 9 == result);
+	}
+	
+	// Test getCostBetween function
+	@Test
+	public void testGetCostBetween(){
+		Waypoint testWaypoint = new Waypoint(2, 4, false);
+		Waypoint testWaypoint2 = new Waypoint(2, 2, true);
+		double result = testWaypoint.getCostBetween(testWaypoint, testWaypoint2);
+		assertTrue("Cost = 2", 2 == result);
+	}@Test
+	public void testGetCostBetween2(){
+		Waypoint testWaypoint = new Waypoint(6, 15, false);
+		Waypoint testWaypoint2 = new Waypoint(15, 15, true);
+		double result = testWaypoint.getCostBetween(testWaypoint, testWaypoint2);
 		assertTrue("Cost = 9", 9 == result);
 	}
 	
