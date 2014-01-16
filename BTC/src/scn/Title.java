@@ -1,6 +1,10 @@
 package scn;
 
+import java.awt.Desktop;
 import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import lib.jog.audio;
 import lib.jog.audio.Sound;
@@ -9,6 +13,8 @@ import lib.jog.window;
 import btc.Main;
 
 public class Title extends Scene {
+	
+	private final static String HELP_URL = "http://atc.h9i.co.uk/ingamehelp.html";
 	
 	private audio.Sound beep;
 	private lib.ButtonText[] buttons;
@@ -23,7 +29,7 @@ public class Title extends Scene {
 		beep = audio.newSoundEffect("sfx" + File.separator + "beep.ogg");
 		beep.setVolume(0.2f);
 		
-		buttons = new lib.ButtonText[4];
+		buttons = new lib.ButtonText[5];
 		// Demo Button
 		lib.ButtonText.Action demo = new lib.ButtonText.Action() {
 			@Override
@@ -41,21 +47,35 @@ public class Title extends Scene {
 		};
 		buttons[1] = new lib.ButtonText("Play Full Game", play, window.height(), window.height()/2 + 126, window.width() - window.height(), 24, 8, 6);
 		buttons[1].setAvailability(false);
-		// Exit Button
-		lib.ButtonText.Action exit = new lib.ButtonText.Action() {
-			@Override
-			public void action() {
-				main.quit();
-			}
-		};
-		buttons[2] = new lib.ButtonText("Exit", exit, window.height(), window.height()/2 + 156, window.width() - window.height(), 24, 8, 6);
+		// Credits Button
 		lib.ButtonText.Action credits = new lib.ButtonText.Action() {
 			@Override
 			public void action() {
 				main.setScene(new Credits(main));
 				}
 			};
-		buttons[3] = new lib.ButtonText("Credits", credits, window.height(), window.height()/2 + 186, window.width() - window.height(), 24, 8, 6);
+		buttons[2] = new lib.ButtonText("Credits", credits, window.height(), window.height()/2 + 156, window.width() - window.height(), 24, 8, 6);
+		// Help Button
+		lib.ButtonText.Action help = new lib.ButtonText.Action() {
+			@Override
+			public void action() {
+				try {
+					Desktop.getDesktop().browse(new URI(HELP_URL));
+				} catch (IOException | URISyntaxException e) {
+					e.printStackTrace();
+				}
+			}
+		};
+		buttons[3] = new lib.ButtonText("Help               (Opens in Browser)", help, window.height(), window.height()/2 + 186, window.width() - window.height(), 24, 8, 6);
+		// Exit Button
+				lib.ButtonText.Action exit = new lib.ButtonText.Action() {
+					@Override
+					public void action() {
+						main.quit();
+					}
+				};
+		buttons[4] = new lib.ButtonText("Exit", exit, window.height(), window.height()/2 + 216, window.width() - window.height(), 24, 8, 6);
+		
 		angle = 0;
 	}
 
@@ -141,8 +161,8 @@ public class Title extends Scene {
 		graphics.print(dateFormat.format(date), window.height() + 8, 20);
 		graphics.print(timeFormat.format(date), window.height() + 8, 36);
 		graphics.line(window.height(), 48, window.width() - 16, 48);
-		graphics.print("Created by:", window.height() + 8, 50);
-		graphics.print("TEAM FLR", window.height() + 8, 60);
+		graphics.print("Created by:", window.height() + 8, 56);
+		graphics.print("TEAM FLR", window.height() + 8, 72);
 		
 		// Draw Buttons
 		for (lib.ButtonText b : buttons) b.draw();
@@ -151,6 +171,8 @@ public class Title extends Scene {
 		graphics.line(window.height(), window.height()/2 + 120, window.width() - 16, window.height()/2 + 120);
 		graphics.line(window.height(), window.height()/2 + 150, window.width() - 16, window.height()/2 + 150);
 		graphics.line(window.height(), window.height()/2 + 180, window.width() - 16, window.height()/2 + 180);
+		graphics.line(window.height(), window.height()/2 + 210, window.width() - 16, window.height()/2 + 210);
+		graphics.line(window.height(), window.height()/2 + 240, window.width() - 16, window.height()/2 + 240);
 	}
 
 	@Override
