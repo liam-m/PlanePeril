@@ -51,6 +51,7 @@ public class Demo extends Scene {
 	private int maxAircraft = 4;
 	private int controlAltitude = 30000;
 	private audio.Music music;
+	private graphics.Image background;
 	
 	private final String[] LOCATION_NAMES = new String[] {
 		"North West Top Leftonia",
@@ -99,6 +100,7 @@ public class Demo extends Scene {
 
 	@Override
 	public void start() {
+		background = graphics.newImage("gfx" + File.separator + "map.png");
 		music = audio.newMusic("sfx" + File.separator + "Gypsy_Shoegazer.ogg");
 		music.play();
 		ordersBox = new cls.OrdersBox(ORDERSBOX_X, ORDERSBOX_Y, ORDERSBOX_W, ORDERSBOX_H, 6);
@@ -210,6 +212,7 @@ public class Demo extends Scene {
 			int collisionState = plane.updateCollisions(dt, aircraftList());
 			if (collisionState >= 0) {
 				gameOver(plane, aircraftList().get(collisionState));
+				return;
 			}
 		}
 	}
@@ -351,6 +354,8 @@ public class Demo extends Scene {
 
 	@Override
 	public void draw() {
+		graphics.setColour(255, 255, 255, 32);
+		graphics.draw(background, 0, 0);
 		graphics.setColour(0, 128, 0);
 		graphics.rectangle(false, 16, 16, window.width() - 32, window.height() - 144);
 		
