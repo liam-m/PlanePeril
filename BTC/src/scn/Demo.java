@@ -400,7 +400,7 @@ public class Demo extends Scene {
 			graphics.setViewport(PLANE_INFO_X, PLANE_INFO_Y, PLANE_INFO_W, PLANE_INFO_H);
 			graphics.printCentred(selectedAircraft.name(), 0, 5, 2, PLANE_INFO_W);
 			// Altitude
-			String altitude = String.valueOf(selectedAircraft.position().z()) + "£";
+			String altitude = String.format("%.0f", selectedAircraft.position().z()) + "£";
 			graphics.print("Altitude:", 10, 40);
 			graphics.print(altitude, PLANE_INFO_W - 10 - altitude.length()*8, 40);
 			// Speed
