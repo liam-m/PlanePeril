@@ -85,7 +85,7 @@ public class Credits extends Scene {
 		graphics.printCentred("______", 4, currentHeight + 8, 2, window.width());
 		currentHeight += gap;
 		graphics.printCentred("Sanjit Samaddar", 0, currentHeight, 2, window.width()/2);
-		graphics.printCentred("Alex Stuart", window.width()/2, currentHeight, 2, window.width()/2);
+		graphics.printCentred("Alex Stewart", window.width()/2, currentHeight, 2, window.width()/2);
 		currentHeight += gap * 2;
 
 		graphics.printCentred("Music", 0, currentHeight, 2, window.width());
