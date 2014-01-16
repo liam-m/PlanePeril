@@ -2,7 +2,6 @@ package cls;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Stack;
 
 import lib.RandomNumber;
 import lib.jog.audio;
