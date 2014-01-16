@@ -159,6 +159,19 @@ public class Demo extends Scene {
 		ordersBox.update(dt);
 		for (Aircraft plane : aircraftInAirspace) {
 			plane.update(dt);
+			if (plane.isFinished()){
+				switch (RandomNumber.randInclusiveInt(0, 2)){
+				case 0:
+					ordersBox.addOrder("<<< Thank you Comrade");
+					break;
+				case 1:
+					ordersBox.addOrder("<<< Well done Comrade");
+					break;
+				case 2:
+					ordersBox.addOrder("<<< Many thanks Comrade");
+					break;
+				}
+			}
 		}
 		checkCollisions(dt);
 		for (int i = aircraftInAirspace.size()-1; i >=0; i --) {
@@ -275,7 +288,7 @@ public class Demo extends Scene {
 				for (Waypoint w : airspaceWaypoints) {
 					if (w.isMouseOver(x-16, y-16)) {
 						selectedAircraft.alterPath(selectedPathpoint, w);
-						ordersBox.addOrder(">>> Flight " + selectedAircraft.name() + " please alter your course");
+						ordersBox.addOrder(">>> " + selectedAircraft.name() + " please alter your course");
 						ordersBox.addOrder("<<< Roger that. Altering course now.");
 						selectedPathpoint = -1;
 						selectedWaypoint = null;
@@ -291,7 +304,13 @@ public class Demo extends Scene {
 			if (key == input.MOUSE_WHEEL_DOWN && controlAltitude > 28000)
 				controlAltitude -= 2000;
 		}
+		
+		if (key == input.MOUSE_WHEEL_UP || key == input.MOUSE_WHEEL_DOWN){
+			ordersBox.addOrder(">>> " + selectedAircraft.name() + ", please adjust your altitude");
+			ordersBox.addOrder("<<< Roger that. Altering altitude now.");
+		}
 		altimeter.mouseReleased(key, x, y);
+		
 		if (compassDragged && selectedAircraft != null) {
 			double dx = input.mouseX() - selectedAircraft.position().x();
 			double dy = input.mouseY() - selectedAircraft.position().y();
