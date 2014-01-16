@@ -308,7 +308,7 @@ public class Demo extends Scene {
 				controlAltitude -= 2000;
 		}
 		
-		if (key == input.MOUSE_WHEEL_UP || key == input.MOUSE_WHEEL_DOWN){
+		if (selectedAircraft != null && (key == input.MOUSE_WHEEL_UP || key == input.MOUSE_WHEEL_DOWN)){
 			ordersBox.addOrder(">>> " + selectedAircraft.name() + ", please adjust your altitude");
 			ordersBox.addOrder("<<< Roger that. Altering altitude now.");
 		}
