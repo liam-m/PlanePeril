@@ -251,7 +251,7 @@ public class Demo extends Scene {
 		if (key == input.MOUSE_LEFT) {
 			Aircraft newSelected = selectedAircraft;
 			for (Aircraft a : aircraftInAirspace) {
-				if (a.isMouseOver(x-16, y-16) && a.position().z() == controlAltitude) {
+				if (a.isMouseOver(x-16, y-16) && aircraftSelectableAtAltitude(a, controlAltitude)) {
 					newSelected = a;
 				}
 			}
@@ -302,18 +302,25 @@ public class Demo extends Scene {
 				}
 			}
 		}
-		if (selectedAircraft == null) {
-			if (key == input.MOUSE_WHEEL_UP && controlAltitude < 30000)
-				controlAltitude += 2000;
-			if (key == input.MOUSE_WHEEL_DOWN && controlAltitude > 28000)
-				controlAltitude -= 2000;
-		}
+		if (key == input.MOUSE_WHEEL_UP && controlAltitude < 30000)	controlAltitude += 2000;
+		if (key == input.MOUSE_WHEEL_DOWN && controlAltitude > 28000) controlAltitude -= 2000;
 		
 		if (selectedAircraft != null && (key == input.MOUSE_WHEEL_UP || key == input.MOUSE_WHEEL_DOWN)){
 			ordersBox.addOrder(">>> " + selectedAircraft.name() + ", please adjust your altitude");
 			ordersBox.addOrder("<<< Roger that. Altering altitude now.");
 		}
+		
+		int planePos = 0;
+		if (selectedAircraft != null) {
+			planePos = selectedAircraft.altitudeState();
+		}
+		
 		altimeter.mouseReleased(key, x, y);
+		
+		if (selectedAircraft != null) {
+			controlAltitude += 2000 * (selectedAircraft.altitudeState() - planePos);
+		}
+			
 		
 		if (compassDragged && selectedAircraft != null) {
 			double dx = input.mouseX() - selectedAircraft.position().x();
@@ -480,6 +487,13 @@ public class Demo extends Scene {
 			}
 		}
 		return new Aircraft(name, destinationName, originName, destinationPoint, originPoint, aircraftImage, 32 + (int)(10 * Math.random()), airspaceWaypoints, difficulty);
+	}
+	
+	private boolean aircraftSelectableAtAltitude(Aircraft a, int altitude) {
+		if (a.position().z() == altitude) return true;
+		if (a.position().z() < altitude && a.altitudeState() == Aircraft.ALTITUDE_CLIMB) return true;
+		if (a.position().z() > altitude && a.altitudeState() == Aircraft.ALTITUDE_FALL) return true;
+		return false;
 	}
 	
 	@Override
