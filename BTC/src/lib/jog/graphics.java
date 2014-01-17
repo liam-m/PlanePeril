@@ -547,6 +547,35 @@ public abstract class graphics {
 	}
 	
 	/**
+	 * Draws a triangle.
+	 * @param fill whether to fill with colour (false just draws the lines).
+	 * @param x1 the x coordinate of the first point of the triangle.
+	 * @param y1 the y coordinate of the first point of the triangle.
+	 * @param x2 the x coordinate of the second point of the triangle.
+	 * @param y2 the y coordinate of the second point of the triangle.
+	 * @param x3 the x coordinate of the third point of the triangle.
+	 * @param y3 the y coordinate of the third point of the triangle.
+	 */
+	public static void triangle(boolean fill, double x1, double y1, double x2, double y2, double x3, double y3) {
+		y1 = window.height() - y1;
+		y2 = window.height() - y2;
+		y3 = window.height() - y3;
+		
+	    if (fill) {
+		    glBegin(GL_TRIANGLES);
+	    } else {
+	    	glBegin(GL_LINE_STRIP);
+	    }
+        glVertex2d(x1, y1);
+        glVertex2d(x2, y2);
+        glVertex2d(x3, y3);
+	    if (!fill) {
+	        glVertex2d(x1, y1);
+	    }
+	    glEnd();
+	}
+	
+	/**
 	 * Draws a rectangle.
 	 * @param fill whether to fill with colour (false just draws the lines).
 	 * @param x the x coordinate of the rectangle.
