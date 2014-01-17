@@ -477,7 +477,7 @@ public class Demo extends Scene {
 				if (a.name() == name) nameTaken = true;
 			}
 		}
-		return new Aircraft(name, originName, destinationName, originPoint, destinationPoint, aircraftImage, 32 + (int)(10 * Math.random()), airspaceWaypoints, difficulty);
+		return new Aircraft(name, destinationName, originName, destinationPoint, originPoint, aircraftImage, 32 + (int)(10 * Math.random()), airspaceWaypoints, difficulty);
 	}
 	
 	@Override
