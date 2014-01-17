@@ -15,6 +15,7 @@ import btc.Main;
 
 public class Demo extends Scene {
 	
+	// Position of things drawn to window   
 	private final int PLANE_INFO_X = 16;
 	private final int PLANE_INFO_Y = window.height() - 120;
 	private final int PLANE_INFO_W = window.width()/4;
@@ -127,12 +128,12 @@ public class Demo extends Scene {
 		switch (difficulty){
 		// Set attributes according to the selected difficulty
 		// Flights spawn more often on harder difficulties.
-		case 0:
+		case DIFFICULTY_EASY:
 			break;
-		case 1:
+		case DIFFICULTY_MEDIUM:
 			flightGenerationInterval = flightGenerationInterval / 1.3;
 			break;
-		case 2:
+		case DIFFICULTY_HARD:
 			flightGenerationInterval = flightGenerationInterval / 1.6;
 			break;
 		}

@@ -3,6 +3,8 @@ package cls;
 import java.io.File;
 import java.util.ArrayList;
 
+import scn.Demo;
+
 import lib.RandomNumber;
 import lib.jog.audio;
 import lib.jog.graphics;
@@ -187,16 +189,16 @@ public class Aircraft {
 		//adjust the aircraft's attributes according to the difficulty of the parent scene.
 		// 0 has the easiest attributes (slower aircraft, more forgiving separation rules.
 		// 2 has the hardest attributes (faster aircrft, least forgiving separation rules.
-		case 0:
+		case Demo.DIFFICULTY_EASY:
 			separationRule = 64;
 			break;
-		case 1:
+		case Demo.DIFFICULTY_MEDIUM:
 			separationRule = 96;
 			velocity = velocity.scaleBy(2);
 			turnSpeed = Math.PI / 3;
 			altitudeChangeSpeed = 200;
 			break;
-		case 2:
+		case Demo.DIFFICULTY_HARD:
 			separationRule = 128;
 			velocity = velocity.scaleBy(3);
 			//At high velocities, the aircraft is allowed to turn faster
@@ -205,7 +207,6 @@ public class Aircraft {
 			altitudeChangeSpeed = 100;
 			break;
 		}
-		
 	}
 
 	/**
