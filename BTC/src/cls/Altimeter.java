@@ -10,15 +10,15 @@ import lib.jog.input.EventHandler;
  */
 public class Altimeter implements EventHandler {
 	
-	private boolean isVisible;
 	/**
 	 * Whether or not the Altimeter should be drawn
 	 */
+	private boolean isVisible;
 	
-	private cls.Aircraft currentAircraft;
 	/**
 	 * The current aircraft associated with the altimeter
 	 */
+	private cls.Aircraft currentAircraft;
 	
 	private double positionX, positionY, width, height;
 	
@@ -78,13 +78,14 @@ public class Altimeter implements EventHandler {
 	/**
 	 * Handler for mouse releases
 	 */
-	public void mouseReleased(int key, int x, int y) {
+	public void mouseReleased(int key, int mx, int my) {
 		if (!isVisible) return;
-		if (key == input.MOUSE_WHEEL_DOWN) {
-			currentAircraft.setAltitudeState(Aircraft.altitudeFall);
-		}
-		if (key == input.MOUSE_WHEEL_UP) {
-			currentAircraft.setAltitudeState(Aircraft.altitudeClimb);
+		if (key == input.MOUSE_LEFT) {
+			if (mouseOverTopButton(mx, my)) {
+				currentAircraft.setAltitudeState(Aircraft.altitudeClimb);
+			} else if (mouseOverBottomButton(mx, my)) {
+				currentAircraft.setAltitudeState(Aircraft.altitudeFall);
+			}
 		}
 	}
 
@@ -103,6 +104,8 @@ public class Altimeter implements EventHandler {
 		drawRectangle();
 		if (isVisible) {
 			drawPlaneIcon();
+			drawAltitudes();
+			drawArrows();
 		}
 	}
 	
@@ -127,8 +130,8 @@ public class Altimeter implements EventHandler {
 			r = Math.PI / 12;
 		}
 		double x = positionX + (width / 2);
-		double y = positionY + (height / 2) - 16;
-		double wingLength = width / 3;
+		double y = positionY + (height / 2);
+		double wingLength = width / 3 - 8;
 		double tailLength = width / 9;
 		graphics.line(x, y, x + wingLength * Math.cos(r), y + wingLength * Math.sin(r));
 		r -= Math.PI / 2;
@@ -141,5 +144,49 @@ public class Altimeter implements EventHandler {
 		graphics.circle(false, x, y, 4);
 		graphics.printCentred(String.format("%.0f", currentAircraft.position().z()), positionX, y+32, 1, width);
 	}
+	
+	private void drawAltitudes() {
+		graphics.setColour(0, 128, 0, 32);
+		graphics.setViewport((int)positionX, (int)positionY, (int)width, (int)height);
+		int midX = (int)(width / 2);
+		int midY = (int)(height / 2);
+		for (int i = -5; i <= 4; i ++) {
+			int alt = (int)(currentAircraft.position().z() + (1000 * i));
+			int offset = (int)( 16.0 * (alt % 1000) / 1000 );
+			int y = midY - (i * 16) + offset;
+			graphics.line(midX - 64, y, midX + 64, y);
+			alt -= (alt % 1000);
+			graphics.print(String.valueOf(alt), midX + 72, y);
+			graphics.print(String.valueOf(alt), midX - 72 - 40, y);
+		}
+		graphics.setViewport();
+		graphics.setColour(0, 128, 0);
+	}
+	
+	private void drawArrows() {
+		int midX = (int)( positionX + (width / 2) );
+		graphics.setColour(0, 128, 0);
+		if (mouseOverTopButton()) { graphics.setColour(128, 128, 128); }
+		graphics.triangle(true, midX - 10, positionY + 10, midX, positionY + 4, midX + 10, positionY + 10);
+		graphics.setColour(0, 128, 0);
+		if (mouseOverBottomButton()) { graphics.setColour(128, 128, 128); }
+		graphics.triangle(true, midX - 10, positionY + height - 10, midX, positionY + height - 4, midX + 10, positionY + height - 10);
+	}
+	
+	private boolean mouseOverTopButton(int mx, int my) {
+		if (!isVisible) return false;
+		if (mx < positionX || mx > positionX + width) return false;
+		if (my < positionY || my > positionY + height) return false;
+		return (my <= positionY + 16);
+	}
+	private boolean mouseOverTopButton() { return mouseOverTopButton(input.mouseX(), input.mouseY()); }
 
+	private boolean mouseOverBottomButton(int mx, int my) {
+		if (!isVisible) return false;
+		if (mx < positionX || mx > positionX + width) return false;
+		if (my < positionY || my > positionY + height) return false;
+		return (my >= positionY + height - 16);
+	}
+	private boolean mouseOverBottomButton() { return mouseOverBottomButton(input.mouseX(), input.mouseY()); }
+	
 }

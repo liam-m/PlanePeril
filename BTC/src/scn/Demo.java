@@ -18,12 +18,12 @@ public class Demo extends Scene {
 	// Position of things drawn to window   
 	private final int PLANE_INFO_X = 16;
 	private final int PLANE_INFO_Y = window.height() - 120;
-	private final int PLANE_INFO_W = window.width()/4;
+	private final int PLANE_INFO_W = window.width()/4 - 16;
 	private final int PLANE_INFO_H = 112;
 	
 	private final int ALTIMETER_X = PLANE_INFO_X + PLANE_INFO_W + 8;
 	private final int ALTIMETER_Y = window.height() - 120;
-	private final int ALTIMETER_W = 192;
+	private final int ALTIMETER_W = 244;
 	private final int ALTIMETER_H = 112;
 	
 	private final int ORDERSBOX_X = ALTIMETER_X + ALTIMETER_W + 8;
@@ -44,7 +44,7 @@ public class Demo extends Scene {
 	private int selectedPathpoint;
 	private java.util.ArrayList<Aircraft> aircraftInAirspace;
 	private graphics.Image aircraftImage;
-	private lib.ButtonText _manualOverrideButton;
+	private lib.ButtonText manualOverrideButton;
 	private boolean compassDragged;
 	private cls.Altimeter altimeter;
 	private static double flightGenerationInterval = 12;
@@ -114,14 +114,14 @@ public class Demo extends Scene {
 				toggleManualControl();
 			}
 		};
-		_manualOverrideButton = new lib.ButtonText("Take Control", manual, (window.width() - 128) / 2, 32, 128, 32, 8, 4);
+		manualOverrideButton = new lib.ButtonText("Take Control", manual, (window.width() - 128) / 2, 32, 128, 32, 8, 4);
 		timeElapsed = 0;
 		compassDragged = false;
 		selectedAircraft = null;
 		selectedWaypoint = null;
 		selectedPathpoint = -1;
 		
-		_manualOverrideButton = new lib.ButtonText(" Take Control", manual, (window.width() - 128) / 2, 32, 128, 32, 8, 4);
+		manualOverrideButton = new lib.ButtonText(" Take Control", manual, (window.width() - 128) / 2, 32, 128, 32, 8, 4);
 		altimeter = new cls.Altimeter(ALTIMETER_X, ALTIMETER_Y, ALTIMETER_W, ALTIMETER_H);
 		deselectAircraft();
 		
@@ -142,13 +142,13 @@ public class Demo extends Scene {
 	private void toggleManualControl() {
 		if (selectedAircraft == null) return;
 		selectedAircraft.toggleManualControl();
-		_manualOverrideButton.setText( (selectedAircraft.isManuallyControlled() ? "Remove" : " Take") + " Control");
+		manualOverrideButton.setText( (selectedAircraft.isManuallyControlled() ? "Remove" : " Take") + " Control");
 	}
 	
 	private void deselectAircraft() {
 		if (selectedAircraft != null && selectedAircraft.isManuallyControlled()) {
 			selectedAircraft.toggleManualControl();
-			_manualOverrideButton.setText(" Take Control");
+			manualOverrideButton.setText(" Take Control");
 		}
 		selectedAircraft = null;
 		selectedWaypoint = null; 
@@ -284,7 +284,7 @@ public class Demo extends Scene {
 
 	@Override
 	public void mouseReleased(int key, int x, int y) {
-		if (selectedAircraft != null && _manualOverrideButton.isMouseOver(x, y)) _manualOverrideButton.act();
+		if (selectedAircraft != null && manualOverrideButton.isMouseOver(x, y)) manualOverrideButton.act();
 		if (key == input.MOUSE_LEFT && selectedWaypoint != null) {
 			if (selectedAircraft.isManuallyControlled() == true){
 				return;
@@ -394,7 +394,7 @@ public class Demo extends Scene {
 			graphics.rectangle(true, (window.width() - 128) / 2, 16, 128, 32);
 			graphics.setColour(0, 128, 0);
 			graphics.rectangle(false, (window.width() - 128) / 2, 16, 128, 32);
-			_manualOverrideButton.draw();
+			manualOverrideButton.draw();
 			
 			selectedAircraft.drawFlightPath();
 			graphics.setColour(0, 128, 0);
@@ -415,6 +415,7 @@ public class Demo extends Scene {
 	}
 	
 	private void drawPlaneInfo() {
+		graphics.setColour(0, 128, 0);
 		graphics.rectangle(false, PLANE_INFO_X, PLANE_INFO_Y, PLANE_INFO_W, PLANE_INFO_H);
 		if (selectedAircraft != null) {
 			graphics.setViewport(PLANE_INFO_X, PLANE_INFO_Y, PLANE_INFO_W, PLANE_INFO_H);
