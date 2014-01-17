@@ -193,6 +193,7 @@ public class Aircraft {
 		case 1:
 			separationRule = 96;
 			velocity = velocity.scaleBy(2);
+			turnSpeed = Math.PI / 3;
 			altitudeChangeSpeed = 200;
 			break;
 		case 2:
