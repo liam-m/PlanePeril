@@ -310,16 +310,16 @@ public class Demo extends Scene {
 			ordersBox.addOrder("<<< Roger that. Altering altitude now.");
 		}
 		
-		int planePos = 0;
-		if (selectedAircraft != null) {
-			planePos = selectedAircraft.altitudeState();
-		}
+//		int planePos = 0;
+//		if (selectedAircraft != null) {
+//			planePos = selectedAircraft.altitudeState();
+//		}
 		
 		altimeter.mouseReleased(key, x, y);
 		
-		if (selectedAircraft != null) {
-			controlAltitude += 2000 * (selectedAircraft.altitudeState() - planePos);
-		}
+//		if (selectedAircraft != null) {
+//			controlAltitude += 2000 * (selectedAircraft.altitudeState() - planePos);
+//		}
 			
 		
 		if (compassDragged && selectedAircraft != null) {
