@@ -3,6 +3,7 @@ package lib.jog;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 
@@ -119,8 +120,8 @@ public abstract class window {
 	}
 	
 	private static ByteBuffer loadIcon(String filename, int width, int height) throws IOException, URISyntaxException {
-		java.net.URI path = ResourceLoader.getResource(filename).toURI();
-		BufferedImage img = ImageIO.read(new File(path));
+		InputStream path = ResourceLoader.getResourceAsStream(filename);
+		BufferedImage img = ImageIO.read(path);
 		byte[] imageBytes = new byte[width * height * 4];
 	    for (int y = 0; y < height; y++) {
 	        for (int x = 0; x < width; x++) {
