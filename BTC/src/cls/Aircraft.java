@@ -96,40 +96,36 @@ public class Aircraft {
 	 */
 	private double currentlyTurningBy;
 	/**
-	 * A list of planes that are too near.
+	 * Holds a list of planes currently in violation of separation rules with this plane
 	 */
-	
-	private int altitudeState;
+	private java.util.ArrayList<Aircraft> planesTooNear = new java.util.ArrayList<Aircraft>();
 	/**
 	 * the current state of the plane's altitude, ie if the plane is climbing or falling
 	 */
-	private int altitudeChangeSpeed = 300;
+	private int altitudeState;
 	/**
 	 * the speed to climb or fall by. Default 300 for easy mode
 	 */
+	private int altitudeChangeSpeed = 300;
 	
-	public static final int altitudeClimb = 1;
-	public static final int altitudeFall = -1;
-	public static final int altitudeLevel = 0;
 	/**
 	 * Static ints for use where altitude state is to be changed.
 	 */
+	public static final int ALTITUDE_CLIMB = 1;
+	public static final int ALTITUDE_FALL = -1;
+	public static final int ALTITUDE_LEVEL = 0;
 	
-	private boolean collisionWarningSoundFlag = false;
 	/**
 	 * Flags whether the collision warning sound has been played before.
 	 * If set, plane will not play warning again until it the separation violation involving it ends
 	 */
+	private boolean collisionWarningSoundFlag = false;
 	
-	private java.util.ArrayList<Aircraft> planesTooNear = new java.util.ArrayList<Aircraft>();
-	/**
-	 * Holds a list of planes currently in violation of separation rules with this plane
-	 */
-	
-	private final static audio.Sound WARNING_SOUND = audio.newSoundEffect("sfx" + File.separator + "beep.ogg"); 
 	/**
 	 * A warning sound to be played when the plane enters separation violation.
 	 */
+	private final static audio.Sound WARNING_SOUND = audio.newSoundEffect("sfx" + File.separator + "beep.ogg"); 
+	
 
 	/**
 	 * Constructor for an aircraft.
@@ -255,6 +251,10 @@ public class Aircraft {
 	 */
 	public boolean isManuallyControlled() {
 		return isManuallyControlled;
+	}
+	
+	public int altitudeState() {
+		return altitudeState;
 	}
 
 	/**
@@ -715,11 +715,11 @@ public class Aircraft {
 	 * Increases the plane's altitude.
 	 */
 	public void climb() {
-		if (position.z() < 30000 && altitudeState == altitudeClimb)
+		if (position.z() < 30000 && altitudeState == ALTITUDE_CLIMB)
 			changeAltitude(altitudeChangeSpeed);
 		if (position.z() >= 30000){
 			changeAltitude(0);
-			altitudeState = altitudeLevel;
+			altitudeState = ALTITUDE_LEVEL;
 			position = new Vector(position.x(), position.y(), 30000);
 		}
 	}
@@ -728,11 +728,11 @@ public class Aircraft {
 	 * Decreases the plane's altitude.
 	 */
 	public void fall() {
-		if (position.z() > 28000 && altitudeState == altitudeFall)
+		if (position.z() > 28000 && altitudeState == ALTITUDE_FALL)
 			changeAltitude(-altitudeChangeSpeed);
 		if (position.z() <= 28000){
 			changeAltitude(0);
-			altitudeState = altitudeLevel;
+			altitudeState = ALTITUDE_LEVEL;
 			position = new Vector(position.x(), position.y(), 28000);
 		}
 	}

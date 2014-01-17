@@ -82,9 +82,9 @@ public class Altimeter implements EventHandler {
 		if (!isVisible) return;
 		if (key == input.MOUSE_LEFT) {
 			if (mouseOverTopButton(mx, my)) {
-				currentAircraft.setAltitudeState(Aircraft.altitudeClimb);
+				currentAircraft.setAltitudeState(Aircraft.ALTITUDE_CLIMB);
 			} else if (mouseOverBottomButton(mx, my)) {
-				currentAircraft.setAltitudeState(Aircraft.altitudeFall);
+				currentAircraft.setAltitudeState(Aircraft.ALTITUDE_FALL);
 			}
 		}
 	}
