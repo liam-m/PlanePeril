@@ -1,7 +1,6 @@
 package lib.jog;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
@@ -111,7 +110,7 @@ public abstract class window {
 					size -= 1;
 				}
 				int width = Integer.parseInt(name.substring(size));
-				icons[i] = loadIcon(filepaths[i], width, width);
+				icons[i] = loadIcon(filepaths[i], width);
 			}
 			Display.setIcon(icons);
 		} catch (IOException | URISyntaxException e) {
@@ -119,16 +118,24 @@ public abstract class window {
 		}
 	}
 	
-	private static ByteBuffer loadIcon(String filename, int width, int height) throws IOException, URISyntaxException {
+	/**
+	 * 
+	 * @param filename filename of the icon.
+	 * @param size the width (and height) of the icon
+	 * @return a ByteBuffer containing the icon's data
+	 * @throws IOException
+	 * @throws URISyntaxException
+	 */
+	private static ByteBuffer loadIcon(String filename, int size) throws IOException, URISyntaxException {
 		InputStream path = ResourceLoader.getResourceAsStream(filename);
 		BufferedImage img = ImageIO.read(path);
-		byte[] imageBytes = new byte[width * height * 4];
-	    for (int y = 0; y < height; y++) {
-	        for (int x = 0; x < width; x++) {
+		byte[] imageBytes = new byte[size * size * 4];
+	    for (int y = 0; y < size; y++) {
+	        for (int x = 0; x < size; x++) {
 	            int pixel = img.getRGB(y, x);
 	            for (int k = 0; k < 3; k++) {
-	                imageBytes[(x*width+y)*4 + k] = (byte)(((pixel >> (2-k) * 8)) & 255); // red, green, blue
-	            	imageBytes[(x*width+y)*4 + 3] = (byte)(((pixel >> (3) * 8)) & 255); // alpha
+	                imageBytes[(x*size+y)*4 + k] = (byte)(((pixel >> (2-k) * 8)) & 255); // red, green, blue
+	            	imageBytes[(x*size+y)*4 + 3] = (byte)(((pixel >> (3) * 8)) & 255); // alpha
 	            }
 	        }
 	    }
