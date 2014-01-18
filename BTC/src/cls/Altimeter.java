@@ -145,6 +145,9 @@ public class Altimeter implements EventHandler {
 		graphics.printCentred(String.format("%.0f", currentAircraft.position().z()), positionX, y+32, 1, width);
 	}
 	
+	/**
+	 * Draws the altitude lines relative to the aircraft, showing whether the aircraft is climbing or falling
+	 */
 	private void drawAltitudes() {
 		graphics.setColour(0, 128, 0, 32);
 		graphics.setViewport((int)positionX, (int)positionY, (int)width, (int)height);

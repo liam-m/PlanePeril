@@ -100,7 +100,7 @@ public class Aircraft {
 	 */
 	private java.util.ArrayList<Aircraft> planesTooNear = new java.util.ArrayList<Aircraft>();
 	/**
-	 * the current state of the plane's altitude, ie if the plane is climbing or falling
+	 * the current state of the plane's altitude, i.e. if the plane is climbing or falling
 	 */
 	private int altitudeState;
 	/**
@@ -168,7 +168,7 @@ public class Aircraft {
 		}
 		position = position.add(new Vector(offset, 0, altitudeOffset));
 		
-		// Calculate inital velocity (direction)
+		// Calculate initial velocity (direction)
 		currentTarget = route[0].position();
 		double x = currentTarget.x() - position.x();
 		double y = currentTarget.y() - position.y();
@@ -184,7 +184,7 @@ public class Aircraft {
 		switch (difficulty){
 			//adjust the aircraft's attributes according to the difficulty of the parent scene.
 			// 0 has the easiest attributes (slower aircraft, more forgiving separation rules.
-			// 2 has the hardest attributes (faster aircrft, least forgiving separation rules.
+			// 2 has the hardest attributes (faster aircraft, least forgiving separation rules.
 			case Demo.DIFFICULTY_EASY:
 				separationRule = 64;
 				altitudeChangeSpeed = 400;
