@@ -63,13 +63,13 @@ public class WaypointTest {
 	public void testGetCostBetween(){
 		Waypoint testWaypoint = new Waypoint(2, 4, false);
 		Waypoint testWaypoint2 = new Waypoint(2, 2, true);
-		double result = testWaypoint.getCostBetween(testWaypoint, testWaypoint2);
+		double result = Waypoint.getCostBetween(testWaypoint, testWaypoint2);
 		assertTrue("Cost = 2", 2 == result);
 	}@Test
 	public void testGetCostBetween2(){
 		Waypoint testWaypoint = new Waypoint(6, 15, false);
 		Waypoint testWaypoint2 = new Waypoint(15, 15, true);
-		double result = testWaypoint.getCostBetween(testWaypoint, testWaypoint2);
+		double result = Waypoint.getCostBetween(testWaypoint, testWaypoint2);
 		assertTrue("Cost = 9", 9 == result);
 	}
 	

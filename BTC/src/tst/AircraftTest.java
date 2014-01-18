@@ -2,8 +2,6 @@ package tst;
 
 import static org.junit.Assert.*;
 
-import lib.jog.graphics;
-
 import org.junit.Test;
 
 import cls.Aircraft;
