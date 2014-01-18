@@ -182,26 +182,33 @@ public class Aircraft {
 		
 		// Speed up plane for higher difficulties
 		switch (difficulty){
-		//adjust the aircraft's attributes according to the difficulty of the parent scene.
-		// 0 has the easiest attributes (slower aircraft, more forgiving separation rules.
-		// 2 has the hardest attributes (faster aircrft, least forgiving separation rules.
-		case Demo.DIFFICULTY_EASY:
-			separationRule = 64;
+			//adjust the aircraft's attributes according to the difficulty of the parent scene.
+			// 0 has the easiest attributes (slower aircraft, more forgiving separation rules.
+			// 2 has the hardest attributes (faster aircrft, least forgiving separation rules.
+			case Demo.DIFFICULTY_EASY:
+				separationRule = 64;
+				altitudeChangeSpeed = 400;
 			break;
-		case Demo.DIFFICULTY_MEDIUM:
-			separationRule = 96;
-			velocity = velocity.scaleBy(2);
-			turnSpeed = Math.PI / 3;
-			altitudeChangeSpeed = 200;
+			
+			case Demo.DIFFICULTY_MEDIUM:
+				separationRule = 96;
+				velocity = velocity.scaleBy(2);
+				turnSpeed = Math.PI / 3;
+				altitudeChangeSpeed = 200;
 			break;
-		case Demo.DIFFICULTY_HARD:
-			separationRule = 128;
-			velocity = velocity.scaleBy(3);
-			//At high velocities, the aircraft is allowed to turn faster
-			//this helps keep the aircraft on track.
-			turnSpeed = Math.PI / 2;
-			altitudeChangeSpeed = 100;
+			
+			case Demo.DIFFICULTY_HARD:
+				separationRule = 128;
+				velocity = velocity.scaleBy(3);
+				//At high velocities, the aircraft is allowed to turn faster
+				//this helps keep the aircraft on track.
+				turnSpeed = Math.PI / 2;
+				altitudeChangeSpeed = 100;
 			break;
+			
+			default :
+				Exception e = new Exception("Invalid Difficulty : " + difficulty + ".");
+				e.printStackTrace();
 		}
 	}
 
