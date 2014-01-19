@@ -10,11 +10,6 @@
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="Bear Traffic Control/BTC/ext/natives/windows"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="BTC/ext/hamcrest-core-1.3.jar">
-		<attributes>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="bear_traffic_controller/BTC/ext/natives/windows"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="lib" path="BTC/ext/jogg-0.0.7.jar">
 		<attributes>
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="bear_traffic_controller/BTC/ext/natives/windows"/>
@@ -40,5 +35,6 @@
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="bear_traffic_controller/BTC/ext/natives/windows"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="BTC/ext/hamcrest-core-1.3.jar"/>
 	<classpathentry kind="output" path="BTC/bin"/>
 </classpath>
