@@ -76,11 +76,12 @@ public class AircraftTest {
 		int altState = testAircraft.altitudeState();
 		assertTrue("Altitude State = 1", altState == 1);
 	}
+	
 	// Test outOfBounds
 	@Test
 	public void testOutOfBounds(){
 		Waypoint[] waypointList = new Waypoint[]{new Waypoint(0, 0, true), new Waypoint(100, 100, true), new Waypoint(25, 75, false), new Waypoint(75, 25, false), new Waypoint(50,50, false)};
-		Aircraft testAircraft = new Aircraft("testAircraft", "Berlin", "Dublin", new Waypoint(-10000,-10000, true), new Waypoint(0,0, true), null, 10.0, waypointList, 1);
+		Aircraft testAircraft = new Aircraft("testAircraft", "Berlin", "Dublin", new Waypoint(100,100, true), new Waypoint(0,0, true), null, 10.0, waypointList, 1);
 		boolean x = testAircraft.outOfBounds();
 		assertTrue("Out of bounds = false", x == true);
 	}
