@@ -315,7 +315,7 @@ public class Demo extends Scene {
 				ordersBox.addOrder("<<< Roger that. Altering altitude now.");
 			}
 		}
-			
+
 		if (compassDragged && selectedAircraft != null) {
 			double dx = input.mouseX() - selectedAircraft.position().x();
 			double dy = input.mouseY() - selectedAircraft.position().y();
