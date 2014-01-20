@@ -110,8 +110,6 @@ public class Credits extends Scene {
 		currentHeight += gap * 2;
 		
 		graphics.pop();
-		
-		graphics.print("" + scrollPosition, 0, 0);
 	}
 
 	@Override
