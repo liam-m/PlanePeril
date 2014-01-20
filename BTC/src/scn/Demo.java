@@ -36,7 +36,6 @@ public class Demo extends Scene {
 	public final static int DIFFICULTY_HARD = 2;
 	public static int difficulty = DIFFICULTY_EASY;
 	
-	
 	private cls.OrdersBox ordersBox;
 	private double timeElapsed;
 	private Aircraft selectedAircraft;
@@ -49,7 +48,7 @@ public class Demo extends Scene {
 	private cls.Altimeter altimeter;
 	private static double flightGenerationInterval = 12;
 	private double flightGenerationTimeElapsed = 6;
-	private int maxAircraft = 4;
+	private int maxAircraft = 2;
 	private int controlAltitude = 30000;
 	private audio.Music music;
 	private graphics.Image background;
