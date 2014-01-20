@@ -113,7 +113,7 @@ public abstract class window {
 				icons[i] = loadIcon(filepaths[i], width);
 			}
 			Display.setIcon(icons);
-		} catch (IOException | URISyntaxException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
@@ -126,7 +126,7 @@ public abstract class window {
 	 * @throws IOException
 	 * @throws URISyntaxException
 	 */
-	private static ByteBuffer loadIcon(String filename, int size) throws IOException, URISyntaxException {
+	private static ByteBuffer loadIcon(String filename, int size) throws IOException {
 		InputStream path = ResourceLoader.getResourceAsStream(filename);
 		BufferedImage img = ImageIO.read(path);
 		byte[] imageBytes = new byte[size * size * 4];
