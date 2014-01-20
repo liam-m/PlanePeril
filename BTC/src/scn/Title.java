@@ -14,7 +14,7 @@ import btc.Main;
 
 public class Title extends Scene {
 	
-	private final static String HELP_URL = "http://atc.h9i.co.uk/ingamehelp.html";
+	private final static String HELP_URL = "http://imp1.github.io/bear_traffic_controller/ingamehelp";
 	
 	private audio.Sound beep;
 	private lib.ButtonText[] buttons;
