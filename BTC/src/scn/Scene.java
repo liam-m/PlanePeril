@@ -20,6 +20,4 @@ public abstract class Scene implements lib.jog.input.EventHandler {
 	
 	abstract public void playSound(audio.Sound sound);
 	
-	
 }
-

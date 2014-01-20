@@ -126,7 +126,6 @@ public class Aircraft {
 	 */
 	private final static audio.Sound WARNING_SOUND = audio.newSoundEffect("sfx" + File.separator + "beep.ogg"); 
 	
-
 	/**
 	 * Constructor for an aircraft.
 	 * @param name the name of the flight.

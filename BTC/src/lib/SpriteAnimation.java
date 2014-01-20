@@ -6,20 +6,20 @@ import lib.jog.graphics.Quad;
 
 public class SpriteAnimation {
 
-	private Image image;		// the animation sequence
-	private Quad quad;	        // the rectangle to be drawn from the animation bitmap
-	private int frameCount;		// number of frames in animation
-	private int currentFrame;	// the current frame
-	private double framePeriod;	// milliseconds between each frame (1000/fps)
+	private Image image;		 // the animation sequence
+	private Quad quad;	         // the rectangle to be drawn from the animation bitmap
+	private int frameCount;		 // number of frames in animation
+	private int currentFrame;	 // the current frame
+	private double framePeriod;	 // milliseconds between each frame (1000/fps)
 
-	private double spriteWidth;	// the width of the sprite to calculate the cut out rectangle
-	private double spriteHeight;	// the height of the sprite
+	private double spriteWidth;	 // the width of the sprite to calculate the cut out rectangle
+	private double spriteHeight; // the height of the sprite
 	
 	private boolean hasFinished; // Flag which is set to mark when all frames have been drawn
 
-	private int x;				// the X coordinate of the object (top left of the image)
-	private int y;				// the Y coordinate of the object (top left of the image)
-	private double gameTime;	// tracks how long a frame has been shown for. Updated by the parent scene update(dt)
+	private int x;				 // the X coordinate of the object (top left of the image)
+	private int y;				 // the Y coordinate of the object (top left of the image)
+	private double gameTime;	 // tracks how long a frame has been shown for. Updated by the parent scene update(dt)
 	private double imageW, imageH;
 	
 	public SpriteAnimation(Image image, int x, int y, int fps, int frameCount){
@@ -45,7 +45,6 @@ public class SpriteAnimation {
 	public Quad getQuad(int currentFrame){
 		return graphics.newQuad(currentFrame * spriteWidth, 0, spriteWidth, spriteHeight, imageW * 1.62, imageH);
 	}
-	
 	
 	public void update(double dt) {
 		if (hasFinished) return;
