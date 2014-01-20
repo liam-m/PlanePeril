@@ -304,23 +304,18 @@ public class Demo extends Scene {
 		if (key == input.MOUSE_WHEEL_UP && controlAltitude < 30000)	controlAltitude += 2000;
 		if (key == input.MOUSE_WHEEL_DOWN && controlAltitude > 28000) controlAltitude -= 2000;
 		
-		if (selectedAircraft != null && (key == input.MOUSE_WHEEL_UP || key == input.MOUSE_WHEEL_DOWN)){
-			ordersBox.addOrder(">>> " + selectedAircraft.name() + ", please adjust your altitude");
-			ordersBox.addOrder("<<< Roger that. Altering altitude now.");
+		int altitudeState = 0;
+		if (selectedAircraft != null) {
+			altitudeState = selectedAircraft.altitudeState();
 		}
-		
-//		int planePos = 0;
-//		if (selectedAircraft != null) {
-//			planePos = selectedAircraft.altitudeState();
-//		}
-		
 		altimeter.mouseReleased(key, x, y);
-		
-//		if (selectedAircraft != null) {
-//			controlAltitude += 2000 * (selectedAircraft.altitudeState() - planePos);
-//		}
+		if (selectedAircraft != null) {
+			if (altitudeState != selectedAircraft.altitudeState()) {
+				ordersBox.addOrder(">>> " + selectedAircraft.name() + ", please adjust your altitude");
+				ordersBox.addOrder("<<< Roger that. Altering altitude now.");
+			}
+		}
 			
-		
 		if (compassDragged && selectedAircraft != null) {
 			double dx = input.mouseX() - selectedAircraft.position().x();
 			double dy = input.mouseY() - selectedAircraft.position().y();
