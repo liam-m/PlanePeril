@@ -34,7 +34,7 @@ public class Title extends Scene {
 		lib.ButtonText.Action demo = new lib.ButtonText.Action() {
 			@Override
 			public void action() {
-				main.setScene(new DifficultySelect(main));
+				main.setScene(new DifficultySelect(main, DifficultySelect.CREATE_DEMO));
 			}
 		};
 		buttons[0] = new lib.ButtonText("Play Demo", demo, window.height(), window.height()/2 + 96, window.width() - window.height(), 24, 8, 6);

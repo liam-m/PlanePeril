@@ -9,6 +9,7 @@ import btc.Main;
 
 public class DifficultySelect extends Scene {
 	
+	//Position of things to draw in the window
 	private final int EASY_BUTTON_X = window.width()/4;
 	private final int EASY_BUTTON_Y = 2*window.height()/3;
 	private final int EASY_BUTTON_W = 128;
@@ -27,9 +28,15 @@ public class DifficultySelect extends Scene {
 	private lib.ButtonText[] buttons;
 	private lib.TextBox textBox;
 	private static final String placeName = "Moscow";
+	
+	//To allow the difficulty selection to work with multiple potential game scenes, e.g. separate Demo and a Full Game
+	private int sceneToCreate;
+	//static ints for clarity of reading. Implement more to allow more game scenes.
+	public final static int CREATE_DEMO = 0;
 
-	protected DifficultySelect(Main main) {
+	protected DifficultySelect(Main main, int sceneToCreate) {
 		super(main);
+		this.sceneToCreate = sceneToCreate;
 	}
 
 	@Override
@@ -60,7 +67,11 @@ public class DifficultySelect extends Scene {
 		lib.ButtonText.Action easy = new lib.ButtonText.Action() {
 			@Override
 			public void action() {
-				main.setScene(new Demo(main, Demo.DIFFICULTY_EASY));
+				switch (sceneToCreate){
+				case DifficultySelect.CREATE_DEMO:
+					main.setScene(new Demo(main, Demo.DIFFICULTY_EASY));
+					break;
+				}
 			}
 		};
 		buttons[0] = new lib.ButtonText("Easy", easy, EASY_BUTTON_X, EASY_BUTTON_Y, EASY_BUTTON_W, EASY_BUTTON_H);
@@ -68,7 +79,11 @@ public class DifficultySelect extends Scene {
 		lib.ButtonText.Action medium = new lib.ButtonText.Action() {
 			@Override
 			public void action() {
-				main.setScene(new Demo(main, Demo.DIFFICULTY_MEDIUM));
+				switch (sceneToCreate){
+				case DifficultySelect.CREATE_DEMO:
+					main.setScene(new Demo(main, Demo.DIFFICULTY_MEDIUM));
+					break;
+				}
 			}
 		};
 		buttons[1] = new lib.ButtonText("Medium", medium, MEDIUM_BUTTON_X, MEDIUM_BUTTON_Y, MEDIUM_BUTTON_W, MEDIUM_BUTTON_H);
@@ -76,7 +91,11 @@ public class DifficultySelect extends Scene {
 		lib.ButtonText.Action hard = new lib.ButtonText.Action() {
 			@Override
 			public void action() {
-				main.setScene(new Demo(main, Demo.DIFFICULTY_HARD));
+				switch (sceneToCreate){
+				case DifficultySelect.CREATE_DEMO:
+					main.setScene(new Demo(main, Demo.DIFFICULTY_HARD));
+					break;
+				}
 			}
 		};
 		buttons[2] = new lib.ButtonText("Hard", hard, HARD_BUTTON_X, HARD_BUTTON_Y, HARD_BUTTON_W, HARD_BUTTON_H);
