@@ -20,7 +20,7 @@ public class SpriteAnimation {
 	private int x;				 // the X coordinate of the object (top left of the image)
 	private int y;				 // the Y coordinate of the object (top left of the image)
 	private double gameTime;	 // tracks how long a frame has been shown for. Updated by the parent scene update(dt)
-	private double imageW, imageH;
+	private double imageWidth, imageHeight;
 	private boolean isLooping;
 	
 	/**
@@ -38,21 +38,25 @@ public class SpriteAnimation {
 	 */
 	public SpriteAnimation(Image image, int x, int y, int fps, int frameCount, int framesWide, int framesHigh, boolean looping){
 		this.image = image;
-		imageW = image.width();
-		imageH = image.height();
+		imageWidth = image.width();
+		System.out.println("-----");
+		imageHeight = image.height();
+		System.out.println("-----");
 		this.x = x;
 		this.y = y;
 		this.frameCount = frameCount;
 		currentFrame = 0;
-		spriteWidth = imageW / framesWide;
-		spriteHeight = imageH / framesHigh;
+		spriteWidth = imageWidth / framesWide;
+		spriteHeight = imageHeight / framesHigh;
+		System.out.println("Image Dimensions: " + imageWidth + ", " + imageHeight);
+		System.out.println("Frame Dimensions: " + spriteWidth + ", " + spriteHeight);
 		framePeriod = 1.0/fps;
 		gameTime = 0;
 		quads = new Quad[frameCount];
 		for (int n = 0; n < frameCount; n ++) {
 			int i = n % framesWide;
 			int j = n / framesWide;
-			quads[n] = graphics.newQuad(i * spriteWidth, j * spriteWidth, spriteWidth, spriteHeight, imageW, imageH);
+			quads[n] = graphics.newQuad(i * spriteWidth, j * spriteHeight, spriteWidth, spriteHeight, imageWidth, imageHeight);
 		}
 		isLooping = looping;
 		hasFinished = false;
@@ -85,6 +89,7 @@ public class SpriteAnimation {
 		gameTime += dt;
 		if (gameTime > framePeriod) { // frame period exceeded
 			gameTime = 0; //reset timer
+			System.out.print(currentFrame + ", ");
 			currentFrame++; //increment frame
 			if (currentFrame >= frameCount) {
 				if (!isLooping) {
