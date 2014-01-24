@@ -29,10 +29,10 @@ public class GameOver extends Scene {
 		crashedPlane2 = plane2;
 		crash = new Vector(plane1.position().x(), plane1.position().y(), 0);
 //		playSound(audio.newSoundEffect("sfx" + File.separator + "crash.ogg"));
-		explosion = graphics.newImage("gfx" + File.separator + "explosionFrames.png");
+		explosion = graphics.newImage("gfx" + File.separator + "new_boom.png");
 		Vector midPoint = crashedPlane1.position().add(crashedPlane2.position()).scaleBy(0.5);
-		Vector explosionPos = midPoint.sub( new Vector(explosion.width()/72, explosion.height()/3, 0) );
-		explosionAnim = new SpriteAnimation(explosion, (int) explosionPos.x(), (int) explosionPos.y(), 6, 18);
+		Vector explosionPos = midPoint.sub( new Vector(explosion.width()/8, explosion.height()/8, 0) );
+		explosionAnim = new SpriteAnimation(explosion, (int) explosionPos.x(), (int) explosionPos.y(), 6, 16, 4, 4, false);
 	}
 
 	@Override
