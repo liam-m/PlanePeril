@@ -14,16 +14,41 @@ import btc.Main;
 
 public class Title extends Scene {
 	
+	/**
+	 * A URL to the Bear Traffic Controller Website
+	 * Webpage contains explanation of game's controls and goal
+	 */
 	private final static String HELP_URL = "http://imp1.github.io/bear_traffic_controller/ingamehelp";
 	
+	/**
+	 * The 'beep' played as the radar makes a sweep
+	 */
 	private audio.Sound beep;
+	
+	/**
+	 * A List of buttons, to hold declared buttons in the scene
+	 */
 	private lib.ButtonText[] buttons;
+	
+	/**
+	 * Holds the angle to draw the radar sweep at.
+	 * Also used to play the beep sound as the radar sweeps the BTC title string
+	 * Updated regularly during Title's update()
+	 */
 	private double angle;
 	
+	/**
+	 * Constructor for the Title Scene
+	 * @param main the main holding the scene
+	 */
 	public Title(Main main) {
 		super(main);
 	}
 
+	/**
+	 * Initialises anything which needs to be initialised, such as buttons and sound effects
+	 * Runs only at start of scene
+	 */
 	@Override
 	public void start() {
 		beep = audio.newSoundEffect("sfx" + File.separator + "beep.ogg");
@@ -79,19 +104,35 @@ public class Title extends Scene {
 		angle = 0;
 	}
 
+	/**
+	 * Updates all objects in the title scene
+	 * Called by Main class
+	 * @param dt the delta time since the last update
+	 */
 	@Override
 	public void update(double dt) {
-		angle += dt;
-		double beepTimer = (angle * 4) + (Math.PI * 4 / 5);
+		angle += dt; //increase the angle of the radar sweep
+		
+		//Check the angle of the radar sweep;
+		//If approaching the BTC title string, play the beep
+		double beepTimer = (angle * 4) + (Math.PI * 4 / 5); 
 		beepTimer %= (2 * Math.PI);
 		if ( beepTimer <= 0.1 ) {
 			playSound(beep);
 		}
 	}
-
+	
+	/**
+	 * Handles mouse down input
+	 * Unused
+	 */
 	@Override
 	public void mousePressed(int key, int x, int y) {}
 
+	/**
+	 * Handles mouse release events
+	 * Causes a button to act if clicked by any mouse key
+	 */
 	@Override
 	public void mouseReleased(int key, int mx, int my) {
 		for (lib.ButtonText b : buttons) {
@@ -102,20 +143,32 @@ public class Title extends Scene {
 		
 	}
 
+	/**
+	 * Keyboard input methods
+	 * Unused - no keyboard interaction in this scene
+	 */
 	@Override
 	public void keyPressed(int key) {}
 
 	@Override
 	public void keyReleased(int key) {}
 
+	/**
+	 * Handles drawing of the scene
+	 * Calls drawRadar() and drawMenu() to draw elements of the scene
+	 * Called regularly by Main
+	 */
 	@Override
 	public void draw() {
 		drawRadar();
 		drawMenu();
 	}
-	
+	/**
+	 * Draws the radar arc and title string
+	 */
 	private void drawRadar() {
 		// Radar
+		// set of circles for radar 'screen'
 		graphics.setColour(0, 128, 0);
 		graphics.circle(false, window.height()/2, window.height()/2, window.height()/2 - 32, 100);
 		graphics.setColour(0, 128, 0, 32);
@@ -124,6 +177,7 @@ public class Title extends Scene {
 		graphics.circle(false, window.height()/2, window.height()/2, window.height()/9, 100);
 		graphics.circle(false, window.height()/2, window.height()/2, 2, 100);
 		graphics.setColour(0, 128, 0);
+		// sweep of radar
 		double radarAngle = (angle * 4) % (2 * Math.PI);
 		int w = (int)( Math.cos(radarAngle) * (window.height()/2 - 32) );
 		int h = (int)( Math.sin(radarAngle) * (window.height()/2 - 32) );
@@ -139,6 +193,8 @@ public class Title extends Scene {
 		graphics.arc(true, window.height()/2, window.height()/2, window.height()/2 - 32, radarAngle, -1 * Math.PI / 8);
 		// Title
 		String title = "Bear Traffic Controller";
+		// fades title string's characters over time
+		// characters brighten when the sweep passes over them
 		double a = radarAngle + (Math.PI * 4 / 5);
 		for (int i = 0; i < title.length(); i++) {
 			a -= Math.PI / 32;
@@ -151,6 +207,9 @@ public class Title extends Scene {
 		}
 	}
 	
+	/**
+	 * Draws menu boxes, boxes around buttons, and so on
+	 */
 	private void drawMenu() {
 		// Draw Extras e.g. Date, Time, Credits
 		graphics.setColour(0, 128, 0);
@@ -176,11 +235,17 @@ public class Title extends Scene {
 	}
 
 	@Override
+	/**
+	 * cleanly exits the title scene
+	 */
 	public void close() {
 
 	}
 
 	@Override
+	/**
+	 * Plays a requested sound
+	 */
 	public void playSound(Sound sound) {
 		sound.stop();
 		sound.play();

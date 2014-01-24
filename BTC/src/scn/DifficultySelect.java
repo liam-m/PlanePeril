@@ -25,7 +25,9 @@ public class DifficultySelect extends Scene {
 	private final int HARD_BUTTON_W = EASY_BUTTON_W;
 	private final int HARD_BUTTON_H = EASY_BUTTON_H;
 	
+	//list of buttons
 	private lib.ButtonText[] buttons;
+	//text box to write flavour text about the game setting into
 	private lib.TextBox textBox;
 	private static final String placeName = "Moscow";
 	
@@ -34,6 +36,11 @@ public class DifficultySelect extends Scene {
 	//static ints for clarity of reading. Implement more to allow more game scenes.
 	public final static int CREATE_DEMO = 0;
 
+	/**
+	 * Constructor
+	 * @param main the main containing the scene
+	 * @param sceneToCreate the scene to create after a difficulty has been selected, e.g. Demo
+	 */
 	protected DifficultySelect(Main main, int sceneToCreate) {
 		super(main);
 		this.sceneToCreate = sceneToCreate;
@@ -43,6 +50,9 @@ public class DifficultySelect extends Scene {
 	public void mousePressed(int key, int x, int y) {}
 
 	@Override
+	/**
+	 * Causes a button to act if mouse released over it
+	 */
 	public void mouseReleased(int key, int x, int y) {
 		for (lib.ButtonText b : buttons) {
 			if (b.isMouseOver(x, y)) {
@@ -55,6 +65,9 @@ public class DifficultySelect extends Scene {
 	public void keyPressed(int key) {}
 
 	@Override
+	/**
+	 * Quits back to title scene on escape button
+	 */
 	public void keyReleased(int key) {
 		if (key == input.KEY_ESCAPE) {
 			main.closeScene();
@@ -62,6 +75,9 @@ public class DifficultySelect extends Scene {
 	}
 
 	@Override
+	/**
+	 * Initialises scene variables, buttons, text box.
+	 */
 	public void start() {
 		buttons = new lib.ButtonText[3];
 		lib.ButtonText.Action easy = new lib.ButtonText.Action() {
@@ -117,11 +133,17 @@ public class DifficultySelect extends Scene {
 	}
 
 	@Override
+	/**
+	 * Updates text box
+	 */
 	public void update(double dt) {
 		textBox.update(dt);
 	}
 
 	@Override
+	/**
+	 * Draws text box, buttons, and prints strings
+	 */
 	public void draw() {
 		graphics.setColour(0,128,0);
 		graphics.printCentred("Select the difficulty:", window.width()/2, window.height()/2 + 50, 1, 100);

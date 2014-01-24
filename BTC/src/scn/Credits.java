@@ -11,16 +11,32 @@ import btc.Main;
 
 public class Credits extends Scene {
 	
+	/**
+	 * default speed to scroll the credits
+	 */
 	private final static int SCROLL_SPEED = 64;
 	
 	private float speed;
+	/**
+	 * The position to print the credits text at. Initially offscreen
+	 */
 	private double scrollPosition;
+	/**
+	 * Music to play during the credits
+	 */
 	private audio.Music music;
 
+	/**
+	 * Constructor
+	 * @param main the main containing the scene
+	 */
 	public Credits(Main main) {
 		super(main);
 	}
-
+	
+	/**
+	 * INPUT HANDLERS
+	 */
 	@Override
 	public void mousePressed(int key, int x, int y) {}
 
@@ -31,12 +47,18 @@ public class Credits extends Scene {
 	public void keyPressed(int key) {}
 
 	@Override
+	/**
+	 * exit to the title screen if escape is pressed
+	 */
 	public void keyReleased(int key) {
 		if (key == input.KEY_ESCAPE) {
 			main.closeScene();
 		}
 	}
-
+	
+	/**
+	 * Init musis, and the credits text to be offscreen
+	 */
 	@Override
 	public void start() {
 		speed = 1f;
@@ -46,6 +68,10 @@ public class Credits extends Scene {
 	}
 
 	@Override
+	/**
+	 * update the credits's scroll position
+	 * hurry the credits movement if certain keys pressed
+	 */
 	public void update(double dt) {
 		boolean hurried = input.isKeyDown(input.KEY_SPACE) || input.isMouseDown(input.MOUSE_LEFT);
 		speed = hurried ? 4f : 1f;
@@ -54,6 +80,9 @@ public class Credits extends Scene {
 	}
 
 	@Override
+	/**
+	 * print the credits based on the current scroll position
+	 */
 	public void draw() {
 		int gap = 64;
 		int currentHeight = 0;

@@ -5,6 +5,7 @@ import java.io.File;
 import cls.Aircraft;
 import cls.Vector;
 import lib.SpriteAnimation;
+import lib.jog.audio;
 import lib.jog.audio.Sound;
 import lib.jog.graphics;
 import lib.jog.graphics.Image;
@@ -12,23 +13,53 @@ import lib.jog.window;
 import btc.Main;
 
 public class GameOver extends Scene {
-	
+	/**
+	 * Text box to write the details of the game failure
+	 */
 	private lib.TextBox textBox;
+	
+	/**
+	 * The two crashed aircraft, passed to the scene by the scene in which they crashed
+	 * Used to position the explosion, and provide graphical feedback of how and where the player failed
+	 */
 	private Aircraft crashedPlane1;
 	private Aircraft crashedPlane2;
+	/**
+	 * A randon number of deaths caused by the crash
+	 */
 	private int deaths;
+	
+	/**
+	 * The position of the crash - the vector midpoint of the positions of the two crashed planes
+	 */
 	private Vector crash;
+	/**
+	 * A sprite animation to handle the frame by frame drawing of the explosion
+	 */
 	private SpriteAnimation explosionAnim;
+	/**
+	 * The explosion image to use for the animation
+	 */
 	private Image explosion;
+	
 	private int keyPressed;
+	
+	/**
+	 * Timer to allow for explosion and plane to be shown for a period, followed by the text box.
+	 */
 	private double timer;
-
+	
+	/**
+	 * Constructor for the Game Over scene
+	 * @param main the main containing the scene
+	 * @param plane1 one of the planes involved in the crash
+	 * @param plane2 the second plane involved in the crash
+	 */
 	public GameOver(Main main, Aircraft plane1, Aircraft plane2) {
 		super(main);
 		crashedPlane1 = plane1;
 		crashedPlane2 = plane2;
 		crash = new Vector(plane1.position().x(), plane1.position().y(), 0);
-//		playSound(audio.newSoundEffect("sfx" + File.separator + "crash.ogg"));
 		int framesAcross = 8;
 		int framesDown = 4;
 		explosion = graphics.newImage("gfx" + File.separator + "explosionFrames.png");
@@ -36,9 +67,13 @@ public class GameOver extends Scene {
 		Vector explosionPos = midPoint.sub( new Vector(explosion.width()/(framesAcross*2), explosion.height()/(framesDown*2), 0) );
 		explosionAnim = new SpriteAnimation(explosion, (int)explosionPos.x(), (int)explosionPos.y(), 6, 16, framesAcross, framesDown, false);
 	}
-
+	
+	/**
+	 * initialises the random number of deaths, timer, and text box with strings to be written about the game failure
+	 */
 	@Override
 	public void start() {
+		playSound(audio.newSoundEffect("sfx" + File.separator + "crash.ogg"));
 		deaths = (int)( Math.random() * 500) + 300;
 		timer = 0;
 		textBox = new lib.TextBox(64, 96, window.width() - 128, window.height() - 96, 32);
@@ -62,6 +97,10 @@ public class GameOver extends Scene {
 	}
 
 	@Override
+	/**
+	 * If before explosion has finished, update the explosion
+	 * otherwise, update text box instead
+	 */
 	public void update(double dt) {
 		if (explosionAnim.hasFinished()){
 			timer += dt;
@@ -78,10 +117,17 @@ public class GameOver extends Scene {
 	public void mouseReleased(int key, int x, int y) {}
 
 	@Override
+	/**
+	 * Tracks if any keys are pressed when the game over screen begins
+	 * Prevents the scene instantly ending due to a key press from previous scene
+	 */
 	public void keyPressed(int key) {
 		keyPressed = key;
 	}
 
+	/**
+	 * Ends the scene if any key is released , ie. press any key to continue
+	 */
 	@Override
 	public void keyReleased(int key) {
 		if (key == keyPressed) {
@@ -91,6 +137,11 @@ public class GameOver extends Scene {
 	}
 
 	@Override
+	/**
+	 * draws game over
+	 * If explosion has finished, draw the textbox
+	 * Otherwise, draw the planes and explosion
+	 */
 	public void draw() {
 		graphics.setColour(0, 128, 0);
 		graphics.printCentred(crashedPlane1.name() + 

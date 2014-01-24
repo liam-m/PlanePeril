@@ -1,16 +1,14 @@
 package scn;
 
 import java.io.File;
-import lib.RandomNumber;
 
+import lib.RandomNumber;
 import lib.jog.audio;
 import lib.jog.graphics;
 import lib.jog.input;
 import lib.jog.window;
-
 import cls.Aircraft;
 import cls.Waypoint;
-
 import btc.Main;
 
 public class Demo extends Scene {
@@ -31,28 +29,90 @@ public class Demo extends Scene {
 	private final int ORDERSBOX_W = window.width() - (ORDERSBOX_X + 16);
 	private final static int ORDERSBOX_H = 112;
 	
+	// Static Final Ints for difficulty settings
+	// Difficulty of demo scene determined by difficulty selection scene
 	public final static int DIFFICULTY_EASY = 0;
 	public final static int DIFFICULTY_MEDIUM = 1;
 	public final static int DIFFICULTY_HARD = 2;
 	public static int difficulty = DIFFICULTY_EASY;
 	
+	/**
+	 * Orders box to print orders from ACTO to aircraft to
+	 */
 	private cls.OrdersBox ordersBox;
+	
+	/**
+	 * Time since the scene began
+	 * Could be used for score
+	 */
 	private double timeElapsed;
+	/**
+	 * The currently selected aircraft
+	 */
 	private Aircraft selectedAircraft;
+	/**
+	 * The currently selected waypoint
+	 */
 	private Waypoint selectedWaypoint;
+	/**
+	 * Selected path point, in an aircraft's route, used for altering the route
+	 */
 	private int selectedPathpoint;
+	/**
+	 * A list of aircraft present in the airspace
+	 */
 	private java.util.ArrayList<Aircraft> aircraftInAirspace;
+	
+	/**
+	 * An image to be used for aircraft
+	 * Expand to list of images for multiple aircraft appearances
+	 */
 	private graphics.Image aircraftImage;
+	
+	/**
+	 * A button to start and end manual control of an aircraft
+	 */
 	private lib.ButtonText manualOverrideButton;
+	/**
+	 * Tracks if manual heading compass of a manually controller aircraft has been dragged
+	 */
 	private boolean compassDragged;
+	/**
+	 * An altimeter to display aircraft altitidue, heading, etc.
+	 */
 	private cls.Altimeter altimeter;
+	/**
+	 * The interval in seconds to generate flights after
+	 */
 	private static double flightGenerationInterval = 12;
+	/**
+	 * The time eleapsed since the last flight was generated
+	 */
 	private double flightGenerationTimeElapsed = 6;
+	/**
+	 * Max aircraft in the airspace at once
+	 * Change to 10 for Assessment 3.
+	 */
 	private int maxAircraft = 2;
+	/**
+	 * The current control altitude of the ACTO
+	 * initially 30,000
+	 * only aircraft on or close to this altitude can be controlled
+	 */
 	private int controlAltitude = 30000;
+	
+	/**
+	 * Music to play during the game scene
+	 */
 	private audio.Music music;
+	/**
+	 * The background to draw in the airspace.
+	 */
 	private graphics.Image background;
 	
+	/**
+	 * A list of location names for waypoint flavour
+	 */
 	private final String[] LOCATION_NAMES = new String[] {
 		"North West Top Leftonia",
 		"100 Acre Woods",
@@ -60,6 +120,9 @@ public class Demo extends Scene {
 		"South Sea",
 	};
 	
+	/**
+	 * The set of waypoints in the airspace which are origins / destinations
+	 */
 	public static Waypoint[] locationWaypoints = new Waypoint[] {
 		/* A set of Waypoints which are origin / destination points */
 		new Waypoint(8, 8, true), //top left
@@ -68,6 +131,9 @@ public class Demo extends Scene {
 		new Waypoint(window.width() - 40, window.height() - ORDERSBOX_H - 40, true), //bottom right
 	};
 
+	/**
+	 * All waypoints in the airspace, INCLUDING locationWaypoints.
+	 */
 	public static Waypoint[] airspaceWaypoints = new Waypoint[] {		
 		/* All waypoints in the airspace, including location Way Points*/
 	
@@ -88,17 +154,21 @@ public class Demo extends Scene {
 		locationWaypoints[2],           // 12
 		locationWaypoints[3],           // 13
 	};
-
-	public java.util.ArrayList<Aircraft> aircraftList() {
-		return aircraftInAirspace;
-	}
-
+	/**
+	 * Constructor
+	 * @param main the main containing the scene
+	 * @param difficulty the difficulty the scene is to be initialised with
+	 */
 	public Demo(Main main, int difficulty) {
 		super(main);
 		Demo.difficulty = difficulty;
 	}
 
 	@Override
+	/**
+	 * Initialise and begin music, init background image and scene variables.
+	 * Shorten flight generation timer according to difficulty
+	 */
 	public void start() {
 		background = graphics.newImage("gfx" + File.separator + "map.png");
 		music = audio.newMusic("sfx" + File.separator + "Gypsy_Shoegazer.ogg");
@@ -138,12 +208,26 @@ public class Demo extends Scene {
 		}
 	}
 	
+	/**
+	 * Getter for aircraft list
+	 * @return the arrayList of aircraft in the airspace
+	 */
+	public java.util.ArrayList<Aircraft> aircraftList() {
+		return aircraftInAirspace;
+	}
+	
+	/**
+	 * Causes a selected aircraft to call methods to toggle manual control
+	 */
 	private void toggleManualControl() {
 		if (selectedAircraft == null) return;
 		selectedAircraft.toggleManualControl();
 		manualOverrideButton.setText( (selectedAircraft.isManuallyControlled() ? "Remove" : " Take") + " Control");
 	}
 	
+	/**
+	 * Causes an aircraft to call methods to handle deselection
+	 */
 	private void deselectAircraft() {
 		if (selectedAircraft != null && selectedAircraft.isManuallyControlled()) {
 			selectedAircraft.toggleManualControl();
@@ -154,7 +238,12 @@ public class Demo extends Scene {
 		selectedPathpoint = -1;
 		altimeter.hide();
 	}
-
+	
+	/**
+	 * Update all objects within the scene, ie aircraft, orders box altimeter.
+	 * Cause collision detection to occur
+	 * Generate a new flight if flight generation interval has been exceeded.
+	 */
 	@Override
 	public void update(double dt) {
 		timeElapsed += dt;
@@ -207,6 +296,11 @@ public class Demo extends Scene {
 		}
 	}
 	
+	/**
+	 * Cause all planes in airspace to update collisions
+	 * Catch and handle a resultant game over state
+	 * @param dt delta time since last collision check
+	 */
 	private void checkCollisions(double dt) {
 		for (Aircraft plane : aircraftInAirspace) {
 			int collisionState = plane.updateCollisions(dt, aircraftList());
@@ -223,6 +317,12 @@ public class Demo extends Scene {
 		sound.play();
 	}
 	
+	/**
+	 * Handle a game over caused by two planes colliding
+	 * Create a gameOver scene and make it the current scene
+	 * @param plane1 the first plane involved in the collision
+	 * @param plane2 the second plane in the collision
+	 */
 	public void gameOver(Aircraft plane1, Aircraft plane2) {
 		playSound(audio.newSoundEffect("sfx" + File.separator + "crash.ogg"));
 		main.closeScene();
@@ -233,6 +333,7 @@ public class Demo extends Scene {
 	 * Causes the scene to pause execution for the specified number of seconds
 	 * @param seconds the number of seconds to wait.
 	 */
+	@Deprecated
 	public void wait(int seconds){
 		long startTime, endTime;
 		startTime = System.currentTimeMillis();
@@ -245,6 +346,9 @@ public class Demo extends Scene {
 		return;
 	}
 
+	/**
+	 * Handle mouse input
+	 */
 	@Override
 	public void mousePressed(int key, int x, int y) {
 		if (key == input.MOUSE_LEFT) {
@@ -330,6 +434,9 @@ public class Demo extends Scene {
 	}
 
 	@Override
+	/**
+	 * handle keyboard input
+	 */
 	public void keyReleased(int key) {
 		switch (key) {
 		
@@ -353,7 +460,10 @@ public class Demo extends Scene {
 			
 		}
 	}
-
+	
+	/**
+	 * Draw the scene GUI and all drawables within it, e.g. aircraft and waypoints
+	 */
 	@Override
 	public void draw() {
 		graphics.setColour(0, 128, 0);
@@ -377,6 +487,10 @@ public class Demo extends Scene {
 		drawScore();
 	}
 	
+	/**
+	 * draw waypoints, and route of a selected aircraft between waypoints
+	 * print waypoint names next to waypoints
+	 */
 	private void drawMap() {
 		for (Waypoint waypoint : airspaceWaypoints) {
 			waypoint.draw();
@@ -415,6 +529,9 @@ public class Demo extends Scene {
 
 	}
 	
+	/**
+	 * draw the info of a selected plane in the scene GUI
+	 */
 	private void drawPlaneInfo() {
 		graphics.setColour(0, 128, 0);
 		graphics.rectangle(false, PLANE_INFO_X, PLANE_INFO_Y, PLANE_INFO_W, PLANE_INFO_H);
@@ -439,6 +556,10 @@ public class Demo extends Scene {
 		}
 	}
 	
+	/**
+	 * draw a readout of the time the game has been played for, aircraft in the sky, etc.
+	 * Hint: for assessment 3, this could be used to print the player's current score.
+	 */
 	private void drawScore() {
 		int hours = (int)(timeElapsed / (60 * 60));
 		int minutes = (int)(timeElapsed / 60);
@@ -452,12 +573,20 @@ public class Demo extends Scene {
 		graphics.print("Control Altitude: " + String.valueOf(controlAltitude), 544, 0);
 	}
 	
+	/**
+	 * Create a new aircraft object and introduce it to the airspace
+	 */
 	private void generateFlight() {
 		Aircraft a = createAircraft();
 		ordersBox.addOrder("<<< " + a.name() + " incoming from " + a.originName() + " heading towards " + a.destinationName() + ".");
 		aircraftInAirspace.add(a);
 	}
 	
+	/**
+	 * Handle nitty gritty of aircraft creating
+	 * including randomisation of entry, exit, altitude, etc.
+	 * @return the create aircraft object
+	 */
 	private Aircraft createAircraft() {
 		// Origin and Destination
 		int o = RandomNumber.randInclusiveInt(0, locationWaypoints.length - 1);
@@ -483,6 +612,13 @@ public class Demo extends Scene {
 		return new Aircraft(name, destinationName, originName, destinationPoint, originPoint, aircraftImage, 32 + (int)(10 * Math.random()), airspaceWaypoints, difficulty);
 	}
 	
+	/**
+	 * Decide which aircraft are selectable at the current control altitude
+	 * Aircraft must be on the current control altitude, or changing altitude towards it
+	 * @param a an aircraft to be checked for selectability
+	 * @param altitude the current control altitude
+	 * @return whether or not the aircraft is selectable at the current control altitude
+	 */
 	private boolean aircraftSelectableAtAltitude(Aircraft a, int altitude) {
 		if (a.position().z() == altitude) return true;
 		if (a.position().z() < altitude && a.altitudeState() == Aircraft.ALTITUDE_CLIMB) return true;
@@ -491,6 +627,9 @@ public class Demo extends Scene {
 	}
 	
 	@Override
+	/**
+	 * cleanly exit by stopping the scene's music
+	 */
 	public void close() {
 		music.stop();
 	}
