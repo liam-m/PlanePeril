@@ -37,14 +37,19 @@ public class OrdersBox extends lib.TextBox {
 	 * @param dt time since the last update call.
 	 */
 	public void update(double dt) {
+
 		if (!isTyping) {
+
 			removalTimer += dt;
+
 			if (removalTimer >= REMOVAL_WAIT) {
 				removalTimer -= REMOVAL_WAIT;
 				ripple();
 			}
+
 			return;
 		}
+
 		super.update(dt);
 	}
 	

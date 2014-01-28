@@ -111,7 +111,10 @@ public class Vector {
 	 */
 	public double angleBetween(Vector v) {
 		double a = Math.acos( (x*v.x + y*v.y + z*v.z) / (magnitude() * v.magnitude()));
-		if (v.y < y) a *= -1;
+
+		if (v.y < y)
+			a *= -1;
+
 		return a;
 	}
 	

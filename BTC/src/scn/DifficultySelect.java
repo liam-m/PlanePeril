@@ -1,5 +1,6 @@
 package scn;
 
+import lib.ButtonText;
 import lib.TextBox;
 import lib.jog.audio.Sound;
 import lib.jog.graphics;
@@ -26,9 +27,9 @@ public class DifficultySelect extends Scene {
 	private final int HARD_BUTTON_H = EASY_BUTTON_H;
 	
 	//list of buttons
-	private lib.ButtonText[] buttons;
+	private ButtonText[] buttons;
 	//text box to write flavour text about the game setting into
-	private lib.TextBox textBox;
+	private TextBox textBox;
 	private static final String placeName = "Moscow";
 	
 	//To allow the difficulty selection to work with multiple potential game scenes, e.g. separate Demo and a Full Game
@@ -54,7 +55,7 @@ public class DifficultySelect extends Scene {
 	 * Causes a button to act if mouse released over it
 	 */
 	public void mouseReleased(int key, int x, int y) {
-		for (lib.ButtonText b : buttons) {
+		for (ButtonText b : buttons) {
 			if (b.isMouseOver(x, y)) {
 				b.act();
 			}
@@ -79,8 +80,9 @@ public class DifficultySelect extends Scene {
 	 * Initialises scene variables, buttons, text box.
 	 */
 	public void start() {
-		buttons = new lib.ButtonText[3];
-		lib.ButtonText.Action easy = new lib.ButtonText.Action() {
+		buttons = new ButtonText[3];
+
+		ButtonText.Action easy = new ButtonText.Action() {
 			@Override
 			public void action() {
 				switch (sceneToCreate){
@@ -90,9 +92,11 @@ public class DifficultySelect extends Scene {
 				}
 			}
 		};
-		buttons[0] = new lib.ButtonText("Easy", easy, EASY_BUTTON_X, EASY_BUTTON_Y, EASY_BUTTON_W, EASY_BUTTON_H);
+
+		buttons[0] = new ButtonText("Easy", easy, EASY_BUTTON_X, EASY_BUTTON_Y,
+				EASY_BUTTON_W, EASY_BUTTON_H);
 		
-		lib.ButtonText.Action medium = new lib.ButtonText.Action() {
+		ButtonText.Action medium = new ButtonText.Action() {
 			@Override
 			public void action() {
 				switch (sceneToCreate){
@@ -102,9 +106,10 @@ public class DifficultySelect extends Scene {
 				}
 			}
 		};
+
 		buttons[1] = new lib.ButtonText("Medium", medium, MEDIUM_BUTTON_X, MEDIUM_BUTTON_Y, MEDIUM_BUTTON_W, MEDIUM_BUTTON_H);
 		
-		lib.ButtonText.Action hard = new lib.ButtonText.Action() {
+		ButtonText.Action hard = new ButtonText.Action() {
 			@Override
 			public void action() {
 				switch (sceneToCreate){
@@ -114,9 +119,12 @@ public class DifficultySelect extends Scene {
 				}
 			}
 		};
-		buttons[2] = new lib.ButtonText("Hard", hard, HARD_BUTTON_X, HARD_BUTTON_Y, HARD_BUTTON_W, HARD_BUTTON_H);
 		
-		textBox = new lib.TextBox(128, 96, window.width() - 256, window.height() - 96, 32);
+		buttons[2] = new ButtonText("Hard", hard, HARD_BUTTON_X, HARD_BUTTON_Y,
+				HARD_BUTTON_W, HARD_BUTTON_H);
+
+		textBox = new TextBox(128, 96, window.width() - 256,
+				window.height() - 96, 32);
 		textBox.addText("You are a 500 kilogram ferocious Grizzly Bear." + TextBox.DELAY_START + "0.5" + TextBox.DELAY_END + " The Humans are not aware of your hidden identity.");
 		textBox.delay(0.5);
 		textBox.addText("You have become an air traffic controller at " + DifficultySelect.placeName + " international in order to provide for your family during the harsh winters ahead.");
@@ -150,9 +158,11 @@ public class DifficultySelect extends Scene {
 		graphics.rectangle(false, EASY_BUTTON_X, EASY_BUTTON_Y, EASY_BUTTON_W, EASY_BUTTON_H);
 		graphics.rectangle(false, MEDIUM_BUTTON_X, MEDIUM_BUTTON_Y, MEDIUM_BUTTON_W, MEDIUM_BUTTON_H);
 		graphics.rectangle(false, HARD_BUTTON_X, HARD_BUTTON_Y, HARD_BUTTON_W, HARD_BUTTON_H);
-		for (lib.ButtonText b : buttons) {
+
+		for (ButtonText b : buttons) {
 			b.draw();
 		}
+
 		textBox.draw();
 	}
 

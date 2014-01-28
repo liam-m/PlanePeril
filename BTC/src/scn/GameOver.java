@@ -2,21 +2,22 @@ package scn;
 
 import java.io.File;
 
-import cls.Aircraft;
-import cls.Vector;
 import lib.SpriteAnimation;
+import lib.TextBox;
 import lib.jog.audio;
 import lib.jog.audio.Sound;
 import lib.jog.graphics;
 import lib.jog.graphics.Image;
 import lib.jog.window;
 import btc.Main;
+import cls.Aircraft;
+import cls.Vector;
 
 public class GameOver extends Scene {
 	/**
 	 * Text box to write the details of the game failure
 	 */
-	private lib.TextBox textBox;
+	private TextBox textBox;
 	
 	/**
 	 * The two crashed aircraft, passed to the scene by the scene in which they crashed
@@ -57,14 +58,18 @@ public class GameOver extends Scene {
 	 */
 	public GameOver(Main main, Aircraft plane1, Aircraft plane2) {
 		super(main);
+
 		crashedPlane1 = plane1;
 		crashedPlane2 = plane2;
 		crash = new Vector(plane1.position().x(), plane1.position().y(), 0);
+
 		int framesAcross = 8;
 		int framesDown = 4;
+
 		explosion = graphics.newImage("gfx" + File.separator + "explosionFrames.png");
 		Vector midPoint = crashedPlane1.position().add(crashedPlane2.position()).scaleBy(0.5);
 		Vector explosionPos = midPoint.sub( new Vector(explosion.width()/(framesAcross*2), explosion.height()/(framesDown*2), 0) );
+
 		explosionAnim = new SpriteAnimation(explosion, (int)explosionPos.x(), (int)explosionPos.y(), 6, 16, framesAcross, framesDown, false);
 	}
 	
@@ -74,8 +79,10 @@ public class GameOver extends Scene {
 	@Override
 	public void start() {
 		playSound(audio.newSoundEffect("sfx" + File.separator + "crash.ogg"));
+
 		deaths = (int)( Math.random() * 500) + 300;
 		timer = 0;
+
 		textBox = new lib.TextBox(64, 96, window.width() - 128, window.height() - 96, 32);
 		textBox.addText(String.valueOf(deaths) + " people died in the crash.");
 		textBox.delay(0.4);
@@ -146,9 +153,13 @@ public class GameOver extends Scene {
 		graphics.setColour(0, 128, 0);
 		graphics.printCentred(crashedPlane1.name() + 
 				" crashed into " + crashedPlane2.name() + ".", 0, 32, 2, window.width());
+
 		if (explosionAnim.hasFinished()) {
+
 			textBox.draw();
+
 		} else {
+
 			crashedPlane1.draw((int) crashedPlane1.position().z());
 			crashedPlane2.draw((int) crashedPlane1.position().z());
 			Vector midPoint = crash.add(crashedPlane2.position()).scaleBy(0.5);
@@ -156,8 +167,11 @@ public class GameOver extends Scene {
 			graphics.setColour(128,0,0);
 			graphics.circle(false, midPoint.x(), midPoint.y(), radius);
 			explosionAnim.draw();
+
 		}
+
 		int opacity = (int)(255 * Math.sin(timer));
+
 		graphics.setColour(0, 128, 0, opacity);
 		graphics.printCentred("Press any key to continue", 0, window.height() - 256, 1, window.width());
 	}

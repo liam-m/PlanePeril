@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import lib.ButtonText;
 import lib.jog.audio;
 import lib.jog.audio.Sound;
 import lib.jog.graphics;
@@ -23,12 +24,12 @@ public class Title extends Scene {
 	/**
 	 * The 'beep' played as the radar makes a sweep
 	 */
-	private audio.Sound beep;
+	private Sound beep;
 	
 	/**
 	 * A List of buttons, to hold declared buttons in the scene
 	 */
-	private lib.ButtonText[] buttons;
+	private ButtonText[] buttons;
 	
 	/**
 	 * Holds the angle to draw the radar sweep at.
@@ -54,34 +55,47 @@ public class Title extends Scene {
 		beep = audio.newSoundEffect("sfx" + File.separator + "beep.ogg");
 		beep.setVolume(0.2f);
 		
-		buttons = new lib.ButtonText[5];
+		buttons = new ButtonText[5];
 		// Demo Button
-		lib.ButtonText.Action demo = new lib.ButtonText.Action() {
+		ButtonText.Action demo = new ButtonText.Action() {
+
 			@Override
 			public void action() {
 				main.setScene(new DifficultySelect(main, DifficultySelect.CREATE_DEMO));
 			}
+
 		};
-		buttons[0] = new lib.ButtonText("Play Demo", demo, window.height(), window.height()/2 + 96, window.width() - window.height(), 24, 8, 6);
+		buttons[0] = new ButtonText("Play Demo", demo, window.height(),
+				window.height() / 2 + 96, window.width() - window.height(), 24,
+				8, 6);
 		// Game Button
-		lib.ButtonText.Action play = new lib.ButtonText.Action() {
+
+		ButtonText.Action play = new ButtonText.Action() {
 			@Override
 			public void action() {
 //				_main.setScene(new Game(main));
 			}
 		};
-		buttons[1] = new lib.ButtonText("Play Full Game", play, window.height(), window.height()/2 + 126, window.width() - window.height(), 24, 8, 6);
+
+		buttons[1] = new ButtonText("Play Full Game", play, window.height(),
+				window.height() / 2 + 126, window.width() - window.height(),
+				24, 8, 6);
 		buttons[1].setAvailability(false);
+
 		// Credits Button
-		lib.ButtonText.Action credits = new lib.ButtonText.Action() {
+		ButtonText.Action credits = new ButtonText.Action() {
 			@Override
 			public void action() {
 				main.setScene(new Credits(main));
 				}
 			};
-		buttons[2] = new lib.ButtonText("Credits", credits, window.height(), window.height()/2 + 156, window.width() - window.height(), 24, 8, 6);
+
+		buttons[2] = new ButtonText("Credits", credits, window.height(),
+				window.height() / 2 + 156, window.width() - window.height(),
+				24, 8, 6);
+
 		// Help Button
-		lib.ButtonText.Action help = new lib.ButtonText.Action() {
+		ButtonText.Action help = new ButtonText.Action() {
 			@Override
 			public void action() {
 				try {
@@ -91,15 +105,22 @@ public class Title extends Scene {
 				}
 			}
 		};
-		buttons[3] = new lib.ButtonText("Help               (Opens in Browser)", help, window.height(), window.height()/2 + 186, window.width() - window.height(), 24, 8, 6);
+
+		buttons[3] = new ButtonText("Help               (Opens in Browser)",
+				help, window.height(), window.height() / 2 + 186,
+				window.width() - window.height(), 24, 8, 6);
+
 		// Exit Button
-				lib.ButtonText.Action exit = new lib.ButtonText.Action() {
+		ButtonText.Action exit = new ButtonText.Action() {
 					@Override
 					public void action() {
 						main.quit();
 					}
 				};
-		buttons[4] = new lib.ButtonText("Exit", exit, window.height(), window.height()/2 + 216, window.width() - window.height(), 24, 8, 6);
+
+		buttons[4] = new ButtonText("Exit", exit, window.height(),
+				window.height() / 2 + 216, window.width() - window.height(),
+				24, 8, 6);
 		
 		angle = 0;
 	}
@@ -116,7 +137,9 @@ public class Title extends Scene {
 		//Check the angle of the radar sweep;
 		//If approaching the BTC title string, play the beep
 		double beepTimer = (angle * 4) + (Math.PI * 4 / 5); 
+
 		beepTimer %= (2 * Math.PI);
+
 		if ( beepTimer <= 0.1 ) {
 			playSound(beep);
 		}
@@ -135,12 +158,11 @@ public class Title extends Scene {
 	 */
 	@Override
 	public void mouseReleased(int key, int mx, int my) {
-		for (lib.ButtonText b : buttons) {
+		for (ButtonText b : buttons) {
 			if (b.isMouseOver(mx, my)) {
 				b.act();
 			}
 		}
-		
 	}
 
 	/**
@@ -177,10 +199,12 @@ public class Title extends Scene {
 		graphics.circle(false, window.height()/2, window.height()/2, window.height()/9, 100);
 		graphics.circle(false, window.height()/2, window.height()/2, 2, 100);
 		graphics.setColour(0, 128, 0);
+
 		// sweep of radar
 		double radarAngle = (angle * 4) % (2 * Math.PI);
 		int w = (int)( Math.cos(radarAngle) * (window.height()/2 - 32) );
 		int h = (int)( Math.sin(radarAngle) * (window.height()/2 - 32) );
+
 		graphics.line(window.height()/2, window.height()/2, window.height()/2 + w, window.height()/2 + h);
 		graphics.setColour(0, 128, 0, 8);
 		graphics.arc(true, window.height()/2, window.height()/2, window.height()/2 - 32, radarAngle, -8 * Math.PI / 8);
@@ -191,11 +215,14 @@ public class Title extends Scene {
 		graphics.arc(true, window.height()/2, window.height()/2, window.height()/2 - 32, radarAngle, -3 * Math.PI / 8);
 		graphics.arc(true, window.height()/2, window.height()/2, window.height()/2 - 32, radarAngle, -2 * Math.PI / 8);
 		graphics.arc(true, window.height()/2, window.height()/2, window.height()/2 - 32, radarAngle, -1 * Math.PI / 8);
+
 		// Title
 		String title = "Bear Traffic Controller";
+
 		// fades title string's characters over time
 		// characters brighten when the sweep passes over them
 		double a = radarAngle + (Math.PI * 4 / 5);
+
 		for (int i = 0; i < title.length(); i++) {
 			a -= Math.PI / 32;
 			double opacity = a %= (2 * Math.PI);
@@ -224,7 +251,8 @@ public class Title extends Scene {
 		graphics.print("TEAM FLR", window.height() + 8, 72);
 		
 		// Draw Buttons
-		for (lib.ButtonText b : buttons) b.draw();
+		for (ButtonText b : buttons)
+			b.draw();
 		graphics.setColour(0, 128, 0);
 		graphics.line(window.height(), window.height()/2 + 90, window.width() - 16, window.height()/2 + 90);
 		graphics.line(window.height(), window.height()/2 + 120, window.width() - 16, window.height()/2 + 120);

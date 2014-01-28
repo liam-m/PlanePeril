@@ -1,17 +1,19 @@
 package scn;
 
-import lib.jog.audio;
+import lib.jog.audio.Sound;
+import lib.jog.input.EventHandler;
+import btc.Main;
 
-public abstract class Scene implements lib.jog.input.EventHandler {
+public abstract class Scene implements EventHandler {
 	
 
-	protected btc.Main main;
+	protected Main main;
 	
 	/**
 	 * Top level Constructor for a scene
 	 * @param main the main class holding the scene, ie the running instance of the game
 	 */
-	protected Scene(btc.Main main) {
+	protected Scene(Main main) {
 		this.main = main;
 	}
 	
@@ -45,6 +47,6 @@ public abstract class Scene implements lib.jog.input.EventHandler {
 	 * when their separation radius is infringed.
 	 * @param sound the sound to be played
 	 */
-	abstract public void playSound(audio.Sound sound);
+	abstract public void playSound(Sound sound);
 	
 }

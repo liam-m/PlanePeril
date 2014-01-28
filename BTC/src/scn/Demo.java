@@ -1,15 +1,22 @@
 package scn;
 
 import java.io.File;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
 
+import lib.ButtonText;
 import lib.RandomNumber;
 import lib.jog.audio;
+import lib.jog.audio.Music;
 import lib.jog.graphics;
+import lib.jog.graphics.Image;
 import lib.jog.input;
 import lib.jog.window;
-import cls.Aircraft;
-import cls.Waypoint;
 import btc.Main;
+import cls.Aircraft;
+import cls.Altimeter;
+import cls.OrdersBox;
+import cls.Waypoint;
 
 public class Demo extends Scene {
 	
@@ -61,18 +68,18 @@ public class Demo extends Scene {
 	/**
 	 * A list of aircraft present in the airspace
 	 */
-	private java.util.ArrayList<Aircraft> aircraftInAirspace;
+	private ArrayList<Aircraft> aircraftInAirspace;
 	
 	/**
 	 * An image to be used for aircraft
 	 * Expand to list of images for multiple aircraft appearances
 	 */
-	private graphics.Image aircraftImage;
+	private Image aircraftImage;
 	
 	/**
 	 * A button to start and end manual control of an aircraft
 	 */
-	private lib.ButtonText manualOverrideButton;
+	private ButtonText manualOverrideButton;
 	/**
 	 * Tracks if manual heading compass of a manually controller aircraft has been dragged
 	 */
@@ -80,7 +87,7 @@ public class Demo extends Scene {
 	/**
 	 * An altimeter to display aircraft altitidue, heading, etc.
 	 */
-	private cls.Altimeter altimeter;
+	private Altimeter altimeter;
 	/**
 	 * The interval in seconds to generate flights after
 	 */
@@ -104,11 +111,11 @@ public class Demo extends Scene {
 	/**
 	 * Music to play during the game scene
 	 */
-	private audio.Music music;
+	private Music music;
 	/**
 	 * The background to draw in the airspace.
 	 */
-	private graphics.Image background;
+	private Image background;
 	
 	/**
 	 * A list of location names for waypoint flavour
@@ -173,9 +180,14 @@ public class Demo extends Scene {
 		background = graphics.newImage("gfx" + File.separator + "map.png");
 		music = audio.newMusic("sfx" + File.separator + "Gypsy_Shoegazer.ogg");
 		music.play();
-		ordersBox = new cls.OrdersBox(ORDERSBOX_X, ORDERSBOX_Y, ORDERSBOX_W, ORDERSBOX_H, 6);
-		aircraftInAirspace = new java.util.ArrayList<Aircraft>();
+
+		ordersBox = new OrdersBox(ORDERSBOX_X, ORDERSBOX_Y, ORDERSBOX_W,
+				ORDERSBOX_H, 6);
+
+		aircraftInAirspace = new ArrayList<Aircraft>();
+
 		aircraftImage = graphics.newImage("gfx" + File.separator + "plane.png");
+
 		lib.ButtonText.Action manual = new lib.ButtonText.Action() {
 			@Override
 			public void action() {
@@ -183,15 +195,19 @@ public class Demo extends Scene {
 				toggleManualControl();
 			}
 		};
-		manualOverrideButton = new lib.ButtonText("Take Control", manual, (window.width() - 128) / 2, 32, 128, 32, 8, 4);
+
+		manualOverrideButton = new ButtonText("Take Control", manual,
+				(window.width() - 128) / 2, 32, 128, 32, 8, 4);
 		timeElapsed = 0;
 		compassDragged = false;
 		selectedAircraft = null;
 		selectedWaypoint = null;
 		selectedPathpoint = -1;
 		
-		manualOverrideButton = new lib.ButtonText(" Take Control", manual, (window.width() - 128) / 2, 32, 128, 32, 8, 4);
-		altimeter = new cls.Altimeter(ALTIMETER_X, ALTIMETER_Y, ALTIMETER_W, ALTIMETER_H);
+		manualOverrideButton = new ButtonText(" Take Control", manual,
+				(window.width() - 128) / 2, 32, 128, 32, 8, 4);
+		altimeter = new Altimeter(ALTIMETER_X, ALTIMETER_Y, ALTIMETER_W,
+				ALTIMETER_H);
 		deselectAircraft();
 		
 		switch (difficulty){
@@ -212,7 +228,7 @@ public class Demo extends Scene {
 	 * Getter for aircraft list
 	 * @return the arrayList of aircraft in the airspace
 	 */
-	public java.util.ArrayList<Aircraft> aircraftList() {
+	public ArrayList<Aircraft> aircraftList() {
 		return aircraftInAirspace;
 	}
 	
@@ -220,8 +236,10 @@ public class Demo extends Scene {
 	 * Causes a selected aircraft to call methods to toggle manual control
 	 */
 	private void toggleManualControl() {
-		if (selectedAircraft == null) return;
+		if (selectedAircraft == null)
+			return;
 		selectedAircraft.toggleManualControl();
+
 		manualOverrideButton.setText( (selectedAircraft.isManuallyControlled() ? "Remove" : " Take") + " Control");
 	}
 	
@@ -233,6 +251,7 @@ public class Demo extends Scene {
 			selectedAircraft.toggleManualControl();
 			manualOverrideButton.setText(" Take Control");
 		}
+
 		selectedAircraft = null;
 		selectedWaypoint = null; 
 		selectedPathpoint = -1;
@@ -248,6 +267,7 @@ public class Demo extends Scene {
 	public void update(double dt) {
 		timeElapsed += dt;
 		ordersBox.update(dt);
+
 		for (Aircraft plane : aircraftInAirspace) {
 			plane.update(dt);
 			if (plane.isFinished()){
@@ -264,7 +284,9 @@ public class Demo extends Scene {
 				}
 			}
 		}
+
 		checkCollisions(dt);
+
 		for (int i = aircraftInAirspace.size()-1; i >=0; i --) {
 			if (aircraftInAirspace.get(i).isFinished()) {
 				if (aircraftInAirspace.get(i) == selectedAircraft) {
@@ -273,6 +295,7 @@ public class Demo extends Scene {
 				aircraftInAirspace.remove(i);
 			}
 		}
+
 		altimeter.update(dt);
 		
 		if (selectedAircraft != null && selectedAircraft.isManuallyControlled()) {
@@ -304,6 +327,7 @@ public class Demo extends Scene {
 	private void checkCollisions(double dt) {
 		for (Aircraft plane : aircraftInAirspace) {
 			int collisionState = plane.updateCollisions(dt, aircraftList());
+
 			if (collisionState >= 0) {
 				gameOver(plane, aircraftList().get(collisionState));
 				return;
@@ -352,24 +376,31 @@ public class Demo extends Scene {
 	@Override
 	public void mousePressed(int key, int x, int y) {
 		if (key == input.MOUSE_LEFT) {
+
 			Aircraft newSelected = selectedAircraft;
+
 			for (Aircraft a : aircraftInAirspace) {
 				if (a.isMouseOver(x-16, y-16) && aircraftSelectableAtAltitude(a, controlAltitude)) {
 					newSelected = a;
 				}
 			}
+
 			if (newSelected != selectedAircraft) {
 				deselectAircraft();
 				selectedAircraft = newSelected;
 			}
+
 			altimeter.show(selectedAircraft);
+
 			if (selectedAircraft != null) {
+
 				for (Waypoint w : airspaceWaypoints) {
 					if (w.isMouseOver(x-16, y-16) && selectedAircraft.flightPathContains(w) > -1) {
 						selectedWaypoint = w;
 						selectedPathpoint = selectedAircraft.flightPathContains(w);
 					}
 				}
+
 				if (selectedWaypoint == null && selectedAircraft.isManuallyControlled()) {
 					// If mouse is over compass
 					double dx = selectedAircraft.position().x() - input.mouseX();
@@ -379,20 +410,31 @@ public class Demo extends Scene {
 						compassDragged = true;
 					}
 				}
+
 			}
 		}
-		if (key == input.MOUSE_RIGHT) deselectAircraft();
+
+		if (key == input.MOUSE_RIGHT)
+			deselectAircraft();
+
 		altimeter.mousePressed(key, x, y);
 	}
 
 	@Override
 	public void mouseReleased(int key, int x, int y) {
-		if (selectedAircraft != null && manualOverrideButton.isMouseOver(x, y)) manualOverrideButton.act();
+		if (selectedAircraft != null && manualOverrideButton.isMouseOver(x, y))
+			manualOverrideButton.act();
+
 		if (key == input.MOUSE_LEFT && selectedWaypoint != null) {
+
 			if (selectedAircraft.isManuallyControlled() == true){
+
 				return;
+
 			} else {
+
 				for (Waypoint w : airspaceWaypoints) {
+
 					if (w.isMouseOver(x-16, y-16)) {
 						selectedAircraft.alterPath(selectedPathpoint, w);
 						ordersBox.addOrder(">>> " + selectedAircraft.name() + " please alter your course");
@@ -403,16 +445,24 @@ public class Demo extends Scene {
 						selectedWaypoint = null;
 					}
 				}
+
 			}
 		}
-		if (key == input.MOUSE_WHEEL_UP && controlAltitude < 30000)	controlAltitude += 2000;
-		if (key == input.MOUSE_WHEEL_DOWN && controlAltitude > 28000) controlAltitude -= 2000;
 		
+		if (key == input.MOUSE_WHEEL_UP && controlAltitude < 30000)
+			controlAltitude += 2000;
+
+		if (key == input.MOUSE_WHEEL_DOWN && controlAltitude > 28000)
+			controlAltitude -= 2000;
+
 		int altitudeState = 0;
+
 		if (selectedAircraft != null) {
 			altitudeState = selectedAircraft.altitudeState();
 		}
+
 		altimeter.mouseReleased(key, x, y);
+
 		if (selectedAircraft != null) {
 			if (altitudeState != selectedAircraft.altitudeState()) {
 				ordersBox.addOrder(">>> " + selectedAircraft.name() + ", please adjust your altitude");
@@ -426,6 +476,7 @@ public class Demo extends Scene {
 			double newHeading = Math.atan2(dy, dx);
 			selectedAircraft.setBearing(newHeading);
 		}
+
 		compassDragged = false;
 	}
 
@@ -495,7 +546,9 @@ public class Demo extends Scene {
 		for (Waypoint waypoint : airspaceWaypoints) {
 			waypoint.draw();
 		}
+
 		graphics.setColour(255, 255, 255);
+
 		for (Aircraft aircraft : aircraftInAirspace) {
 			aircraft.draw(controlAltitude);
 		}
@@ -535,6 +588,7 @@ public class Demo extends Scene {
 	private void drawPlaneInfo() {
 		graphics.setColour(0, 128, 0);
 		graphics.rectangle(false, PLANE_INFO_X, PLANE_INFO_Y, PLANE_INFO_W, PLANE_INFO_H);
+
 		if (selectedAircraft != null) {
 			graphics.setViewport(PLANE_INFO_X, PLANE_INFO_Y, PLANE_INFO_W, PLANE_INFO_H);
 			graphics.printCentred(selectedAircraft.name(), 0, 5, 2, PLANE_INFO_W);
@@ -563,12 +617,18 @@ public class Demo extends Scene {
 	private void drawScore() {
 		int hours = (int)(timeElapsed / (60 * 60));
 		int minutes = (int)(timeElapsed / 60);
+
 		minutes %= 60;
+
 		double seconds = timeElapsed % 60;
-		java.text.DecimalFormat df = new java.text.DecimalFormat("00.00");
+
+		DecimalFormat df = new DecimalFormat("00.00");
+
 		String timePlayed = String.format("%d:%02d:", hours, minutes) + df.format(seconds); 
 		graphics.print(timePlayed, window.width() - (timePlayed.length() * 8 + 32), 0);
+
 		int planes = aircraftInAirspace.size();
+
 		graphics.print(String.valueOf(aircraftInAirspace.size()) + " plane" + (planes == 1 ? "" : "s") + " in the sky.", 32, 0);
 		graphics.print("Control Altitude: " + String.valueOf(controlAltitude), 544, 0);
 	}
@@ -591,9 +651,11 @@ public class Demo extends Scene {
 		// Origin and Destination
 		int o = RandomNumber.randInclusiveInt(0, locationWaypoints.length - 1);
 		int d = RandomNumber.randInclusiveInt(0, locationWaypoints.length - 1);
+
 		while (LOCATION_NAMES[d] == LOCATION_NAMES[o]){
 			d = RandomNumber.randInclusiveInt(0, locationWaypoints.length - 1);
 		}
+
 		String originName = LOCATION_NAMES[o];
 		String destinationName = LOCATION_NAMES[d];
 		Waypoint originPoint = locationWaypoints[o];
@@ -609,6 +671,7 @@ public class Demo extends Scene {
 				if (a.name() == name) nameTaken = true;
 			}
 		}
+
 		return new Aircraft(name, destinationName, originName, destinationPoint, originPoint, aircraftImage, 32 + (int)(10 * Math.random()), airspaceWaypoints, difficulty);
 	}
 	
@@ -620,9 +683,17 @@ public class Demo extends Scene {
 	 * @return whether or not the aircraft is selectable at the current control altitude
 	 */
 	private boolean aircraftSelectableAtAltitude(Aircraft a, int altitude) {
-		if (a.position().z() == altitude) return true;
-		if (a.position().z() < altitude && a.altitudeState() == Aircraft.ALTITUDE_CLIMB) return true;
-		if (a.position().z() > altitude && a.altitudeState() == Aircraft.ALTITUDE_FALL) return true;
+		if (a.position().z() == altitude)
+			return true;
+
+		if (a.position().z() < altitude
+				&& a.altitudeState() == Aircraft.ALTITUDE_CLIMB)
+			return true;
+
+		if (a.position().z() > altitude
+				&& a.altitudeState() == Aircraft.ALTITUDE_FALL)
+			return true;
+
 		return false;
 	}
 	

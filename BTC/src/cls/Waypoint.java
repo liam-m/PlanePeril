@@ -51,9 +51,11 @@ public class Waypoint {
 	 * @return whether the mouse is considered over the waypoint.
 	 */
 	public boolean isMouseOver(int mx, int my) {
+
 		double dx = position.x() - mx;
 		double dy = position.y() - my;
-		return dx*dx + dy*dy < MOUSE_LENIANCY*MOUSE_LENIANCY;
+
+		return dx * dx + dy * dy < MOUSE_LENIANCY * MOUSE_LENIANCY;
 	}
 	
 	/**

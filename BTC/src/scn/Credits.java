@@ -3,6 +3,7 @@ package scn;
 import java.io.File;
 
 import lib.jog.audio;
+import lib.jog.audio.Music;
 import lib.jog.audio.Sound;
 import lib.jog.graphics;
 import lib.jog.input;
@@ -24,7 +25,7 @@ public class Credits extends Scene {
 	/**
 	 * Music to play during the credits
 	 */
-	private audio.Music music;
+	private Music music;
 
 	/**
 	 * Constructor
@@ -74,9 +75,13 @@ public class Credits extends Scene {
 	 */
 	public void update(double dt) {
 		boolean hurried = input.isKeyDown(input.KEY_SPACE) || input.isMouseDown(input.MOUSE_LEFT);
+
 		speed = hurried ? 4f : 1f;
+
 		scrollPosition += SCROLL_SPEED * dt * speed;
-		if (scrollPosition > 1100) scrollPosition = -window.height();
+
+		if (scrollPosition > 1100)
+			scrollPosition = -window.height();
 	}
 
 	@Override
@@ -86,6 +91,7 @@ public class Credits extends Scene {
 	public void draw() {
 		int gap = 64;
 		int currentHeight = 0;
+
 		graphics.setColour(0, 128, 0);
 		graphics.push();
 		graphics.translate(0, scrollPosition);
@@ -148,7 +154,6 @@ public class Credits extends Scene {
 
 	@Override
 	public void playSound(Sound sound) {
-		// TODO Auto-generated method stub
 		
 	}
 

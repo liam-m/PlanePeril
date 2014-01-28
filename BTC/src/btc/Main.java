@@ -1,10 +1,17 @@
 package btc;
 
 import java.io.File;
+import java.util.Stack;
+
+import lib.jog.audio;
+import lib.jog.graphics;
+import lib.jog.input;
+import lib.jog.window;
 
 import org.lwjgl.Sys;
 
-import lib.jog.*;
+import scn.Scene;
+import scn.Title;
 
 /**
  * <h1>Main</h1>
@@ -32,7 +39,7 @@ public class Main implements input.EventHandler {
 
 	private double lastFrameTime;
 	private double dt;
-	private java.util.Stack<scn.Scene> sceneStack;
+	private Stack<Scene> sceneStack;
 	private scn.Scene currentScene;
 	private int fps;
 	private long lastfps;
@@ -57,14 +64,14 @@ public class Main implements input.EventHandler {
 	 * Creates window, initialises jog classes and sets starting values to variables.
 	 */
 	private void start() {
-		lastFrameTime = (double)(Sys.getTime()) / Sys.getTimerResolution();
+		lastFrameTime = (double) (Sys.getTime()) / Sys.getTimerResolution();
 		window.initialise(TITLE, WIDTH, HEIGHT);
 		window.setIcon(ICONS);
 		graphics.initialise();
 		graphics.Font font = graphics.newBitmapFont("gfx" + File.separator + "font.png", "ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz1234567890.,_-!?()[]><#~:;/\\^'\"{}£$@@@@@@@@");
 		graphics.setFont(font);
-		sceneStack = new java.util.Stack<scn.Scene>();
-		setScene(new scn.Title(this));
+		sceneStack = new Stack<Scene>();
+		setScene(new Title(this));
 		lastfps = ((Sys.getTime()* 1000) / Sys.getTimerResolution()); //set lastFPS to current Time
 	}
 	
@@ -85,7 +92,7 @@ public class Main implements input.EventHandler {
 	 * @return the time in seconds since the last frame.
 	 */
 	private double getDeltaTime() {
-		double time = (double)(Sys.getTime()) / Sys.getTimerResolution();
+		double time = (double) (Sys.getTime()) / Sys.getTimerResolution();
 	    double delta = (time - lastFrameTime);
 	    lastFrameTime = time;
 	    return delta;
