@@ -1,5 +1,10 @@
-bear_traffic_controller
+INI-FLR bear_traffic_controller
 =======================
+
+This is an extension by Team INI, which made [Controller Concern](https://github.com/CremboC/INI).
+
+
+Original by Team FLR:
 
 ![Bear Traffic Controller](http://i.imgur.com/KHlkiaj.jpg)
 
