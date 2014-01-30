@@ -46,7 +46,7 @@ public class Demo extends Scene {
 	/**
 	 * Orders box to print orders from ACTO to aircraft to
 	 */
-	private cls.OrdersBox ordersBox;
+	private OrdersBox ordersBox;
 
 	/**
 	 * Time since the scene began Could be used for score
@@ -139,7 +139,6 @@ public class Demo extends Scene {
 	 * All waypoints in the airspace, INCLUDING locationWaypoints.
 	 */
 	public static Waypoint[] airspaceWaypoints = new Waypoint[] {
-	/* All waypoints in the airspace, including location Way Points */
 
 			// airspace waypoints
 			new Waypoint(125, 70, false), // 0
@@ -148,10 +147,7 @@ public class Demo extends Scene {
 			new Waypoint(670, 400, false), // 3
 			new Waypoint(1050, 400, false), // 4
 			new Waypoint(250, 400, false), // 5
-			new Waypoint(200, 635, false), // 6
-			new Waypoint(500, 655, false), // 7
-			new Waypoint(800, 750, false), // 8
-			new Waypoint(1000, 750, false), // 9
+
 			// destination/origin waypoints - present in this list for
 			// pathfinding.
 			locationWaypoints[0], // 10
@@ -190,7 +186,7 @@ public class Demo extends Scene {
 
 		aircraftImage = graphics.newImage("gfx" + File.separator + "plane.png");
 
-		lib.ButtonText.Action manual = new lib.ButtonText.Action() {
+		ButtonText.Action manual = new ButtonText.Action() {
 			@Override
 			public void action() {
 				// _selectedAircraft.manuallyControl();
@@ -496,6 +492,7 @@ public class Demo extends Scene {
 			double dx = input.mouseX() - selectedAircraft.position().x();
 			double dy = input.mouseY() - selectedAircraft.position().y();
 			double newHeading = Math.atan2(dy, dx);
+
 			selectedAircraft.setBearing(newHeading);
 		}
 
@@ -715,6 +712,7 @@ public class Demo extends Scene {
 		// Name
 		String name = "";
 		boolean nameTaken = true;
+
 		while (nameTaken) {
 			name = "Flight " + (int) (900 * Math.random() + 100);
 			nameTaken = false;
