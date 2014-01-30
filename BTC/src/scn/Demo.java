@@ -99,7 +99,7 @@ public class Demo extends Scene {
 	/**
 	 * Max aircraft in the airspace at once Change to 10 for Assessment 3.
 	 */
-	private final int maxAircraft = 2;
+	private final int maxAircraft = 10;
 	/**
 	 * The current control altitude of the ACTO initially 30,000 only aircraft
 	 * on or close to this altitude can be controlled
@@ -289,27 +289,34 @@ public class Demo extends Scene {
 		checkCollisions(dt);
 
 		for (int i = aircraftInAirspace.size() - 1; i >= 0; i--) {
+
 			if (aircraftInAirspace.get(i).isFinished()) {
+
 				if (aircraftInAirspace.get(i) == selectedAircraft) {
 					deselectAircraft();
 				}
+
 				aircraftInAirspace.remove(i);
 			}
+
 		}
 
 		altimeter.update(dt);
 
 		if (selectedAircraft != null && selectedAircraft.isManuallyControlled()) {
+
 			if (input.isKeyDown(input.KEY_LEFT)) {
 				selectedAircraft.turnLeft(dt);
 			} else if (input.isKeyDown(input.KEY_RIGHT)) {
 				selectedAircraft.turnRight(dt);
 			}
+
 			if (selectedAircraft.outOfBounds()) {
 				ordersBox.addOrder(">>> " + selectedAircraft.name()
 						+ " out of bounds, returning to route");
 				deselectAircraft();
 			}
+
 		}
 
 		flightGenerationTimeElapsed += dt;
@@ -575,9 +582,11 @@ public class Demo extends Scene {
 		}
 
 		if (selectedAircraft != null) {
+
 			// Flight Path
 			selectedAircraft.drawFlightPath();
 			graphics.setColour(0, 128, 0);
+
 			// Override Button
 			graphics.setColour(0, 0, 0);
 			graphics.rectangle(true, (window.width() - 128) / 2, 16, 128, 32);
@@ -622,10 +631,12 @@ public class Demo extends Scene {
 				PLANE_INFO_H);
 
 		if (selectedAircraft != null) {
+
 			graphics.setViewport(PLANE_INFO_X, PLANE_INFO_Y, PLANE_INFO_W,
 					PLANE_INFO_H);
 			graphics.printCentred(selectedAircraft.name(), 0, 5, 2,
 					PLANE_INFO_W);
+
 			// Altitude
 			String altitude = String.format("%.0f", selectedAircraft.position()
 					.z())
@@ -633,15 +644,18 @@ public class Demo extends Scene {
 			graphics.print("Altitude:", 10, 40);
 			graphics.print(altitude, PLANE_INFO_W - 10 - altitude.length() * 8,
 					40);
+
 			// Speed
 			String speed = String.format("%.2f",
 					selectedAircraft.speed() * 1.687810) + "$";
 			graphics.print("Speed:", 10, 55);
 			graphics.print(speed, PLANE_INFO_W - 10 - speed.length() * 8, 55);
+
 			// Origin
 			graphics.print("Origin:", 10, 70);
 			graphics.print(selectedAircraft.originName(), PLANE_INFO_W - 10
 					- selectedAircraft.originName().length() * 8, 70);
+
 			// Destination
 			graphics.print("Destination:", 10, 85);
 			graphics.print(selectedAircraft.destinationName(), PLANE_INFO_W
@@ -659,6 +673,10 @@ public class Demo extends Scene {
 		int hours = (int) (timeElapsed / (60 * 60));
 		int minutes = (int) (timeElapsed / 60);
 
+		// padding for all of the top text so it doesn't touch the edge of the
+		// window
+		int paddingFromTop = 4;
+
 		minutes %= 60;
 
 		double seconds = timeElapsed % 60;
@@ -668,14 +686,14 @@ public class Demo extends Scene {
 		String timePlayed = String.format("%d:%02d:", hours, minutes)
 				+ df.format(seconds);
 		graphics.print(timePlayed, window.width()
-				- (timePlayed.length() * 8 + 32), 0);
+				- (timePlayed.length() * 8 + 32), paddingFromTop);
 
 		int planes = aircraftInAirspace.size();
 
 		graphics.print(String.valueOf(aircraftInAirspace.size()) + " plane"
-				+ (planes == 1 ? "" : "s") + " in the sky.", 32, 0);
+				+ (planes == 1 ? "" : "s") + " in the sky.", 32, paddingFromTop);
 		graphics.print("Control Altitude: " + String.valueOf(controlAltitude),
-				544, 0);
+				544, paddingFromTop);
 	}
 
 	/**

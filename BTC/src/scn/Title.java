@@ -68,11 +68,12 @@ public class Title extends Scene {
 			}
 
 		};
+
 		buttons[0] = new ButtonText("Play Demo", demo, window.height(),
 				window.height() / 2 + 96, window.width() - window.height(), 24,
 				8, 6);
-		// Game Button
 
+		// Game Button
 		ButtonText.Action play = new ButtonText.Action() {
 			@Override
 			public void action() {
@@ -83,6 +84,7 @@ public class Title extends Scene {
 		buttons[1] = new ButtonText("Play Full Game", play, window.height(),
 				window.height() / 2 + 126, window.width() - window.height(),
 				24, 8, 6);
+
 		buttons[1].setAvailability(false);
 
 		// Credits Button
@@ -235,7 +237,7 @@ public class Title extends Scene {
 				window.height() / 2 - 32, radarAngle, -1 * Math.PI / 8);
 
 		// Title
-		String title = "Bear Traffic Controller";
+		String title = "INI-FLR Bear Traffic Controller";
 
 		// fades title string's characters over time
 		// characters brighten when the sweep passes over them
@@ -248,7 +250,7 @@ public class Title extends Scene {
 			opacity = 256 - opacity;
 			opacity %= 256;
 			graphics.setColour(0, 128, 0, opacity);
-			graphics.print(title.substring(i, i + 1), 74 * 4.5 + i * 14, 344,
+			graphics.print(title.substring(i, i + 1), 35 * 4.5 + i * 14, 344,
 					1.8);
 		}
 	}
@@ -271,6 +273,9 @@ public class Title extends Scene {
 		graphics.line(window.height(), 48, window.width() - 16, 48);
 		graphics.print("Created by:", window.height() + 8, 56);
 		graphics.print("TEAM FLR", window.height() + 8, 72);
+
+		graphics.print("Extended by:", window.height() + 8, 88);
+		graphics.print("TEAM INI", window.height() + 8, 104);
 
 		// Draw Buttons
 		for (ButtonText b : buttons)
