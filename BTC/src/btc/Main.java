@@ -6,6 +6,7 @@ import java.util.Stack;
 import lib.jog.audio;
 import lib.jog.graphics;
 import lib.jog.input;
+import lib.jog.input.EventHandler;
 import lib.jog.window;
 
 import org.lwjgl.Sys;
@@ -22,7 +23,7 @@ import scn.Title;
  * 
  * @author Huw Taylor
  */
-public class Main implements input.EventHandler {
+public class Main implements EventHandler {
 
 	/**
 	 * Creates a new instance of Main, starting a new game.
@@ -71,21 +72,23 @@ public class Main implements input.EventHandler {
 	 */
 	private void start() {
 		lastFrameTime = (double) (Sys.getTime()) / Sys.getTimerResolution();
+
 		window.initialise(TITLE, WIDTH, HEIGHT);
 		window.setIcon(ICONS);
+
 		graphics.initialise();
+
 		graphics.Font font = graphics
 				.newBitmapFont(
 						"gfx" + File.separator + "font.png",
 						"ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz1234567890.,_-!?()[]><#~:;/\\^'\"{}£$@@@@@@@@");
 		graphics.setFont(font);
+
 		sceneStack = new Stack<Scene>();
 		setScene(new Title(this));
-		lastfps = ((Sys.getTime() * 1000) / Sys.getTimerResolution()); // set
-																		// lastFPS
-																		// to
-																		// current
-																		// Time
+
+		// set lastFPS to current Time
+		lastfps = ((Sys.getTime() * 1000) / Sys.getTimerResolution());
 	}
 
 	/**
@@ -142,6 +145,7 @@ public class Main implements input.EventHandler {
 	public void setScene(Scene newScene) {
 		if (currentScene != null)
 			currentScene.close();
+
 		sceneStack.push(newScene);
 		currentScene = sceneStack.peek();
 		currentScene.start();
@@ -160,11 +164,9 @@ public class Main implements input.EventHandler {
 	 * Updates the fps
 	 */
 	public void updateFPS() {
-		long time = ((Sys.getTime() * 1000) / Sys.getTimerResolution()); // set
-																			// lastFPS
-																			// to
-																			// current
-																			// Time
+		// set lastFPS to current Time
+		long time = ((Sys.getTime() * 1000) / Sys.getTimerResolution());
+
 		if (time - lastfps > 1000) {
 			window.setTitle("Bear Traffic Controller - FPS: " + fps);
 			fps = 0; // reset the FPS counter
