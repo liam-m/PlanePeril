@@ -305,9 +305,10 @@ public class Demo extends Scene {
 
 		if (selectedAircraft != null && selectedAircraft.isManuallyControlled()) {
 
-			if (input.isKeyDown(input.KEY_LEFT)) {
+			if (input.isKeyDown(input.KEY_LEFT) || input.isKeyDown(input.KEY_A)) {
 				selectedAircraft.turnLeft(dt);
-			} else if (input.isKeyDown(input.KEY_RIGHT)) {
+			} else if (input.isKeyDown(input.KEY_RIGHT)
+					|| input.isKeyDown(input.KEY_D)) {
 				selectedAircraft.turnRight(dt);
 			}
 
