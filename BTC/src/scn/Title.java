@@ -14,54 +14,57 @@ import lib.jog.window;
 import btc.Main;
 
 public class Title extends Scene {
-	
+
 	/**
-	 * A URL to the Bear Traffic Controller Website
-	 * Webpage contains explanation of game's controls and goal
+	 * A URL to the Bear Traffic Controller Website Webpage contains explanation
+	 * of game's controls and goal
 	 */
 	private final static String HELP_URL = "http://imp1.github.io/bear_traffic_controller/ingamehelp";
-	
+
 	/**
 	 * The 'beep' played as the radar makes a sweep
 	 */
 	private Sound beep;
-	
+
 	/**
 	 * A List of buttons, to hold declared buttons in the scene
 	 */
 	private ButtonText[] buttons;
-	
+
 	/**
-	 * Holds the angle to draw the radar sweep at.
-	 * Also used to play the beep sound as the radar sweeps the BTC title string
-	 * Updated regularly during Title's update()
+	 * Holds the angle to draw the radar sweep at. Also used to play the beep
+	 * sound as the radar sweeps the BTC title string Updated regularly during
+	 * Title's update()
 	 */
 	private double angle;
-	
+
 	/**
 	 * Constructor for the Title Scene
-	 * @param main the main holding the scene
+	 * 
+	 * @param main
+	 *            the main holding the scene
 	 */
 	public Title(Main main) {
 		super(main);
 	}
 
 	/**
-	 * Initialises anything which needs to be initialised, such as buttons and sound effects
-	 * Runs only at start of scene
+	 * Initialises anything which needs to be initialised, such as buttons and
+	 * sound effects Runs only at start of scene
 	 */
 	@Override
 	public void start() {
 		beep = audio.newSoundEffect("sfx" + File.separator + "beep.ogg");
 		beep.setVolume(0.2f);
-		
+
 		buttons = new ButtonText[5];
 		// Demo Button
 		ButtonText.Action demo = new ButtonText.Action() {
 
 			@Override
 			public void action() {
-				main.setScene(new DifficultySelect(main, DifficultySelect.CREATE_DEMO));
+				main.setScene(new DifficultySelect(main,
+						DifficultySelect.CREATE_DEMO));
 			}
 
 		};
@@ -73,7 +76,7 @@ public class Title extends Scene {
 		ButtonText.Action play = new ButtonText.Action() {
 			@Override
 			public void action() {
-//				_main.setScene(new Game(main));
+				// _main.setScene(new Game(main));
 			}
 		};
 
@@ -87,8 +90,8 @@ public class Title extends Scene {
 			@Override
 			public void action() {
 				main.setScene(new Credits(main));
-				}
-			};
+			}
+		};
 
 		buttons[2] = new ButtonText("Credits", credits, window.height(),
 				window.height() / 2 + 156, window.width() - window.height(),
@@ -112,49 +115,50 @@ public class Title extends Scene {
 
 		// Exit Button
 		ButtonText.Action exit = new ButtonText.Action() {
-					@Override
-					public void action() {
-						main.quit();
-					}
-				};
+			@Override
+			public void action() {
+				main.quit();
+			}
+		};
 
 		buttons[4] = new ButtonText("Exit", exit, window.height(),
 				window.height() / 2 + 216, window.width() - window.height(),
 				24, 8, 6);
-		
+
 		angle = 0;
 	}
 
 	/**
-	 * Updates all objects in the title scene
-	 * Called by Main class
-	 * @param dt the delta time since the last update
+	 * Updates all objects in the title scene Called by Main class
+	 * 
+	 * @param dt
+	 *            the delta time since the last update
 	 */
 	@Override
 	public void update(double dt) {
-		angle += dt; //increase the angle of the radar sweep
-		
-		//Check the angle of the radar sweep;
-		//If approaching the BTC title string, play the beep
-		double beepTimer = (angle * 4) + (Math.PI * 4 / 5); 
+		angle += dt; // increase the angle of the radar sweep
+
+		// Check the angle of the radar sweep;
+		// If approaching the BTC title string, play the beep
+		double beepTimer = (angle * 4) + (Math.PI * 4 / 5);
 
 		beepTimer %= (2 * Math.PI);
 
-		if ( beepTimer <= 0.1 ) {
+		if (beepTimer <= 0.1) {
 			playSound(beep);
 		}
 	}
-	
-	/**
-	 * Handles mouse down input
-	 * Unused
-	 */
-	@Override
-	public void mousePressed(int key, int x, int y) {}
 
 	/**
-	 * Handles mouse release events
-	 * Causes a button to act if clicked by any mouse key
+	 * Handles mouse down input Unused
+	 */
+	@Override
+	public void mousePressed(int key, int x, int y) {
+	}
+
+	/**
+	 * Handles mouse release events Causes a button to act if clicked by any
+	 * mouse key
 	 */
 	@Override
 	public void mouseReleased(int key, int mx, int my) {
@@ -166,25 +170,26 @@ public class Title extends Scene {
 	}
 
 	/**
-	 * Keyboard input methods
-	 * Unused - no keyboard interaction in this scene
+	 * Keyboard input methods Unused - no keyboard interaction in this scene
 	 */
 	@Override
-	public void keyPressed(int key) {}
+	public void keyPressed(int key) {
+	}
 
 	@Override
-	public void keyReleased(int key) {}
+	public void keyReleased(int key) {
+	}
 
 	/**
-	 * Handles drawing of the scene
-	 * Calls drawRadar() and drawMenu() to draw elements of the scene
-	 * Called regularly by Main
+	 * Handles drawing of the scene Calls drawRadar() and drawMenu() to draw
+	 * elements of the scene Called regularly by Main
 	 */
 	@Override
 	public void draw() {
 		drawRadar();
 		drawMenu();
 	}
+
 	/**
 	 * Draws the radar arc and title string
 	 */
@@ -192,29 +197,42 @@ public class Title extends Scene {
 		// Radar
 		// set of circles for radar 'screen'
 		graphics.setColour(0, 128, 0);
-		graphics.circle(false, window.height()/2, window.height()/2, window.height()/2 - 32, 100);
+		graphics.circle(false, window.height() / 2, window.height() / 2,
+				window.height() / 2 - 32, 100);
 		graphics.setColour(0, 128, 0, 32);
-		graphics.circle(false, window.height()/2, window.height()/2, window.height()/3, 100);
-		graphics.circle(false, window.height()/2, window.height()/2, window.height()/4 - 16, 100);
-		graphics.circle(false, window.height()/2, window.height()/2, window.height()/9, 100);
-		graphics.circle(false, window.height()/2, window.height()/2, 2, 100);
+		graphics.circle(false, window.height() / 2, window.height() / 2,
+				window.height() / 3, 100);
+		graphics.circle(false, window.height() / 2, window.height() / 2,
+				window.height() / 4 - 16, 100);
+		graphics.circle(false, window.height() / 2, window.height() / 2,
+				window.height() / 9, 100);
+		graphics.circle(false, window.height() / 2, window.height() / 2, 2, 100);
 		graphics.setColour(0, 128, 0);
 
 		// sweep of radar
 		double radarAngle = (angle * 4) % (2 * Math.PI);
-		int w = (int)( Math.cos(radarAngle) * (window.height()/2 - 32) );
-		int h = (int)( Math.sin(radarAngle) * (window.height()/2 - 32) );
+		int w = (int) (Math.cos(radarAngle) * (window.height() / 2 - 32));
+		int h = (int) (Math.sin(radarAngle) * (window.height() / 2 - 32));
 
-		graphics.line(window.height()/2, window.height()/2, window.height()/2 + w, window.height()/2 + h);
+		graphics.line(window.height() / 2, window.height() / 2, window.height()
+				/ 2 + w, window.height() / 2 + h);
 		graphics.setColour(0, 128, 0, 8);
-		graphics.arc(true, window.height()/2, window.height()/2, window.height()/2 - 32, radarAngle, -8 * Math.PI / 8);
-		graphics.arc(true, window.height()/2, window.height()/2, window.height()/2 - 32, radarAngle, -7 * Math.PI / 8);
-		graphics.arc(true, window.height()/2, window.height()/2, window.height()/2 - 32, radarAngle, -6 * Math.PI / 8);
-		graphics.arc(true, window.height()/2, window.height()/2, window.height()/2 - 32, radarAngle, -5 * Math.PI / 8);
-		graphics.arc(true, window.height()/2, window.height()/2, window.height()/2 - 32, radarAngle, -4 * Math.PI / 8);
-		graphics.arc(true, window.height()/2, window.height()/2, window.height()/2 - 32, radarAngle, -3 * Math.PI / 8);
-		graphics.arc(true, window.height()/2, window.height()/2, window.height()/2 - 32, radarAngle, -2 * Math.PI / 8);
-		graphics.arc(true, window.height()/2, window.height()/2, window.height()/2 - 32, radarAngle, -1 * Math.PI / 8);
+		graphics.arc(true, window.height() / 2, window.height() / 2,
+				window.height() / 2 - 32, radarAngle, -8 * Math.PI / 8);
+		graphics.arc(true, window.height() / 2, window.height() / 2,
+				window.height() / 2 - 32, radarAngle, -7 * Math.PI / 8);
+		graphics.arc(true, window.height() / 2, window.height() / 2,
+				window.height() / 2 - 32, radarAngle, -6 * Math.PI / 8);
+		graphics.arc(true, window.height() / 2, window.height() / 2,
+				window.height() / 2 - 32, radarAngle, -5 * Math.PI / 8);
+		graphics.arc(true, window.height() / 2, window.height() / 2,
+				window.height() / 2 - 32, radarAngle, -4 * Math.PI / 8);
+		graphics.arc(true, window.height() / 2, window.height() / 2,
+				window.height() / 2 - 32, radarAngle, -3 * Math.PI / 8);
+		graphics.arc(true, window.height() / 2, window.height() / 2,
+				window.height() / 2 - 32, radarAngle, -2 * Math.PI / 8);
+		graphics.arc(true, window.height() / 2, window.height() / 2,
+				window.height() / 2 - 32, radarAngle, -1 * Math.PI / 8);
 
 		// Title
 		String title = "Bear Traffic Controller";
@@ -230,36 +248,46 @@ public class Title extends Scene {
 			opacity = 256 - opacity;
 			opacity %= 256;
 			graphics.setColour(0, 128, 0, opacity);
-			graphics.print(title.substring(i, i+1), 74*4.5 + i * 14, 344, 1.8);
+			graphics.print(title.substring(i, i + 1), 74 * 4.5 + i * 14, 344,
+					1.8);
 		}
 	}
-	
+
 	/**
 	 * Draws menu boxes, boxes around buttons, and so on
 	 */
 	private void drawMenu() {
 		// Draw Extras e.g. Date, Time, Credits
 		graphics.setColour(0, 128, 0);
-		graphics.line(window.height(), 16, window.height(), window.height() - 16);
-		java.text.DateFormat dateFormat = new java.text.SimpleDateFormat("yyyy/MM/dd");
-		java.text.DateFormat timeFormat = new java.text.SimpleDateFormat("HH:mm:ss");
+		graphics.line(window.height(), 16, window.height(),
+				window.height() - 16);
+		java.text.DateFormat dateFormat = new java.text.SimpleDateFormat(
+				"yyyy/MM/dd");
+		java.text.DateFormat timeFormat = new java.text.SimpleDateFormat(
+				"HH:mm:ss");
 		java.util.Date date = new java.util.Date();
 		graphics.print(dateFormat.format(date), window.height() + 8, 20);
 		graphics.print(timeFormat.format(date), window.height() + 8, 36);
 		graphics.line(window.height(), 48, window.width() - 16, 48);
 		graphics.print("Created by:", window.height() + 8, 56);
 		graphics.print("TEAM FLR", window.height() + 8, 72);
-		
+
 		// Draw Buttons
 		for (ButtonText b : buttons)
 			b.draw();
 		graphics.setColour(0, 128, 0);
-		graphics.line(window.height(), window.height()/2 + 90, window.width() - 16, window.height()/2 + 90);
-		graphics.line(window.height(), window.height()/2 + 120, window.width() - 16, window.height()/2 + 120);
-		graphics.line(window.height(), window.height()/2 + 150, window.width() - 16, window.height()/2 + 150);
-		graphics.line(window.height(), window.height()/2 + 180, window.width() - 16, window.height()/2 + 180);
-		graphics.line(window.height(), window.height()/2 + 210, window.width() - 16, window.height()/2 + 210);
-		graphics.line(window.height(), window.height()/2 + 240, window.width() - 16, window.height()/2 + 240);
+		graphics.line(window.height(), window.height() / 2 + 90,
+				window.width() - 16, window.height() / 2 + 90);
+		graphics.line(window.height(), window.height() / 2 + 120,
+				window.width() - 16, window.height() / 2 + 120);
+		graphics.line(window.height(), window.height() / 2 + 150,
+				window.width() - 16, window.height() / 2 + 150);
+		graphics.line(window.height(), window.height() / 2 + 180,
+				window.width() - 16, window.height() / 2 + 180);
+		graphics.line(window.height(), window.height() / 2 + 210,
+				window.width() - 16, window.height() / 2 + 210);
+		graphics.line(window.height(), window.height() / 2 + 240,
+				window.width() - 16, window.height() / 2 + 240);
 	}
 
 	@Override

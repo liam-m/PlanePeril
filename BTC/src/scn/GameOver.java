@@ -18,43 +18,50 @@ public class GameOver extends Scene {
 	 * Text box to write the details of the game failure
 	 */
 	private TextBox textBox;
-	
+
 	/**
-	 * The two crashed aircraft, passed to the scene by the scene in which they crashed
-	 * Used to position the explosion, and provide graphical feedback of how and where the player failed
+	 * The two crashed aircraft, passed to the scene by the scene in which they
+	 * crashed Used to position the explosion, and provide graphical feedback of
+	 * how and where the player failed
 	 */
-	private Aircraft crashedPlane1;
-	private Aircraft crashedPlane2;
+	private final Aircraft crashedPlane1;
+	private final Aircraft crashedPlane2;
 	/**
 	 * A randon number of deaths caused by the crash
 	 */
 	private int deaths;
-	
+
 	/**
-	 * The position of the crash - the vector midpoint of the positions of the two crashed planes
+	 * The position of the crash - the vector midpoint of the positions of the
+	 * two crashed planes
 	 */
-	private Vector crash;
+	private final Vector crash;
 	/**
 	 * A sprite animation to handle the frame by frame drawing of the explosion
 	 */
-	private SpriteAnimation explosionAnim;
+	private final SpriteAnimation explosionAnim;
 	/**
 	 * The explosion image to use for the animation
 	 */
-	private Image explosion;
-	
+	private final Image explosion;
+
 	private int keyPressed;
-	
+
 	/**
-	 * Timer to allow for explosion and plane to be shown for a period, followed by the text box.
+	 * Timer to allow for explosion and plane to be shown for a period, followed
+	 * by the text box.
 	 */
 	private double timer;
-	
+
 	/**
 	 * Constructor for the Game Over scene
-	 * @param main the main containing the scene
-	 * @param plane1 one of the planes involved in the crash
-	 * @param plane2 the second plane involved in the crash
+	 * 
+	 * @param main
+	 *            the main containing the scene
+	 * @param plane1
+	 *            one of the planes involved in the crash
+	 * @param plane2
+	 *            the second plane involved in the crash
 	 */
 	public GameOver(Main main, Aircraft plane1, Aircraft plane2) {
 		super(main);
@@ -66,24 +73,31 @@ public class GameOver extends Scene {
 		int framesAcross = 8;
 		int framesDown = 4;
 
-		explosion = graphics.newImage("gfx" + File.separator + "explosionFrames.png");
-		Vector midPoint = crashedPlane1.position().add(crashedPlane2.position()).scaleBy(0.5);
-		Vector explosionPos = midPoint.sub( new Vector(explosion.width()/(framesAcross*2), explosion.height()/(framesDown*2), 0) );
+		explosion = graphics.newImage("gfx" + File.separator
+				+ "explosionFrames.png");
+		Vector midPoint = crashedPlane1.position()
+				.add(crashedPlane2.position()).scaleBy(0.5);
+		Vector explosionPos = midPoint
+				.sub(new Vector(explosion.width() / (framesAcross * 2),
+						explosion.height() / (framesDown * 2), 0));
 
-		explosionAnim = new SpriteAnimation(explosion, (int)explosionPos.x(), (int)explosionPos.y(), 6, 16, framesAcross, framesDown, false);
+		explosionAnim = new SpriteAnimation(explosion, (int) explosionPos.x(),
+				(int) explosionPos.y(), 6, 16, framesAcross, framesDown, false);
 	}
-	
+
 	/**
-	 * initialises the random number of deaths, timer, and text box with strings to be written about the game failure
+	 * initialises the random number of deaths, timer, and text box with strings
+	 * to be written about the game failure
 	 */
 	@Override
 	public void start() {
 		playSound(audio.newSoundEffect("sfx" + File.separator + "crash.ogg"));
 
-		deaths = (int)( Math.random() * 500) + 300;
+		deaths = (int) (Math.random() * 500) + 300;
 		timer = 0;
 
-		textBox = new lib.TextBox(64, 96, window.width() - 128, window.height() - 96, 32);
+		textBox = new lib.TextBox(64, 96, window.width() - 128,
+				window.height() - 96, 32);
 		textBox.addText(String.valueOf(deaths) + " people died in the crash.");
 		textBox.delay(0.4);
 		textBox.addText("British Bearways is facing heavy legal pressure from the family and loved-ones of the dead and an investigation into the incident will be performed.");
@@ -109,7 +123,7 @@ public class GameOver extends Scene {
 	 * otherwise, update text box instead
 	 */
 	public void update(double dt) {
-		if (explosionAnim.hasFinished()){
+		if (explosionAnim.hasFinished()) {
 			timer += dt;
 			textBox.update(dt);
 		} else {
@@ -118,10 +132,12 @@ public class GameOver extends Scene {
 	}
 
 	@Override
-	public void mousePressed(int key, int x, int y) {}
+	public void mousePressed(int key, int x, int y) {
+	}
 
 	@Override
-	public void mouseReleased(int key, int x, int y) {}
+	public void mouseReleased(int key, int x, int y) {
+	}
 
 	@Override
 	/**
@@ -151,8 +167,8 @@ public class GameOver extends Scene {
 	 */
 	public void draw() {
 		graphics.setColour(0, 128, 0);
-		graphics.printCentred(crashedPlane1.name() + 
-				" crashed into " + crashedPlane2.name() + ".", 0, 32, 2, window.width());
+		graphics.printCentred(crashedPlane1.name() + " crashed into "
+				+ crashedPlane2.name() + ".", 0, 32, 2, window.width());
 
 		if (explosionAnim.hasFinished()) {
 
@@ -164,20 +180,22 @@ public class GameOver extends Scene {
 			crashedPlane2.draw((int) crashedPlane1.position().z());
 			Vector midPoint = crash.add(crashedPlane2.position()).scaleBy(0.5);
 			double radius = 20;
-			graphics.setColour(128,0,0);
+			graphics.setColour(128, 0, 0);
 			graphics.circle(false, midPoint.x(), midPoint.y(), radius);
 			explosionAnim.draw();
 
 		}
 
-		int opacity = (int)(255 * Math.sin(timer));
+		int opacity = (int) (255 * Math.sin(timer));
 
 		graphics.setColour(0, 128, 0, opacity);
-		graphics.printCentred("Press any key to continue", 0, window.height() - 256, 1, window.width());
+		graphics.printCentred("Press any key to continue", 0,
+				window.height() - 256, 1, window.width());
 	}
 
 	@Override
-	public void close() {}
+	public void close() {
+	}
 
 	@Override
 	public void playSound(Sound sound) {
