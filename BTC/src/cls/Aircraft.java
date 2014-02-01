@@ -124,6 +124,11 @@ public class Aircraft {
 	public static final int ALTITUDE_LEVEL = 0;
 
 	/**
+	 * Whether this aircraft is currently in the airport
+	 */
+	private boolean atAirport = false;
+
+	/**
 	 * Flags whether the collision warning sound has been played before. If set,
 	 * plane will not play warning again until it the separation violation
 	 * involving it ends
@@ -285,6 +290,15 @@ public class Aircraft {
 	 */
 	public boolean isFinished() {
 		return hasFinished;
+	}
+
+	/**
+	 * Whether the aircraft is in the airport at the moment.
+	 * 
+	 * @return
+	 */
+	public boolean atAirport() {
+		return atAirport;
 	}
 
 	/**
@@ -450,8 +464,9 @@ public class Aircraft {
 	 * whether it has finished its flight.
 	 * 
 	 * @param dt
+	 * @throws Exception
 	 */
-	public void update(double dt) {
+	public void update(double dt) throws IllegalStateException {
 		if (hasFinished)
 			return;
 
@@ -475,6 +490,12 @@ public class Aircraft {
 		// Update target
 		if (isAt(currentTarget.position()) && currentTarget.equals(destination)) {
 			hasFinished = true;
+
+			if (destination instanceof Airport) {
+				((Airport) destination).insertAircraft(this);
+				atAirport = true;
+			}
+
 		} else if (isAt(currentTarget.position())
 				&& (currentRouteStage == route.length - 1)) {
 			currentRouteStage++;

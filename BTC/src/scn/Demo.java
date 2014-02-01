@@ -284,7 +284,19 @@ public class Demo extends Scene {
 		ordersBox.update(dt);
 
 		for (Aircraft plane : aircraftInAirspace) {
-			plane.update(dt);
+
+			try {
+				plane.update(dt);
+			} catch (IllegalStateException e) {
+				ordersBox
+						.addOrder("<<< Aerodromio Medved' is full, divert aircraft Comrade!");
+			}
+
+			if (plane.atAirport()) {
+				ordersBox.addOrder("<<< Aircraft " + plane.name()
+						+ " has landed safely at Aerodromio Medved'");
+			}
+
 			if (plane.isFinished()) {
 				switch (RandomNumber.randInclusiveInt(0, 2)) {
 				case 0:
@@ -298,6 +310,7 @@ public class Demo extends Scene {
 					break;
 				}
 			}
+
 		}
 
 		checkCollisions(dt);

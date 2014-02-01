@@ -22,7 +22,7 @@ public class Airport extends Waypoint {
 	 * @throws IllegalStateException
 	 *             if insertion will overflow airport
 	 */
-	public void insertAircraft(Aircraft aircraft) throws Exception {
+	public void insertAircraft(Aircraft aircraft) throws IllegalStateException {
 		if (aircraftList.size() + 1 > MAX_AIRCRAFT_NUMBER) {
 			throw new IllegalStateException(
 					"Tried landing an aircraft into a full airport.");
