@@ -8,9 +8,10 @@ public class Airport extends Waypoint {
 
 	private ArrayList<Aircraft> aircraftList = new ArrayList<Aircraft>();
 
-	public Airport(double x, double y, WaypointType type) {
-		super(x, y, type);
-
+	public Airport(double x, double y) {
+		super(x, y, WaypointType.ENTRY_EXIT);
+		// TODO: Change type to WaypointType.MXIED, requires updates in
+		// flightplan generations
 	}
 
 	/**

@@ -5,7 +5,7 @@ import lib.jog.graphics;
 public class Waypoint {
 
 	public enum WaypointType {
-		ENTRY_EXIT, REGULAR
+		ENTRY_EXIT, REGULAR, MIXED
 	}
 
 	/**

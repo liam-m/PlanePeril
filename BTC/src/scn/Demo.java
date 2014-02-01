@@ -14,6 +14,7 @@ import lib.jog.input;
 import lib.jog.window;
 import btc.Main;
 import cls.Aircraft;
+import cls.Airport;
 import cls.Altimeter;
 import cls.OrdersBox;
 import cls.Waypoint;
@@ -121,21 +122,30 @@ public class Demo extends Scene {
 	 */
 	private final static String[] LOCATION_NAMES = new String[]{
 			"North West Top Leftonia", "100 Acre Woods", "City of Rightson",
-			"South Sea", };
+			"South Sea", "Aerodromio Medved'"};
 
 	/**
 	 * The set of waypoints in the airspace which are origins / destinations
 	 */
 	public final static Waypoint[] locationWaypoints = new Waypoint[]{
 			/* A set of Waypoints which are origin / destination points */
-			new Waypoint(8, 8, WaypointType.ENTRY_EXIT), // top left
+
+			// top left
+			new Waypoint(8, 8, WaypointType.ENTRY_EXIT),
+
+			// bottom left
 			new Waypoint(8, window.height() - ORDERSBOX_H - 40,
-					WaypointType.ENTRY_EXIT), // bottom
-																		// left
-			new Waypoint(window.width() - 40, 8, WaypointType.ENTRY_EXIT), // top
-																			// right
+					WaypointType.ENTRY_EXIT),
+
+			// top right
+			new Waypoint(window.width() - 40, 8, WaypointType.ENTRY_EXIT),
+
+			// bottom right
 			new Waypoint(window.width() - 40, window.height() - ORDERSBOX_H
-					- 40, WaypointType.ENTRY_EXIT), // bottom right
+					- 40, WaypointType.ENTRY_EXIT),
+
+			// The aerodromio
+			new Airport(window.width() / 2, window.height() / 2 - 100)
 	};
 
 	/**
@@ -157,6 +167,7 @@ public class Demo extends Scene {
 			locationWaypoints[1], // 11
 			locationWaypoints[2], // 12
 			locationWaypoints[3], // 13
+			locationWaypoints[4], // 14 - Airport
 	};
 
 	/**
@@ -644,7 +655,7 @@ public class Demo extends Scene {
 			// Altitude
 			String altitude = String.format("%.0f", selectedAircraft.position()
 					.z())
-					+ "£";
+					+ "Â£";
 			graphics.print("Altitude:", 10, 40);
 			graphics.print(altitude, PLANE_INFO_W - 10 - altitude.length() * 8,
 					40);

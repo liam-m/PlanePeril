@@ -63,7 +63,7 @@ public class Aircraft {
 	 * The position the plane is currently flying towards (if not manually
 	 * controlled).
 	 */
-	private Vector currentTarget;
+	private Waypoint currentTarget;
 	/**
 	 * The target the player has told the plane to fly at when manually
 	 * controlled.
@@ -88,7 +88,7 @@ public class Aircraft {
 	/**
 	 * The off-screen point the plane will end up at before disappearing.
 	 */
-	private final Vector destination;
+	private final Waypoint destination;
 	/**
 	 * The image to be drawn representing the plane.
 	 */
@@ -168,7 +168,7 @@ public class Aircraft {
 
 		// Find route
 		route = findGreedyRoute(originPoint, destinationPoint, sceneWaypoints);
-		destination = destinationPoint.position();
+		destination = destinationPoint;
 		// place on spawn waypoint
 		position = originPoint.position();
 		// offset spawn position. Helps avoid aircraft crashes very soon after
@@ -195,9 +195,9 @@ public class Aircraft {
 		position = position.add(new Vector(offset, 0, altitudeOffset));
 
 		// Calculate initial velocity (direction)
-		currentTarget = route[0].position();
-		double x = currentTarget.x() - position.x();
-		double y = currentTarget.y() - position.y();
+		currentTarget = route[0];
+		double x = currentTarget.position().x() - position.x();
+		double y = currentTarget.position().y() - position.y();
 		velocity = new Vector(x, y, 0).normalise().scaleBy(speed);
 
 		isManuallyControlled = false;
@@ -312,8 +312,8 @@ public class Aircraft {
 					? bearing()
 					: manualBearingTarget;
 		} else {
-			return Math.atan2(currentTarget.y() - position.y(),
-					currentTarget.x() - position.x());
+			return Math.atan2(currentTarget.position().y() - position.y(),
+					currentTarget.position().x() - position.x());
 		}
 	}
 
@@ -412,7 +412,7 @@ public class Aircraft {
 			resetBearing();
 
 		if (routeStage == currentRouteStage) {
-			currentTarget = newWaypoint.position();
+			currentTarget = newWaypoint;
 			turnTowardsTarget(0);
 		}
 	}
@@ -473,15 +473,15 @@ public class Aircraft {
 		currentlyTurningBy = 0;
 
 		// Update target
-		if (isAt(currentTarget) && currentTarget.equals(destination)) {
+		if (isAt(currentTarget.position()) && currentTarget.equals(destination)) {
 			hasFinished = true;
-		} else if (isAt(currentTarget)
+		} else if (isAt(currentTarget.position())
 				&& (currentRouteStage == route.length - 1)) {
 			currentRouteStage++;
 			currentTarget = destination;
-		} else if (isAt(currentTarget)) {
+		} else if (isAt(currentTarget.position())) {
 			currentRouteStage++;
-			currentTarget = route[currentRouteStage].position();
+			currentTarget = route[currentRouteStage];
 		}
 
 		// Update bearing
@@ -657,12 +657,12 @@ public class Aircraft {
 		}
 
 		if (currentTarget == destination) {
-			graphics.line(position.x(), position.y(), destination.x(),
-					destination.y());
+			graphics.line(position.x(), position.y(), destination.position()
+					.x(), destination.position().y());
 		} else {
 			graphics.line(route[route.length - 1].position().x(),
-					route[route.length - 1].position().y(), destination.x(),
-					destination.y());
+					route[route.length - 1].position().y(), destination
+							.position().x(), destination.position().y());
 		}
 	}
 
@@ -686,7 +686,8 @@ public class Aircraft {
 
 		if (currentTarget == destination) {
 
-			graphics.line(mouseX, mouseY, destination.x(), destination.y());
+			graphics.line(mouseX, mouseY, destination.position().x(),
+					destination.position().y());
 
 		} else {
 
@@ -694,7 +695,8 @@ public class Aircraft {
 
 			if (index == route.length) { // modifying final waypoint in route
 				// line drawn to final waypoint
-				graphics.line(mouseX, mouseY, destination.x(), destination.y());
+				graphics.line(mouseX, mouseY, destination.position().x(),
+						destination.position().y());
 			} else {
 				graphics.line(mouseX, mouseY, route[index].position().x(),
 						route[index].position().y());
@@ -892,7 +894,7 @@ public class Aircraft {
 	 */
 	private void resetBearing() {
 		if (currentRouteStage < route.length) {
-			currentTarget = route[currentRouteStage].position();
+			currentTarget = route[currentRouteStage];
 		}
 
 		turnTowardsTarget(0);
