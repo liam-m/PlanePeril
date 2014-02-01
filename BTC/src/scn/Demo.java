@@ -17,6 +17,7 @@ import cls.Aircraft;
 import cls.Altimeter;
 import cls.OrdersBox;
 import cls.Waypoint;
+import cls.Waypoint.WaypointType;
 
 public class Demo extends Scene {
 
@@ -118,21 +119,23 @@ public class Demo extends Scene {
 	/**
 	 * A list of location names for waypoint flavour
 	 */
-	private final String[] LOCATION_NAMES = new String[] {
+	private final static String[] LOCATION_NAMES = new String[]{
 			"North West Top Leftonia", "100 Acre Woods", "City of Rightson",
 			"South Sea", };
 
 	/**
 	 * The set of waypoints in the airspace which are origins / destinations
 	 */
-	public static Waypoint[] locationWaypoints = new Waypoint[] {
+	public final static Waypoint[] locationWaypoints = new Waypoint[]{
 			/* A set of Waypoints which are origin / destination points */
-			new Waypoint(8, 8, true), // top left
-			new Waypoint(8, window.height() - ORDERSBOX_H - 40, true), // bottom
+			new Waypoint(8, 8, WaypointType.ENTRY_EXIT), // top left
+			new Waypoint(8, window.height() - ORDERSBOX_H - 40,
+					WaypointType.ENTRY_EXIT), // bottom
 																		// left
-			new Waypoint(window.width() - 40, 8, true), // top right
+			new Waypoint(window.width() - 40, 8, WaypointType.ENTRY_EXIT), // top
+																			// right
 			new Waypoint(window.width() - 40, window.height() - ORDERSBOX_H
-					- 40, true), // bottom right
+					- 40, WaypointType.ENTRY_EXIT), // bottom right
 	};
 
 	/**
@@ -141,12 +144,12 @@ public class Demo extends Scene {
 	public static Waypoint[] airspaceWaypoints = new Waypoint[] {
 
 			// airspace waypoints
-			new Waypoint(125, 70, false), // 0
-			new Waypoint(700, 100, false), // 1
-			new Waypoint(1040, 80, false), // 2
-			new Waypoint(670, 400, false), // 3
-			new Waypoint(1050, 400, false), // 4
-			new Waypoint(250, 400, false), // 5
+			new Waypoint(125, 70, WaypointType.REGULAR), // 0
+			new Waypoint(700, 100, WaypointType.REGULAR), // 1
+			new Waypoint(1040, 80, WaypointType.REGULAR), // 2
+			new Waypoint(670, 400, WaypointType.REGULAR), // 3
+			new Waypoint(1050, 400, WaypointType.REGULAR), // 4
+			new Waypoint(250, 400, WaypointType.REGULAR), // 5
 
 			// destination/origin waypoints - present in this list for
 			// pathfinding.

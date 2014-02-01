@@ -11,6 +11,7 @@ import lib.jog.graphics.Image;
 import lib.jog.input;
 import lib.jog.window;
 import scn.Demo;
+import cls.Waypoint.WaypointType;
 
 /**
  * <h1>Aircraft</h1>
@@ -213,31 +214,31 @@ public class Aircraft {
 		// separation rules.
 		// 2 has the hardest attributes (faster aircraft, least forgiving
 		// separation rules.
-		case Demo.DIFFICULTY_EASY:
-			separationRule = 64;
-			altitudeChangeSpeed = 400;
-			break;
+			case Demo.DIFFICULTY_EASY :
+				separationRule = 64;
+				altitudeChangeSpeed = 400;
+				break;
 
-		case Demo.DIFFICULTY_MEDIUM:
-			separationRule = 96;
-			velocity = velocity.scaleBy(2);
-			turnSpeed = Math.PI / 3;
-			altitudeChangeSpeed = 200;
-			break;
+			case Demo.DIFFICULTY_MEDIUM :
+				separationRule = 96;
+				velocity = velocity.scaleBy(2);
+				turnSpeed = Math.PI / 3;
+				altitudeChangeSpeed = 200;
+				break;
 
-		case Demo.DIFFICULTY_HARD:
-			separationRule = 128;
-			velocity = velocity.scaleBy(3);
-			// At high velocities, the aircraft is allowed to turn faster
-			// this helps keep the aircraft on track.
-			turnSpeed = Math.PI / 2;
-			altitudeChangeSpeed = 100;
-			break;
+			case Demo.DIFFICULTY_HARD :
+				separationRule = 128;
+				velocity = velocity.scaleBy(3);
+				// At high velocities, the aircraft is allowed to turn faster
+				// this helps keep the aircraft on track.
+				turnSpeed = Math.PI / 2;
+				altitudeChangeSpeed = 100;
+				break;
 
-		default:
-			Exception e = new Exception("Invalid Difficulty : " + difficulty
-					+ ".");
-			e.printStackTrace();
+			default :
+				Exception e = new Exception("Invalid Difficulty : "
+						+ difficulty + ".");
+				e.printStackTrace();
 		}
 	}
 
@@ -307,7 +308,8 @@ public class Aircraft {
 	 */
 	private double angleToTarget() {
 		if (isManuallyControlled) {
-			return (manualBearingTarget == Double.NaN) ? bearing()
+			return (manualBearingTarget == Double.NaN)
+					? bearing()
 					: manualBearingTarget;
 		} else {
 			return Math.atan2(currentTarget.y() - position.y(),
@@ -454,14 +456,14 @@ public class Aircraft {
 			return;
 
 		switch (altitudeState) {
-		case -1:
-			fall();
-			break;
-		case 0:
-			break;
-		case 1:
-			climb();
-			break;
+			case -1 :
+				fall();
+				break;
+			case 0 :
+				break;
+			case 1 :
+				climb();
+				break;
 		}
 
 		// Update position
@@ -720,6 +722,7 @@ public class Aircraft {
 			Waypoint[] waypoints) {
 		// to hold the route as we generate it.
 		ArrayList<Waypoint> selectedWaypoints = new ArrayList<Waypoint>();
+
 		// initialise the origin as the first point in the route.
 		// selectedWaypoints.add(origin);
 		// to track our position as we generate the route. Initialise to the
@@ -753,10 +756,10 @@ public class Aircraft {
 				// destination
 				// also skip if flagged as a previously selected waypoint
 				if (skip == true
-						| point.position().equals(currentPos.position())
-						| point.position().equals(origin.position())
-						| (point.isEntryOrExit() == true && (point.position()
-								.equals(destination.position()) == false))) {
+						|| point.position().equals(currentPos.position())
+						|| point.position().equals(origin.position())
+						|| (point.getType() == WaypointType.ENTRY_EXIT && (point
+								.position().equals(destination.position()) == false))) {
 					skip = false; // reset flag
 					continue;
 
