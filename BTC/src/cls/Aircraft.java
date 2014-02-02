@@ -591,11 +591,15 @@ public class Aircraft {
 		double alpha = 255 / ((Math.abs(position.z() - controlAltitude) + 1000) / 1000);
 		double scale = 2 * (position.z() / 30000);
 
+		// draws the aircraft itself
 		graphics.setColour(128, 128, 128, alpha);
 		graphics.draw(image, scale, position.x(), position.y(), bearing(), 8, 8);
-		graphics.setColour(128, 128, 128, alpha / 2.5);
+
+		// draw the altitude near the aircraft
+		// £ is rendered as cursive "ft" for mysterious reasons
+		graphics.setColour(128, 128, 128, alpha);
 		graphics.print(String.format("%.0f", position.z()) + "£",
-				position.x() + 8, position.y() - 8);
+				position.x() - 22, position.y() + 15);
 
 		drawWarningCircles();
 	}

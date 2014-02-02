@@ -329,7 +329,7 @@ public class Demo extends Scene {
 		}
 
 		altimeter.update(dt);
-
+		
 		if (selectedAircraft != null && selectedAircraft.isManuallyControlled()) {
 
 			if (input.isKeyDown(input.KEY_LEFT) || input.isKeyDown(input.KEY_A)) {
