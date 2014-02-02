@@ -117,6 +117,9 @@ public class Waypoint {
 		graphics.setColour(128, 0, 0, 128);
 		graphics.circle(false, x, y, RADIUS);
 		graphics.circle(true, x, y, RADIUS - 2);
+
+		if (this instanceof Airport)
+			graphics.print("Aero Medved'", x - 40, y + 15);
 	}
 
 	public void draw() {
