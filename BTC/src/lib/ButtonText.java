@@ -14,7 +14,7 @@ public class ButtonText {
 	private org.newdawn.slick.Color colourDefault, colourHover, colourUnavailable;
 	private Action action;
 	private boolean available;
-	
+	// Format ButtonText (text, action, )
 	public ButtonText(String text, Action action, int x, int y, int w, int h, int ox, int oy) {
 		this.text = text;
 		this.action = action;

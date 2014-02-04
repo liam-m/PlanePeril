@@ -55,6 +55,11 @@ public class Aircraft {
 	 * Whether the plane is being manually controlled.
 	 */
 	private boolean isManuallyControlled;
+	
+	/**
+	 * Whether the plane is landing.
+	 */
+	private boolean isLanding;
 	/**
 	 * The flight name of the plane.
 	 */
@@ -208,7 +213,7 @@ public class Aircraft {
 		double x = currentTarget.position().x() - position.x();
 		double y = currentTarget.position().y() - position.y();
 		velocity = new Vector(x, y, 0).normalise().scaleBy(speed);
-
+		isLanding = false;
 		isManuallyControlled = false;
 		hasFinished = false;
 		currentRouteStage = 0;
@@ -315,6 +320,11 @@ public class Aircraft {
 		return isManuallyControlled;
 	}
 
+	// Allow access to whether plane is in the process of landing
+	public boolean isLanding() {
+		return isLanding;
+	}
+	
 	public int altitudeState() {
 		return altitudeState;
 	}
@@ -914,6 +924,14 @@ public class Aircraft {
 			resetBearing();
 	}
 
+	
+	public void toggleLand() {
+		isLanding = !isLanding;
+
+		if (!isLanding)
+			return;
+			// Insert landing function here
+	}	
 	/**
 	 * Changes the direction the plane is going towards.
 	 * 
@@ -985,5 +1003,9 @@ public class Aircraft {
 	public int getPoints() {
 		return this.points;
 	}
+
+
+
+
 
 }

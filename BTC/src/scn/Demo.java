@@ -90,6 +90,12 @@ public class Demo extends Scene {
 	 * Tracks if manual heading compass of a manually controller aircraft has
 	 * been dragged
 	 */
+	
+	private ButtonText landButton;
+	/**
+	 * Tracks if manual heading compass of a manually controller aircraft has
+	 * been dragged
+	 */
 	private boolean compassDragged;
 	/**
 	 * An altimeter to display aircraft altitidue, heading, etc.
@@ -213,16 +219,28 @@ public class Demo extends Scene {
 			}
 		};
 
+		
 		manualOverrideButton = new ButtonText("Take Control", manual,
 				(window.width() - 128) / 2, 32, 128, 32, 8, 4);
+		
+		ButtonText.Action land = new ButtonText.Action() {
+			@Override
+			public void action() {
+				// toggle land function
+				toggleLand();
+			}
+		};		
+		
+
+		landButton = new ButtonText("Land", land,
+				(window.width() - 500) / 2, 32, 128, 32, 8, 4);
+		
 		timeElapsed = 0;
 		compassDragged = false;
 		selectedAircraft = null;
 		selectedWaypoint = null;
 		selectedPathpoint = -1;
 
-		manualOverrideButton = new ButtonText(" Take Control", manual,
-				(window.width() - 128) / 2, 32, 128, 32, 8, 4);
 		altimeter = new Altimeter(ALTIMETER_X, ALTIMETER_Y, ALTIMETER_W,
 				ALTIMETER_H);
 		deselectAircraft();
@@ -263,6 +281,21 @@ public class Demo extends Scene {
 						: " Take") + " Control");
 	}
 
+
+	/**
+	 * Causes a selected aircraft to call methods to toggle manual control
+	 */
+	private void toggleLand() {
+		if (selectedAircraft == null)
+			return;
+		selectedAircraft.toggleLand();
+
+		landButton
+				.setText((selectedAircraft.isLanding() ? ""
+						: " ") + " Land");
+	}
+	
+	
 	/**
 	 * Causes an aircraft to call methods to handle deselection
 	 */
@@ -628,6 +661,13 @@ public class Demo extends Scene {
 			graphics.setColour(0, 128, 0);
 			graphics.rectangle(false, (window.width() - 128) / 2, 16, 128, 32);
 			manualOverrideButton.draw();
+			
+			// Land Button
+			graphics.setColour(0, 0, 0);
+			graphics.rectangle(true, (window.width() - 500) / 2, 16, 128, 32);
+			graphics.setColour(0, 128, 0);
+			graphics.rectangle(false, (window.width() - 500) / 2, 16, 128, 32);			
+			landButton.draw();
 
 			selectedAircraft.drawFlightPath();
 			graphics.setColour(0, 128, 0);
