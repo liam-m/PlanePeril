@@ -46,11 +46,6 @@ public class Demo extends Scene {
 	public static int difficulty = DIFFICULTY_EASY;
 
 	/**
-	 *  Cumulative score, added to upon completion of flightplan by aircraft.
-	 */
-	private int score;
-	
-	/**
 	 * Orders box to print orders from ACTO to aircraft to
 	 */
 	private OrdersBox ordersBox;
@@ -125,15 +120,15 @@ public class Demo extends Scene {
 	/**
 	 * A list of location names for waypoint flavour
 	 */
-	private final static String[] LOCATION_NAMES = new String[]{
+	private final static String[] LOCATION_NAMES = new String[] {
 			"North West Top Leftonia", "100 Acre Woods", "City of Rightson",
-			"South Sea", "Aerodromio Medved'"};
+			"South Sea", "Aerodromio Medved'" };
 
 	/**
 	 * The set of waypoints in the airspace which are origins / destinations
 	 */
-	public final static Waypoint[] locationWaypoints = new Waypoint[]{
-			/* A set of Waypoints which are origin / destination points */
+	public final static Waypoint[] locationWaypoints = new Waypoint[] {
+	/* A set of Waypoints which are origin / destination points */
 
 			// top left
 			new Waypoint(8, 8, WaypointType.ENTRY_EXIT),
@@ -150,8 +145,7 @@ public class Demo extends Scene {
 					- 40, WaypointType.ENTRY_EXIT),
 
 			// The aerodromio
-			new Airport(window.width() / 2, window.height() / 2 - 100)
-	};
+			new Airport(window.width() / 2, window.height() / 2 - 100) };
 
 	/**
 	 * All waypoints in the airspace, INCLUDING locationWaypoints.
@@ -303,8 +297,6 @@ public class Demo extends Scene {
 			}
 
 			if (plane.isFinished()) {
-				score += plane.getPoints();
-				System.out.println(score);
 				switch (RandomNumber.randInclusiveInt(0, 2)) {
 				case 0:
 					ordersBox.addOrder("<<< Thank you Comrade");
@@ -336,7 +328,7 @@ public class Demo extends Scene {
 		}
 
 		altimeter.update(dt);
-		
+
 		if (selectedAircraft != null && selectedAircraft.isManuallyControlled()) {
 
 			if (input.isKeyDown(input.KEY_LEFT) || input.isKeyDown(input.KEY_A)) {
