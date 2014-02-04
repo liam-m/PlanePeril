@@ -44,6 +44,11 @@ public class Demo extends Scene {
 	public static int difficulty = DIFFICULTY_EASY;
 
 	/**
+	 *  Cumulative score, added to upon completion of flightplan by aircraft.
+	 */
+	private int score;
+	
+	/**
 	 * Orders box to print orders from ACTO to aircraft to
 	 */
 	private OrdersBox ordersBox;
@@ -272,6 +277,8 @@ public class Demo extends Scene {
 		for (Aircraft plane : aircraftInAirspace) {
 			plane.update(dt);
 			if (plane.isFinished()) {
+				score += plane.getPoints();
+				System.out.println(score);
 				switch (RandomNumber.randInclusiveInt(0, 2)) {
 				case 0:
 					ordersBox.addOrder("<<< Thank you Comrade");
