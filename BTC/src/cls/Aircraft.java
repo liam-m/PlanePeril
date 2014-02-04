@@ -141,6 +141,10 @@ public class Aircraft {
 	private final static Sound WARNING_SOUND = audio.newSoundEffect("sfx"
 			+ File.separator + "beep.ogg");
 
+	private int points = 10;
+
+	private boolean wasBreachingInLastFrame = false;
+
 	/**
 	 * Constructor for an aircraft.
 	 * 
@@ -219,31 +223,31 @@ public class Aircraft {
 		// separation rules.
 		// 2 has the hardest attributes (faster aircraft, least forgiving
 		// separation rules.
-			case Demo.DIFFICULTY_EASY :
-				separationRule = 64;
-				altitudeChangeSpeed = 400;
-				break;
+		case Demo.DIFFICULTY_EASY:
+			separationRule = 64;
+			altitudeChangeSpeed = 400;
+			break;
 
-			case Demo.DIFFICULTY_MEDIUM :
-				separationRule = 96;
-				velocity = velocity.scaleBy(2);
-				turnSpeed = Math.PI / 3;
-				altitudeChangeSpeed = 200;
-				break;
+		case Demo.DIFFICULTY_MEDIUM:
+			separationRule = 96;
+			velocity = velocity.scaleBy(2);
+			turnSpeed = Math.PI / 3;
+			altitudeChangeSpeed = 200;
+			break;
 
-			case Demo.DIFFICULTY_HARD :
-				separationRule = 128;
-				velocity = velocity.scaleBy(3);
-				// At high velocities, the aircraft is allowed to turn faster
-				// this helps keep the aircraft on track.
-				turnSpeed = Math.PI / 2;
-				altitudeChangeSpeed = 100;
-				break;
+		case Demo.DIFFICULTY_HARD:
+			separationRule = 128;
+			velocity = velocity.scaleBy(3);
+			// At high velocities, the aircraft is allowed to turn faster
+			// this helps keep the aircraft on track.
+			turnSpeed = Math.PI / 2;
+			altitudeChangeSpeed = 100;
+			break;
 
-			default :
-				Exception e = new Exception("Invalid Difficulty : "
-						+ difficulty + ".");
-				e.printStackTrace();
+		default:
+			Exception e = new Exception("Invalid Difficulty : " + difficulty
+					+ ".");
+			e.printStackTrace();
 		}
 	}
 
@@ -322,8 +326,7 @@ public class Aircraft {
 	 */
 	private double angleToTarget() {
 		if (isManuallyControlled) {
-			return (manualBearingTarget == Double.NaN)
-					? bearing()
+			return (manualBearingTarget == Double.NaN) ? bearing()
 					: manualBearingTarget;
 		} else {
 			return Math.atan2(currentTarget.position().y() - position.y(),
@@ -471,14 +474,14 @@ public class Aircraft {
 			return;
 
 		switch (altitudeState) {
-			case -1 :
-				fall();
-				break;
-			case 0 :
-				break;
-			case 1 :
-				climb();
-				break;
+		case -1:
+			fall();
+			break;
+		case 0:
+			break;
+		case 1:
+			climb();
+			break;
 		}
 
 		// Update position
@@ -867,11 +870,17 @@ public class Aircraft {
 					WARNING_SOUND.play();
 				}
 
+				if (wasBreachingInLastFrame == false) {
+					wasBreachingInLastFrame = true;
+					points -= 1;
+				}
+
 			}
 		}
 
 		if (planesTooNear.isEmpty()) {
 			collisionWarningSoundFlag = false;
+			wasBreachingInLastFrame = false;
 		}
 
 		return -1;
@@ -971,6 +980,10 @@ public class Aircraft {
 	 */
 	public void setAltitudeState(int state) {
 		this.altitudeState = state;
+	}
+
+	public int getPoints() {
+		return this.points;
 	}
 
 }
