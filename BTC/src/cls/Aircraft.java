@@ -11,6 +11,7 @@ import lib.jog.graphics.Image;
 import lib.jog.input;
 import lib.jog.window;
 import scn.Demo;
+import cls.Waypoint.WaypointType;
 
 /**
  * <h1>Aircraft</h1>
@@ -62,7 +63,7 @@ public class Aircraft {
 	 * The position the plane is currently flying towards (if not manually
 	 * controlled).
 	 */
-	private Vector currentTarget;
+	private Waypoint currentTarget;
 	/**
 	 * The target the player has told the plane to fly at when manually
 	 * controlled.
@@ -87,7 +88,7 @@ public class Aircraft {
 	/**
 	 * The off-screen point the plane will end up at before disappearing.
 	 */
-	private final Vector destination;
+	private final Waypoint destination;
 	/**
 	 * The image to be drawn representing the plane.
 	 */
@@ -123,6 +124,11 @@ public class Aircraft {
 	public static final int ALTITUDE_LEVEL = 0;
 
 	/**
+	 * Whether this aircraft is currently in the airport
+	 */
+	private boolean atAirport = false;
+
+	/**
 	 * Flags whether the collision warning sound has been played before. If set,
 	 * plane will not play warning again until it the separation violation
 	 * involving it ends
@@ -134,6 +140,10 @@ public class Aircraft {
 	 */
 	private final static Sound WARNING_SOUND = audio.newSoundEffect("sfx"
 			+ File.separator + "beep.ogg");
+
+	private int points = 10;
+
+	private boolean wasBreachingInLastFrame = false;
 
 	/**
 	 * Constructor for an aircraft.
@@ -167,7 +177,7 @@ public class Aircraft {
 
 		// Find route
 		route = findGreedyRoute(originPoint, destinationPoint, sceneWaypoints);
-		destination = destinationPoint.position();
+		destination = destinationPoint;
 		// place on spawn waypoint
 		position = originPoint.position();
 		// offset spawn position. Helps avoid aircraft crashes very soon after
@@ -194,9 +204,9 @@ public class Aircraft {
 		position = position.add(new Vector(offset, 0, altitudeOffset));
 
 		// Calculate initial velocity (direction)
-		currentTarget = route[0].position();
-		double x = currentTarget.x() - position.x();
-		double y = currentTarget.y() - position.y();
+		currentTarget = route[0];
+		double x = currentTarget.position().x() - position.x();
+		double y = currentTarget.position().y() - position.y();
 		velocity = new Vector(x, y, 0).normalise().scaleBy(speed);
 
 		isManuallyControlled = false;
@@ -287,6 +297,15 @@ public class Aircraft {
 	}
 
 	/**
+	 * Whether the aircraft is in the airport at the moment.
+	 * 
+	 * @return
+	 */
+	public boolean atAirport() {
+		return atAirport;
+	}
+
+	/**
 	 * Allows access to whether the plane is being manually controlled.
 	 * 
 	 * @return true, if the plane is currently manually controlled. False,
@@ -310,8 +329,8 @@ public class Aircraft {
 			return (manualBearingTarget == Double.NaN) ? bearing()
 					: manualBearingTarget;
 		} else {
-			return Math.atan2(currentTarget.y() - position.y(),
-					currentTarget.x() - position.x());
+			return Math.atan2(currentTarget.position().y() - position.y(),
+					currentTarget.position().x() - position.x());
 		}
 	}
 
@@ -410,7 +429,7 @@ public class Aircraft {
 			resetBearing();
 
 		if (routeStage == currentRouteStage) {
-			currentTarget = newWaypoint.position();
+			currentTarget = newWaypoint;
 			turnTowardsTarget(0);
 		}
 	}
@@ -448,8 +467,9 @@ public class Aircraft {
 	 * whether it has finished its flight.
 	 * 
 	 * @param dt
+	 * @throws Exception
 	 */
-	public void update(double dt) {
+	public void update(double dt) throws IllegalStateException {
 		if (hasFinished)
 			return;
 
@@ -471,15 +491,21 @@ public class Aircraft {
 		currentlyTurningBy = 0;
 
 		// Update target
-		if (isAt(currentTarget) && currentTarget.equals(destination)) {
+		if (isAt(currentTarget.position()) && currentTarget.equals(destination)) {
 			hasFinished = true;
-		} else if (isAt(currentTarget)
+
+			if (destination instanceof Airport) {
+				((Airport) destination).insertAircraft(this);
+				atAirport = true;
+			}
+
+		} else if (isAt(currentTarget.position())
 				&& (currentRouteStage == route.length - 1)) {
 			currentRouteStage++;
 			currentTarget = destination;
-		} else if (isAt(currentTarget)) {
+		} else if (isAt(currentTarget.position())) {
 			currentRouteStage++;
-			currentTarget = route[currentRouteStage].position();
+			currentTarget = route[currentRouteStage];
 		}
 
 		// Update bearing
@@ -568,11 +594,15 @@ public class Aircraft {
 		double alpha = 255 / ((Math.abs(position.z() - controlAltitude) + 1000) / 1000);
 		double scale = 2 * (position.z() / 30000);
 
+		// draws the aircraft itself
 		graphics.setColour(128, 128, 128, alpha);
 		graphics.draw(image, scale, position.x(), position.y(), bearing(), 8, 8);
-		graphics.setColour(128, 128, 128, alpha / 2.5);
+
+		// draw the altitude near the aircraft
+		// £ is rendered as cursive "ft" for mysterious reasons
+		graphics.setColour(128, 128, 128, alpha);
 		graphics.print(String.format("%.0f", position.z()) + "£",
-				position.x() + 8, position.y() - 8);
+				position.x() - 22, position.y() + 15);
 
 		drawWarningCircles();
 	}
@@ -655,12 +685,12 @@ public class Aircraft {
 		}
 
 		if (currentTarget == destination) {
-			graphics.line(position.x(), position.y(), destination.x(),
-					destination.y());
+			graphics.line(position.x(), position.y(), destination.position()
+					.x(), destination.position().y());
 		} else {
 			graphics.line(route[route.length - 1].position().x(),
-					route[route.length - 1].position().y(), destination.x(),
-					destination.y());
+					route[route.length - 1].position().y(), destination
+							.position().x(), destination.position().y());
 		}
 	}
 
@@ -684,7 +714,8 @@ public class Aircraft {
 
 		if (currentTarget == destination) {
 
-			graphics.line(mouseX, mouseY, destination.x(), destination.y());
+			graphics.line(mouseX, mouseY, destination.position().x(),
+					destination.position().y());
 
 		} else {
 
@@ -692,7 +723,8 @@ public class Aircraft {
 
 			if (index == route.length) { // modifying final waypoint in route
 				// line drawn to final waypoint
-				graphics.line(mouseX, mouseY, destination.x(), destination.y());
+				graphics.line(mouseX, mouseY, destination.position().x(),
+						destination.position().y());
 			} else {
 				graphics.line(mouseX, mouseY, route[index].position().x(),
 						route[index].position().y());
@@ -720,6 +752,7 @@ public class Aircraft {
 			Waypoint[] waypoints) {
 		// to hold the route as we generate it.
 		ArrayList<Waypoint> selectedWaypoints = new ArrayList<Waypoint>();
+
 		// initialise the origin as the first point in the route.
 		// selectedWaypoints.add(origin);
 		// to track our position as we generate the route. Initialise to the
@@ -753,10 +786,10 @@ public class Aircraft {
 				// destination
 				// also skip if flagged as a previously selected waypoint
 				if (skip == true
-						| point.position().equals(currentPos.position())
-						| point.position().equals(origin.position())
-						| (point.isEntryOrExit() == true && (point.position()
-								.equals(destination.position()) == false))) {
+						|| point.position().equals(currentPos.position())
+						|| point.position().equals(origin.position())
+						|| (point.getType() == WaypointType.ENTRY_EXIT && (point
+								.position().equals(destination.position()) == false))) {
 					skip = false; // reset flag
 					continue;
 
@@ -837,11 +870,17 @@ public class Aircraft {
 					WARNING_SOUND.play();
 				}
 
+				if (wasBreachingInLastFrame == false) {
+					wasBreachingInLastFrame = true;
+					points -= 1;
+				}
+
 			}
 		}
 
 		if (planesTooNear.isEmpty()) {
 			collisionWarningSoundFlag = false;
+			wasBreachingInLastFrame = false;
 		}
 
 		return -1;
@@ -889,7 +928,7 @@ public class Aircraft {
 	 */
 	private void resetBearing() {
 		if (currentRouteStage < route.length) {
-			currentTarget = route[currentRouteStage].position();
+			currentTarget = route[currentRouteStage];
 		}
 
 		turnTowardsTarget(0);
@@ -941,6 +980,10 @@ public class Aircraft {
 	 */
 	public void setAltitudeState(int state) {
 		this.altitudeState = state;
+	}
+
+	public int getPoints() {
+		return this.points;
 	}
 
 }

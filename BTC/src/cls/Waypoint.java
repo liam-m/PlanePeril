@@ -4,6 +4,10 @@ import lib.jog.graphics;
 
 public class Waypoint {
 
+	public enum WaypointType {
+		ENTRY_EXIT, REGULAR, MIXED
+	}
+
 	/**
 	 * Leniancy to allow mouse input to be accepted in a small area around the
 	 * waypoint For ease of use.
@@ -24,7 +28,7 @@ public class Waypoint {
 	 * Marks whether the waypoint is a point where planes may enter and exit the
 	 * game airspace
 	 */
-	private final boolean entryOrExit;
+	private final WaypointType type;
 
 	/**
 	 * Constructor for waypoints
@@ -37,9 +41,9 @@ public class Waypoint {
 	 *            whether the waypoint is a point where planes may enter and
 	 *            leave the airspace
 	 */
-	public Waypoint(double x, double y, boolean inputEntryOrExit) {
+	public Waypoint(double x, double y, WaypointType type) {
 		position = new Vector(x, y, 0);
-		entryOrExit = inputEntryOrExit;
+		this.type = type;
 	}
 
 	/**
@@ -72,8 +76,8 @@ public class Waypoint {
 	 * @return Whether or not the waypoint is an entry or exit point for the
 	 *         airspace.
 	 */
-	public boolean isEntryOrExit() {
-		return this.entryOrExit;
+	public WaypointType getType() {
+		return this.type;
 	}
 
 	/**
@@ -113,6 +117,9 @@ public class Waypoint {
 		graphics.setColour(128, 0, 0, 128);
 		graphics.circle(false, x, y, RADIUS);
 		graphics.circle(true, x, y, RADIUS - 2);
+
+		if (this instanceof Airport)
+			graphics.print("Aero Medved'", x - 40, y + 15);
 	}
 
 	public void draw() {

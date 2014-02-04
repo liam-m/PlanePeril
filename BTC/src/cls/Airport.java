@@ -1,28 +1,34 @@
 package cls;
 
+import java.util.ArrayList;
+
 public class Airport extends Waypoint {
 
 	private final static int MAX_AIRCRAFT_NUMBER = 10;
 
-	private int aircraftIn = 0;
+	private ArrayList<Aircraft> aircraftList = new ArrayList<Aircraft>();
 
-	public Airport(double x, double y, boolean inputEntryOrExit) {
-		super(x, y, inputEntryOrExit);
-
+	public Airport(double x, double y) {
+		super(x, y, WaypointType.ENTRY_EXIT);
+		// TODO: Change type to WaypointType.MXIED, requires updates in
+		// flightplan generations
 	}
 
 	/**
+	 * Inserts an aircraft into the airport, done by reference.
 	 * 
-	 * @param a
+	 * @param aircraft
 	 *            Aircraft to insert
-	 * @return
+	 * @throws IllegalStateException
+	 *             if insertion will overflow airport
 	 */
-	public boolean insertAircraft(Aircraft a) {
-		if (aircraftIn + 1 > MAX_AIRCRAFT_NUMBER) {
-			return false;
+	public void insertAircraft(Aircraft aircraft) throws IllegalStateException {
+		if (aircraftList.size() + 1 > MAX_AIRCRAFT_NUMBER) {
+			throw new IllegalStateException(
+					"Tried landing an aircraft into a full airport.");
 		}
 
-		return true;
+		aircraftList.add(aircraft);
 	}
 
 }
