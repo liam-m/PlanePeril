@@ -10,6 +10,7 @@ import lib.jog.input.EventHandler;
 import lib.jog.window;
 
 import org.lwjgl.Sys;
+import org.newdawn.slick.Color;
 
 import scn.Scene;
 import scn.Title;
@@ -24,6 +25,8 @@ import scn.Title;
  * @author Huw Taylor
  */
 public class Main implements EventHandler {
+
+	public final static Color GREEN = new Color(0, 200, 0);
 
 	/**
 	 * Creates a new instance of Main, starting a new game.

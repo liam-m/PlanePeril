@@ -572,14 +572,17 @@ public class Demo extends Scene {
 	 */
 	@Override
 	public void draw() {
-		graphics.setColour(0, 128, 0);
+		graphics.setColour(Main.GREEN);
 		graphics.rectangle(false, 16, 16, window.width() - 32,
 				window.height() - 144);
 
 		graphics.setViewport(16, 16, window.width() - 32, window.height() - 144);
-		graphics.setColour(255, 255, 255, 32);
+
+		graphics.setColour(255, 255, 255, 100);
 		graphics.draw(background, 0, 0);
+
 		drawMap();
+
 		graphics.setViewport();
 
 		if (selectedAircraft != null && selectedAircraft.isManuallyControlled()) {
@@ -590,7 +593,7 @@ public class Demo extends Scene {
 		altimeter.draw();
 		drawPlaneInfo();
 
-		graphics.setColour(0, 128, 0);
+		graphics.setColour(Main.GREEN);
 		drawScore();
 	}
 
@@ -613,17 +616,17 @@ public class Demo extends Scene {
 
 			// Flight Path
 			selectedAircraft.drawFlightPath();
-			graphics.setColour(0, 128, 0);
+			graphics.setColour(Main.GREEN);
 
 			// Override Button
 			graphics.setColour(0, 0, 0);
 			graphics.rectangle(true, (window.width() - 128) / 2, 16, 128, 32);
-			graphics.setColour(0, 128, 0);
+			graphics.setColour(Main.GREEN);
 			graphics.rectangle(false, (window.width() - 128) / 2, 16, 128, 32);
 			manualOverrideButton.draw();
 
 			selectedAircraft.drawFlightPath();
-			graphics.setColour(0, 128, 0);
+			graphics.setColour(Main.GREEN);
 
 		}
 
@@ -634,7 +637,7 @@ public class Demo extends Scene {
 		}
 
 		graphics.setViewport();
-		graphics.setColour(0, 128, 0);
+		graphics.setColour(Main.GREEN);
 		graphics.print(LOCATION_NAMES[0],
 				locationWaypoints[0].position().x() + 25, locationWaypoints[0]
 						.position().y() + 10);
@@ -654,7 +657,7 @@ public class Demo extends Scene {
 	 * draw the info of a selected plane in the scene GUI
 	 */
 	private void drawPlaneInfo() {
-		graphics.setColour(0, 128, 0);
+		graphics.setColour(Main.GREEN);
 		graphics.rectangle(false, PLANE_INFO_X, PLANE_INFO_Y, PLANE_INFO_W,
 				PLANE_INFO_H);
 

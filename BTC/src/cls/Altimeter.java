@@ -3,6 +3,7 @@ package cls;
 import lib.jog.graphics;
 import lib.jog.input;
 import lib.jog.input.EventHandler;
+import btc.Main;
 
 /**
  * Shows the planes height in feet (whatever units you want). And the current
@@ -138,7 +139,7 @@ public class Altimeter implements EventHandler {
 	 * Draws the box around the altimeter
 	 */
 	private void drawRectangle() {
-		graphics.setColour(0, 128, 0);
+		graphics.setColour(Main.GREEN);
 		graphics.rectangle(false, positionX, positionY, width, height);
 	}
 
@@ -170,7 +171,7 @@ public class Altimeter implements EventHandler {
 				y + wingLength * Math.sin(r));
 		graphics.setColour(0, 0, 0);
 		graphics.circle(true, x, y, 4);
-		graphics.setColour(0, 128, 0);
+		graphics.setColour(Main.GREEN);
 		graphics.circle(false, x, y, 4);
 		graphics.printCentred(
 				String.format("%.0f", currentAircraft.position().z()),
@@ -203,12 +204,12 @@ public class Altimeter implements EventHandler {
 		}
 
 		graphics.setViewport();
-		graphics.setColour(0, 128, 0);
+		graphics.setColour(Main.GREEN);
 	}
 
 	private void drawArrows() {
 		int midX = (int) (positionX + (width / 2));
-		graphics.setColour(0, 128, 0);
+		graphics.setColour(Main.GREEN);
 
 		if (mouseOverTopButton()) {
 			graphics.setColour(128, 128, 128);
@@ -216,7 +217,7 @@ public class Altimeter implements EventHandler {
 
 		graphics.triangle(true, midX - 10, positionY + 10, midX, positionY + 4,
 				midX + 10, positionY + 10);
-		graphics.setColour(0, 128, 0);
+		graphics.setColour(Main.GREEN);
 
 		if (mouseOverBottomButton()) {
 			graphics.setColour(128, 128, 128);
