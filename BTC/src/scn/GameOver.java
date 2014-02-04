@@ -166,7 +166,7 @@ public class GameOver extends Scene {
 	 * Otherwise, draw the planes and explosion
 	 */
 	public void draw() {
-		graphics.setColour(0, 128, 0);
+		graphics.setColour(Main.GREEN);
 		graphics.printCentred(crashedPlane1.name() + " crashed into "
 				+ crashedPlane2.name() + ".", 0, 32, 2, window.width());
 

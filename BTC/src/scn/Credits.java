@@ -98,7 +98,7 @@ public class Credits extends Scene {
 		int gap = 64;
 		int currentHeight = 0;
 
-		graphics.setColour(0, 128, 0);
+		graphics.setColour(Main.GREEN);
 		graphics.push();
 		graphics.translate(0, scrollPosition);
 		currentHeight += gap;

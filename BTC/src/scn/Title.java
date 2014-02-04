@@ -198,7 +198,7 @@ public class Title extends Scene {
 	private void drawRadar() {
 		// Radar
 		// set of circles for radar 'screen'
-		graphics.setColour(0, 128, 0);
+		graphics.setColour(Main.GREEN);
 		graphics.circle(false, window.height() / 2, window.height() / 2,
 				window.height() / 2 - 32, 100);
 		graphics.setColour(0, 128, 0, 32);
@@ -209,7 +209,7 @@ public class Title extends Scene {
 		graphics.circle(false, window.height() / 2, window.height() / 2,
 				window.height() / 9, 100);
 		graphics.circle(false, window.height() / 2, window.height() / 2, 2, 100);
-		graphics.setColour(0, 128, 0);
+		graphics.setColour(Main.GREEN);
 
 		// sweep of radar
 		double radarAngle = (angle * 4) % (2 * Math.PI);
@@ -260,7 +260,7 @@ public class Title extends Scene {
 	 */
 	private void drawMenu() {
 		// Draw Extras e.g. Date, Time, Credits
-		graphics.setColour(0, 128, 0);
+		graphics.setColour(Main.GREEN);
 		graphics.line(window.height(), 16, window.height(),
 				window.height() - 16);
 		java.text.DateFormat dateFormat = new java.text.SimpleDateFormat(
@@ -280,7 +280,7 @@ public class Title extends Scene {
 		// Draw Buttons
 		for (ButtonText b : buttons)
 			b.draw();
-		graphics.setColour(0, 128, 0);
+		graphics.setColour(Main.GREEN);
 		graphics.line(window.height(), window.height() / 2 + 90,
 				window.width() - 16, window.height() / 2 + 90);
 		graphics.line(window.height(), window.height() / 2 + 120,

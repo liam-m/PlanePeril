@@ -11,6 +11,7 @@ import lib.jog.graphics.Image;
 import lib.jog.input;
 import lib.jog.window;
 import scn.Demo;
+import btc.Main;
 import cls.Waypoint.WaypointType;
 
 /**
@@ -622,7 +623,7 @@ public class Aircraft {
 	 */
 	public void drawCompass() {
 
-		graphics.setColour(0, 128, 0);
+		graphics.setColour(Main.GREEN);
 		graphics.circle(false, position.x() + 16, position.y() + 16,
 				COMPASS_RADIUS);
 

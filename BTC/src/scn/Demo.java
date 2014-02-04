@@ -46,11 +46,6 @@ public class Demo extends Scene {
 	public static int difficulty = DIFFICULTY_EASY;
 
 	/**
-	 *  Cumulative score, added to upon completion of flightplan by aircraft.
-	 */
-	private int score;
-	
-	/**
 	 * Orders box to print orders from ACTO to aircraft to
 	 */
 	private OrdersBox ordersBox;
@@ -131,15 +126,15 @@ public class Demo extends Scene {
 	/**
 	 * A list of location names for waypoint flavour
 	 */
-	private final static String[] LOCATION_NAMES = new String[]{
+	private final static String[] LOCATION_NAMES = new String[] {
 			"North West Top Leftonia", "100 Acre Woods", "City of Rightson",
-			"South Sea", "Aerodromio Medved'"};
+			"South Sea", "Aerodromio Medved'" };
 
 	/**
 	 * The set of waypoints in the airspace which are origins / destinations
 	 */
-	public final static Waypoint[] locationWaypoints = new Waypoint[]{
-			/* A set of Waypoints which are origin / destination points */
+	public final static Waypoint[] locationWaypoints = new Waypoint[] {
+	/* A set of Waypoints which are origin / destination points */
 
 			// top left
 			new Waypoint(8, 8, WaypointType.ENTRY_EXIT),
@@ -156,8 +151,7 @@ public class Demo extends Scene {
 					- 40, WaypointType.ENTRY_EXIT),
 
 			// The aerodromio
-			new Airport(window.width() / 2, window.height() / 2 - 100)
-	};
+			new Airport(window.width() / 2, window.height() / 2 - 100) };
 
 	/**
 	 * All waypoints in the airspace, INCLUDING locationWaypoints.
@@ -336,8 +330,6 @@ public class Demo extends Scene {
 			}
 
 			if (plane.isFinished()) {
-				score += plane.getPoints();
-				System.out.println(score);
 				switch (RandomNumber.randInclusiveInt(0, 2)) {
 				case 0:
 					ordersBox.addOrder("<<< Thank you Comrade");
@@ -369,7 +361,7 @@ public class Demo extends Scene {
 		}
 
 		altimeter.update(dt);
-		
+
 		if (selectedAircraft != null && selectedAircraft.isManuallyControlled()) {
 
 			if (input.isKeyDown(input.KEY_LEFT) || input.isKeyDown(input.KEY_A)) {
@@ -612,14 +604,17 @@ public class Demo extends Scene {
 	 */
 	@Override
 	public void draw() {
-		graphics.setColour(0, 128, 0);
+		graphics.setColour(Main.GREEN);
 		graphics.rectangle(false, 16, 16, window.width() - 32,
 				window.height() - 144);
 
 		graphics.setViewport(16, 16, window.width() - 32, window.height() - 144);
-		graphics.setColour(255, 255, 255, 32);
+
+		graphics.setColour(255, 255, 255, 100);
 		graphics.draw(background, 0, 0);
+
 		drawMap();
+
 		graphics.setViewport();
 
 		if (selectedAircraft != null && selectedAircraft.isManuallyControlled()) {
@@ -630,7 +625,7 @@ public class Demo extends Scene {
 		altimeter.draw();
 		drawPlaneInfo();
 
-		graphics.setColour(0, 128, 0);
+		graphics.setColour(Main.GREEN);
 		drawScore();
 	}
 
@@ -653,12 +648,12 @@ public class Demo extends Scene {
 
 			// Flight Path
 			selectedAircraft.drawFlightPath();
-			graphics.setColour(0, 128, 0);
+			graphics.setColour(Main.GREEN);
 
 			// Override Button
 			graphics.setColour(0, 0, 0);
 			graphics.rectangle(true, (window.width() - 128) / 2, 16, 128, 32);
-			graphics.setColour(0, 128, 0);
+			graphics.setColour(Main.GREEN);
 			graphics.rectangle(false, (window.width() - 128) / 2, 16, 128, 32);
 			manualOverrideButton.draw();
 			
@@ -670,7 +665,7 @@ public class Demo extends Scene {
 			landButton.draw();
 
 			selectedAircraft.drawFlightPath();
-			graphics.setColour(0, 128, 0);
+			graphics.setColour(Main.GREEN);
 
 		}
 
@@ -681,7 +676,7 @@ public class Demo extends Scene {
 		}
 
 		graphics.setViewport();
-		graphics.setColour(0, 128, 0);
+		graphics.setColour(Main.GREEN);
 		graphics.print(LOCATION_NAMES[0],
 				locationWaypoints[0].position().x() + 25, locationWaypoints[0]
 						.position().y() + 10);
@@ -701,7 +696,7 @@ public class Demo extends Scene {
 	 * draw the info of a selected plane in the scene GUI
 	 */
 	private void drawPlaneInfo() {
-		graphics.setColour(0, 128, 0);
+		graphics.setColour(Main.GREEN);
 		graphics.rectangle(false, PLANE_INFO_X, PLANE_INFO_Y, PLANE_INFO_W,
 				PLANE_INFO_H);
 
