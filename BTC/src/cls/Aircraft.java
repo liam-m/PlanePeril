@@ -1003,9 +1003,4 @@ public class Aircraft {
 	public int getPoints() {
 		return this.points;
 	}
-
-
-
-
-
 }
