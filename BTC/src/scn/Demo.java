@@ -16,6 +16,7 @@ import btc.Main;
 import cls.Aircraft;
 import cls.Airport;
 import cls.Altimeter;
+import cls.HoldingWaypoint;
 import cls.OrdersBox;
 import cls.Waypoint;
 import cls.Waypoint.WaypointType;
@@ -175,6 +176,8 @@ public class Demo extends Scene {
 			locationWaypoints[4], // 14 - Airport
 	};
 
+	public static ArrayList<HoldingWaypoint> holdingWaypoints = new ArrayList<HoldingWaypoint>();
+
 	/**
 	 * Constructor
 	 * 
@@ -197,6 +200,24 @@ public class Demo extends Scene {
 		background = graphics.newImage("gfx" + File.separator + "map.png");
 		music = audio.newMusic("sfx" + File.separator + "Gypsy_Shoegazer.ogg");
 		music.play();
+		// Initialise Holding Waypoints
+		holdingWaypoints.add(new HoldingWaypoint(locationWaypoints[4]
+				.position().x() - 100,
+				locationWaypoints[4].position().y() - 100));
+		holdingWaypoints.add(new HoldingWaypoint(locationWaypoints[4]
+				.position().x() + 100,
+				locationWaypoints[4].position().y() - 100));
+		holdingWaypoints.add(new HoldingWaypoint(locationWaypoints[4]
+				.position().x() + 100,
+				locationWaypoints[4].position().y() + 100));
+		holdingWaypoints.add(new HoldingWaypoint(locationWaypoints[4]
+				.position().x() - 100,
+				locationWaypoints[4].position().y() + 100));
+		// Initialise values of setNextWaypoint.
+		holdingWaypoints.get(0).setNextWaypoint(holdingWaypoints.get(1));
+		holdingWaypoints.get(1).setNextWaypoint(holdingWaypoints.get(2));
+		holdingWaypoints.get(2).setNextWaypoint(holdingWaypoints.get(3));
+		holdingWaypoints.get(3).setNextWaypoint(holdingWaypoints.get(0));
 
 		ordersBox = new OrdersBox(ORDERSBOX_X, ORDERSBOX_Y, ORDERSBOX_W,
 				ORDERSBOX_H, 6);
@@ -637,6 +658,9 @@ public class Demo extends Scene {
 		for (Waypoint waypoint : airspaceWaypoints) {
 			waypoint.draw();
 		}
+		for (HoldingWaypoint waypoint : holdingWaypoints) {
+			waypoint.draw();
+		}
 
 		graphics.setColour(255, 255, 255);
 
@@ -812,7 +836,8 @@ public class Demo extends Scene {
 
 		return new Aircraft(name, destinationName, originName,
 				destinationPoint, originPoint, aircraftImage,
-				32 + (int) (10 * Math.random()), airspaceWaypoints, difficulty);
+				32 + (int) (10 * Math.random()), airspaceWaypoints, difficulty,
+				holdingWaypoints);
 	}
 
 	/**

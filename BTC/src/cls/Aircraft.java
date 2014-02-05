@@ -175,14 +175,16 @@ public class Aircraft {
 	 */
 	public Aircraft(String name, String nameDestination, String nameOrigin,
 			Waypoint destinationPoint, Waypoint originPoint, Image img,
-			double speed, Waypoint[] sceneWaypoints, int difficulty) {
+			double speed, Waypoint[] sceneWaypoints, int difficulty,
+			ArrayList<HoldingWaypoint> holdingWaypoints) {
 		flightName = name;
 		destinationName = nameDestination;
 		originName = nameOrigin;
 		image = img;
 
 		// Find route
-		route = findGreedyRoute(originPoint, destinationPoint, sceneWaypoints);
+		route = findGreedyRoute(originPoint, destinationPoint, sceneWaypoints,
+				holdingWaypoints);
 		destination = destinationPoint;
 		// place on spawn waypoint
 		position = originPoint.position();
@@ -513,10 +515,23 @@ public class Aircraft {
 		} else if (isAt(currentTarget.position())
 				&& (currentRouteStage == route.length - 1)) {
 			currentRouteStage++;
-			currentTarget = destination;
+
+			// new code
+
+			currentTarget = destination; // part of old code
+
+			// new code end
+
 		} else if (isAt(currentTarget.position())) {
-			currentRouteStage++;
-			currentTarget = route[currentRouteStage];
+
+			if (currentTarget instanceof HoldingWaypoint) {
+				currentTarget = ((HoldingWaypoint) currentTarget)
+						.getNextWaypoint();
+
+			} else {
+				currentRouteStage++;
+				currentTarget = route[currentRouteStage];
+			}
 		}
 
 		// Update bearing
@@ -760,7 +775,7 @@ public class Aircraft {
 	 *         sensible amount of waypoint.
 	 */
 	public Waypoint[] findGreedyRoute(Waypoint origin, Waypoint destination,
-			Waypoint[] waypoints) {
+			Waypoint[] waypoints, ArrayList<HoldingWaypoint> holdingWaypoints) {
 		// to hold the route as we generate it.
 		ArrayList<Waypoint> selectedWaypoints = new ArrayList<Waypoint>();
 
@@ -837,6 +852,12 @@ public class Aircraft {
 			cost = 99999999999.0;
 
 		} // end while
+
+		if (destination instanceof Airport) {
+			Waypoint holdingWaypoint = holdingWaypoints.get(0);
+			selectedWaypoints
+					.add(selectedWaypoints.size() - 1, holdingWaypoint);
+		}
 
 		// create a Waypoint[] to hold the new route
 		Waypoint[] route = new Waypoint[selectedWaypoints.size()];
