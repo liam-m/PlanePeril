@@ -133,6 +133,12 @@ public class Demo extends Scene {
 	/**
 	 * A list of location names for waypoint flavour
 	 */
+	
+	public int getScore() {
+		return score;
+	}
+	
+	
 	private final static String[] LOCATION_NAMES = new String[] {
 			"North West Top Leftonia", "100 Acre Woods", "City of Rightson",
 			"South Sea", "Aerodromio Medved'" };
@@ -140,6 +146,7 @@ public class Demo extends Scene {
 	/**
 	 * The set of waypoints in the airspace which are origins / destinations
 	 */
+
 	public final static Waypoint[] locationWaypoints = new Waypoint[] {
 	/* A set of Waypoints which are origin / destination points */
 
@@ -453,7 +460,7 @@ public class Demo extends Scene {
 	public void gameOver(Aircraft plane1, Aircraft plane2) {
 		playSound(audio.newSoundEffect("sfx" + File.separator + "crash.ogg"));
 		main.closeScene();
-		main.setScene(new GameOver(main, plane1, plane2));
+		main.setScene(new GameOver(main, plane1, plane2, score));
 	}
 
 	/**
@@ -787,7 +794,7 @@ public class Demo extends Scene {
 
 		String timePlayed = String.format("%d:%02d:", hours, minutes)
 				+ df.format(seconds);
-		graphics.print(timePlayed, window.width()
+		graphics.print("score: "+score+"  "+timePlayed, window.width()
 				- (timePlayed.length() * 8 + 32), paddingFromTop);
 
 		int planes = aircraftInAirspace.size();

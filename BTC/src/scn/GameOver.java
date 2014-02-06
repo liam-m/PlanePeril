@@ -46,7 +46,8 @@ public class GameOver extends Scene {
 	private final Image explosion;
 
 	private int keyPressed;
-
+	
+	private int score;
 	/**
 	 * Timer to allow for explosion and plane to be shown for a period, followed
 	 * by the text box.
@@ -63,9 +64,9 @@ public class GameOver extends Scene {
 	 * @param plane2
 	 *            the second plane involved in the crash
 	 */
-	public GameOver(Main main, Aircraft plane1, Aircraft plane2) {
+	public GameOver(Main main, Aircraft plane1, Aircraft plane2, int score) {
 		super(main);
-
+		this.score=score;
 		crashedPlane1 = plane1;
 		crashedPlane2 = plane2;
 		crash = new Vector(plane1.position().x(), plane1.position().y(), 0);
@@ -113,7 +114,15 @@ public class GameOver extends Scene {
 		textBox.addText("With no income, there is no way your family can survive the fast-approaching winter months.");
 		textBox.newline();
 		textBox.newline();
-		textBox.delay(0.8);
+		textBox.delay(1);
+		textBox.addText("Your score of "+this.score+" just wasn't enough...");
+	    textBox.newline();
+	    textBox.delay(0.4);
+	    textBox.newline();
+	    textBox.addText(".....");
+		textBox.delay(2);
+		textBox.newline();
+		textBox.newline();
 		textBox.addText("Game Over.");
 	}
 
