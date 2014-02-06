@@ -54,6 +54,12 @@ public class Demo extends Scene {
 	/**
 	 * Time since the scene began Could be used for score
 	 */
+
+ 	/**
+ 	 *  Cumulative score, added to upon completion of flightplan by aircraft.
+ 	 */
+	private int score;
+ 
 	private double timeElapsed;
 	/**
 	 * The currently selected aircraft
@@ -351,6 +357,8 @@ public class Demo extends Scene {
 			}
 
 			if (plane.isFinished()) {
+				score += plane.getPoints();
+				System.out.println(score);
 				switch (RandomNumber.randInclusiveInt(0, 2)) {
 				case 0:
 					ordersBox.addOrder("<<< Thank you Comrade");
