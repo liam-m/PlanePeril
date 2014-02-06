@@ -951,8 +951,7 @@ public class Aircraft {
 		isLanding = !isLanding;
 
 		if (!isLanding)
-			return;
-			// Insert landing function here
+			resetBearing();
 	}	
 	/**
 	 * Changes the direction the plane is going towards.

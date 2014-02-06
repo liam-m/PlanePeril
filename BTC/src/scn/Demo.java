@@ -770,7 +770,7 @@ public class Demo extends Scene {
 		// padding for all of the top text so it doesn't touch the edge of the
 		// window
 		int paddingFromTop = 4;
-
+		
 		minutes %= 60;
 
 		double seconds = timeElapsed % 60;
