@@ -254,7 +254,7 @@ public class Demo extends Scene {
 		ButtonText.Action land = new ButtonText.Action() {
 			@Override
 			public void action() {
-				// toggle land function
+				// toggle land function		
 				toggleLand();
 			}
 		};		
@@ -542,7 +542,10 @@ public class Demo extends Scene {
 	public void mouseReleased(int key, int x, int y) {
 		if (selectedAircraft != null && manualOverrideButton.isMouseOver(x, y))
 			manualOverrideButton.act();
-
+		
+		if (selectedAircraft != null && landButton.isMouseOver(x, y))
+			landButton.act();
+		
 		if (key == input.MOUSE_LEFT && selectedWaypoint != null) {
 
 			if (selectedAircraft.isManuallyControlled() == true) {
