@@ -855,9 +855,17 @@ public class Aircraft {
 		} // end while
 
 		if (destination instanceof Airport) {
-			Waypoint holdingWaypoint = holdingWaypoints.get(0);
-			selectedWaypoints
-					.add(selectedWaypoints.size() - 1, holdingWaypoint);
+			Waypoint nearestHoldingWaypoint = holdingWaypoints.get(3);
+			double cheapestCost = holdingWaypoints.get(0).getCost(origin);
+
+			for (HoldingWaypoint holdingPoint : holdingWaypoints) {
+				if (holdingPoint.getCost(origin) < cheapestCost) {
+					nearestHoldingWaypoint = holdingPoint;
+				}
+			}
+
+			selectedWaypoints.add(selectedWaypoints.size() - 1,
+					nearestHoldingWaypoint);
 		}
 
 		// create a Waypoint[] to hold the new route
