@@ -56,7 +56,7 @@ public class Aircraft {
 	 * Whether the plane is being manually controlled.
 	 */
 	private boolean isManuallyControlled;
-	
+
 	/**
 	 * Whether the plane is landing.
 	 */
@@ -327,7 +327,7 @@ public class Aircraft {
 	public boolean isLanding() {
 		return isLanding;
 	}
-	
+
 	public int altitudeState() {
 		return altitudeState;
 	}
@@ -525,9 +525,10 @@ public class Aircraft {
 		} else if (isAt(currentTarget.position())) {
 
 			if (currentTarget instanceof HoldingWaypoint) {
-				currentTarget = ((HoldingWaypoint) currentTarget)
-						.getNextWaypoint();
-
+				// currentTarget = ((HoldingWaypoint) currentTarget)
+				// .getNextWaypoint();
+				this.alterPath(this.flightPathContains(currentTarget),
+						((HoldingWaypoint) currentTarget).getNextWaypoint());
 			} else {
 				currentRouteStage++;
 				currentTarget = route[currentRouteStage];
@@ -946,13 +947,13 @@ public class Aircraft {
 			resetBearing();
 	}
 
-	
 	public void toggleLand() {
 		isLanding = !isLanding;
 
 		if (!isLanding)
 			resetBearing();
-	}	
+	}
+
 	/**
 	 * Changes the direction the plane is going towards.
 	 * 
