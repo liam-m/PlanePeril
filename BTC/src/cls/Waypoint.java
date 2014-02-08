@@ -22,13 +22,15 @@ public class Waypoint {
 	/**
 	 * Location of the waypoint
 	 */
-	private final Vector position;
+	protected final Vector position;
 
 	/**
 	 * Marks whether the waypoint is a point where planes may enter and exit the
 	 * game airspace
 	 */
 	private final WaypointType type;
+
+	private final String name;
 
 	/**
 	 * Constructor for waypoints
@@ -41,9 +43,16 @@ public class Waypoint {
 	 *            whether the waypoint is a point where planes may enter and
 	 *            leave the airspace
 	 */
-	public Waypoint(double x, double y, WaypointType type) {
+	public Waypoint(double x, double y, WaypointType type, String name) {
 		position = new Vector(x, y, 0);
 		this.type = type;
+		this.name = name;
+	}
+
+	public Waypoint(double x, double y) {
+		position = new Vector(x, y, 0);
+		this.type = WaypointType.REGULAR;
+		this.name = "";
 	}
 
 	/**
@@ -105,6 +114,10 @@ public class Waypoint {
 		return target.getCost(source);
 	}
 
+	public String getName() {
+		return this.name;
+	}
+
 	/**
 	 * draws the waypoint
 	 * 
@@ -118,8 +131,6 @@ public class Waypoint {
 		graphics.circle(false, x, y, RADIUS);
 		graphics.circle(true, x, y, RADIUS - 2);
 
-		if (this instanceof Airport)
-			graphics.print("Aero Medved'", x - 40, y + 15);
 	}
 
 	public void draw() {

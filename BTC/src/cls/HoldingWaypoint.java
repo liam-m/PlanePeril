@@ -5,7 +5,7 @@ public class HoldingWaypoint extends Waypoint {
 	private Waypoint nextWaypoint;
 
 	public HoldingWaypoint(double x, double y) {
-		super(x, y, WaypointType.REGULAR);
+		super(x, y);
 
 	}
 

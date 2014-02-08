@@ -955,6 +955,9 @@ public class Aircraft {
 			resetBearing();
 	}
 
+	/**
+	 * 
+	 */
 	public void toggleLand() {
 		isLanding = !isLanding;
 
@@ -1036,5 +1039,9 @@ public class Aircraft {
 
 	public int getPoints() {
 		return this.points;
+	}
+
+	public Waypoint getDestination() {
+		return destination;
 	}
 }

@@ -2,14 +2,19 @@ package cls;
 
 import java.util.ArrayList;
 
+import lib.RandomNumber;
+import lib.jog.graphics;
+import btc.Main;
+
 public class Airport extends Waypoint {
 
 	private final static int MAX_AIRCRAFT_NUMBER = 10;
+	public final static int MOUSE_LENIANCY = 32;
 
 	private ArrayList<Aircraft> aircraftList = new ArrayList<Aircraft>();
 
-	public Airport(double x, double y) {
-		super(x, y, WaypointType.ENTRY_EXIT);
+	public Airport(double x, double y, String name) {
+		super(x, y, WaypointType.ENTRY_EXIT, name);
 		// TODO: Change type to WaypointType.MXIED, requires updates in
 		// flightplan generations
 	}
@@ -29,6 +34,28 @@ public class Airport extends Waypoint {
 		}
 
 		aircraftList.add(aircraft);
+	}
+
+	public Aircraft takeoff() throws IllegalStateException {
+		if (aircraftList.size() == 0)
+			throw new IllegalStateException("No aircraft in airport");
+
+		System.out.println("Taking offff!!!");
+
+		int i = RandomNumber.randInclusiveInt(0, aircraftList.size() - 1);
+		Aircraft aircraft = aircraftList.get(i);
+		aircraftList.remove(i);
+
+		return aircraft;
+	}
+
+	public void drawAirportInfo() {
+		graphics.setColour(Main.GREEN);
+
+		graphics.print("Aircraft in: " + aircraftList.size(),
+				position.x() - 40, position.y() + 25);
+
+		graphics.print("Aero Medved'", position.x() - 40, position.y() + 15);
 	}
 
 }

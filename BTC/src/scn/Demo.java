@@ -65,10 +65,14 @@ public class Demo extends Scene {
 	 * The currently selected aircraft
 	 */
 	private Aircraft selectedAircraft;
+
 	/**
 	 * The currently selected waypoint
 	 */
 	private Waypoint selectedWaypoint;
+
+	private static Airport airport;
+
 	/**
 	 * Selected path point, in an aircraft's route, used for altering the route
 	 */
@@ -107,6 +111,7 @@ public class Demo extends Scene {
 	 * The interval in seconds to generate flights after
 	 */
 	private static double flightGenerationInterval = 12;
+
 	/**
 	 * The time eleapsed since the last flight was generated
 	 */
@@ -133,39 +138,33 @@ public class Demo extends Scene {
 	/**
 	 * A list of location names for waypoint flavour
 	 */
-	
-	public int getScore() {
-		return score;
-	}
-	
-	
-	private final static String[] LOCATION_NAMES = new String[] {
+	private final static String[] LOCATION_NAMES = new String[]{
 			"North West Top Leftonia", "100 Acre Woods", "City of Rightson",
-			"South Sea", "Aerodromio Medved'" };
-
+			"South Sea", "Aerodromio Medved'"};
+	
 	/**
 	 * The set of waypoints in the airspace which are origins / destinations
 	 */
-
 	public final static Waypoint[] locationWaypoints = new Waypoint[] {
 	/* A set of Waypoints which are origin / destination points */
 
 			// top left
-			new Waypoint(8, 8, WaypointType.ENTRY_EXIT),
+			new Waypoint(8, 8, WaypointType.ENTRY_EXIT, "North West Top Leftonia"),
 
 			// bottom left
 			new Waypoint(8, window.height() - ORDERSBOX_H - 40,
-					WaypointType.ENTRY_EXIT),
+					WaypointType.ENTRY_EXIT, "100 Acre Woods"),
 
 			// top right
-			new Waypoint(window.width() - 40, 8, WaypointType.ENTRY_EXIT),
+			new Waypoint(window.width() - 40, 8, WaypointType.ENTRY_EXIT, "City of Rightson"),
 
 			// bottom right
 			new Waypoint(window.width() - 40, window.height() - ORDERSBOX_H
-					- 40, WaypointType.ENTRY_EXIT),
+					- 40, WaypointType.ENTRY_EXIT, "South Sea"),
 
 			// The aerodromio
-			new Airport(window.width() / 2, window.height() / 2 - 100) };
+			airport = new Airport(window.width() / 2,
+					window.height() / 2 - 100, "Aerodromio Medved'"),};
 
 	/**
 	 * All waypoints in the airspace, INCLUDING locationWaypoints.
@@ -173,12 +172,12 @@ public class Demo extends Scene {
 	public static Waypoint[] airspaceWaypoints = new Waypoint[] {
 
 			// airspace waypoints
-			new Waypoint(125, 70, WaypointType.REGULAR), // 0
-			new Waypoint(700, 100, WaypointType.REGULAR), // 1
-			new Waypoint(1040, 80, WaypointType.REGULAR), // 2
-			new Waypoint(670, 400, WaypointType.REGULAR), // 3
-			new Waypoint(1050, 400, WaypointType.REGULAR), // 4
-			new Waypoint(250, 400, WaypointType.REGULAR), // 5
+			new Waypoint(125, 70), // 0
+			new Waypoint(700, 100), // 1
+			new Waypoint(1040, 80), // 2
+			new Waypoint(670, 400), // 3
+			new Waypoint(1050, 400), // 4
+			new Waypoint(250, 400), // 5
 
 			// destination/origin waypoints - present in this list for
 			// pathfinding.
@@ -419,7 +418,7 @@ public class Demo extends Scene {
 		if (flightGenerationTimeElapsed >= flightGenerationInterval) {
 			flightGenerationTimeElapsed -= flightGenerationInterval;
 			if (aircraftInAirspace.size() < maxAircraft) {
-				generateFlight();
+				generateFlight(false);
 			}
 		}
 	}
@@ -546,6 +545,15 @@ public class Demo extends Scene {
 		if (selectedAircraft != null && landButton.isMouseOver(x, y))
 			landButton.act();
 		
+		if (key == input.MOUSE_LEFT && airport.isMouseOver(x - 16, y - 16)) {
+			try {
+				Aircraft fromAirport = airport.takeoff();
+				generateFlight(true);
+			} catch (IllegalStateException e) {
+
+			}
+		}
+		
 		if (key == input.MOUSE_LEFT && selectedWaypoint != null) {
 
 			if (selectedAircraft.isManuallyControlled() == true) {
@@ -621,7 +629,7 @@ public class Demo extends Scene {
 			break;
 
 		case input.KEY_LCRTL:
-			generateFlight();
+				generateFlight(false);
 			break;
 
 		case input.KEY_ESCAPE:
@@ -629,8 +637,8 @@ public class Demo extends Scene {
 			break;
 
 		case input.KEY_F5:
-			Aircraft a1 = createAircraft();
-			Aircraft a2 = createAircraft();
+				Aircraft a1 = createAircraft(false);
+				Aircraft a2 = createAircraft(true);
 			gameOver(a1, a2);
 			break;
 
@@ -676,9 +684,12 @@ public class Demo extends Scene {
 		for (Waypoint waypoint : airspaceWaypoints) {
 			waypoint.draw();
 		}
+
 		for (HoldingWaypoint waypoint : holdingWaypoints) {
 			waypoint.draw();
 		}
+
+		airport.drawAirportInfo();
 
 		graphics.setColour(255, 255, 255);
 
@@ -699,12 +710,16 @@ public class Demo extends Scene {
 			graphics.rectangle(false, (window.width() - 128) / 2, 16, 128, 32);
 			manualOverrideButton.draw();
 			
-			// Land Button
-			graphics.setColour(0, 0, 0);
-			graphics.rectangle(true, (window.width() - 500) / 2, 16, 128, 32);
-			graphics.setColour(0, 128, 0);
-			graphics.rectangle(false, (window.width() - 500) / 2, 16, 128, 32);			
-			landButton.draw();
+			if (selectedAircraft.getDestination() instanceof Airport) {
+				// Land Button
+				graphics.setColour(0, 0, 0);
+				graphics.rectangle(true, (window.width() - 500) / 2, 16, 128,
+						32);
+				graphics.setColour(Main.GREEN);
+				graphics.rectangle(false, (window.width() - 500) / 2, 16, 128,
+						32);
+				landButton.draw();
+			}
 
 			selectedAircraft.drawFlightPath();
 			graphics.setColour(Main.GREEN);
@@ -811,11 +826,14 @@ public class Demo extends Scene {
 	/**
 	 * Create a new aircraft object and introduce it to the airspace
 	 */
-	private void generateFlight() {
-		Aircraft a = createAircraft();
+	private void generateFlight(boolean fromAirport) {
+
+		Aircraft a = createAircraft(fromAirport);
+
 		ordersBox.addOrder("<<< " + a.name() + " incoming from "
 				+ a.originName() + " heading towards " + a.destinationName()
 				+ ".");
+
 		aircraftInAirspace.add(a);
 	}
 
@@ -825,18 +843,28 @@ public class Demo extends Scene {
 	 * 
 	 * @return the create aircraft object
 	 */
-	private Aircraft createAircraft() {
+	private Aircraft createAircraft(boolean fromAirport) {
 		// Origin and Destination
 		int o = RandomNumber.randInclusiveInt(0, locationWaypoints.length - 1);
 		int d = RandomNumber.randInclusiveInt(0, locationWaypoints.length - 1);
 
+		// make sure origin and destination is not the same waypoint
 		while (LOCATION_NAMES[d] == LOCATION_NAMES[o]) {
 			d = RandomNumber.randInclusiveInt(0, locationWaypoints.length - 1);
 		}
 
-		String originName = LOCATION_NAMES[o];
-		String destinationName = LOCATION_NAMES[d];
 		Waypoint originPoint = locationWaypoints[o];
+
+		// if from airport, make sure destination is not airport
+		if (fromAirport) {
+			while (locationWaypoints[d] instanceof Airport) {
+				d = RandomNumber.randInclusiveInt(0,
+						locationWaypoints.length - 1);
+			}
+
+			originPoint = airport;
+		}
+
 		Waypoint destinationPoint = locationWaypoints[d];
 
 		// Name
@@ -852,7 +880,8 @@ public class Demo extends Scene {
 			}
 		}
 
-		return new Aircraft(name, destinationName, originName,
+		return new Aircraft(name, destinationPoint.getName(),
+				originPoint.getName(),
 				destinationPoint, originPoint, aircraftImage,
 				32 + (int) (10 * Math.random()), airspaceWaypoints, difficulty,
 				holdingWaypoints);
