@@ -274,7 +274,7 @@ public class Title extends Scene {
 		graphics.print("Created by:", window.height() + 8, 56);
 		graphics.print("TEAM FLR", window.height() + 8, 72);
 
-		graphics.print("Fixed & Extended by:", window.height() + 8, 88);
+		graphics.print("Fixed and Extended by:", window.height() + 8, 88);
 		graphics.print("TEAM INI", window.height() + 8, 104);
 
 		// Draw Buttons
