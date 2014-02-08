@@ -328,6 +328,15 @@ public class Aircraft {
 		return isLanding;
 	}
 
+	// Checks if the aircraft wants to land at the airport
+	public boolean landingAircraft() {
+		if (destination instanceof Airport) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	public int altitudeState() {
 		return altitudeState;
 	}

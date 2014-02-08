@@ -55,11 +55,11 @@ public class Demo extends Scene {
 	 * Time since the scene began Could be used for score
 	 */
 
- 	/**
- 	 *  Cumulative score, added to upon completion of flightplan by aircraft.
- 	 */
+	/**
+	 * Cumulative score, added to upon completion of flightplan by aircraft.
+	 */
 	private int score;
- 
+
 	private double timeElapsed;
 	/**
 	 * The currently selected aircraft
@@ -92,7 +92,7 @@ public class Demo extends Scene {
 	 * Tracks if manual heading compass of a manually controller aircraft has
 	 * been dragged
 	 */
-	
+
 	private ButtonText landButton;
 	/**
 	 * Tracks if manual heading compass of a manually controller aircraft has
@@ -133,12 +133,11 @@ public class Demo extends Scene {
 	/**
 	 * A list of location names for waypoint flavour
 	 */
-	
+
 	public int getScore() {
 		return score;
 	}
-	
-	
+
 	private final static String[] LOCATION_NAMES = new String[] {
 			"North West Top Leftonia", "100 Acre Woods", "City of Rightson",
 			"South Sea", "Aerodromio Medved'" };
@@ -247,22 +246,20 @@ public class Demo extends Scene {
 			}
 		};
 
-		
 		manualOverrideButton = new ButtonText("Take Control", manual,
 				(window.width() - 128) / 2, 32, 128, 32, 8, 4);
-		
+
 		ButtonText.Action land = new ButtonText.Action() {
 			@Override
 			public void action() {
-				// toggle land function		
+				// toggle land function
 				toggleLand();
 			}
-		};		
-		
+		};
 
-		landButton = new ButtonText("Land", land,
-				(window.width() - 500) / 2, 32, 128, 32, 8, 4);
-		
+		landButton = new ButtonText("Land", land, (window.width() - 500) / 2,
+				32, 128, 32, 8, 4);
+
 		timeElapsed = 0;
 		compassDragged = false;
 		selectedAircraft = null;
@@ -309,7 +306,6 @@ public class Demo extends Scene {
 						: " Take") + " Control");
 	}
 
-
 	/**
 	 * Causes a selected aircraft to call methods to toggle manual control
 	 */
@@ -318,12 +314,9 @@ public class Demo extends Scene {
 			return;
 		selectedAircraft.toggleLand();
 
-		landButton
-				.setText((selectedAircraft.isLanding() ? ""
-						: " ") + " Land");
+		landButton.setText((selectedAircraft.isLanding() ? "" : " ") + " Land");
 	}
-	
-	
+
 	/**
 	 * Causes an aircraft to call methods to handle deselection
 	 */
@@ -542,10 +535,11 @@ public class Demo extends Scene {
 	public void mouseReleased(int key, int x, int y) {
 		if (selectedAircraft != null && manualOverrideButton.isMouseOver(x, y))
 			manualOverrideButton.act();
-		
-		if (selectedAircraft != null && landButton.isMouseOver(x, y))
+
+		if (selectedAircraft != null && landButton.isMouseOver(x, y)
+				&& selectedAircraft.landingAircraft())
 			landButton.act();
-		
+
 		if (key == input.MOUSE_LEFT && selectedWaypoint != null) {
 
 			if (selectedAircraft.isManuallyControlled() == true) {
@@ -698,13 +692,17 @@ public class Demo extends Scene {
 			graphics.setColour(Main.GREEN);
 			graphics.rectangle(false, (window.width() - 128) / 2, 16, 128, 32);
 			manualOverrideButton.draw();
-			
-			// Land Button
-			graphics.setColour(0, 0, 0);
-			graphics.rectangle(true, (window.width() - 500) / 2, 16, 128, 32);
-			graphics.setColour(0, 128, 0);
-			graphics.rectangle(false, (window.width() - 500) / 2, 16, 128, 32);			
-			landButton.draw();
+
+			if (selectedAircraft.landingAircraft()) {
+				// Land Button
+				graphics.setColour(0, 0, 0);
+				graphics.rectangle(true, (window.width() - 500) / 2, 16, 128,
+						32);
+				graphics.setColour(0, 128, 0);
+				graphics.rectangle(false, (window.width() - 500) / 2, 16, 128,
+						32);
+				landButton.draw();
+			}
 
 			selectedAircraft.drawFlightPath();
 			graphics.setColour(Main.GREEN);
@@ -788,7 +786,7 @@ public class Demo extends Scene {
 		// padding for all of the top text so it doesn't touch the edge of the
 		// window
 		int paddingFromTop = 4;
-		
+
 		minutes %= 60;
 
 		double seconds = timeElapsed % 60;
@@ -797,7 +795,7 @@ public class Demo extends Scene {
 
 		String timePlayed = String.format("%d:%02d:", hours, minutes)
 				+ df.format(seconds);
-		graphics.print("score: "+score+"  "+timePlayed, window.width()
+		graphics.print("score: " + score + "  " + timePlayed, window.width()
 				- (timePlayed.length() * 8 + 32), paddingFromTop);
 
 		int planes = aircraftInAirspace.size();
