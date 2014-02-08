@@ -961,7 +961,7 @@ public class Aircraft {
 		if (!isLanding) {
 			resetBearing();
 		} else {
-			currentRouteStage++;
+			currentRouteStage = route.length;
 			currentTarget = destination;
 		}
 	}
