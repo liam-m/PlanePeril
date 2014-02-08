@@ -958,8 +958,12 @@ public class Aircraft {
 	public void toggleLand() {
 		isLanding = !isLanding;
 
-		if (!isLanding)
+		if (!isLanding) {
 			resetBearing();
+		} else {
+			currentRouteStage++;
+			currentTarget = destination;
+		}
 	}
 
 	/**
