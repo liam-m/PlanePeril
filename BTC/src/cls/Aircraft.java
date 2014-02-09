@@ -56,7 +56,6 @@ public class Aircraft {
 	 * Whether the plane is being manually controlled.
 	 */
 	private boolean isManuallyControlled;
-
 	/**
 	 * Whether the plane is landing.
 	 */
@@ -113,21 +112,17 @@ public class Aircraft {
 	 */
 	private final ArrayList<Aircraft> planesTooNear = new ArrayList<Aircraft>();
 	/**
-	 * the current state of the plane's altitude, i.e. if the plane is climbing
-	 * or falling
+	 * Index of altidudeList for the value of the Altidude the aircraft desires to be at.
 	 */
-	private int altitudeState;
+	private int targetAltitudeIndex;
+	/**
+	 * A list holding the list of possible altitudes for the aircraft.
+	 */
+	private ArrayList<Integer> altitudeList = new ArrayList<Integer>();
 	/**
 	 * the speed to climb or fall by. Default 300 for easy mode
 	 */
 	private int altitudeChangeSpeed = 300;
-
-	/**
-	 * Static ints for use where altitude state is to be changed.
-	 */
-	public static final int ALTITUDE_CLIMB = 1;
-	public static final int ALTITUDE_FALL = -1;
-	public static final int ALTITUDE_LEVEL = 0;
 
 	/**
 	 * Whether this aircraft is currently in the airport
@@ -201,15 +196,16 @@ public class Aircraft {
 		} else {
 			offset = RandomNumber.randInclusiveInt(10, separationRule);
 		}
+		
+		altitudeList.add(100);
+		altitudeList.add(5000);
+		altitudeList.add(10000);
+		altitudeList.add(15000);
+		targetAltitudeIndex = RandomNumber.randInclusiveInt(1, altitudeList.size()-1);
+		int altitude= altitudeList.get(targetAltitudeIndex);
+		
 
-		int altitudeOffset;
-		if (RandomNumber.randInclusiveInt(0, 1) == 0) {
-			altitudeOffset = 28000;
-		} else {
-			altitudeOffset = 30000;
-		}
-
-		position = position.add(new Vector(offset, 0, altitudeOffset));
+		position = position.add(new Vector(offset, 0, altitude));
 
 		// Calculate initial velocity (direction)
 		currentTarget = route[0];
@@ -328,9 +324,6 @@ public class Aircraft {
 		return isLanding;
 	}
 
-	public int altitudeState() {
-		return altitudeState;
-	}
 
 	/**
 	 * Calculates the angle from the plane's position, to its current target.
@@ -485,48 +478,34 @@ public class Aircraft {
 	public void update(double dt) throws IllegalStateException {
 		if (hasFinished)
 			return;
-
-		switch (altitudeState) {
-		case -1:
-			fall();
-			break;
-		case 0:
-			break;
-		case 1:
+		if (altitudeList.get(targetAltitudeIndex) == this.position.z()){}
+		else if (altitudeList.get(targetAltitudeIndex) > this.position.z()){
 			climb();
-			break;
+		} else {
+			fall();
 		}
-
+		
 		// Update position
 		Vector dv = velocity.scaleBy(dt);
 		position = position.add(dv);
 
 		currentlyTurningBy = 0;
 
-		// Update target
+		// Update target waypoint
 		if (isAt(currentTarget.position()) && currentTarget.equals(destination)) {
 			hasFinished = true;
-
 			if (destination instanceof Airport) {
 				((Airport) destination).insertAircraft(this);
 				atAirport = true;
 			}
-
+			
 		} else if (isAt(currentTarget.position())
 				&& (currentRouteStage == route.length - 1)) {
 			currentRouteStage++;
-
-			// new code
-
-			currentTarget = destination; // part of old code
-
-			// new code end
-
+			currentTarget = destination;
+			
 		} else if (isAt(currentTarget.position())) {
-
 			if (currentTarget instanceof HoldingWaypoint) {
-				// currentTarget = ((HoldingWaypoint) currentTarget)
-				// .getNextWaypoint();
 				this.alterPath(this.flightPathContains(currentTarget),
 						((HoldingWaypoint) currentTarget).getNextWaypoint());
 			} else {
@@ -617,10 +596,10 @@ public class Aircraft {
 	/**
 	 * Draws the plane and any warning circles if necessary.
 	 */
-	public void draw(int controlAltitude) {
-		double alpha = 255 / ((Math.abs(position.z() - controlAltitude) + 1000) / 1000);
-		double scale = 2 * (position.z() / 30000);
-
+	public void draw() {
+		double alpha = 255; 
+		double scale = 2; 
+		
 		// draws the aircraft itself
 		graphics.setColour(128, 128, 128, alpha);
 		graphics.draw(image, scale, position.x(), position.y(), bearing(), 8, 8);
@@ -990,29 +969,26 @@ public class Aircraft {
 	}
 
 	/**
-	 * Increases the plane's altitude.
+	 * Increases the plane's altitude to altitudeList.get(targetAltitudeIndex).
 	 */
 	public void climb() {
-		if (position.z() < 30000 && altitudeState == ALTITUDE_CLIMB)
+		if (position.z() < altitudeList.get(targetAltitudeIndex))
 			changeAltitude(altitudeChangeSpeed);
-		if (position.z() >= 30000) {
+		if (position.z() >= altitudeList.get(targetAltitudeIndex)) {
 			changeAltitude(0);
-			altitudeState = ALTITUDE_LEVEL;
-			position = new Vector(position.x(), position.y(), 30000);
+			position = new Vector(position.x(), position.y(), altitudeList.get(targetAltitudeIndex));
 		}
 	}
 
 	/**
-	 * Decreases the plane's altitude.
+	 * Decreases the plane's altitude to altitudeList.get(targetAltitudeIndex).
 	 */
 	public void fall() {
-		if (position.z() > 28000 && altitudeState == ALTITUDE_FALL)
+		if (position.z() > altitudeList.get(targetAltitudeIndex))
 			changeAltitude(-altitudeChangeSpeed);
 
-		if (position.z() <= 28000) {
-			changeAltitude(0);
-			altitudeState = ALTITUDE_LEVEL;
-			position = new Vector(position.x(), position.y(), 28000);
+		if (position.z() <= altitudeList.get(targetAltitudeIndex)) {
+			position = new Vector(position.x(), position.y(), altitudeList.get(targetAltitudeIndex));
 		}
 	}
 
@@ -1023,18 +999,30 @@ public class Aircraft {
 	 *            the height by which to change altitude.
 	 */
 	private void changeAltitude(int height) {
-		// velocity = velocity.add(new Vector(0,0, height));
-
 		velocity.setZ(height);
 	}
 
 	/**
-	 * Sets the plane's altitude state, e.g. climbing or falling
-	 * 
-	 * @param state
+	 * Decrements the targetAltitudeIndex by 1.
 	 */
+	
+	public void decreaseTargetAltitude(){
+		if (targetAltitudeIndex <= 1)
+			return;
+		else{
+			targetAltitudeIndex --;
+		}
+	}
+	public void increaseTargetAltitude(){
+		if (targetAltitudeIndex == 3)
+			return;
+		else{
+			targetAltitudeIndex ++;
+		}
+	}
+	
 	public void setAltitudeState(int state) {
-		this.altitudeState = state;
+		return;
 	}
 
 	public int getPoints() {

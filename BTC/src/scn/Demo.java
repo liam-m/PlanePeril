@@ -120,11 +120,6 @@ public class Demo extends Scene {
 	 * Max aircraft in the airspace at once Change to 10 for Assessment 3.
 	 */
 	private final int maxAircraft = 10;
-	/**
-	 * The current control altitude of the ACTO initially 30,000 only aircraft
-	 * on or close to this altitude can be controlled
-	 */
-	private int controlAltitude = 30000;
 
 	/**
 	 * Music to play during the game scene
@@ -313,12 +308,11 @@ public class Demo extends Scene {
 	 * Causes a selected aircraft to call methods to toggle manual control
 	 */
 	private void toggleLand() {
-		if (selectedAircraft == null)
+		if (selectedAircraft == null || selectedAircraft.position().z() >= 5000)
 			return;
 		selectedAircraft.toggleLand();
 
-		landButton
-				.setText((selectedAircraft.isLanding() ? ""
+		landButton.setText((selectedAircraft.isLanding() ? ""
 						: " ") + " Land");
 	}
 	
@@ -491,8 +485,7 @@ public class Demo extends Scene {
 			Aircraft newSelected = selectedAircraft;
 
 			for (Aircraft a : aircraftInAirspace) {
-				if (a.isMouseOver(x - 16, y - 16)
-						&& aircraftSelectableAtAltitude(a, controlAltitude)) {
+				if (a.isMouseOver(x - 16, y - 16)) {
 					newSelected = a;
 				}
 			}
@@ -580,27 +573,16 @@ public class Demo extends Scene {
 			}
 		}
 
-		if (key == input.MOUSE_WHEEL_UP && controlAltitude < 30000)
-			controlAltitude += 2000;
-
-		if (key == input.MOUSE_WHEEL_DOWN && controlAltitude > 28000)
-			controlAltitude -= 2000;
-
-		int altitudeState = 0;
-
-		if (selectedAircraft != null) {
-			altitudeState = selectedAircraft.altitudeState();
-		}
-
 		altimeter.mouseReleased(key, x, y);
 
+		/* TODO Needs to be reworked so that aircraft displays this message when altitude is changed. 
 		if (selectedAircraft != null) {
 			if (altitudeState != selectedAircraft.altitudeState()) {
 				ordersBox.addOrder(">>> " + selectedAircraft.name()
 						+ ", please adjust your altitude");
 				ordersBox.addOrder("<<< Roger that. Altering altitude now.");
 			}
-		}
+		}*/
 
 		if (compassDragged && selectedAircraft != null) {
 			double dx = input.mouseX() - selectedAircraft.position().x();
@@ -694,7 +676,7 @@ public class Demo extends Scene {
 		graphics.setColour(255, 255, 255);
 
 		for (Aircraft aircraft : aircraftInAirspace) {
-			aircraft.draw(controlAltitude);
+			aircraft.draw();
 		}
 
 		if (selectedAircraft != null) {
@@ -819,8 +801,6 @@ public class Demo extends Scene {
 
 		graphics.print(String.valueOf(aircraftInAirspace.size()) + " plane"
 				+ (planes == 1 ? "" : "s") + " in the sky.", 32, paddingFromTop);
-		graphics.print("Control Altitude: " + String.valueOf(controlAltitude),
-				544, paddingFromTop);
 	}
 
 	/**
@@ -900,18 +880,7 @@ public class Demo extends Scene {
 	 *         altitude
 	 */
 	private boolean aircraftSelectableAtAltitude(Aircraft a, int altitude) {
-		if (a.position().z() == altitude)
 			return true;
-
-		if (a.position().z() < altitude
-				&& a.altitudeState() == Aircraft.ALTITUDE_CLIMB)
-			return true;
-
-		if (a.position().z() > altitude
-				&& a.altitudeState() == Aircraft.ALTITUDE_FALL)
-			return true;
-
-		return false;
 	}
 
 	@Override

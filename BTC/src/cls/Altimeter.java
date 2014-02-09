@@ -104,9 +104,9 @@ public class Altimeter implements EventHandler {
 
 		if (key == input.MOUSE_LEFT) {
 			if (mouseOverTopButton(mx, my)) {
-				currentAircraft.setAltitudeState(Aircraft.ALTITUDE_CLIMB);
+				currentAircraft.increaseTargetAltitude();
 			} else if (mouseOverBottomButton(mx, my)) {
-				currentAircraft.setAltitudeState(Aircraft.ALTITUDE_FALL);
+				currentAircraft.decreaseTargetAltitude();
 			}
 		}
 	}
