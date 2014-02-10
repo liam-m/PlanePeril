@@ -185,21 +185,9 @@ public class Aircraft {
 		route = findGreedyRoute(originPoint, destinationPoint, sceneWaypoints,
 				holdingWaypoints);
 		destination = destinationPoint;
+		
 		// place on spawn waypoint
 		position = originPoint.position();
-		// offset spawn position. Helps avoid aircraft crashes very soon after
-		// spawn
-
-		// Offsets the spawn location of the aircraft around the origin
-		// waypoint, for variety
-		// This also prevents collisions between just-spawned aircraft and
-		// existing aircraft flying to the waypoint.
-		int offset;
-		if (RandomNumber.randInclusiveInt(0, 1) == 0) {
-			offset = RandomNumber.randInclusiveInt(-separationRule, -10);
-		} else {
-			offset = RandomNumber.randInclusiveInt(10, separationRule);
-		}
 
 		altitudeList.add(100);
 		altitudeList.add(5000);
@@ -209,7 +197,7 @@ public class Aircraft {
 				altitudeList.size() - 1);
 		int altitude = altitudeList.get(targetAltitudeIndex);
 
-		position = position.add(new Vector(offset, 0, altitude));
+		position = position.add(new Vector(0, 0, altitude));
 
 		// Calculate initial velocity (direction)
 		currentTarget = route[0];
@@ -232,24 +220,24 @@ public class Aircraft {
 		// 2 has the hardest attributes (faster aircraft, least forgiving
 		// separation rules.
 		case Demo.DIFFICULTY_EASY:
-			separationRule = 64;
-			altitudeChangeSpeed = 400;
+				separationRule = 64;
+				altitudeChangeSpeed = 800;
 			break;
 
 		case Demo.DIFFICULTY_MEDIUM:
-			separationRule = 96;
-			velocity = velocity.scaleBy(2);
-			turnSpeed = Math.PI / 3;
-			altitudeChangeSpeed = 200;
+				separationRule = 96;
+				velocity = velocity.scaleBy(2);
+				turnSpeed = Math.PI / 3;
+				altitudeChangeSpeed = 600;
 			break;
 
 		case Demo.DIFFICULTY_HARD:
-			separationRule = 128;
-			velocity = velocity.scaleBy(3);
-			// At high velocities, the aircraft is allowed to turn faster
-			// this helps keep the aircraft on track.
-			turnSpeed = Math.PI / 2;
-			altitudeChangeSpeed = 100;
+				separationRule = 128;
+				velocity = velocity.scaleBy(3);
+				// At high velocities, the aircraft is allowed to turn faster
+				// this helps keep the aircraft on track.
+				turnSpeed = Math.PI / 2;
+				altitudeChangeSpeed = 400;
 			break;
 
 		default:
