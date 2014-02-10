@@ -112,7 +112,8 @@ public class Aircraft {
 	 */
 	private final ArrayList<Aircraft> planesTooNear = new ArrayList<Aircraft>();
 	/**
-	 * Index of altidudeList for the value of the Altidude the aircraft desires to be at.
+	 * Index of altidudeList for the value of the Altidude the aircraft desires
+	 * to be at.
 	 */
 	private int targetAltitudeIndex;
 	/**
@@ -196,14 +197,14 @@ public class Aircraft {
 		} else {
 			offset = RandomNumber.randInclusiveInt(10, separationRule);
 		}
-		
+
 		altitudeList.add(100);
 		altitudeList.add(5000);
 		altitudeList.add(10000);
 		altitudeList.add(15000);
-		targetAltitudeIndex = RandomNumber.randInclusiveInt(1, altitudeList.size()-1);
-		int altitude= altitudeList.get(targetAltitudeIndex);
-		
+		targetAltitudeIndex = RandomNumber.randInclusiveInt(1,
+				altitudeList.size() - 1);
+		int altitude = altitudeList.get(targetAltitudeIndex);
 
 		position = position.add(new Vector(offset, 0, altitude));
 
@@ -323,7 +324,6 @@ public class Aircraft {
 	public boolean isLanding() {
 		return isLanding;
 	}
-
 
 	/**
 	 * Calculates the angle from the plane's position, to its current target.
@@ -478,13 +478,13 @@ public class Aircraft {
 	public void update(double dt) throws IllegalStateException {
 		if (hasFinished)
 			return;
-		if (altitudeList.get(targetAltitudeIndex) == this.position.z()){}
-		else if (altitudeList.get(targetAltitudeIndex) > this.position.z()){
+		if (altitudeList.get(targetAltitudeIndex) == this.position.z()) {
+		} else if (altitudeList.get(targetAltitudeIndex) > this.position.z()) {
 			climb();
 		} else {
 			fall();
 		}
-		
+
 		// Update position
 		Vector dv = velocity.scaleBy(dt);
 		position = position.add(dv);
@@ -498,12 +498,12 @@ public class Aircraft {
 				((Airport) destination).insertAircraft(this);
 				atAirport = true;
 			}
-			
+
 		} else if (isAt(currentTarget.position())
 				&& (currentRouteStage == route.length - 1)) {
 			currentRouteStage++;
 			currentTarget = destination;
-			
+
 		} else if (isAt(currentTarget.position())) {
 			if (currentTarget instanceof HoldingWaypoint) {
 				this.alterPath(this.flightPathContains(currentTarget),
@@ -597,9 +597,9 @@ public class Aircraft {
 	 * Draws the plane and any warning circles if necessary.
 	 */
 	public void draw() {
-		double alpha = 255; 
-		double scale = 2; 
-		
+		double alpha = 255;
+		double scale = 2;
+
 		// draws the aircraft itself
 		graphics.setColour(128, 128, 128, alpha);
 		graphics.draw(image, scale, position.x(), position.y(), bearing(), 8, 8);
@@ -840,6 +840,7 @@ public class Aircraft {
 			for (HoldingWaypoint holdingPoint : holdingWaypoints) {
 				if (holdingPoint.getCost(origin) < cheapestCost) {
 					nearestHoldingWaypoint = holdingPoint;
+					cheapestCost = holdingPoint.getCost(origin);
 				}
 			}
 
@@ -976,7 +977,8 @@ public class Aircraft {
 			changeAltitude(altitudeChangeSpeed);
 		if (position.z() >= altitudeList.get(targetAltitudeIndex)) {
 			changeAltitude(0);
-			position = new Vector(position.x(), position.y(), altitudeList.get(targetAltitudeIndex));
+			position = new Vector(position.x(), position.y(),
+					altitudeList.get(targetAltitudeIndex));
 		}
 	}
 
@@ -988,7 +990,8 @@ public class Aircraft {
 			changeAltitude(-altitudeChangeSpeed);
 
 		if (position.z() <= altitudeList.get(targetAltitudeIndex)) {
-			position = new Vector(position.x(), position.y(), altitudeList.get(targetAltitudeIndex));
+			position = new Vector(position.x(), position.y(),
+					altitudeList.get(targetAltitudeIndex));
 		}
 	}
 
@@ -1005,22 +1008,23 @@ public class Aircraft {
 	/**
 	 * Decrements the targetAltitudeIndex by 1.
 	 */
-	
-	public void decreaseTargetAltitude(){
+
+	public void decreaseTargetAltitude() {
 		if (targetAltitudeIndex <= 1)
 			return;
-		else{
-			targetAltitudeIndex --;
+		else {
+			targetAltitudeIndex--;
 		}
 	}
-	public void increaseTargetAltitude(){
+
+	public void increaseTargetAltitude() {
 		if (targetAltitudeIndex == 3)
 			return;
-		else{
-			targetAltitudeIndex ++;
+		else {
+			targetAltitudeIndex++;
 		}
 	}
-	
+
 	public void setAltitudeState(int state) {
 		return;
 	}

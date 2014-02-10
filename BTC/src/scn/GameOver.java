@@ -46,7 +46,7 @@ public class GameOver extends Scene {
 	private final Image explosion;
 
 	private int keyPressed;
-	
+
 	private int score;
 	/**
 	 * Timer to allow for explosion and plane to be shown for a period, followed
@@ -66,7 +66,7 @@ public class GameOver extends Scene {
 	 */
 	public GameOver(Main main, Aircraft plane1, Aircraft plane2, int score) {
 		super(main);
-		this.score=score;
+		this.score = score;
 		crashedPlane1 = plane1;
 		crashedPlane2 = plane2;
 		crash = new Vector(plane1.position().x(), plane1.position().y(), 0);
@@ -115,11 +115,12 @@ public class GameOver extends Scene {
 		textBox.newline();
 		textBox.newline();
 		textBox.delay(1);
-		textBox.addText("Your score of "+this.score+" just wasn't enough...");
-	    textBox.newline();
-	    textBox.delay(0.4);
-	    textBox.newline();
-	    textBox.addText(".....");
+		textBox.addText("Your score of " + this.score
+				+ " just wasn't enough...");
+		textBox.newline();
+		textBox.delay(0.4);
+		textBox.newline();
+		textBox.addText(".....");
 		textBox.delay(2);
 		textBox.newline();
 		textBox.newline();
@@ -185,8 +186,8 @@ public class GameOver extends Scene {
 
 		} else {
 
-			crashedPlane1.draw((int) crashedPlane1.position().z());
-			crashedPlane2.draw((int) crashedPlane1.position().z());
+			crashedPlane1.draw();
+			crashedPlane2.draw();
 			Vector midPoint = crash.add(crashedPlane2.position()).scaleBy(0.5);
 			double radius = 20;
 			graphics.setColour(128, 0, 0);
