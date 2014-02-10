@@ -118,13 +118,11 @@ public class GameOver extends Scene {
 		textBox.addText("Your score of " + this.score
 				+ " just wasn't enough...");
 		textBox.newline();
-		textBox.delay(0.4);
-		textBox.newline();
-		textBox.addText(".....");
-		textBox.delay(2);
-		textBox.newline();
+		textBox.delay(2.4);
 		textBox.newline();
 		textBox.addText("Game Over.");
+		textBox.delay(0.5);
+		textBox.addText("You Lose.");
 	}
 
 	@Override
