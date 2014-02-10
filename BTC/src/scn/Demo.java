@@ -71,7 +71,7 @@ public class Demo extends Scene {
 	 */
 	private Waypoint selectedWaypoint;
 
-	private static Airport airport;
+	private Airport airport;
 
 	/**
 	 * Selected path point, in an aircraft's route, used for altering the route
@@ -140,7 +140,7 @@ public class Demo extends Scene {
 	/**
 	 * The set of waypoints in the airspace which are origins / destinations
 	 */
-	public final static Waypoint[] locationWaypoints = new Waypoint[] {
+	public final Waypoint[] locationWaypoints = new Waypoint[]{
 	/* A set of Waypoints which are origin / destination points */
 
 			// top left
@@ -163,7 +163,7 @@ public class Demo extends Scene {
 	/**
 	 * All waypoints in the airspace, INCLUDING locationWaypoints.
 	 */
-	public static Waypoint[] airspaceWaypoints = new Waypoint[] {
+	public Waypoint[] airspaceWaypoints = new Waypoint[]{
 
 			// airspace waypoints
 			new Waypoint(160, 174), // 0
@@ -183,7 +183,17 @@ public class Demo extends Scene {
 			locationWaypoints[4], // 14 - Airport
 	};
 
-	public static ArrayList<HoldingWaypoint> holdingWaypoints = new ArrayList<HoldingWaypoint>();
+	/**
+	 * Used for circling around airport
+	 */
+	public ArrayList<HoldingWaypoint> holdingWaypoints = new ArrayList<HoldingWaypoint>();
+
+	/**
+	 * All aircraft taking off must go through this waypoint, allows for
+	 * aircraft to take off in one direction all the time ps. a hack
+	 */
+	private final Waypoint takeoffWaypoint = new Waypoint(airport.position()
+			.x() - 60, airport.position().y());
 
 	/**
 	 * Constructor
@@ -207,6 +217,7 @@ public class Demo extends Scene {
 		background = graphics.newImage("gfx" + File.separator + "map.png");
 		music = audio.newMusic("sfx" + File.separator + "Gypsy_Shoegazer.ogg");
 		music.play();
+
 		// Initialise Holding Waypoints
 		holdingWaypoints.add(new HoldingWaypoint(locationWaypoints[4]
 				.position().x() - 100,
@@ -220,6 +231,7 @@ public class Demo extends Scene {
 		holdingWaypoints.add(new HoldingWaypoint(locationWaypoints[4]
 				.position().x() - 100,
 				locationWaypoints[4].position().y() + 100));
+
 		// Initialise values of setNextWaypoint.
 		holdingWaypoints.get(0).setNextWaypoint(holdingWaypoints.get(1));
 		holdingWaypoints.get(1).setNextWaypoint(holdingWaypoints.get(2));
@@ -347,6 +359,7 @@ public class Demo extends Scene {
 			try {
 				plane.update(dt);
 			} catch (IllegalStateException e) {
+				e.printStackTrace();
 				ordersBox
 						.addOrder("<<< Aerodromio Medved' is full, divert aircraft Comrade!");
 			}
@@ -358,7 +371,6 @@ public class Demo extends Scene {
 
 			if (plane.isFinished()) {
 				score += plane.getPoints();
-				System.out.println(score);
 				switch (RandomNumber.randInclusiveInt(0, 2)) {
 				case 0:
 					ordersBox.addOrder("<<< Thank you Comrade");
@@ -810,6 +822,12 @@ public class Demo extends Scene {
 
 		Aircraft a = createAircraft(fromAirport);
 
+		if (fromAirport) {
+			// start at altitude 100 and increase to next step
+			a.setAltitude(100);
+			a.increaseTargetAltitude();
+		}
+
 		ordersBox.addOrder("<<< " + a.name() + " incoming from "
 				+ a.originName() + " heading towards " + a.destinationName()
 				+ ".");
@@ -866,10 +884,10 @@ public class Demo extends Scene {
 		}
 
 		return new Aircraft(name, destinationPoint.getName(),
-				originPoint.getName(),
-				destinationPoint, originPoint, aircraftImage,
-				32 + (int) (10 * Math.random()), airspaceWaypoints, difficulty,
-				holdingWaypoints);
+				originPoint.getName(), destinationPoint, originPoint,
+				aircraftImage, 32 + (int) (10 * Math.random()),
+				airspaceWaypoints, difficulty, holdingWaypoints,
+				takeoffWaypoint);
 	}
 
 	/**

@@ -175,7 +175,8 @@ public class Aircraft {
 	public Aircraft(String name, String nameDestination, String nameOrigin,
 			Waypoint destinationPoint, Waypoint originPoint, Image img,
 			double speed, Waypoint[] sceneWaypoints, int difficulty,
-			ArrayList<HoldingWaypoint> holdingWaypoints) {
+			ArrayList<HoldingWaypoint> holdingWaypoints,
+			Waypoint takeoffWaypoint) {
 		flightName = name;
 		destinationName = nameDestination;
 		originName = nameOrigin;
@@ -199,10 +200,18 @@ public class Aircraft {
 
 		position = position.add(new Vector(0, 0, altitude));
 
+
+		// if origin is airport, use the takeoff waypoint as the first one
+		if (originPoint instanceof Airport) {
+			route[0] = takeoffWaypoint;
+		}
+
 		// Calculate initial velocity (direction)
 		currentTarget = route[0];
+
 		double x = currentTarget.position().x() - position.x();
 		double y = currentTarget.position().y() - position.y();
+
 		velocity = new Vector(x, y, 0).normalise().scaleBy(speed);
 		isLanding = false;
 		isManuallyControlled = false;
@@ -1034,8 +1043,8 @@ public class Aircraft {
 		}
 	}
 
-	public void setAltitudeState(int state) {
-		return;
+	public void setAltitude(int altitude) {
+		position.setZ(altitude);
 	}
 
 	public int getPoints() {
