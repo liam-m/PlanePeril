@@ -40,8 +40,6 @@ public class Airport extends Waypoint {
 		if (aircraftList.size() == 0)
 			throw new IllegalStateException("No aircraft in airport");
 
-		System.out.println("Taking offff!!!");
-
 		int i = RandomNumber.randInclusiveInt(0, aircraftList.size() - 1);
 		Aircraft aircraft = aircraftList.get(i);
 		aircraftList.remove(i);
