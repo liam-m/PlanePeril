@@ -946,6 +946,7 @@ public class Aircraft {
 		} else {
 			currentRouteStage++;
 			currentTarget = destination;
+			velocity = velocity.scaleBy(0.5);
 		}
 	}
 
