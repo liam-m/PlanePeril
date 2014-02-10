@@ -308,7 +308,7 @@ public class Demo extends Scene {
 	 * Causes a selected aircraft to call methods to toggle manual control
 	 */
 	private void toggleLand() {
-		if (selectedAircraft == null || selectedAircraft.position().z() >= 5000)
+		if (selectedAircraft == null || selectedAircraft.position().z() > 5000)
 			return;
 		selectedAircraft.toggleLand();
 

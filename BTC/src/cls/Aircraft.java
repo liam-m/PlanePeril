@@ -944,11 +944,18 @@ public class Aircraft {
 		isLanding = !isLanding;
 
 		if (!isLanding) {
-			resetBearing();
+			// TODO Delete this.
+			/*resetBearing();
+			// resume normal speed and return to 5000 ft. But do we want this to be an option?
+			currentRouteStage --;
+			currentTarget = destination;
+			velocity = velocity.scaleBy(2);
+			targetAltitudeIndex = 1;*/
 		} else {
 			currentRouteStage++;
 			currentTarget = destination;
-			velocity = velocity.scaleBy(0.5);
+			targetAltitudeIndex = 0;
+			velocity = velocity.scaleBy(0.7);
 		}
 	}
 
