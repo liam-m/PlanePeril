@@ -110,7 +110,7 @@ public class Demo extends Scene {
 	/**
 	 * The interval in seconds to generate flights after
 	 */
-	private static double flightGenerationInterval = 12;
+	private static double flightGenerationInterval = 8;
 
 	/**
 	 * The time eleapsed since the last flight was generated
@@ -158,8 +158,7 @@ public class Demo extends Scene {
 					- 40, WaypointType.ENTRY_EXIT, "South Sea"),
 
 			// The aerodromio
-			airport = new Airport(window.width() / 2,
-					window.height() / 2 - 100, "Aerodromio Medved'"),};
+			airport = new Airport(949, 358, "Aerodromio Medved'"),};
 
 	/**
 	 * All waypoints in the airspace, INCLUDING locationWaypoints.
@@ -167,12 +166,13 @@ public class Demo extends Scene {
 	public static Waypoint[] airspaceWaypoints = new Waypoint[] {
 
 			// airspace waypoints
-			new Waypoint(125, 70), // 0
-			new Waypoint(700, 100), // 1
-			new Waypoint(1040, 80), // 2
-			new Waypoint(670, 400), // 3
-			new Waypoint(1050, 400), // 4
-			new Waypoint(250, 400), // 5
+			new Waypoint(160, 174), // 0
+			new Waypoint(383, 481), // 1
+			new Waypoint(502, 274), // 2
+			new Waypoint(632, 125), // 3
+			new Waypoint(949, 96), // 4
+			new Waypoint(698, 430), // 4.1
+			new Waypoint(909, 481), // 5
 
 			// destination/origin waypoints - present in this list for
 			// pathfinding.
@@ -543,7 +543,7 @@ public class Demo extends Scene {
 				Aircraft fromAirport = airport.takeoff();
 				generateFlight(true);
 			} catch (IllegalStateException e) {
-
+				e.printStackTrace();
 			}
 		}
 		

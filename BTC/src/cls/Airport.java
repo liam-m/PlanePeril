@@ -15,8 +15,6 @@ public class Airport extends Waypoint {
 
 	public Airport(double x, double y, String name) {
 		super(x, y, WaypointType.ENTRY_EXIT, name);
-		// TODO: Change type to WaypointType.MXIED, requires updates in
-		// flightplan generations
 	}
 
 	/**
@@ -51,9 +49,9 @@ public class Airport extends Waypoint {
 		graphics.setColour(Main.GREEN);
 
 		graphics.print("Aircraft in: " + aircraftList.size(),
-				position.x() - 40, position.y() + 25);
+				position.x() - 40, position.y() - 25);
 
-		graphics.print("Aero Medved'", position.x() - 40, position.y() + 15);
+		graphics.print("Aero Medved'", position.x() - 40, position.y() - 35);
 	}
 
 }

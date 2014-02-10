@@ -10,6 +10,9 @@ import lib.jog.graphics;
 import lib.jog.graphics.Image;
 import lib.jog.input;
 import lib.jog.window;
+
+import org.newdawn.slick.Color;
+
 import scn.Demo;
 import btc.Main;
 import cls.Waypoint.WaypointType;
@@ -599,18 +602,26 @@ public class Aircraft {
 	 * Draws the plane and any warning circles if necessary.
 	 */
 	public void draw() {
-		double alpha = 255;
-		double scale = 2;
+		float alpha = 255;
+		float scale = 2;
+
+		Color grey = new Color(128, 128, 128, 255);
 
 		// draws the aircraft itself
-		graphics.setColour(128, 128, 128, alpha);
+		graphics.setColour(grey);
 		graphics.draw(image, scale, position.x(), position.y(), bearing(), 8, 8);
 
 		// draw the altitude near the aircraft
 		// £ is rendered as cursive "ft" for mysterious reasons
-		graphics.setColour(128, 128, 128, alpha);
+		graphics.setColour(grey);
 		graphics.print(String.format("%.0f", position.z()) + "£",
 				position.x() - 22, position.y() + 15);
+
+		// draw the 'land me' message once an aircraft is circling the airport
+		if (currentTarget instanceof HoldingWaypoint) {
+			graphics.setColour(grey);
+			graphics.print("Land me!", position.x() - 28, position.y() - 22);
+		}
 
 		drawWarningCircles();
 	}
