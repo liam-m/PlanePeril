@@ -478,8 +478,10 @@ public class Aircraft {
 	public void update(double dt) throws IllegalStateException {
 		if (hasFinished)
 			return;
-		if (altitudeList.get(targetAltitudeIndex) == this.position.z()) {
-		} else if (altitudeList.get(targetAltitudeIndex) > this.position.z()) {
+		if (altitudeList.get(targetAltitudeIndex) + 300 >= (int) this.position.z() || altitudeList.get(targetAltitudeIndex) - 300 >= (int) this.position.z()){
+			this.position.setZ(altitudeList.get(targetAltitudeIndex));
+			changeAltitude(0);
+		} else if (altitudeList.get(targetAltitudeIndex) > (int) this.position.z()) {
 			climb();
 		} else {
 			fall();
