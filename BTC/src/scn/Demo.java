@@ -102,6 +102,12 @@ public class Demo extends Scene {
 	 * Tracks if manual heading compass of a manually controller aircraft has
 	 * been dragged
 	 */
+	
+	private ButtonText landAltitudeButton;
+	/**
+	 * Tracks if manual heading compass of a manually controller aircraft has
+	 * been dragged
+	 */	
 	private boolean compassDragged;
 	
 	/**
@@ -274,6 +280,9 @@ public class Demo extends Scene {
 		landButton = new ButtonText("Land", land,
 				(window.width() - 500) / 2, 32, 128, 32, 8, 4);
 		
+		landAltitudeButton = new ButtonText("Lower Altitude!", null,
+				(window.width() - 500) / 2, 32, 128, 32, 8, 4);
+		
 		timeElapsed = 0;
 		compassDragged = false;
 		selectedAircraft = null;
@@ -330,7 +339,7 @@ public class Demo extends Scene {
 		selectedAircraft.toggleLand();
 
 		landButton.setText((selectedAircraft.isLanding() ? ""
-						: " ") + " Land");
+						: "") + " Land");
 	}
 	
 	
@@ -710,7 +719,7 @@ public class Demo extends Scene {
 			manualOverrideButton.draw();
 			
 			if ((selectedAircraft.getDestination() instanceof Airport) && selectedAircraft.position().z() <= 5000 ) {
-				// Land Button
+				// Land Button with valid altitude
 				graphics.setColour(0, 0, 0);
 				graphics.rectangle(true, (window.width() - 500) / 2, 16, 128,
 						32);
@@ -719,6 +728,16 @@ public class Demo extends Scene {
 						32);
 				landButton.draw();
 			}
+				else if ((selectedAircraft.getDestination() instanceof Airport) && selectedAircraft.position().z() > 5000 ){
+					// Land Button
+					graphics.setColour(0, 0, 0);
+					graphics.rectangle(true, (window.width() - 500) / 2, 16, 128,
+							32);
+					graphics.setColour(Main.GREEN);
+					graphics.rectangle(false, (window.width() - 500) / 2, 16, 128,32);	
+					landAltitudeButton.draw();
+				}
+
 
 			selectedAircraft.drawFlightPath();
 			graphics.setColour(Main.GREEN);
