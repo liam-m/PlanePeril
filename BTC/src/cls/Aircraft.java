@@ -186,7 +186,7 @@ public class Aircraft {
 		route = findGreedyRoute(originPoint, destinationPoint, sceneWaypoints,
 				holdingWaypoints);
 		destination = destinationPoint;
-		
+
 		// place on spawn waypoint
 		position = originPoint.position();
 
@@ -199,7 +199,6 @@ public class Aircraft {
 		int altitude = altitudeList.get(targetAltitudeIndex);
 
 		position = position.add(new Vector(0, 0, altitude));
-
 
 		// if origin is airport, use the takeoff waypoint as the first one
 		if (originPoint instanceof Airport) {
@@ -229,24 +228,24 @@ public class Aircraft {
 		// 2 has the hardest attributes (faster aircraft, least forgiving
 		// separation rules.
 		case Demo.DIFFICULTY_EASY:
-				separationRule = 64;
-				altitudeChangeSpeed = 800;
+			separationRule = 64;
+			altitudeChangeSpeed = 800;
 			break;
 
 		case Demo.DIFFICULTY_MEDIUM:
-				separationRule = 96;
-				velocity = velocity.scaleBy(2);
-				turnSpeed = Math.PI / 3;
-				altitudeChangeSpeed = 600;
+			separationRule = 96;
+			velocity = velocity.scaleBy(2);
+			turnSpeed = Math.PI / 3;
+			altitudeChangeSpeed = 600;
 			break;
 
 		case Demo.DIFFICULTY_HARD:
-				separationRule = 128;
-				velocity = velocity.scaleBy(3);
-				// At high velocities, the aircraft is allowed to turn faster
-				// this helps keep the aircraft on track.
-				turnSpeed = Math.PI / 2;
-				altitudeChangeSpeed = 400;
+			separationRule = 128;
+			velocity = velocity.scaleBy(3);
+			// At high velocities, the aircraft is allowed to turn faster
+			// this helps keep the aircraft on track.
+			turnSpeed = Math.PI / 2;
+			altitudeChangeSpeed = 400;
 			break;
 
 		default:
@@ -429,6 +428,10 @@ public class Aircraft {
 	 *            the new waypoint to travel to.
 	 */
 	public void alterPath(int routeStage, Waypoint newWaypoint) {
+		if ((routeStage == route.length - 1)
+				&& (destination instanceof Airport)) {
+			return;
+		}
 		route[routeStage] = newWaypoint;
 
 		if (!isManuallyControlled)
@@ -478,10 +481,14 @@ public class Aircraft {
 	public void update(double dt) throws IllegalStateException {
 		if (hasFinished)
 			return;
-		if (altitudeList.get(targetAltitudeIndex) + 100 >= (int) this.position.z() && altitudeList.get(targetAltitudeIndex) - 100 <= (int) this.position.z()){
+		if (altitudeList.get(targetAltitudeIndex) + 100 >= (int) this.position
+				.z()
+				&& altitudeList.get(targetAltitudeIndex) - 100 <= (int) this.position
+						.z()) {
 			this.position.setZ(altitudeList.get(targetAltitudeIndex));
 			changeAltitude(0);
-		} else if (altitudeList.get(targetAltitudeIndex) > (int) this.position.z()) {
+		} else if (altitudeList.get(targetAltitudeIndex) > (int) this.position
+				.z()) {
 			climb();
 		} else {
 			fall();
@@ -508,6 +515,9 @@ public class Aircraft {
 
 		} else if (isAt(currentTarget.position())) {
 			if (currentTarget instanceof HoldingWaypoint) {
+
+				// Changes the current waypoint to the next holding waypoint in
+				// the airport circle
 				this.alterPath(this.flightPathContains(currentTarget),
 						((HoldingWaypoint) currentTarget).getNextWaypoint());
 			} else {
@@ -953,12 +963,12 @@ public class Aircraft {
 
 		if (!isLanding) {
 			// TODO Delete this.
-			/*resetBearing();
-			// resume normal speed and return to 5000 ft. But do we want this to be an option?
-			currentRouteStage --;
-			currentTarget = destination;
-			velocity = velocity.scaleBy(2);
-			targetAltitudeIndex = 1;*/
+			/*
+			 * resetBearing(); // resume normal speed and return to 5000 ft. But
+			 * do we want this to be an option? currentRouteStage --;
+			 * currentTarget = destination; velocity = velocity.scaleBy(2);
+			 * targetAltitudeIndex = 1;
+			 */
 		} else {
 			currentRouteStage++;
 			currentTarget = destination;
