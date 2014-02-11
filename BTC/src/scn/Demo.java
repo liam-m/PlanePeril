@@ -103,6 +103,11 @@ public class Demo extends Scene {
 	 * been dragged
 	 */
 	private boolean compassDragged;
+	
+	/**
+	 * Placeholder for whitespaces in score
+	 */
+	public String spaces;
 	/**
 	 * An altimeter to display aircraft altitidue, heading, etc.
 	 */
@@ -790,6 +795,19 @@ public class Demo extends Scene {
 	 * sky, etc. Hint: for assessment 3, this could be used to print the
 	 * player's current score.
 	 */
+	
+	/**Whitespace Concatenation maker
+	 * 
+	 */
+	
+	public String whiteSpace(int score){
+		spaces="";
+		int ScoreLength=5-Integer.toString(score).length();
+		for (int i=0; i<ScoreLength; i++){
+			spaces+=" "; 
+		}
+		return spaces;
+	}
 	private void drawScore() {
 		int hours = (int) (timeElapsed / (60 * 60));
 		int minutes = (int) (timeElapsed / 60);
@@ -806,8 +824,8 @@ public class Demo extends Scene {
 
 		String timePlayed = String.format("%d:%02d:", hours, minutes)
 				+ df.format(seconds);
-		graphics.print("score: "+score+"  "+timePlayed, window.width()
-				- (timePlayed.length() * 8 + 32), paddingFromTop);
+		graphics.print("Score: " + score + whiteSpace(score) + timePlayed, window.width()
+				- (timePlayed.length() * 8)-150, paddingFromTop);
 
 		int planes = aircraftInAirspace.size();
 
