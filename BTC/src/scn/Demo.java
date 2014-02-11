@@ -709,7 +709,7 @@ public class Demo extends Scene {
 			graphics.rectangle(false, (window.width() - 128) / 2, 16, 128, 32);
 			manualOverrideButton.draw();
 			
-			if (selectedAircraft.getDestination() instanceof Airport) {
+			if ((selectedAircraft.getDestination() instanceof Airport) && selectedAircraft.position().z() <= 5000 ) {
 				// Land Button
 				graphics.setColour(0, 0, 0);
 				graphics.rectangle(true, (window.width() - 500) / 2, 16, 128,
