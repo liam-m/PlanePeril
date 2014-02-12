@@ -280,7 +280,7 @@ public class Demo extends Scene {
 		landButton = new ButtonText("Land", land,
 				(window.width() - 500) / 2, 32, 128, 32, 8, 4);
 		
-		landAltitudeButton = new ButtonText("Lower Altitude!", null,
+		landAltitudeButton = new ButtonText("Lower Altitude!", land,
 				(window.width() - 500) / 2, 32, 128, 32, 8, 4);
 		
 		timeElapsed = 0;
