@@ -48,7 +48,9 @@ public class GameOver extends Scene {
 	private final Image explosion;
 
 	private int keyPressed;
-
+	/**
+	 * To store value of the score passed to this class in the constructor by the previous screen.
+	 */
 	private int score;
 	/**
 	 * Timer to allow for explosion and plane to be shown for a period, followed
@@ -101,26 +103,26 @@ public class GameOver extends Scene {
 
 		textBox = new lib.TextBox(64, 96, window.width() - 128,
 				window.height() - 96, 32);
+		textBox.addText("You managed to earn " + this.score
+				+ "rubles before making your fatal error.");
+		textBox.delay(1);
+		textBox.newline();
 		textBox.addText(String.valueOf(deaths) + " people died in the crash.");
 		textBox.delay(0.4);
 		textBox.addText("British Bearways is facing heavy legal pressure from the family and loved-ones of the dead and an investigation into the incident will be performed.");
 		textBox.newline();
-		textBox.delay(0.8);
+		textBox.delay(0.4);
 		textBox.addText("The inquery into your incompetance will lead to humanity discovering your true bear nature.");
 		textBox.newline();
-		textBox.delay(0.8);
+		textBox.delay(0.4);
 		textBox.addText("Your guilt for the deaths you caused, and your failure to pass as a human, will gnaw at you and you will have to revert to your drinking problem to attempt to cope.");
 		textBox.newline();
 		textBox.newline();
-		textBox.delay(0.8);
+		textBox.delay(0.4);
 		textBox.addText("With no income, there is no way your family can survive the fast-approaching winter months.");
+		textBox.newline();	
 		textBox.newline();
-		textBox.newline();
-		textBox.delay(1);
-		textBox.addText("Your score of " + this.score
-				+ " just wasn't enough...");
-		textBox.newline();
-		textBox.delay(2.4);
+		textBox.delay(0.4);
 		textBox.newline();
 		textBox.addText("Game Over.");
 		textBox.delay(0.5);
