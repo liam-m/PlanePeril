@@ -439,7 +439,7 @@ public class Aircraft {
 
 		if (routeStage == currentRouteStage) {
 			currentTarget = newWaypoint;
-			turnTowardsTarget(0);
+			// turnTowardsTarget(0);
 		}
 	}
 
