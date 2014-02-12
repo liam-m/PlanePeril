@@ -1,7 +1,9 @@
 package scn;
 
 import java.io.File;
+import java.util.ArrayList;
 
+import lib.Serializer;
 import lib.SpriteAnimation;
 import lib.TextBox;
 import lib.jog.audio;
@@ -123,6 +125,17 @@ public class GameOver extends Scene {
 		textBox.addText("Game Over.");
 		textBox.delay(0.5);
 		textBox.addText("You Lose.");
+		
+	}
+
+	private void saveScore() {
+		if (Serializer.deserialize(Main.SCORES_FILE)) {
+			@SuppressWarnings("unchecked")
+			ArrayList<Integer> scores = (ArrayList<Integer>) Serializer
+					.getRecovered();
+			
+			Serializer.serialize(Main.SCORES_FILE, scores.add(this.score));
+		}
 	}
 
 	@Override

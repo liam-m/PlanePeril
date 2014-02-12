@@ -1,8 +1,10 @@
 package btc;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Stack;
 
+import lib.Serializer;
 import lib.jog.audio;
 import lib.jog.graphics;
 import lib.jog.input;
@@ -27,6 +29,7 @@ import scn.Title;
 public class Main implements EventHandler {
 
 	public final static Color GREEN = new Color(0, 200, 0);
+	public final static String SCORES_FILE = "scores.ser";
 
 	/**
 	 * Creates a new instance of Main, starting a new game.
@@ -92,6 +95,10 @@ public class Main implements EventHandler {
 
 		// set lastFPS to current Time
 		lastfps = ((Sys.getTime() * 1000) / Sys.getTimerResolution());
+
+		if (!Serializer.deserialize(Main.SCORES_FILE)) {
+			Serializer.serialize(Main.SCORES_FILE, new ArrayList<Integer>());
+		}
 	}
 
 	/**

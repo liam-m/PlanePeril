@@ -498,25 +498,6 @@ public class Demo extends Scene {
 	}
 
 	/**
-	 * Causes the scene to pause execution for the specified number of seconds
-	 * 
-	 * @param seconds
-	 *            the number of seconds to wait.
-	 */
-	@Deprecated
-	public void wait(int seconds) {
-		long startTime, endTime;
-		startTime = System.currentTimeMillis();
-		endTime = startTime + (seconds * 1000);
-
-		while (startTime < endTime) {
-			startTime = System.currentTimeMillis();
-		}
-
-		return;
-	}
-
-	/**
 	 * Handle mouse input
 	 */
 	@Override
@@ -651,7 +632,6 @@ public class Demo extends Scene {
 				toggleManualControl();
 				break;
 
-			case input.KEY_RSHIFT :
 			case input.KEY_F :
 				toggleLand();
 				break;
