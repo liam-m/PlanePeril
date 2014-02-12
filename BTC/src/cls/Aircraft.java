@@ -145,8 +145,10 @@ public class Aircraft {
 	 */
 	private final static Sound WARNING_SOUND = audio.newSoundEffect("sfx"
 			+ File.separator + "beep.ogg");
-
-	private int points = 10;
+	/**
+	 * The number of points an aircraft enters the airspace with.
+	 */
+	private int points;
 
 	private boolean wasBreachingInLastFrame = false;
 
@@ -228,8 +230,10 @@ public class Aircraft {
 		// 2 has the hardest attributes (faster aircraft, least forgiving
 		// separation rules.
 		case Demo.DIFFICULTY_EASY:
-			separationRule = 64;
+			separationRule = 128;
+			velocity = velocity.scaleBy(1.5);
 			altitudeChangeSpeed = 800;
+			points = 10;
 			break;
 
 		case Demo.DIFFICULTY_MEDIUM:
@@ -237,15 +241,17 @@ public class Aircraft {
 			velocity = velocity.scaleBy(2);
 			turnSpeed = Math.PI / 3;
 			altitudeChangeSpeed = 600;
+			points = 15;
 			break;
 
 		case Demo.DIFFICULTY_HARD:
-			separationRule = 128;
+			separationRule = 64;
 			velocity = velocity.scaleBy(3);
 			// At high velocities, the aircraft is allowed to turn faster
 			// this helps keep the aircraft on track.
 			turnSpeed = Math.PI / 2;
 			altitudeChangeSpeed = 400;
+			points = 20;
 			break;
 
 		default:
@@ -905,19 +911,17 @@ public class Aircraft {
 				return i;
 
 			} else if (plane != this && isWithin(plane, separationRule)) {
-
+				// When separation rules are breached
 				planesTooNear.add(plane);
 
 				if (collisionWarningSoundFlag == false) {
 					collisionWarningSoundFlag = true;
 					WARNING_SOUND.play();
 				}
-
 				if (wasBreachingInLastFrame == false) {
 					wasBreachingInLastFrame = true;
-					points -= 1;
+					points -= 5;
 				}
-
 			}
 		}
 
@@ -925,7 +929,6 @@ public class Aircraft {
 			collisionWarningSoundFlag = false;
 			wasBreachingInLastFrame = false;
 		}
-
 		return -1;
 	}
 
@@ -962,20 +965,14 @@ public class Aircraft {
 	}
 
 	/**
+	 * Triggered when land button is pressed. Causes plane to immediately target
+	 * airport, and changes other aircraft properties shown below.
 	 * 
+	 * The command to land an aircraft cannot be reneged upon.
 	 */
 	public void toggleLand() {
 		isLanding = !isLanding;
-
-		if (!isLanding) {
-			// TODO Delete this.
-			/*
-			 * resetBearing(); // resume normal speed and return to 5000 ft. But
-			 * do we want this to be an option? currentRouteStage --;
-			 * currentTarget = destination; velocity = velocity.scaleBy(2);
-			 * targetAltitudeIndex = 1;
-			 */
-		} else {
+		if (isLanding) {
 			currentRouteStage++;
 			currentTarget = destination;
 			targetAltitudeIndex = 0;
@@ -1042,7 +1039,6 @@ public class Aircraft {
 	/**
 	 * Decrements the targetAltitudeIndex by 1.
 	 */
-
 	public void decreaseTargetAltitude() {
 		if (targetAltitudeIndex <= 1)
 			return;
