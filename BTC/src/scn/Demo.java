@@ -651,7 +651,7 @@ public class Demo extends Scene {
 				toggleManualControl();
 				break;
 
-			case input.KEY_RCRTL :
+			case input.KEY_RSHIFT :
 			case input.KEY_F :
 				toggleLand();
 				break;
