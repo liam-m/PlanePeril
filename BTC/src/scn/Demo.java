@@ -884,7 +884,7 @@ public class Demo extends Scene {
 		int d = RandomNumber.randInclusiveInt(0, locationWaypoints.length - 1);
 
 		// make sure origin and destination is not the same waypoint
-		while (LOCATION_NAMES[d] == LOCATION_NAMES[o]) {
+		while (locationWaypoints[d].equals(locationWaypoints[o])) {
 			d = RandomNumber.randInclusiveInt(0, locationWaypoints.length - 1);
 		}
 
