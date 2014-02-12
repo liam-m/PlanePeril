@@ -358,6 +358,8 @@ public class Demo extends Scene {
 		altimeter.hide();
 	}
 
+	private boolean handling;
+
 	/**
 	 * Update all objects within the scene, ie aircraft, orders box altimeter.
 	 * Cause collision detection to occur Generate a new flight if flight
@@ -417,13 +419,26 @@ public class Demo extends Scene {
 
 		altimeter.update(dt);
 
-		if (selectedAircraft != null && selectedAircraft.isManuallyControlled()) {
+		if (selectedAircraft != null) {
+
+			handling = false;
 
 			if (input.isKeyDown(input.KEY_LEFT) || input.isKeyDown(input.KEY_A)) {
 				selectedAircraft.turnLeft(dt);
+				handling = true;
 			} else if (input.isKeyDown(input.KEY_RIGHT)
 					|| input.isKeyDown(input.KEY_D)) {
 				selectedAircraft.turnRight(dt);
+				handling = true;
+			}
+
+			selectedAircraft.setManualControl(handling);
+
+			if (input.isKeyDown(input.KEY_S) || input.isKeyDown(input.KEY_DOWN)) {
+				selectedAircraft.decreaseTargetAltitude();
+			} else if (input.isKeyDown(input.KEY_W)
+					|| input.isKeyDown(input.KEY_UP)) {
+				selectedAircraft.increaseTargetAltitude();
 			}
 
 			if (selectedAircraft.outOfBounds()) {
@@ -632,23 +647,28 @@ public class Demo extends Scene {
 	public void keyReleased(int key) {
 		switch (key) {
 
-		case input.KEY_SPACE:
-			toggleManualControl();
-			break;
+			case input.KEY_SPACE :
+				toggleManualControl();
+				break;
 
-		case input.KEY_LCRTL:
+			case input.KEY_RCRTL :
+			case input.KEY_F :
+				toggleLand();
+				break;
+
+			case input.KEY_LCRTL :
 				generateFlight(false);
-			break;
+				break;
 
-		case input.KEY_ESCAPE:
-			main.closeScene();
-			break;
+			case input.KEY_ESCAPE :
+				main.closeScene();
+				break;
 
-		case input.KEY_F5:
+			case input.KEY_F5 :
 				Aircraft a1 = createAircraft(false);
 				Aircraft a2 = createAircraft(true);
-			gameOver(a1, a2);
-			break;
+				gameOver(a1, a2);
+				break;
 
 		}
 	}
