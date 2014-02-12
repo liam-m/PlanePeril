@@ -883,14 +883,14 @@ public class Demo extends Scene {
 		int o = RandomNumber.randInclusiveInt(0, locationWaypoints.length - 1);
 		int d = RandomNumber.randInclusiveInt(0, locationWaypoints.length - 1);
 
-		// make sure origin and destination is not the same waypoint
-		while (locationWaypoints[d].equals(locationWaypoints[o])) {
-			d = RandomNumber.randInclusiveInt(0, locationWaypoints.length - 1);
-		}
-
 		// make sure airport doesn't spawn random aircrafts
 		while (locationWaypoints[o] instanceof Airport) {
 			o = RandomNumber.randInclusiveInt(0, locationWaypoints.length - 1);
+		}
+
+		// make sure origin and destination is not the same waypoint
+		while (locationWaypoints[d].equals(locationWaypoints[o])) {
+			d = RandomNumber.randInclusiveInt(0, locationWaypoints.length - 1);
 		}
 
 		Waypoint originPoint = locationWaypoints[o];
