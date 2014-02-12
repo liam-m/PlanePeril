@@ -846,6 +846,7 @@ public class Aircraft {
 			// update the selected route
 			// consider further points in route from the position of the
 			// selected point
+			// remove previous instances of a point
 			selectedWaypoints.remove(cheapest);
 			selectedWaypoints.add(cheapest);
 			currentPos = cheapest;
