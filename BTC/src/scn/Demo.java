@@ -67,6 +67,11 @@ public class Demo extends Scene {
 	private Aircraft selectedAircraft;
 
 	/**
+	 * Whether player is currently manually controlling
+	 */
+	private boolean isManuallyControlling;
+
+	/**
 	 * The currently selected waypoint
 	 */
 	private Waypoint selectedWaypoint;
@@ -322,6 +327,8 @@ public class Demo extends Scene {
 	private void toggleManualControl() {
 		if (selectedAircraft == null)
 			return;
+
+		isManuallyControlling = false;
 		selectedAircraft.toggleManualControl();
 
 		manualOverrideButton
@@ -336,6 +343,7 @@ public class Demo extends Scene {
 	private void toggleLand() {
 		if (selectedAircraft == null || selectedAircraft.position().z() > 5000)
 			return;
+
 		selectedAircraft.toggleLand();
 
 		landButton.setText((selectedAircraft.isLanding() ? ""
@@ -358,8 +366,6 @@ public class Demo extends Scene {
 		altimeter.hide();
 	}
 
-	private boolean handling;
-
 	/**
 	 * Update all objects within the scene, ie aircraft, orders box altimeter.
 	 * Cause collision detection to occur Generate a new flight if flight
@@ -375,9 +381,13 @@ public class Demo extends Scene {
 			try {
 				plane.update(dt);
 			} catch (IllegalStateException e) {
-				e.printStackTrace();
 				ordersBox
 						.addOrder("<<< Aerodromio Medved' is full, divert aircraft Comrade!");
+
+				Aircraft a1 = createAircraft(false);
+				Aircraft a2 = createAircraft(true);
+
+				gameOver(a1, a2);
 			}
 
 			if (plane.atAirport()) {
@@ -421,18 +431,16 @@ public class Demo extends Scene {
 
 		if (selectedAircraft != null) {
 
-			handling = false;
-
 			if (input.isKeyDown(input.KEY_LEFT) || input.isKeyDown(input.KEY_A)) {
 				selectedAircraft.turnLeft(dt);
-				handling = true;
+				isManuallyControlling = true;
 			} else if (input.isKeyDown(input.KEY_RIGHT)
 					|| input.isKeyDown(input.KEY_D)) {
 				selectedAircraft.turnRight(dt);
-				handling = true;
+				isManuallyControlling = true;
 			}
 
-			selectedAircraft.setManualControl(handling);
+			selectedAircraft.setManualControl(isManuallyControlling);
 
 			if (input.isKeyDown(input.KEY_S) || input.isKeyDown(input.KEY_DOWN)) {
 				selectedAircraft.decreaseTargetAltitude();
@@ -441,10 +449,12 @@ public class Demo extends Scene {
 				selectedAircraft.increaseTargetAltitude();
 			}
 
-			if (selectedAircraft.outOfBounds()) {
-				ordersBox.addOrder(">>> " + selectedAircraft.name()
-						+ " out of bounds, returning to route");
-				deselectAircraft();
+			if (selectedAircraft.isManuallyControlled()) {
+				if (selectedAircraft.outOfBounds()) {
+					ordersBox.addOrder(">>> " + selectedAircraft.name()
+							+ " out of bounds, returning to route");
+					deselectAircraft();
+				}
 			}
 
 		}

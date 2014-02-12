@@ -959,9 +959,6 @@ public class Aircraft {
 
 	public void setManualControl(boolean manual) {
 		isManuallyControlled = manual;
-
-		if (!isManuallyControlled)
-			resetBearing();
 	}
 
 	/**
