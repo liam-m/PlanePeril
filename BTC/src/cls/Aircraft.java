@@ -846,6 +846,7 @@ public class Aircraft {
 			// update the selected route
 			// consider further points in route from the position of the
 			// selected point
+			selectedWaypoints.remove(cheapest);
 			selectedWaypoints.add(cheapest);
 			currentPos = cheapest;
 			// resaturate cost for next loop
