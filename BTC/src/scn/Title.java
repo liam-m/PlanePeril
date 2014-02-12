@@ -57,6 +57,10 @@ public class Title extends Scene {
 		beep = audio.newSoundEffect("sfx" + File.separator + "beep.ogg");
 		beep.setVolume(0.2f);
 
+		int i = 0;
+		int offset = 96;
+		int buttonHeight = 30;
+
 		buttons = new ButtonText[5];
 		// Demo Button
 		ButtonText.Action demo = new ButtonText.Action() {
@@ -69,23 +73,28 @@ public class Title extends Scene {
 
 		};
 
-		buttons[0] = new ButtonText("Play Demo", demo, window.height(),
-				window.height() / 2 + 96, window.width() - window.height(), 24,
-				8, 6);
+		buttons[i] = new ButtonText("Play", demo, window.height(),
+				window.height() / 2 + (offset + buttonHeight * i),
+				window.width() - window.height(), 24, 8, 6);
 
-		// Game Button
-		ButtonText.Action play = new ButtonText.Action() {
+		i++;
+
+		// High Scores Button
+		ButtonText.Action highScores = new ButtonText.Action() {
+
 			@Override
 			public void action() {
-				// _main.setScene(new Game(main));
+				main.setScene(new HighScores(main));
 			}
+
 		};
 
-		buttons[1] = new ButtonText("Play Full Game", play, window.height(),
-				window.height() / 2 + 126, window.width() - window.height(),
-				24, 8, 6);
+		buttons[i] = new ButtonText("High Scores", highScores,
+				window.height(), window.height() / 2
+						+ (offset + buttonHeight * i), window.width()
+						- window.height(), 24, 8, 6);
 
-		buttons[1].setAvailability(false);
+		i++;
 
 		// Credits Button
 		ButtonText.Action credits = new ButtonText.Action() {
@@ -95,9 +104,11 @@ public class Title extends Scene {
 			}
 		};
 
-		buttons[2] = new ButtonText("Credits", credits, window.height(),
-				window.height() / 2 + 156, window.width() - window.height(),
-				24, 8, 6);
+		buttons[i] = new ButtonText("Credits", credits, window.height(),
+				window.height() / 2 + (offset + buttonHeight * i),
+				window.width() - window.height(), 24, 8, 6);
+
+		i++;
 
 		// Help Button
 		ButtonText.Action help = new ButtonText.Action() {
@@ -111,9 +122,12 @@ public class Title extends Scene {
 			}
 		};
 
-		buttons[3] = new ButtonText("Help               (Opens in Browser)",
-				help, window.height(), window.height() / 2 + 186,
-				window.width() - window.height(), 24, 8, 6);
+		buttons[i] = new ButtonText("Help               (Opens in Browser)",
+				help, window.height(), window.height() / 2
+						+ (offset + buttonHeight * i), window.width()
+						- window.height(), 24, 8, 6);
+
+		i++;
 
 		// Exit Button
 		ButtonText.Action exit = new ButtonText.Action() {
@@ -123,9 +137,11 @@ public class Title extends Scene {
 			}
 		};
 
-		buttons[4] = new ButtonText("Exit", exit, window.height(),
-				window.height() / 2 + 216, window.width() - window.height(),
-				24, 8, 6);
+		buttons[i] = new ButtonText("Exit", exit, window.height(),
+				window.height() / 2 + (offset + buttonHeight * i),
+				window.width() - window.height(), 24, 8, 6);
+
+		i++;
 
 		angle = 0;
 	}

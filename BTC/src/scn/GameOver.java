@@ -126,6 +126,7 @@ public class GameOver extends Scene {
 		textBox.delay(0.5);
 		textBox.addText("You Lose.");
 		
+		saveScore();
 	}
 
 	private void saveScore() {
@@ -134,7 +135,11 @@ public class GameOver extends Scene {
 			ArrayList<Integer> scores = (ArrayList<Integer>) Serializer
 					.getRecovered();
 			
-			Serializer.serialize(Main.SCORES_FILE, scores.add(this.score));
+			if (this.score > 0) {
+				scores.add(this.score);
+
+				Serializer.serialize(Main.SCORES_FILE, scores);
+			}
 		}
 	}
 
