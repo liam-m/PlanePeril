@@ -307,7 +307,7 @@ public class Demo extends Scene {
 			flightGenerationInterval = flightGenerationInterval / 1.3;
 			break;
 		case DIFFICULTY_HARD:
-			flightGenerationInterval = flightGenerationInterval / 1.6;
+			flightGenerationInterval = flightGenerationInterval / 1.5;
 			break;
 		}
 	}
@@ -938,7 +938,7 @@ public class Demo extends Scene {
 				originPoint.getName(), destinationPoint, originPoint,
 				aircraftImage, 32 + (int) (10 * Math.random()),
 				airspaceWaypoints, difficulty, holdingWaypoints,
-				takeoffWaypoint);
+				takeoffWaypoint, aircraftInAirspace);
 	}
 
 	@Override
