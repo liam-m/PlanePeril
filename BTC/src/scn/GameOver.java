@@ -49,7 +49,8 @@ public class GameOver extends Scene {
 
 	private int keyPressed;
 	/**
-	 * To store value of the score passed to this class in the constructor by the previous screen.
+	 * To store value of the score passed to this class in the constructor by
+	 * the previous screen.
 	 */
 	private int score;
 	/**
@@ -104,7 +105,7 @@ public class GameOver extends Scene {
 		textBox = new lib.TextBox(64, 96, window.width() - 128,
 				window.height() - 96, 32);
 		textBox.addText("You managed to earn " + this.score
-				+ "rubles before making your fatal error.");
+				+ " rubles before making your fatal error.");
 		textBox.delay(1);
 		textBox.newline();
 		textBox.addText(String.valueOf(deaths) + " people died in the crash.");
@@ -120,14 +121,14 @@ public class GameOver extends Scene {
 		textBox.newline();
 		textBox.delay(0.4);
 		textBox.addText("With no income, there is no way your family can survive the fast-approaching winter months.");
-		textBox.newline();	
+		textBox.newline();
 		textBox.newline();
 		textBox.delay(0.4);
 		textBox.newline();
 		textBox.addText("Game Over.");
 		textBox.delay(0.5);
 		textBox.addText("You Lose.");
-		
+
 		saveScore();
 	}
 
@@ -136,7 +137,7 @@ public class GameOver extends Scene {
 			@SuppressWarnings("unchecked")
 			ArrayList<Integer> scores = (ArrayList<Integer>) Serializer
 					.getRecovered();
-			
+
 			if (this.score > 0) {
 				scores.add(this.score);
 
