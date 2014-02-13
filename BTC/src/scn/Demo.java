@@ -302,12 +302,18 @@ public class Demo extends Scene {
 		// Set attributes according to the selected difficulty
 		// Flights spawn more often on harder difficulties.
 		case DIFFICULTY_EASY:
-			break;
+			flightGenerationInterval = flightGenerationInterval / 1.3;
 		case DIFFICULTY_MEDIUM:
 			flightGenerationInterval = flightGenerationInterval / 1.3;
+			airport.insertAircraft(createAircraft(true));
+			airport.insertAircraft(createAircraft(true));
 			break;
 		case DIFFICULTY_HARD:
 			flightGenerationInterval = flightGenerationInterval / 1.5;
+			airport.insertAircraft(createAircraft(true));
+			airport.insertAircraft(createAircraft(true));
+			airport.insertAircraft(createAircraft(true));
+			airport.insertAircraft(createAircraft(true));
 			break;
 		}
 	}
