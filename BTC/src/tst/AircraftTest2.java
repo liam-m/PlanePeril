@@ -173,8 +173,6 @@ public class AircraftTest2 {
 		testAircraft.setManualControl(true);
 
 		assertTrue(testAircraft.isManuallyControlled());
-
-		// need another test
 	}
 
 	@Test
@@ -186,22 +184,37 @@ public class AircraftTest2 {
 
 	@Test
 	public void testOutOfBounds() {
-		assertFalse(testAircraft.outOfBounds());
-		// need another test
+		Waypoint outOfWindow = new Waypoint(-100.0, -100.0);
+
+		testAircraft.alterPath(0, outOfWindow);
+
+		for (int x = 0; x < 20; x = x + 1) {
+			testAircraft.update(0.3);
+
+			System.out.println(testAircraft.outOfBounds());
+			System.out.println(testAircraft.position().x());
+		}
+
+		assertTrue(testAircraft.outOfBounds());
 	}
 
 	@Test
 	public void testBearing() {
 		// TEST NOT WORKING
 
+		// Waypoint currentTarget = airspaceWaypoints[1];
+		//
+		// double x = currentTarget.position().x() -
+		// testAircraft.position().x();
+		// double y = currentTarget.position().y() -
+		// testAircraft.position().y();
+		//
+		// Vector velocity = new Vector(x, y, 0).normalise().scaleBy(10.0);
+		// velocity = velocity.scaleBy(2);
+		//
+		// System.out.println(Math.atan2(velocity.x(), velocity.y()));
+		// System.out.println(testAircraft.speed());
 		// System.out.println(testAircraft.bearing());
-		//
-		// Waypoint currentTarget = testAircraft.
-		//
-		// double x = currentTarget.position().x() - position.x();
-		// double y = currentTarget.position().y() - position.y();
-		//
-		// velocity = new Vector(x, y, 0).normalise().scaleBy(speed);
 
 		fail("Not yet implemented");
 	}
@@ -307,7 +320,13 @@ public class AircraftTest2 {
 
 	@Test
 	public void testFindGreedyRoute() {
-		fail("Not yet implemented");
+		Waypoint[] testRoute = testAircraft.findGreedyRoute(
+				locationWaypoints[1], locationWaypoints[0], airspaceWaypoints,
+				holdingWaypoints);
+
+		assertTrue(testRoute[0].equals(airspaceWaypoints[1]));
+		assertTrue(testRoute[1].equals(airspaceWaypoints[0]));
+		assertTrue(testRoute[2].equals(locationWaypoints[0]));
 	}
 
 	@Test
