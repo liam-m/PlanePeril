@@ -1,5 +1,6 @@
 package tst;
 
+import static org.junit.Assert.*;
 import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
@@ -19,7 +20,11 @@ import cls.Waypoint.WaypointType;
 public class AirportTest {
 
 	public Airport airport;
+	
+	final static int MAX_AIRCRAFT_NUMBER = 10;
 
+	public ArrayList<Aircraft> aircraftList = new ArrayList<Aircraft>();
+	
 	public ArrayList<Aircraft> aircraftInAirspace;
 
 	public final Waypoint[] locationWaypoints = new Waypoint[] {
@@ -69,6 +74,7 @@ public class AirportTest {
 
 	public AirportTest() {
 		Airport testAirport = new Airport(10, 10, "INI");
+		
 
 	}
 
@@ -121,18 +127,32 @@ public class AirportTest {
 
 	@Test
 	public void testInsertAircraft() {
-
-		fail("Not yet implemented");
+		try{ 
+		for(int i=1; i<12; i++)
+			airport.insertAircraft(testAircraft);
+		}
+		catch (Exception IllegalStateException){ 
+		assertTrue(true);
+		}
+			
+		//fail("Not yet implemented");
 	}
 
 	@Test
 	public void testTakeoff() {
-		fail("Not yet implemented");
+		try{
+			airport.takeoff();
+		}
+		catch (Exception IllegalStateException){ 
+		assertTrue(true);
+		}
+		//fail("Not yet implemented");
 	}
 
 	@Test
 	public void testDrawAirportInfo() {
-		fail("Not yet implemented");
+		//No need to test
+		//fail("Not yet implemented");
 	}
 
 }
