@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
-	<classpathentry kind="lib" path="ext/jogg-0.0.7.jar"/>
-	<classpathentry kind="lib" path="ext/jorbis-0.0.15.jar"/>
-	<classpathentry kind="lib" path="ext/lwjgl.jar">
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
+	<classpathentry exported="true" kind="lib" path="ext/jogg-0.0.7.jar"/>
+	<classpathentry exported="true" kind="lib" path="ext/jorbis-0.0.15.jar"/>
+	<classpathentry exported="true" kind="lib" path="ext/lwjgl.jar">
 		<attributes>
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="BTC/ext/natives/windows"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="ext/slick.jar"/>
-	<classpathentry kind="lib" path="ext/junit-4.11.jar"/>
+	<classpathentry exported="true" kind="lib" path="ext/slick.jar"/>
+	<classpathentry exported="true" kind="lib" path="ext/junit-4.11.jar" sourcepath="ext/junit-4.11.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Joseph/Downloads/junit-4.10.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
