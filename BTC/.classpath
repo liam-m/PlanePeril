@@ -11,6 +11,6 @@
 	</classpathentry>
 	<classpathentry exported="true" kind="lib" path="ext/slick.jar"/>
 	<classpathentry exported="true" kind="lib" path="ext/junit-4.11.jar" sourcepath="ext/junit-4.11.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Joseph/Downloads/junit-4.10.jar"/>
+	<classpathentry kind="lib" path="ext/junit-4.10.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
