@@ -260,7 +260,8 @@ public class AircraftTest2 {
 
 	@Test
 	public void testIsMouseOverIntInt() {
-		fail("Not yet implemented");
+		assertTrue(testAircraft.isMouseOver(10, 1000));
+
 		// GUI
 	}
 
