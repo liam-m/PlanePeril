@@ -142,8 +142,20 @@ public class AircraftTest2 {
 	public void testIsFinished() {
 		assertFalse(testAircraft.isFinished());
 
-		// need another test. collide it with another aircraft, and test if this
-		// returns true.
+		Aircraft testAircraft2 = new Aircraft("testAircraft", "Exit", "Entry",
+				locationWaypoints[0], locationWaypoints[1], null, 10.0,
+				airspaceWaypoints, 1, holdingWaypoints, takeoffWaypoint,
+				aircraftInAirspace);
+
+		ArrayList<Aircraft> testAircrafts = new ArrayList<Aircraft>();
+		testAircrafts.add(testAircraft);
+		testAircrafts.add(testAircraft2);
+
+		testAircraft2.setAltitude((int) testAircraft.position().z());
+
+		testAircraft.updateCollisions(1, testAircrafts);
+
+		assertTrue(testAircraft.isFinished());
 	}
 
 	@Test
@@ -157,6 +169,10 @@ public class AircraftTest2 {
 	@Test
 	public void testIsManuallyControlled() {
 		assertFalse(testAircraft.isManuallyControlled());
+
+		testAircraft.setManualControl(true);
+
+		assertTrue(testAircraft.isManuallyControlled());
 
 		// need another test
 	}
@@ -221,22 +237,36 @@ public class AircraftTest2 {
 
 	@Test
 	public void testFlightPathContains() {
-		fail("Not yet implemented");
+		assertEquals(testAircraft.flightPathContains(airspaceWaypoints[1]), 0,
+				0);
+		assertEquals(testAircraft.flightPathContains(airspaceWaypoints[0]), 0,
+				1);
+		assertEquals(testAircraft.flightPathContains(locationWaypoints[0]), 2,
+				0);
 	}
 
 	@Test
 	public void testAlterPath() {
-		fail("Not yet implemented");
+
+		testAircraft.alterPath(1, airspaceWaypoints[2]);
+
+		assertEquals(testAircraft.flightPathContains(airspaceWaypoints[1]), 0,
+				0);
+		assertEquals(testAircraft.flightPathContains(airspaceWaypoints[2]), 0,
+				1);
+		assertEquals(testAircraft.flightPathContains(locationWaypoints[0]), 2,
+				0);
 	}
 
 	@Test
 	public void testIsMouseOverIntInt() {
 		fail("Not yet implemented");
+		// GUI
 	}
 
 	@Test
 	public void testIsMouseOver() {
-		fail("Not yet implemented");
+		// fail("Not yet implemented");
 	}
 
 	@Test
@@ -256,22 +286,22 @@ public class AircraftTest2 {
 
 	@Test
 	public void testDraw() {
-		fail("Not yet implemented");
+		// fail("Not yet implemented");
 	}
 
 	@Test
 	public void testDrawCompass() {
-		fail("Not yet implemented");
+		// fail("Not yet implemented");
 	}
 
 	@Test
 	public void testDrawFlightPath() {
-		fail("Not yet implemented");
+		// fail("Not yet implemented");
 	}
 
 	@Test
 	public void testDrawModifiedPath() {
-		fail("Not yet implemented");
+		// fail("Not yet implemented");
 	}
 
 	@Test
@@ -281,22 +311,47 @@ public class AircraftTest2 {
 
 	@Test
 	public void testUpdateCollisions() {
-		fail("Not yet implemented");
+		Aircraft testAircraft2 = new Aircraft("testAircraft", "Exit", "Entry",
+				locationWaypoints[0], locationWaypoints[1], null, 10.0,
+				airspaceWaypoints, 1, holdingWaypoints, takeoffWaypoint,
+				aircraftInAirspace);
+
+		ArrayList<Aircraft> testAircrafts = new ArrayList<Aircraft>();
+		testAircrafts.add(testAircraft);
+		testAircrafts.add(testAircraft2);
+
+		testAircraft2.setAltitude((int) testAircraft.position().z());
+
+		testAircraft.updateCollisions(1, testAircrafts);
+
+		assertTrue(testAircraft.isFinished());
 	}
 
 	@Test
 	public void testToggleManualControl() {
-		fail("Not yet implemented");
+		assertFalse(testAircraft.isManuallyControlled());
+
+		testAircraft.toggleManualControl();
+
+		assertTrue(testAircraft.isManuallyControlled());
 	}
 
 	@Test
 	public void testSetManualControl() {
-		fail("Not yet implemented");
+		assertFalse(testAircraft.isManuallyControlled());
+
+		testAircraft.setManualControl(true);
+
+		assertTrue(testAircraft.isManuallyControlled());
 	}
 
 	@Test
 	public void testToggleLand() {
-		fail("Not yet implemented");
+		assertFalse(testAircraft.isLanding());
+
+		testAircraft.toggleLand();
+
+		assertTrue(testAircraft.isLanding());
 	}
 
 	@Test
@@ -326,17 +381,22 @@ public class AircraftTest2 {
 
 	@Test
 	public void testSetAltitude() {
-		fail("Not yet implemented");
+		testAircraft.setAltitude(5000);
+		assertEquals(testAircraft.position().z(), 5000, 0);
+
+		testAircraft.setAltitude(10000);
+		assertEquals(testAircraft.position().z(), 10000, 0);
+
 	}
 
 	@Test
 	public void testGetPoints() {
-		fail("Not yet implemented");
+		assertEquals(testAircraft.getPoints(), 15, 0);
 	}
 
 	@Test
 	public void testGetDestination() {
-		fail("Not yet implemented");
+		assertTrue(testAircraft.getDestination().equals(locationWaypoints[0]));
 	}
 
 }
