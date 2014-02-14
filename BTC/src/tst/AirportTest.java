@@ -14,6 +14,8 @@ public class AirportTest {
 
 	public AirportTest() {
 		Airport testAirport = new Airport(10, 10, "INI");
+		
+		
 	}
 
 	@BeforeClass
@@ -34,12 +36,13 @@ public class AirportTest {
 
 	@Test
 	public void testAirport() {
-		Airport testAirport = new Airport(10, 10, "INI");
-		fail("Not yet implemented");
+		//If initialisation works, this works.
+		//fail("Not yet implemented");
 	}
 
 	@Test
 	public void testInsertAircraft() {
+		
 		fail("Not yet implemented");
 	}
 
