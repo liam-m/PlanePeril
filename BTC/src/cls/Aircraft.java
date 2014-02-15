@@ -987,7 +987,7 @@ public class Aircraft {
 	 */
 	public void toggleLand() {
 		isLanding = !isLanding;
-		if (isLanding) {
+		if (isLanding && (currentTarget instanceof HoldingWaypoint)) {
 			currentRouteStage++;
 			currentTarget = destination;
 			targetAltitudeIndex = 0;
