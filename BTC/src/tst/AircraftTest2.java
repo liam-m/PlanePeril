@@ -192,26 +192,17 @@ public class AircraftTest2 {
 
 	@Test
 	public void testBearing() {
-		// TEST NOT WORKING
-
-		// System.out.println(testAircraft.bearing());
-		//
-		// Waypoint currentTarget = testAircraft.
-		//
-		// double x = currentTarget.position().x() - position.x();
-		// double y = currentTarget.position().y() - position.y();
-		//
-		// velocity = new Vector(x, y, 0).normalise().scaleBy(speed);
-
-		fail("Not yet implemented");
+		Vector point2 = new Vector(20.0, 20.0, 20.0);
+		testAircraft.isAt(point2);
+		assertEquals(testAircraft.bearing(), -0.9476366, 0.1);
+		//fail("Not yet implemented");
 	}
 
 	@Test
 	public void testSpeed() {
 		// TEST NOT WORKING
-
 		// System.out.println(testAircraft.speed());
-		assertEquals(testAircraft.speed(), 10.0, 0);
+		assertEquals(testAircraft.speed(), 20.0, 0.1);
 	}
 
 	@Test

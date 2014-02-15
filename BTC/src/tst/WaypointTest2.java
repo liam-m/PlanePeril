@@ -76,12 +76,18 @@ public class WaypointTest2 {
 
 	@Test
 	public void testGetCost() {
-		fail("Not yet implemented");
+		Waypoint testWaypoint2 = new Waypoint(10, 12);
+		double result = testWaypoint.getCost(testWaypoint2);
+		assertTrue("Cost = 2", 2 == result);
+		
 	}
 
 	@Test
 	public void testGetCostBetween() {
-		fail("Not yet implemented");
+		Waypoint testWaypoint2 = new Waypoint(10, 12);
+		double result = testWaypoint.getCost(testWaypoint2);
+		assertTrue("Cost = 2", 2 == result);
+		
 	}
 
 	@Test
