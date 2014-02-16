@@ -68,12 +68,12 @@ public class Demo extends Scene {
 	/**
 	 * Time when the last takeoff occured
 	 */
-	private double nextTakeoff = 0;
+	private double nextTakeoff = 0 + TAKEOFF_DELAY;
 
 	/**
 	 * Time when the last land occured
 	 */
-	private double nextLand = 0;
+	private double nextLand = 0 + LAND_DELAY;
 
 	/**
 	 * The currently selected aircraft
@@ -352,19 +352,22 @@ public class Demo extends Scene {
 
 		manualOverrideButton.setText((selectedAircraft.isManuallyControlled()
 				? "Remove"
-				: " Take") + " Control");
+				: "Take") + " Control");
 	}
 
 	/**
-	 * Causes a selected aircraft to call methods to toggle manual control
+	 * Causes a selected aircraft to call methods to land
 	 */
 	private void toggleLand() {
-		if (selectedAircraft == null || selectedAircraft.position().z() > 5000)
+		if (selectedAircraft == null || selectedAircraft.position().z() > 5000
+				|| nextLand - timeElapsed > 0)
 			return;
 
 		selectedAircraft.toggleLand();
 
-		landButton.setText((selectedAircraft.isLanding() ? "" : "") + " Land");
+		nextLand = timeElapsed + LAND_DELAY;
+
+		landButton.setText("Land");
 	}
 
 	/**
@@ -373,7 +376,7 @@ public class Demo extends Scene {
 	private void deselectAircraft() {
 		if (selectedAircraft != null && selectedAircraft.isManuallyControlled()) {
 			selectedAircraft.toggleManualControl();
-			manualOverrideButton.setText(" Take Control");
+			manualOverrideButton.setText("Take Control");
 		}
 
 		selectedAircraft = null;
@@ -410,6 +413,7 @@ public class Demo extends Scene {
 				Aircraft a2 = createAircraft(true);
 
 				gameOver(a1, a2);
+				return;
 			}
 
 			// if aircraft landed
@@ -467,7 +471,7 @@ public class Demo extends Scene {
 
 			// update manual control button text
 			manualOverrideButton.setText((selectedAircraft
-					.isManuallyControlled() ? "Remove" : " Take") + " Control");
+					.isManuallyControlled() ? "Remove" : "Take") + " Control");
 
 			if (selectedAircraft.isManuallyControlled()) {
 				if (selectedAircraft.outOfBounds()) {
