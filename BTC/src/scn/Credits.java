@@ -112,33 +112,86 @@ public class Credits extends Scene {
 				window.width());
 		graphics.printCentred("__________", 4, currentHeight + 8, 2,
 				window.width());
+
 		currentHeight += gap;
+
+		graphics.printCentred("Philip Drew", 0, currentHeight, 2,
+				window.width() / 3);
+
+		graphics.printCentred("Miguel Boland", window.width() / 3,
+				currentHeight, 2, window.width() / 3);
+
+		graphics.printCentred("Leslie Hor", 2 * window.width() / 3,
+				currentHeight, 2, window.width() / 3);
+
+		currentHeight += gap;
+
+		graphics.printCentred("Paulius Imbrasas", 0, currentHeight, 2,
+				window.width() / 3);
+
+		graphics.printCentred("Joe Hamm", window.width() / 3, currentHeight, 2,
+				window.width() / 3);
+
+		graphics.printCentred("Jaidev Mandhiyan", 2 * window.width() / 3,
+				currentHeight, 2, window.width() / 3);
+
+		currentHeight += gap;
+
 		graphics.printCentred("Josh Adams", 0, currentHeight, 2,
 				window.width() / 3);
+
 		graphics.printCentred("Huw Taylor", window.width() / 3, currentHeight,
 				2, window.width() / 3);
+
 		graphics.printCentred("Stephen Webb", 2 * window.width() / 3,
 				currentHeight, 2, window.width() / 3);
+
 		currentHeight += gap * 2;
 
 		graphics.printCentred("Website", 0, currentHeight, 2, window.width());
 		graphics.printCentred("_______", 0, currentHeight + 8, 2,
 				window.width());
 		graphics.printCentred("______", 4, currentHeight + 8, 2, window.width());
+
 		currentHeight += gap;
+
+		graphics.printCentred("Miguel Boland", 0, currentHeight, 2,
+				window.width());
+
+		currentHeight += gap;
+
 		graphics.printCentred("Gareth Handley", 0, currentHeight, 2,
 				window.width());
+
 		currentHeight += gap * 2;
 
 		graphics.printCentred("Testing", 0, currentHeight, 2, window.width());
 		graphics.printCentred("_______", 0, currentHeight + 8, 2,
 				window.width());
 		graphics.printCentred("______", 4, currentHeight + 8, 2, window.width());
+
 		currentHeight += gap;
-		graphics.printCentred("Sanjit Samaddar", 0, currentHeight, 2,
+
+		graphics.printCentred("Jaidev Mandhiyan", 0, currentHeight, 2,
 				window.width() / 2);
-		graphics.printCentred("Alex Stewart", window.width() / 2,
+
+		graphics.printCentred("Joe Hamm", window.width() / 2, currentHeight, 2,
+				window.width() / 2);
+
+		currentHeight += gap;
+
+		graphics.printCentred("Leslie Hor", 0,
 				currentHeight, 2, window.width() / 2);
+
+		graphics.printCentred("Sanjit Samaddar", window.width() / 2,
+				currentHeight, 2,
+				window.width() / 2);
+
+		currentHeight += gap;
+
+		graphics.printCentred("Alex Stewart", 0,
+				currentHeight, 2, window.width() / 2);
+
 		currentHeight += gap * 2;
 
 		graphics.printCentred("Music", 0, currentHeight, 2, window.width());

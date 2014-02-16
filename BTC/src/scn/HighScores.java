@@ -25,14 +25,16 @@ public class HighScores extends Scene {
 	}
 
 	/**
-	 * initialises the random number of deaths, timer, and text box with strings
-	 * to be written about the game failure
+	 * loads the high scores screen including deserializing the scores file and
+	 * displaying it on the screen sorted.
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void start() {
 
 		ArrayList<Integer> scores = new ArrayList<Integer>();
 
+		// if file exists and is deserializeable
 		if (Serializer.deserialize(Main.SCORES_FILE)) {
 			scores = (ArrayList<Integer>) Serializer.getRecovered();
 		}
@@ -41,6 +43,7 @@ public class HighScores extends Scene {
 				window.height() - 96, 32);
 		textBox.addText("HIGH SCORES");
 		
+		// convert arraylist into regular array to make sorting simpler
 		Integer[] scoresArray = scores.toArray(new Integer[scores.size()]);
 		Arrays.sort(scoresArray, Collections.reverseOrder());
 
@@ -86,15 +89,11 @@ public class HighScores extends Scene {
 	public void keyReleased(int key) {
 		if (key == keyPressed) {
 			main.closeScene();
-			main.closeScene();
 		}
 	}
 
 	@Override
 	/**
-	 * draws game over
-	 * If explosion has finished, draw the textbox
-	 * Otherwise, draw the planes and explosion
 	 */
 	public void draw() {
 		graphics.setColour(Main.GREEN);
