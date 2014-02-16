@@ -205,13 +205,13 @@ public class Aircraft {
 		// aircraft is to be spawned at and has the same altitude, the new
 		// aircraft must choose a different altitude.
 		for (Aircraft aircraft : aircraftList) {
-			if (!this.equals(aircraft) && isWithin(aircraft, 300)
+			if (originPoint.position().sub(aircraft.position()).magnitude() < 200
 					&& altitude == aircraft.position.z()) {
 				int newTargetAltitudeIndex = targetAltitudeIndex;
 				while (newTargetAltitudeIndex == targetAltitudeIndex)
 					newTargetAltitudeIndex = RandomNumber.randInclusiveInt(1,
 							altitudeList.size() - 1);
-				altitude = altitudeList.get(targetAltitudeIndex);
+				altitude = altitudeList.get(newTargetAltitudeIndex);
 			}
 		}
 
@@ -252,7 +252,7 @@ public class Aircraft {
 			break;
 
 		case Demo.DIFFICULTY_MEDIUM:
-			separationRule = 96;
+			separationRule = 128;
 			velocity = velocity.scaleBy(2);
 			turnSpeed = Math.PI / 3;
 			altitudeChangeSpeed = 600;
@@ -260,7 +260,7 @@ public class Aircraft {
 			break;
 
 		case Demo.DIFFICULTY_HARD:
-			separationRule = 64;
+			separationRule = 128;
 			velocity = velocity.scaleBy(3);
 			// At high velocities, the aircraft is allowed to turn faster
 			// this helps keep the aircraft on track.
