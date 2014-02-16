@@ -205,13 +205,7 @@ public class Aircraft {
 		// aircraft is to be spawned at and has the same altitude, the new
 		// aircraft must choose a different altitude.
 		for (Aircraft aircraft : aircraftList) {
-			if (!this.equals(aircraft) && isWithin(aircraft, 300)
-					&& altitude == aircraft.position.z()) {
-				int newTargetAltitudeIndex = targetAltitudeIndex;
-				while (newTargetAltitudeIndex == targetAltitudeIndex)
-					newTargetAltitudeIndex = RandomNumber.randInclusiveInt(1,
-							altitudeList.size() - 1);
-				altitude = altitudeList.get(targetAltitudeIndex);
+			if (isWithin(this, 200) && altitude == aircraft.position.z()) {
 			}
 		}
 
