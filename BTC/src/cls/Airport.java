@@ -10,11 +10,18 @@ public class Airport extends Waypoint {
 
 	private final static int MAX_AIRCRAFT_NUMBER = 10;
 	public final static int MOUSE_LENIANCY = 32;
+	private int timeLeft = 0;
 
 	private ArrayList<Aircraft> aircraftList = new ArrayList<Aircraft>();
 
 	public Airport(double x, double y, String name) {
 		super(x, y, WaypointType.ENTRY_EXIT, name);
+	}
+
+	public void setTimeLeft(int timeLeft) {
+		if (timeLeft >= 0) {
+			this.timeLeft = timeLeft;
+		}
 	}
 
 	/**
@@ -48,10 +55,16 @@ public class Airport extends Waypoint {
 	public void drawAirportInfo() {
 		graphics.setColour(Main.GREEN);
 
+		graphics.print("Aero Medved'", position.x() - 40, position.y() - 35);
+
 		graphics.print("Aircraft in: " + aircraftList.size(),
 				position.x() - 40, position.y() - 25);
 
-		graphics.print("Aero Medved'", position.x() - 40, position.y() - 35);
+		if (timeLeft != 0) {
+			graphics.print("Takeoff in: " + this.timeLeft, position.x() - 40,
+					position.y() - 15);
+		}
+
 	}
 
 }

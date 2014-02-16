@@ -46,6 +46,9 @@ public class Demo extends Scene {
 	public final static int DIFFICULTY_HARD = 2;
 	public static int difficulty = DIFFICULTY_EASY;
 
+	private final static int TAKEOFF_DELAY = 5;
+	private final static int LAND_DELAY = 5;
+
 	/**
 	 * Orders box to print orders from ACTO to aircraft to
 	 */
@@ -61,6 +64,17 @@ public class Demo extends Scene {
 	private int score;
 
 	private double timeElapsed;
+
+	/**
+	 * Time when the last takeoff occured
+	 */
+	private double nextTakeoff = 0;
+
+	/**
+	 * Time when the last land occured
+	 */
+	private double nextLand = 0;
+
 	/**
 	 * The currently selected aircraft
 	 */
@@ -378,6 +392,9 @@ public class Demo extends Scene {
 		timeElapsed += dt;
 		ordersBox.update(dt);
 
+		// update airport timer
+		airport.setTimeLeft((int) (nextTakeoff - timeElapsed));
+
 		for (Aircraft plane : aircraftInAirspace) {
 
 			// Added a try/catch construct to make sure we catch when the
@@ -445,8 +462,10 @@ public class Demo extends Scene {
 				isManuallyControlling = true;
 			}
 
+			// allows to take control by just pressing left/right or A/D
 			selectedAircraft.setManualControl(isManuallyControlling);
 
+			// update manual control button text
 			manualOverrideButton.setText((selectedAircraft
 					.isManuallyControlled() ? "Remove" : " Take") + " Control");
 
@@ -576,12 +595,16 @@ public class Demo extends Scene {
 			landButton.act();
 
 		if (key == input.MOUSE_LEFT && airport.isMouseOver(x - 16, y - 16)) {
-			try {
-				airport.takeoff();
-				generateFlight(true);
-			} catch (IllegalStateException e) {
-				ordersBox
-						.addOrder("<<< There are no aircraft in the airport, Comrade.");
+			// must wait at least 5 seconds between aircraft takeoff
+			if (nextTakeoff - timeElapsed <= 0) {
+				try {
+					airport.takeoff();
+					generateFlight(true);
+					nextTakeoff = timeElapsed + TAKEOFF_DELAY;
+				} catch (IllegalStateException e) {
+					ordersBox
+							.addOrder("<<< There are no aircraft in the airport, Comrade.");
+				}
 			}
 		}
 
