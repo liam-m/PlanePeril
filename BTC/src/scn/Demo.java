@@ -266,7 +266,6 @@ public class Demo extends Scene {
 		ButtonText.Action manual = new ButtonText.Action() {
 			@Override
 			public void action() {
-				// _selectedAircraft.manuallyControl();
 				toggleManualControl();
 			}
 		};
@@ -448,6 +447,9 @@ public class Demo extends Scene {
 
 			selectedAircraft.setManualControl(isManuallyControlling);
 
+			manualOverrideButton.setText((selectedAircraft
+					.isManuallyControlled() ? "Remove" : " Take") + " Control");
+
 			if (selectedAircraft.isManuallyControlled()) {
 				if (selectedAircraft.outOfBounds()) {
 					ordersBox
@@ -575,10 +577,11 @@ public class Demo extends Scene {
 
 		if (key == input.MOUSE_LEFT && airport.isMouseOver(x - 16, y - 16)) {
 			try {
-				Aircraft fromAirport = airport.takeoff();
+				airport.takeoff();
 				generateFlight(true);
 			} catch (IllegalStateException e) {
-				e.printStackTrace();
+				ordersBox
+						.addOrder("<<< There are no aircraft in the airport, Comrade.");
 			}
 		}
 
