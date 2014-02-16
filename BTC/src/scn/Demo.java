@@ -149,14 +149,14 @@ public class Demo extends Scene {
 	/**
 	 * A list of location names for waypoint flavour
 	 */
-	private final static String[] LOCATION_NAMES = new String[] {
+	private final static String[] LOCATION_NAMES = new String[]{
 			"North West Top Leftonia", "100 Acre Woods", "City of Rightson",
-			"South Sea", "Aerodromio Medved'" };
+			"South Sea", "Aerodromio Medved'"};
 
 	/**
 	 * The set of waypoints in the airspace which are origins / destinations
 	 */
-	public final Waypoint[] locationWaypoints = new Waypoint[] {
+	public final Waypoint[] locationWaypoints = new Waypoint[]{
 			/* A set of Waypoints which are origin / destination points */
 
 			// top left
@@ -176,12 +176,12 @@ public class Demo extends Scene {
 					- 40, WaypointType.ENTRY_EXIT, "South Sea"),
 
 			// The aerodromio
-			airport = new Airport(949, 358, "Aerodromio Medved'"), };
+			airport = new Airport(949, 358, "Aerodromio Medved'"),};
 
 	/**
 	 * All waypoints in the airspace, INCLUDING locationWaypoints.
 	 */
-	public Waypoint[] airspaceWaypoints = new Waypoint[] {
+	public Waypoint[] airspaceWaypoints = new Waypoint[]{
 
 			// airspace waypoints
 			new Waypoint(160, 174), // 0
@@ -301,20 +301,20 @@ public class Demo extends Scene {
 		switch (difficulty) {
 		// Set attributes according to the selected difficulty
 		// Flights spawn more often on harder difficulties.
-		case DIFFICULTY_EASY:
-			flightGenerationInterval = flightGenerationInterval / 1.3;
-		case DIFFICULTY_MEDIUM:
-			flightGenerationInterval = flightGenerationInterval / 1.3;
-			airport.insertAircraft(createAircraft(true));
-			airport.insertAircraft(createAircraft(true));
-			break;
-		case DIFFICULTY_HARD:
-			flightGenerationInterval = flightGenerationInterval / 1.5;
-			airport.insertAircraft(createAircraft(true));
-			airport.insertAircraft(createAircraft(true));
-			airport.insertAircraft(createAircraft(true));
-			airport.insertAircraft(createAircraft(true));
-			break;
+			case DIFFICULTY_EASY :
+				flightGenerationInterval = flightGenerationInterval / 1.3;
+			case DIFFICULTY_MEDIUM :
+				flightGenerationInterval = flightGenerationInterval / 1.3;
+				airport.insertAircraft(createAircraft(true));
+				airport.insertAircraft(createAircraft(true));
+				break;
+			case DIFFICULTY_HARD :
+				flightGenerationInterval = flightGenerationInterval / 1.5;
+				airport.insertAircraft(createAircraft(true));
+				airport.insertAircraft(createAircraft(true));
+				airport.insertAircraft(createAircraft(true));
+				airport.insertAircraft(createAircraft(true));
+				break;
 		}
 	}
 
@@ -337,9 +337,9 @@ public class Demo extends Scene {
 		isManuallyControlling = false;
 		selectedAircraft.toggleManualControl();
 
-		manualOverrideButton
-				.setText((selectedAircraft.isManuallyControlled() ? "Remove"
-						: " Take") + " Control");
+		manualOverrideButton.setText((selectedAircraft.isManuallyControlled()
+				? "Remove"
+				: " Take") + " Control");
 	}
 
 	/**
@@ -381,18 +381,22 @@ public class Demo extends Scene {
 
 		for (Aircraft plane : aircraftInAirspace) {
 
+			// Added a try/catch construct to make sure we catch when the
+			// aircraft is inserted into a full airport
 			try {
 				plane.update(dt);
 			} catch (IllegalStateException e) {
 				ordersBox
 						.addOrder("<<< Aerodromio Medved' is full, divert aircraft Comrade!");
 
+				// simple way to end the game if the airport is full
 				Aircraft a1 = createAircraft(false);
 				Aircraft a2 = createAircraft(true);
 
 				gameOver(a1, a2);
 			}
 
+			// if aircraft landed
 			if (plane.atAirport()) {
 				ordersBox.addOrder("<<< Aircraft " + plane.name()
 						+ " has landed safely at Aerodromio Medved'");
@@ -401,15 +405,15 @@ public class Demo extends Scene {
 			if (plane.isFinished()) {
 				score += plane.getPoints();
 				switch (RandomNumber.randInclusiveInt(0, 2)) {
-				case 0:
-					ordersBox.addOrder("<<< Thank you Comrade");
-					break;
-				case 1:
-					ordersBox.addOrder("<<< Well done Comrade");
-					break;
-				case 2:
-					ordersBox.addOrder("<<< Many thanks Comrade");
-					break;
+					case 0 :
+						ordersBox.addOrder("<<< Thank you Comrade");
+						break;
+					case 1 :
+						ordersBox.addOrder("<<< Well done Comrade");
+						break;
+					case 2 :
+						ordersBox.addOrder("<<< Many thanks Comrade");
+						break;
 				}
 			}
 		}
@@ -443,13 +447,6 @@ public class Demo extends Scene {
 			}
 
 			selectedAircraft.setManualControl(isManuallyControlling);
-
-			if (input.isKeyDown(input.KEY_S) || input.isKeyDown(input.KEY_DOWN)) {
-				selectedAircraft.decreaseTargetAltitude();
-			} else if (input.isKeyDown(input.KEY_W)
-					|| input.isKeyDown(input.KEY_UP)) {
-				selectedAircraft.increaseTargetAltitude();
-			}
 
 			if (selectedAircraft.isManuallyControlled()) {
 				if (selectedAircraft.outOfBounds()) {
@@ -644,27 +641,39 @@ public class Demo extends Scene {
 	public void keyReleased(int key) {
 		switch (key) {
 
-		case input.KEY_SPACE:
-			toggleManualControl();
-			break;
+			case input.KEY_S :
+			case input.KEY_DOWN :
+				if (selectedAircraft != null)
+					selectedAircraft.decreaseTargetAltitude();
+				break;
 
-		case input.KEY_F:
-			toggleLand();
-			break;
+			case input.KEY_W :
+			case input.KEY_UP :
+				if (selectedAircraft != null)
+					selectedAircraft.increaseTargetAltitude();
+				break;
 
-		case input.KEY_LCRTL:
-			generateFlight(false);
-			break;
+			case input.KEY_SPACE :
+				toggleManualControl();
+				break;
 
-		case input.KEY_ESCAPE:
-			main.closeScene();
-			break;
+			case input.KEY_F :
+				toggleLand();
+				break;
 
-		case input.KEY_F5:
-			Aircraft a1 = createAircraft(false);
-			Aircraft a2 = createAircraft(true);
-			gameOver(a1, a2);
-			break;
+			case input.KEY_LCRTL :
+				generateFlight(false);
+				break;
+
+			case input.KEY_ESCAPE :
+				main.closeScene();
+				break;
+
+			case input.KEY_F5 :
+				Aircraft a1 = createAircraft(false);
+				Aircraft a2 = createAircraft(true);
+				gameOver(a1, a2);
+				break;
 
 		}
 	}
