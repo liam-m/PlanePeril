@@ -192,7 +192,8 @@ public class Aircraft {
 		// place on spawn waypoint
 		position = originPoint.position();
 
-		// Add list of aircraft cruising heights.
+		// Add list of aircraft cruising heights. First entry only used when
+		// aircraft is landing/taking off.
 		altitudeList.add(100);
 		altitudeList.add(5000);
 		altitudeList.add(10000);
