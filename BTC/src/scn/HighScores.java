@@ -42,16 +42,15 @@ public class HighScores extends Scene {
 		textBox = new lib.TextBox(64, 96, window.width() - 128,
 				window.height() - 96, 32);
 		textBox.addText("HIGH SCORES");
-		
+
 		// convert arraylist into regular array to make sorting simpler
 		Integer[] scoresArray = scores.toArray(new Integer[scores.size()]);
 		Arrays.sort(scoresArray, Collections.reverseOrder());
 
-		int i = 1;
-		for (Integer score : scoresArray) {
+		// Display the 10 heighest scores.
+		for (int i = 1; i < 11; i++) {
 			textBox.delay(0.2);
-			textBox.addText(i + ": " + score);
-			i++;
+			textBox.addText(i + ": " + scoresArray[i]);
 		}
 
 	}
