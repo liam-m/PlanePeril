@@ -503,6 +503,8 @@ public class Aircraft {
 	public void update(double dt) throws IllegalStateException {
 		if (hasFinished)
 			return;
+		// handles aircrafts' altitude, comparing the aircrafts' altitude to its
+		// target altitude.
 		if (altitudeList.get(targetAltitudeIndex) + 100 >= (int) this.position
 				.z()
 				&& altitudeList.get(targetAltitudeIndex) - 100 <= (int) this.position

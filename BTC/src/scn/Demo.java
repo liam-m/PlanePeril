@@ -140,7 +140,7 @@ public class Demo extends Scene {
 	/**
 	 * The interval in seconds to generate flights after
 	 */
-	private static double flightGenerationInterval = 8;
+	private double flightGenerationInterval;
 
 	/**
 	 * The time eleapsed since the last flight was generated
@@ -149,7 +149,7 @@ public class Demo extends Scene {
 	/**
 	 * Max aircraft in the airspace at once Change to 10 for Assessment 3.
 	 */
-	private final int maxAircraft = 10;
+	private final int maxAircraft = 20;
 
 	/**
 	 * Music to play during the game scene
@@ -249,22 +249,23 @@ public class Demo extends Scene {
 		background = graphics.newImage("gfx" + File.separator + "map.png");
 		music = audio.newMusic("sfx" + File.separator + "Gypsy_Shoegazer.ogg");
 		music.play();
+		flightGenerationInterval = 8;
 
-		// Initialise Holding Waypoints
+		// Initialise Holding Waypoints, positions are relative to the airport.
 		holdingWaypoints.add(new HoldingWaypoint(locationWaypoints[4]
-				.position().x() - 100,
+				.position().x() - 150,
 				locationWaypoints[4].position().y() - 100));
 		holdingWaypoints.add(new HoldingWaypoint(locationWaypoints[4]
-				.position().x() + 100,
+				.position().x() + 150,
 				locationWaypoints[4].position().y() - 100));
 		holdingWaypoints.add(new HoldingWaypoint(locationWaypoints[4]
-				.position().x() + 100,
+				.position().x() + 150,
 				locationWaypoints[4].position().y() + 100));
 		holdingWaypoints.add(new HoldingWaypoint(locationWaypoints[4]
-				.position().x() - 100,
+				.position().x() - 150,
 				locationWaypoints[4].position().y() + 100));
 
-		// Initialise values of setNextWaypoint.
+		// Initialise values of setNextWaypoint for each holding waypoint.
 		holdingWaypoints.get(0).setNextWaypoint(holdingWaypoints.get(1));
 		holdingWaypoints.get(1).setNextWaypoint(holdingWaypoints.get(2));
 		holdingWaypoints.get(2).setNextWaypoint(holdingWaypoints.get(3));
@@ -317,12 +318,12 @@ public class Demo extends Scene {
 		case DIFFICULTY_EASY:
 			flightGenerationInterval = flightGenerationInterval / 1.3;
 		case DIFFICULTY_MEDIUM:
-			flightGenerationInterval = flightGenerationInterval / 1.5;
+			flightGenerationInterval = flightGenerationInterval / 2.0;
 			airport.insertAircraft(createAircraft(true));
 			airport.insertAircraft(createAircraft(true));
 			break;
 		case DIFFICULTY_HARD:
-			flightGenerationInterval = flightGenerationInterval / 1.5;
+			flightGenerationInterval = flightGenerationInterval / 2.0;
 			airport.insertAircraft(createAircraft(true));
 			airport.insertAircraft(createAircraft(true));
 			airport.insertAircraft(createAircraft(true));
