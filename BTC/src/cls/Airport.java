@@ -58,7 +58,7 @@ public class Airport extends Waypoint {
 	/**
 	 * Inserts an aircraft into the airport, done by reference.
 	 * 
-	 * @param Aircraft
+	 * @param aircraft
 	 *            to insert
 	 * @throws IllegalStateException
 	 *             if insertion will overflow airport
