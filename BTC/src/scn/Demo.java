@@ -96,6 +96,7 @@ public class Demo extends Scene {
 	 * Selected path point, in an aircraft's route, used for altering the route
 	 */
 	private int selectedPathpoint;
+
 	/**
 	 * A list of aircraft present in the airspace
 	 */
@@ -111,12 +112,13 @@ public class Demo extends Scene {
 	 * A button to start and end manual control of an aircraft
 	 */
 	private ButtonText manualOverrideButton;
+
 	/**
 	 * Tracks if manual heading compass of a manually controller aircraft has
 	 * been dragged
 	 */
-
 	private ButtonText landButton;
+
 	/**
 	 * Tracks if manual heading compass of a manually controller aircraft has
 	 * been dragged
@@ -130,13 +132,10 @@ public class Demo extends Scene {
 	private boolean compassDragged;
 
 	/**
-	 * Placeholder for whitespaces in score
-	 */
-	public String spaces;
-	/**
 	 * An altimeter to display aircraft altitidue, heading, etc.
 	 */
 	private Altimeter altimeter;
+
 	/**
 	 * The interval in seconds to generate flights after
 	 */
@@ -146,6 +145,7 @@ public class Demo extends Scene {
 	 * The time eleapsed since the last flight was generated
 	 */
 	private double flightGenerationTimeElapsed = 6;
+
 	/**
 	 * Max aircraft in the airspace at once Change to 10 for Assessment 3.
 	 */
@@ -155,6 +155,7 @@ public class Demo extends Scene {
 	 * Music to play during the game scene
 	 */
 	private Music music;
+
 	/**
 	 * The background to draw in the airspace.
 	 */
@@ -189,7 +190,7 @@ public class Demo extends Scene {
 			new Waypoint(window.width() - 40, window.height() - ORDERSBOX_H
 					- 40, WaypointType.ENTRY_EXIT, "South Sea"),
 
-			// The aerodromio
+			// The airport
 			airport = new Airport(949, 390, "Aerodromio Medved'"),};
 
 	/**
@@ -249,21 +250,19 @@ public class Demo extends Scene {
 		background = graphics.newImage("gfx" + File.separator + "map.png");
 		music = audio.newMusic("sfx" + File.separator + "Gypsy_Shoegazer.ogg");
 		music.play();
+
 		flightGenerationInterval = 8;
 
 		// Initialise Holding Waypoints, positions are relative to the airport.
-		holdingWaypoints.add(new HoldingWaypoint(locationWaypoints[4]
-				.position().x() - 150,
-				locationWaypoints[4].position().y() - 100));
-		holdingWaypoints.add(new HoldingWaypoint(locationWaypoints[4]
-				.position().x() + 150,
-				locationWaypoints[4].position().y() - 100));
-		holdingWaypoints.add(new HoldingWaypoint(locationWaypoints[4]
-				.position().x() + 150,
-				locationWaypoints[4].position().y() + 100));
-		holdingWaypoints.add(new HoldingWaypoint(locationWaypoints[4]
-				.position().x() - 150,
-				locationWaypoints[4].position().y() + 100));
+		// these are used to circle the airport.
+		holdingWaypoints.add(new HoldingWaypoint(airport.position().x() - 150,
+				airport.position().y() - 100));
+		holdingWaypoints.add(new HoldingWaypoint(airport.position().x() + 150,
+				airport.position().y() - 100));
+		holdingWaypoints.add(new HoldingWaypoint(airport.position().x() + 150,
+				airport.position().y() + 100));
+		holdingWaypoints.add(new HoldingWaypoint(airport.position().x() - 150,
+				airport.position().y() + 100));
 
 		// Initialise values of setNextWaypoint for each holding waypoint.
 		holdingWaypoints.get(0).setNextWaypoint(holdingWaypoints.get(1));
@@ -288,6 +287,7 @@ public class Demo extends Scene {
 		manualOverrideButton = new ButtonText("Take Control", manual,
 				(window.width() - 128) / 2, 32, 128, 32, 8, 4);
 
+		// the action that is called once the land button is clicked.
 		ButtonText.Action land = new ButtonText.Action() {
 			@Override
 			public void action() {
@@ -310,7 +310,6 @@ public class Demo extends Scene {
 
 		altimeter = new Altimeter(ALTIMETER_X, ALTIMETER_Y, ALTIMETER_W,
 				ALTIMETER_H);
-		deselectAircraft();
 
 		switch (difficulty) {
 		// Set attributes according to the selected difficulty
@@ -641,15 +640,6 @@ public class Demo extends Scene {
 
 		altimeter.mouseReleased(key, x, y);
 
-		/*
-		 * TODO Needs to be reworked so that aircraft displays this message when
-		 * altitude is changed. if (selectedAircraft != null) { if
-		 * (altitudeState != selectedAircraft.altitudeState()) {
-		 * ordersBox.addOrder(">>> " + selectedAircraft.name() +
-		 * ", please adjust your altitude");
-		 * ordersBox.addOrder("<<< Roger that. Altering altitude now."); } }
-		 */
-
 		if (compassDragged && selectedAircraft != null) {
 			double dx = input.mouseX() - selectedAircraft.position().x();
 			double dy = input.mouseY() - selectedAircraft.position().y();
@@ -774,8 +764,9 @@ public class Demo extends Scene {
 			graphics.rectangle(false, (window.width() - 128) / 2, 16, 128, 32);
 			manualOverrideButton.draw();
 
-			if ((selectedAircraft.getDestination() instanceof Airport)
-					&& selectedAircraft.position().z() <= 5000) {
+			// if aircraft is flying towards the airport (i.e. it's its
+			// destination point, draw the land button)
+			if (selectedAircraft.getDestination() instanceof Airport) {
 				// Land Button with valid altitude
 				graphics.setColour(0, 0, 0);
 				graphics.rectangle(true, (window.width() - 500) / 2, 16, 128,
@@ -783,22 +774,23 @@ public class Demo extends Scene {
 				graphics.setColour(Main.GREEN);
 				graphics.rectangle(false, (window.width() - 500) / 2, 16, 128,
 						32);
+
+				// if the altitude is appropriate, i.e. required altitude for
+				// the aircraft to land
+				if (selectedAircraft.position().z() <= Airport.MIN_ALTITUDE) {
+					landButton.setText("Land");
+				}
+
+				// otherwise, set the text to "lower altitude"
+				if (selectedAircraft.position().z() > Airport.MIN_ALTITUDE) {
+					landButton.setText("Lower Altitude!");
+				}
+
 				landButton.draw();
-			} else if ((selectedAircraft.getDestination() instanceof Airport)
-					&& selectedAircraft.position().z() > 5000) {
-				// Land Button
-				graphics.setColour(0, 0, 0);
-				graphics.rectangle(true, (window.width() - 500) / 2, 16, 128,
-						32);
-				graphics.setColour(Main.GREEN);
-				graphics.rectangle(false, (window.width() - 500) / 2, 16, 128,
-						32);
-				landAltitudeButton.draw();
 			}
 
 			selectedAircraft.drawFlightPath();
 			graphics.setColour(Main.GREEN);
-
 		}
 
 		if (selectedWaypoint != null
@@ -867,25 +859,24 @@ public class Demo extends Scene {
 	}
 
 	/**
-	 * draw a readout of the time the game has been played for, aircraft in the
-	 * sky, etc. Hint: for assessment 3, this could be used to print the
-	 * player's current score.
-	 */
-
-	/**
 	 * Whitespace Concatenation maker
 	 * 
 	 */
+	private static String whiteSpace(int text) {
+		String spaces = "";
 
-	public String whiteSpace(int score) {
-		spaces = "";
-		int ScoreLength = 5 - Integer.toString(score).length();
+		int ScoreLength = 5 - Integer.toString(text).length();
+
 		for (int i = 0; i < ScoreLength; i++) {
 			spaces += " ";
 		}
+
 		return spaces;
 	}
 
+	/**
+	 * Draw the score and the timer
+	 */
 	private void drawScore() {
 		int hours = (int) (timeElapsed / (60 * 60));
 		int minutes = (int) (timeElapsed / 60);

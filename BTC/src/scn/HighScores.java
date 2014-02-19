@@ -13,6 +13,8 @@ import btc.Main;
 
 public class HighScores extends Scene {
 
+	private static final int SCORES_TO_DISPLAY = 10;
+
 	/**
 	 * Text box to write the details of the game failure
 	 */
@@ -46,9 +48,15 @@ public class HighScores extends Scene {
 		// convert arraylist into regular array to make sorting simpler
 		Integer[] scoresArray = scores.toArray(new Integer[scores.size()]);
 		Arrays.sort(scoresArray, Collections.reverseOrder());
+		
+		int iMax = SCORES_TO_DISPLAY; 
+		
+		// if there are less scores than max, display all of them
+		if (scores.size() < SCORES_TO_DISPLAY)
+			iMax = scores.size() - 1;
 
-		// Display the 10 heighest scores.
-		for (int i = 1; i < 11; i++) {
+		// Display the 'SCORES_TO_DISPLAY' highest scores.
+		for (int i = 1; i <= iMax; i++) {
 			textBox.delay(0.2);
 			textBox.addText(i + ": " + scoresArray[i]);
 		}
