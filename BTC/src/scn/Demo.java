@@ -190,7 +190,7 @@ public class Demo extends Scene {
 					- 40, WaypointType.ENTRY_EXIT, "South Sea"),
 
 			// The aerodromio
-			airport = new Airport(949, 358, "Aerodromio Medved'"), };
+			airport = new Airport(949, 390, "Aerodromio Medved'"),};
 
 	/**
 	 * All waypoints in the airspace, INCLUDING locationWaypoints.
@@ -222,10 +222,10 @@ public class Demo extends Scene {
 
 	/**
 	 * All aircraft taking off must go through this waypoint, allows for
-	 * aircraft to take off in one direction all the time ps. a hack
+	 * aircraft to take off in one direction all the time
 	 */
 	private final Waypoint takeoffWaypoint = new Waypoint(airport.position()
-			.x() - 60, airport.position().y());
+			.x() - 120, airport.position().y());
 
 	/**
 	 * Constructor

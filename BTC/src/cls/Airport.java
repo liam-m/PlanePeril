@@ -55,14 +55,17 @@ public class Airport extends Waypoint {
 	public void drawAirportInfo() {
 		graphics.setColour(Main.GREEN);
 
-		graphics.print("Aero Medved'", position.x() - 40, position.y() - 35);
+		int pos = 55;
+		int offset = 10;
+
+		graphics.print("Aero Medved'", position.x() - 40, position.y() - pos);
 
 		graphics.print("Aircraft in: " + aircraftList.size(),
-				position.x() - 40, position.y() - 25);
+				position.x() - 40, position.y() - (pos - offset));
 
 		if (timeLeft != 0) {
 			graphics.print("Takeoff in: " + this.timeLeft, position.x() - 40,
-					position.y() - 15);
+					position.y() - (pos - offset * 2));
 		}
 
 	}
