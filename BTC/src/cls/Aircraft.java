@@ -25,21 +25,36 @@ import cls.Waypoint.WaypointType;
  */
 public class Aircraft {
 
-	// The physical size of the plane in pixels. This determines crashes.
+	/**
+	 * The physical size of the plane in pixels. This determines crashes.
+	 */
 	public final static int RADIUS = 16;
 
-	// How far away (in pixels) the mouse can be from the plane but still select
-	// it.
+	/**
+	 * How far away (in pixels) the mouse can be from the plane but still
+	 * selectit.
+	 */
 	public final static int MOUSE_LENIANCY = 16;
 
-	// How large to draw the bearing circle.
+	/**
+	 * How large to draw the bearing circle.
+	 */
 	public final static int COMPASS_RADIUS = 64;
 
 	/**
 	 * How far (in pixels) planes have to be away to not cause a separation
 	 * violation.
 	 */
-	public static int separationRule = 64;
+	public int separationRule = 64;
+
+	// Text to show above the aircraft
+	private final class Texts {
+		public final static String LAND_ME = "Land me!";
+		public final static String LANDING = "Landing";
+	}
+
+	// Scalar for the velocity which is imposed upon landing
+	private final static float LANDING_SPEED = 0.6f;
 
 	// How much the plane can turn per second, in radians.
 	private double turnSpeed = Math.PI / 4;
@@ -103,6 +118,9 @@ public class Aircraft {
 
 	// Whether this aircraft is currently in the airport
 	private boolean atAirport = false;
+
+	// Which info text to display now, from Aircraft.Texts
+	private String infoText = Texts.LAND_ME;
 
 	/**
 	 * Flags whether the collision warning sound has been played before. If set,
@@ -179,11 +197,15 @@ public class Aircraft {
 		for (Aircraft aircraft : aircraftList) {
 			if (originPoint.position().sub(aircraft.position()).magnitude() < 200
 					&& altitude == aircraft.position.z()) {
+
 				int newTargetAltitudeIndex = targetAltitudeIndex;
+
 				while (newTargetAltitudeIndex == targetAltitudeIndex)
 					newTargetAltitudeIndex = RandomNumber.randInclusiveInt(1,
 							altitudeList.size() - 1);
+
 				altitude = altitudeList.get(newTargetAltitudeIndex);
+				targetAltitudeIndex = newTargetAltitudeIndex;
 			}
 		}
 
@@ -429,6 +451,7 @@ public class Aircraft {
 				&& (destination instanceof Airport)) {
 			return;
 		}
+
 		route[routeStage] = newWaypoint;
 
 		if (!isManuallyControlled)
@@ -436,7 +459,6 @@ public class Aircraft {
 
 		if (routeStage == currentRouteStage) {
 			currentTarget = newWaypoint;
-			// turnTowardsTarget(0);
 		}
 	}
 
@@ -612,7 +634,6 @@ public class Aircraft {
 	 * Draws the plane and any warning circles if necessary.
 	 */
 	public void draw() {
-		float alpha = 255;
 		float scale = 2;
 
 		Color grey = new Color(128, 128, 128, 255);
@@ -630,7 +651,8 @@ public class Aircraft {
 		// draw the 'land me' message once an aircraft is circling the airport
 		if (currentTarget instanceof HoldingWaypoint) {
 			graphics.setColour(grey);
-			graphics.print("Land me!", position.x() - 28, position.y() - 22);
+			graphics.print(infoText, position.x() - 28,
+					position.y() - 22);
 		}
 
 		drawWarningCircles();
@@ -890,8 +912,6 @@ public class Aircraft {
 	 * 
 	 * @param dt
 	 *            the time elapsed since the last frame.
-	 * @param scene
-	 *            the game scene object.
 	 * @return 0 if no collisions, 1 if separation violation, 2 if crash
 	 */
 	public int updateCollisions(double dt, ArrayList<Aircraft> aircraftList) {
@@ -926,6 +946,7 @@ public class Aircraft {
 			collisionWarningSoundFlag = false;
 			wasBreachingInLastFrame = false;
 		}
+
 		return -1;
 	}
 
@@ -973,13 +994,20 @@ public class Aircraft {
 	 * 
 	 * The command to land an aircraft cannot be reneged upon.
 	 */
-	public void toggleLand() {
+	public void toggleLand(Waypoint landWaypoint) {
 		isLanding = !isLanding;
+
 		if (isLanding && (currentTarget instanceof HoldingWaypoint)) {
+			// advance the route, breaking loose of the holding waypoints
 			currentRouteStage++;
-			currentTarget = destination;
+			currentTarget = landWaypoint;
+
+			// reduce altitude to 100 ft and speed to a lower one
 			targetAltitudeIndex = 0;
-			velocity = velocity.scaleBy(0.7);
+			velocity = velocity.scaleBy(LANDING_SPEED);
+
+			// update the text above the aircraft to display "Landing"
+			infoText = Texts.LANDING;
 		}
 	}
 
@@ -1009,6 +1037,7 @@ public class Aircraft {
 	public void climb() {
 		if (position.z() < altitudeList.get(targetAltitudeIndex))
 			changeAltitude(altitudeChangeSpeed);
+
 		if (position.z() >= altitudeList.get(targetAltitudeIndex)) {
 			changeAltitude(0);
 			position = new Vector(position.x(), position.y(),
