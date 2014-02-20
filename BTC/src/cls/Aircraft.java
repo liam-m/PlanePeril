@@ -200,11 +200,12 @@ public class Aircraft {
 
 				int newTargetAltitudeIndex = targetAltitudeIndex;
 
-				while (newTargetAltitudeIndex == targetAltitudeIndex)
+				while (newTargetAltitudeIndex == targetAltitudeIndex) {
 					newTargetAltitudeIndex = RandomNumber.randInclusiveInt(1,
 							altitudeList.size() - 1);
 
-				altitude = altitudeList.get(newTargetAltitudeIndex);
+					altitude = altitudeList.get(newTargetAltitudeIndex);
+				}
 				targetAltitudeIndex = newTargetAltitudeIndex;
 			}
 		}
