@@ -185,9 +185,9 @@ public class Demo extends Scene {
 	// All aircraft that land must pass through this waypoint.
 	private final HoldingWaypoint[] landWaypoints = {
 
-			new HoldingWaypoint(airport.position().x() + 140, airport
+			new HoldingWaypoint(airport.position().x() + 200, airport
 					.position().y()),
-			new HoldingWaypoint(airport.position().x() + 240, airport
+			new HoldingWaypoint(airport.position().x() + 150, airport
 					.position().y()),
 
 	};
