@@ -70,9 +70,6 @@ public class Demo extends Scene {
 	// Time when the last takeoff occured
 	private double nextTakeoff = 0 + TAKEOFF_DELAY;
 
-	// Time when the last land occured
-	private double nextLand = 0 + LAND_DELAY;
-
 	// The currently selected aircraft
 	private Aircraft selectedAircraft;
 
@@ -328,13 +325,13 @@ public class Demo extends Scene {
 	 * Causes a selected aircraft to call methods to land
 	 */
 	private void toggleLand() {
-		if (selectedAircraft == null || selectedAircraft.position().z() > 5000
-				|| nextLand - timeElapsed > 0)
+		if (selectedAircraft == null || selectedAircraft.position().z() > 5000)
+			return;
+
+		if (selectedAircraft.isLanding())
 			return;
 
 		selectedAircraft.toggleLand(landWaypoints[0]);
-
-		nextLand = timeElapsed + LAND_DELAY;
 
 		landButton.setText(Texts.LAND);
 	}
