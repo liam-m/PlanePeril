@@ -10,6 +10,7 @@ import lib.jog.audio;
 import lib.jog.audio.Sound;
 import lib.jog.graphics;
 import lib.jog.graphics.Image;
+import lib.jog.input;
 import lib.jog.window;
 import btc.Main;
 import cls.Aircraft;
@@ -178,11 +179,11 @@ public class GameOver extends Scene {
 	}
 
 	/**
-	 * Ends the scene if any key is released , ie. press any key to continue
+	 * Ends the scene if space key is released.
 	 */
 	@Override
 	public void keyReleased(int key) {
-		if (key == keyPressed) {
+		if (key == input.KEY_SPACE) {
 			main.closeScene();
 			main.closeScene();
 		}
@@ -218,7 +219,7 @@ public class GameOver extends Scene {
 		int opacity = (int) (255 * Math.sin(timer));
 
 		graphics.setColour(0, 128, 0, opacity);
-		graphics.printCentred("Press any key to continue", 0,
+		graphics.printCentred("Press space to continue", 0,
 				window.height() - 256, 1, window.width());
 	}
 
