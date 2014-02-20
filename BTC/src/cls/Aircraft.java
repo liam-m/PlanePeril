@@ -240,7 +240,7 @@ public class Aircraft {
 		// separation rules.
 		case Demo.DIFFICULTY_EASY:
 			separationRule = 128;
-				velocity = velocity.scaleBy(1.0);
+			velocity = velocity.scaleBy(1.0);
 			altitudeChangeSpeed = 800;
 			points = 10;
 			break;
@@ -366,8 +366,8 @@ public class Aircraft {
 	public boolean outOfBounds() {
 		double x = position.x();
 		double y = position.y();
-		return (x < RADIUS || x > window.width() + RADIUS - 32 || y < RADIUS || y > window
-				.height() + RADIUS - 144);
+		return (x < 0 || x > window.width() - 32 || y < 0 || y > window
+				.height() - 144);
 	}
 
 	/**
@@ -651,8 +651,7 @@ public class Aircraft {
 		// draw the 'land me' message once an aircraft is circling the airport
 		if (currentTarget instanceof HoldingWaypoint) {
 			graphics.setColour(grey);
-			graphics.print(infoText, position.x() - 28,
-					position.y() - 22);
+			graphics.print(infoText, position.x() - 28, position.y() - 22);
 		}
 
 		drawWarningCircles();
@@ -937,7 +936,7 @@ public class Aircraft {
 				}
 				if (wasBreachingInLastFrame == false) {
 					wasBreachingInLastFrame = true;
-					points -= 5;
+					points -= 20;
 				}
 			}
 		}
@@ -1026,9 +1025,9 @@ public class Aircraft {
 	private void resetBearing() {
 		if (currentRouteStage < route.length) {
 			currentTarget = route[currentRouteStage];
-		}
 
-		turnTowardsTarget(0);
+			turnTowardsTarget(0);
+		}
 	}
 
 	/**

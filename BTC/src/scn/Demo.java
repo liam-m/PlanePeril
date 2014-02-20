@@ -48,7 +48,7 @@ public class Demo extends Scene {
 
 	private final static int TAKEOFF_DELAY = 5;
 	private final static int LAND_DELAY = 5;
-	
+
 	// texts for the buttons in this class
 	private final class Texts {
 		public final static String TAKE_CONTROL = "Take Control";
@@ -152,7 +152,7 @@ public class Demo extends Scene {
 					- 40, WaypointType.ENTRY_EXIT, "South Sea"),
 
 			// The airport
-			airport = new Airport(949, 390, "Aerodromio Medved'"),};
+			airport = new Airport(949, 390, "Aerodromio Medved'"), };
 
 	/**
 	 * All waypoints in the airspace, INCLUDING locationWaypoints.
@@ -238,7 +238,7 @@ public class Demo extends Scene {
 		holdingWaypoints.get(1).setNextWaypoint(holdingWaypoints.get(2));
 		holdingWaypoints.get(2).setNextWaypoint(holdingWaypoints.get(3));
 		holdingWaypoints.get(3).setNextWaypoint(holdingWaypoints.get(0));
-		
+
 		landWaypoints[0].setNextWaypoint(landWaypoints[1]);
 		landWaypoints[1].setNextWaypoint(airport);
 
@@ -269,8 +269,7 @@ public class Demo extends Scene {
 		};
 
 		landButton = new ButtonText(Texts.LAND, land,
-				(window.width() - 500) / 2,
-				32, 128, 32, 8, 4);
+				(window.width() - 500) / 2, 32, 128, 32, 8, 4);
 
 		timeElapsed = 0;
 		compassDragged = false;
@@ -320,9 +319,9 @@ public class Demo extends Scene {
 		isManuallyControlling = !isManuallyControlling;
 		selectedAircraft.toggleManualControl();
 
-		manualOverrideButton.setText(selectedAircraft.isManuallyControlled()
-				? Texts.REMOVE_CONTROL
-				: Texts.TAKE_CONTROL);
+		manualOverrideButton
+				.setText(selectedAircraft.isManuallyControlled() ? Texts.REMOVE_CONTROL
+						: Texts.TAKE_CONTROL);
 	}
 
 	/**
@@ -391,9 +390,14 @@ public class Demo extends Scene {
 				ordersBox.addOrder("<<< Aircraft " + plane.name()
 						+ " has landed safely at Aerodromio Medved'");
 			}
-
+			// if aircraft has completed it's journey correctly
 			if (plane.isFinished()) {
-				score += plane.getPoints();
+				// add points held by aircraft to score, take no action if the
+				// points are in negatives.
+				if (plane.getPoints() <= 0) {
+				} else {
+					score += plane.getPoints();
+				}
 				switch (RandomNumber.randInclusiveInt(0, 2)) {
 				case 0:
 					ordersBox.addOrder("<<< Thank you Comrade");
@@ -441,20 +445,17 @@ public class Demo extends Scene {
 
 			// update manual control button text
 			manualOverrideButton.setText(selectedAircraft
-					.isManuallyControlled()
-					? Texts.REMOVE_CONTROL
+					.isManuallyControlled() ? Texts.REMOVE_CONTROL
 					: Texts.TAKE_CONTROL);
-
-			if (selectedAircraft.isManuallyControlled()) {
-				if (selectedAircraft.outOfBounds()) {
-					ordersBox
-							.addOrder(">>> "
-									+ selectedAircraft.name()
-									+ " is out of bounds, contact lost. Do better Comrade.");
-					deselectAircraft();
-					aircraftInAirspace.remove(selectedAircraft);
-
-				}
+			// Check if the aircraft is out of bounds. If true, remove aircraft
+			// from play.
+			if (selectedAircraft.outOfBounds()) {
+				ordersBox
+						.addOrder(">>> "
+								+ selectedAircraft.name()
+								+ " is out of bounds, contact lost. Do better Comrade.");
+				aircraftInAirspace.remove(selectedAircraft);
+				deselectAircraft();
 			}
 
 		}
