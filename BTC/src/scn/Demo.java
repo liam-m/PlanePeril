@@ -50,120 +50,79 @@ public class Demo extends Scene {
 	private final static int TAKEOFF_DELAY = 5;
 	private final static int LAND_DELAY = 5;
 
-	/**
-	 * Orders box to print orders from ACTO to aircraft to
-	 */
+	// texts for the buttons in this class
+	private final class Texts {
+		public final static String TAKE_CONTROL = "Take Control";
+		public final static String REMOVE_CONTROL = "Remove Control";
+
+		public final static String LOWER_ALT = "Lower Altitude!";
+		public final static String LAND = "Land";
+	}
+
+	// Orders box to print orders from ACTO to aircraft to
 	private OrdersBox ordersBox;
 
-	/**
-	 * Time since the scene began Could be used for score
-	 */
-
-	/**
-	 * Cumulative score, added to upon completion of flightplan by aircraft.
-	 */
+	// Cumulative score, added to upon completion of flightplan by aircraft.
 	private int score;
 
+	// Time since the scene began Could be used for score
 	private double timeElapsed;
 
-	/**
-	 * Time when the last takeoff occured
-	 */
+	// Time when the last takeoff occured
 	private double nextTakeoff = 0 + TAKEOFF_DELAY;
 
-	/**
-	 * Time when the last land occured
-	 */
-	private double nextLand = 0 + LAND_DELAY;
-
-	/**
-	 * The currently selected aircraft
-	 */
+	// The currently selected aircraft
 	private Aircraft selectedAircraft;
 
-	/**
-	 * Whether player is currently manually controlling
-	 */
+	// Whether player is currently manually controlling
 	private boolean isManuallyControlling;
 
-	/**
-	 * The currently selected waypoint
-	 */
+	// The currently selected waypoint
 	private Waypoint selectedWaypoint;
 
-	private Airport airport;
-
-	/**
-	 * Selected path point, in an aircraft's route, used for altering the route
-	 */
+	// Selected path point, in an aircraft's route, used for altering the route
 	private int selectedPathpoint;
-	/**
-	 * A list of aircraft present in the airspace
-	 */
+
+	// A list of aircraft present in the airspace
 	private ArrayList<Aircraft> aircraftInAirspace;
 
-	/**
-	 * An image to be used for aircraft Expand to list of images for multiple
-	 * aircraft appearances
-	 */
+	// An image to be used for aircraft Expand to list of images for multiple
+	// aircraft appearances
 	private Image aircraftImage;
 
-	/**
-	 * A button to start and end manual control of an aircraft
-	 */
+	// A button to start and end manual control of an aircraft
 	private ButtonText manualOverrideButton;
-	/**
-	 * Tracks if manual heading compass of a manually controller aircraft has
-	 * been dragged
-	 */
 
+	// Tracks if manual heading compass of a manually controller aircraft has
+	// been dragged
 	private ButtonText landButton;
-	/**
-	 * Tracks if manual heading compass of a manually controller aircraft has
-	 * been dragged
-	 */
 
-	private ButtonText landAltitudeButton;
-	/**
-	 * Tracks if manual heading compass of a manually controller aircraft has
-	 * been dragged
-	 */
+	// Tracks if manual heading compass of a manually controller aircraft has
+	// been dragged
 	private boolean compassDragged;
 
-	/**
-	 * Placeholder for whitespaces in score
-	 */
-	public String spaces;
-	/**
-	 * An altimeter to display aircraft altitidue, heading, etc.
-	 */
+	// An altimeter to display aircraft altitidue, heading, etc.
 	private Altimeter altimeter;
-	/**
-	 * The interval in seconds to generate flights after
-	 */
+
+	// The interval in seconds to generate flights after
 	private double flightGenerationInterval;
 
-	/**
-	 * The time eleapsed since the last flight was generated
-	 */
+	// The time eleapsed since the last flight was generated
 	private double flightGenerationTimeElapsed = 6;
-	/**
-	 * Max aircraft in the airspace at once Change to 10 for Assessment 3.
-	 */
+
+	// Max aircraft in the airspace at once Change to 10 for Assessment 3.
 	private final int maxAircraft = 20;
 
-	/**
-	 * Music to play during the game scene
-	 */
+	// Music to play during the game scene
 	private Music music;
-	/**
-	 * The background to draw in the airspace.
-	 */
+
+	// The background to draw in the airspace
 	private Image background;
 
-	/**
-	 * A list of location names for waypoint flavour
-	 */
+	// The airport, should be one instance of it in general
+	private Airport airport;
+
+	// A list of location names for waypoint flavour
 	private final static String[] LOCATION_NAMES = new String[] {
 			"North West Top Leftonia", "100 Acre Woods", "City of Rightson",
 			"South Sea", "Aerodromio Medved'" };
@@ -190,8 +149,8 @@ public class Demo extends Scene {
 			new Waypoint(window.width() - 40, window.height() - ORDERSBOX_H
 					- 40, WaypointType.ENTRY_EXIT, "South Sea"),
 
-			// The aerodromio
-			airport = new Airport(949, 358, "Aerodromio Medved'"), };
+			// The airport
+			airport = new Airport(949, 390, "Aerodromio Medved'"), };
 
 	/**
 	 * All waypoints in the airspace, INCLUDING locationWaypoints.
@@ -216,17 +175,25 @@ public class Demo extends Scene {
 			locationWaypoints[4], // 14 - Airport
 	};
 
+	// All aircraft taking off must go through this waypoint, allows for
+	// aircraft to take off in one direction all the time
+	private final Waypoint takeoffWaypoint = new Waypoint(airport.position()
+			.x() - 120, airport.position().y());
+
+	// All aircraft that land must pass through this waypoint.
+	private final HoldingWaypoint[] landWaypoints = {
+
+			new HoldingWaypoint(airport.position().x() + 200, airport
+					.position().y()),
+			new HoldingWaypoint(airport.position().x() + 150, airport
+					.position().y()),
+
+	};
+
 	/**
 	 * Used for circling around airport
 	 */
 	public ArrayList<HoldingWaypoint> holdingWaypoints = new ArrayList<HoldingWaypoint>();
-
-	/**
-	 * All aircraft taking off must go through this waypoint, allows for
-	 * aircraft to take off in one direction all the time ps. a hack
-	 */
-	private final Waypoint takeoffWaypoint = new Waypoint(airport.position()
-			.x() - 60, airport.position().y());
 
 	/**
 	 * Constructor
@@ -250,27 +217,28 @@ public class Demo extends Scene {
 		background = graphics.newImage("gfx" + File.separator + "map.png");
 		music = audio.newMusic("sfx" + File.separator + "Gypsy_Shoegazer.ogg");
 		music.play();
+
 		flightGenerationInterval = 8;
 
 		// Initialise Holding Waypoints, positions are relative to the airport.
-		holdingWaypoints.add(new HoldingWaypoint(locationWaypoints[4]
-				.position().x() - 150,
-				locationWaypoints[4].position().y() - 100));
-		holdingWaypoints.add(new HoldingWaypoint(locationWaypoints[4]
-				.position().x() + 150,
-				locationWaypoints[4].position().y() - 100));
-		holdingWaypoints.add(new HoldingWaypoint(locationWaypoints[4]
-				.position().x() + 150,
-				locationWaypoints[4].position().y() + 100));
-		holdingWaypoints.add(new HoldingWaypoint(locationWaypoints[4]
-				.position().x() - 150,
-				locationWaypoints[4].position().y() + 100));
+		// these are used to circle the airport.
+		holdingWaypoints.add(new HoldingWaypoint(airport.position().x() - 150,
+				airport.position().y() - 100));
+		holdingWaypoints.add(new HoldingWaypoint(airport.position().x() + 150,
+				airport.position().y() - 100));
+		holdingWaypoints.add(new HoldingWaypoint(airport.position().x() + 150,
+				airport.position().y() + 100));
+		holdingWaypoints.add(new HoldingWaypoint(airport.position().x() - 150,
+				airport.position().y() + 100));
 
 		// Initialise values of setNextWaypoint for each holding waypoint.
 		holdingWaypoints.get(0).setNextWaypoint(holdingWaypoints.get(1));
 		holdingWaypoints.get(1).setNextWaypoint(holdingWaypoints.get(2));
 		holdingWaypoints.get(2).setNextWaypoint(holdingWaypoints.get(3));
 		holdingWaypoints.get(3).setNextWaypoint(holdingWaypoints.get(0));
+
+		landWaypoints[0].setNextWaypoint(landWaypoints[1]);
+		landWaypoints[1].setNextWaypoint(airport);
 
 		ordersBox = new OrdersBox(ORDERSBOX_X, ORDERSBOX_Y, ORDERSBOX_W,
 				ORDERSBOX_H, 6);
@@ -286,9 +254,10 @@ public class Demo extends Scene {
 			}
 		};
 
-		manualOverrideButton = new ButtonText("Take Control", manual,
+		manualOverrideButton = new ButtonText(Texts.TAKE_CONTROL, manual,
 				(window.width() - 128) / 2, 32, 128, 32, 8, 4);
 
+		// the action that is called once the land button is clicked.
 		ButtonText.Action land = new ButtonText.Action() {
 			@Override
 			public void action() {
@@ -297,10 +266,7 @@ public class Demo extends Scene {
 			}
 		};
 
-		landButton = new ButtonText("Land", land, (window.width() - 500) / 2,
-				32, 128, 32, 8, 4);
-
-		landAltitudeButton = new ButtonText("Lower Altitude!", land,
+		landButton = new ButtonText(Texts.LAND, land,
 				(window.width() - 500) / 2, 32, 128, 32, 8, 4);
 
 		timeElapsed = 0;
@@ -311,7 +277,6 @@ public class Demo extends Scene {
 
 		altimeter = new Altimeter(ALTIMETER_X, ALTIMETER_Y, ALTIMETER_W,
 				ALTIMETER_H);
-		deselectAircraft();
 
 		switch (difficulty) {
 		// Set attributes according to the selected difficulty
@@ -349,27 +314,27 @@ public class Demo extends Scene {
 		if (selectedAircraft == null)
 			return;
 
-		isManuallyControlling = false;
+		isManuallyControlling = !isManuallyControlling;
 		selectedAircraft.toggleManualControl();
 
 		manualOverrideButton
-				.setText((selectedAircraft.isManuallyControlled() ? "Remove"
-						: "Take") + " Control");
+				.setText(selectedAircraft.isManuallyControlled() ? Texts.REMOVE_CONTROL
+						: Texts.TAKE_CONTROL);
 	}
 
 	/**
 	 * Causes a selected aircraft to call methods to land
 	 */
 	private void toggleLand() {
-		if (selectedAircraft == null || selectedAircraft.position().z() > 5000
-				|| nextLand - timeElapsed > 0)
+		if (selectedAircraft == null || selectedAircraft.position().z() > 5000)
 			return;
 
-		selectedAircraft.toggleLand();
+		if (selectedAircraft.isLanding())
+			return;
 
-		nextLand = timeElapsed + LAND_DELAY;
+		selectedAircraft.toggleLand(landWaypoints[0]);
 
-		landButton.setText("Land");
+		landButton.setText(Texts.LAND);
 	}
 
 	/**
@@ -378,7 +343,7 @@ public class Demo extends Scene {
 	private void deselectAircraft() {
 		if (selectedAircraft != null && selectedAircraft.isManuallyControlled()) {
 			selectedAircraft.toggleManualControl();
-			manualOverrideButton.setText("Take Control");
+			manualOverrideButton.setText(Texts.TAKE_CONTROL);
 		}
 
 		selectedAircraft = null;
@@ -423,9 +388,14 @@ public class Demo extends Scene {
 				ordersBox.addOrder("<<< Aircraft " + plane.name()
 						+ " has landed safely at Aerodromio Medved'");
 			}
-
+			// if aircraft has completed it's journey correctly
 			if (plane.isFinished()) {
-				score += plane.getPoints();
+				// add points held by aircraft to score, take no action if the
+				// points are in negatives.
+				if (plane.getPoints() <= 0) {
+				} else {
+					score += plane.getPoints();
+				}
 				switch (RandomNumber.randInclusiveInt(0, 2)) {
 				case 0:
 					ordersBox.addOrder("<<< Thank you Comrade");
@@ -472,19 +442,18 @@ public class Demo extends Scene {
 			selectedAircraft.setManualControl(isManuallyControlling);
 
 			// update manual control button text
-			manualOverrideButton.setText((selectedAircraft
-					.isManuallyControlled() ? "Remove" : "Take") + " Control");
-
-			if (selectedAircraft.isManuallyControlled()) {
-				if (selectedAircraft.outOfBounds()) {
-					ordersBox
-							.addOrder(">>> "
-									+ selectedAircraft.name()
-									+ " is out of bounds, contact lost. Do better Comrade.");
-					deselectAircraft();
-					aircraftInAirspace.remove(selectedAircraft);
-
-				}
+			manualOverrideButton.setText(selectedAircraft
+					.isManuallyControlled() ? Texts.REMOVE_CONTROL
+					: Texts.TAKE_CONTROL);
+			// Check if the aircraft is out of bounds. If true, remove aircraft
+			// from play.
+			if (selectedAircraft.outOfBounds()) {
+				ordersBox
+						.addOrder(">>> "
+								+ selectedAircraft.name()
+								+ " is out of bounds, contact lost. Do better Comrade.");
+				aircraftInAirspace.remove(selectedAircraft);
+				deselectAircraft();
 			}
 
 		}
@@ -642,15 +611,6 @@ public class Demo extends Scene {
 
 		altimeter.mouseReleased(key, x, y);
 
-		/*
-		 * TODO Needs to be reworked so that aircraft displays this message when
-		 * altitude is changed. if (selectedAircraft != null) { if
-		 * (altitudeState != selectedAircraft.altitudeState()) {
-		 * ordersBox.addOrder(">>> " + selectedAircraft.name() +
-		 * ", please adjust your altitude");
-		 * ordersBox.addOrder("<<< Roger that. Altering altitude now."); } }
-		 */
-
 		if (compassDragged && selectedAircraft != null) {
 			double dx = input.mouseX() - selectedAircraft.position().x();
 			double dy = input.mouseY() - selectedAircraft.position().y();
@@ -775,8 +735,9 @@ public class Demo extends Scene {
 			graphics.rectangle(false, (window.width() - 128) / 2, 16, 128, 32);
 			manualOverrideButton.draw();
 
-			if ((selectedAircraft.getDestination() instanceof Airport)
-					&& selectedAircraft.position().z() <= 5000) {
+			// if aircraft is flying towards the airport (i.e. it's its
+			// destination point, draw the land button)
+			if (selectedAircraft.getDestination() instanceof Airport) {
 				// Land Button with valid altitude
 				graphics.setColour(0, 0, 0);
 				graphics.rectangle(true, (window.width() - 500) / 2, 16, 128,
@@ -784,22 +745,23 @@ public class Demo extends Scene {
 				graphics.setColour(Main.GREEN);
 				graphics.rectangle(false, (window.width() - 500) / 2, 16, 128,
 						32);
+
+				// if the altitude is appropriate, i.e. required altitude for
+				// the aircraft to land
+				if (selectedAircraft.position().z() <= Airport.MIN_ALTITUDE) {
+					landButton.setText(Texts.LAND);
+				}
+
+				// otherwise, set the text to "lower altitude"
+				if (selectedAircraft.position().z() > Airport.MIN_ALTITUDE) {
+					landButton.setText(Texts.LOWER_ALT);
+				}
+
 				landButton.draw();
-			} else if ((selectedAircraft.getDestination() instanceof Airport)
-					&& selectedAircraft.position().z() > 5000) {
-				// Land Button
-				graphics.setColour(0, 0, 0);
-				graphics.rectangle(true, (window.width() - 500) / 2, 16, 128,
-						32);
-				graphics.setColour(Main.GREEN);
-				graphics.rectangle(false, (window.width() - 500) / 2, 16, 128,
-						32);
-				landAltitudeButton.draw();
 			}
 
 			selectedAircraft.drawFlightPath();
 			graphics.setColour(Main.GREEN);
-
 		}
 
 		if (selectedWaypoint != null
@@ -868,25 +830,24 @@ public class Demo extends Scene {
 	}
 
 	/**
-	 * draw a readout of the time the game has been played for, aircraft in the
-	 * sky, etc. Hint: for assessment 3, this could be used to print the
-	 * player's current score.
-	 */
-
-	/**
 	 * Whitespace Concatenation maker
 	 * 
 	 */
+	private static String whiteSpace(int text) {
+		String spaces = "";
 
-	public String whiteSpace(int score) {
-		spaces = "";
-		int ScoreLength = 5 - Integer.toString(score).length();
+		int ScoreLength = 5 - Integer.toString(text).length();
+
 		for (int i = 0; i < ScoreLength; i++) {
 			spaces += " ";
 		}
+
 		return spaces;
 	}
 
+	/**
+	 * Draw the score and the timer
+	 */
 	private void drawScore() {
 		int hours = (int) (timeElapsed / (60 * 60));
 		int minutes = (int) (timeElapsed / 60);

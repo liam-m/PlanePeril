@@ -63,6 +63,16 @@ public class AircraftTest2 {
 			locationWaypoints[4], // 14 - Airport
 	};
 
+	// All aircraft that land must pass through this waypoint.
+	private final HoldingWaypoint[] landWaypoints = {
+
+			new HoldingWaypoint(airport.position().x() + 140, airport
+					.position().y()),
+			new HoldingWaypoint(airport.position().x() + 240, airport
+					.position().y()),
+
+	};
+
 	public Aircraft testAircraft;
 
 	public ArrayList<HoldingWaypoint> holdingWaypoints = new ArrayList<HoldingWaypoint>();
@@ -360,7 +370,7 @@ public class AircraftTest2 {
 	public void testToggleLand() {
 		assertFalse(testAircraft.isLanding());
 
-		testAircraft.toggleLand();
+		testAircraft.toggleLand(landWaypoints[0]);
 
 		assertTrue(testAircraft.isLanding());
 	}

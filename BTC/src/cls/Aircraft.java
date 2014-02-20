@@ -28,109 +28,98 @@ public class Aircraft {
 	 * The physical size of the plane in pixels. This determines crashes.
 	 */
 	public final static int RADIUS = 16;
+
 	/**
-	 * How far away (in pixels) the mouse can be from the plane but still select
-	 * it.
+	 * How far away (in pixels) the mouse can be from the plane but still
+	 * selectit.
 	 */
 	public final static int MOUSE_LENIANCY = 16;
+
 	/**
 	 * How large to draw the bearing circle.
 	 */
 	public final static int COMPASS_RADIUS = 64;
+
 	/**
 	 * How far (in pixels) planes have to be away to not cause a separation
 	 * violation.
 	 */
-	public static int separationRule = 64;
-	/**
-	 * How much the plane can turn per second, in radians.
-	 */
+	public int separationRule = 64;
+
+	// Text to show above the aircraft
+	private final class Texts {
+		public final static String LAND_ME = "Land me!";
+		public final static String LANDING = "Landing";
+	}
+
+	// Scalar for the velocity which is imposed upon landing
+	private final static float LANDING_SPEED = 0.6f;
+
+	// How much the plane can turn per second, in radians.
 	private double turnSpeed = Math.PI / 4;
-	/**
-	 * The position of the plane.
-	 */
+
+	// aircraft position and velocity
 	private Vector position;
-	/**
-	 * The velocity of the plane.
-	 */
 	private Vector velocity;
-	/**
-	 * Whether the plane is being manually controlled.
-	 */
+
+	// Whether the plane is being manually controlled.
 	private boolean isManuallyControlled;
-	/**
-	 * Whether the plane is landing.
-	 */
+
+	// Whether the plane is landing.
 	private boolean isLanding;
-	/**
-	 * The flight name of the plane.
-	 */
+
 	private final String flightName;
-	/**
-	 * The position the plane is currently flying towards (if not manually
-	 * controlled).
-	 */
+
+	// The position the plane is currently flying towards
 	private Waypoint currentTarget;
-	/**
-	 * The target the player has told the plane to fly at when manually
-	 * controlled.
-	 */
+
+	// The target the player has told the plane to fly at when manually
+	// controlled.
 	private double manualBearingTarget;
-	/**
-	 * The name of the location the plane is flying from.
-	 */
+
+	// The name of the location the plane is flying from.
 	private final String originName;
-	/**
-	 * The name of the location the plane is flying to.
-	 */
+
+	// The name of the location the plane is flying to.
 	private final String destinationName;
-	/**
-	 * An array of waypoints from the plane's origin to its destination.
-	 */
+
+	// An array of waypoints from the plane's origin to its destination.
 	private final Waypoint[] route;
-	/**
-	 * The current stage the plane is at in its route.
-	 */
+
+	// The current stage the plane is at in its route.
 	private int currentRouteStage;
-	/**
-	 * The off-screen point the plane will end up at before disappearing.
-	 */
+
+	// The off-screen point the plane will end up at before disappearing.
 	private final Waypoint destination;
-	/**
-	 * The image to be drawn representing the plane.
-	 */
+
+	// The image to be drawn representing the plane.
 	private final Image image;
-	/**
-	 * Whether the plane has reached its destination and can be disposed of.
-	 */
+
+	// Whether the plane has reached its destination and can be disposed of.
 	private boolean hasFinished;
-	/**
-	 * The angle the plane is currently turning by.
-	 */
+
+	// The angle the plane is currently turning by.
 	private double currentlyTurningBy;
-	/**
-	 * Holds a list of planes currently in violation of separation rules with
-	 * this plane
-	 */
+
+	// Holds a list of planes currently in violation of separation rules with
+	// this plane
 	private final ArrayList<Aircraft> planesTooNear = new ArrayList<Aircraft>();
-	/**
-	 * Index of altidudeList for the value of the Altidude the aircraft desires
-	 * to be at.
-	 */
+
+	// Index of altidudeList for the value of the Altidude the aircraft desires
+	// to be at.
 	private int targetAltitudeIndex;
-	/**
-	 * A list holding the list of possible altitudes for the aircraft.
-	 */
+
+	// A list holding the list of possible altitudes for the aircraft.
 	private ArrayList<Integer> altitudeList = new ArrayList<Integer>();
-	/**
-	 * the speed to climb or fall by. Default 300 for easy mode
-	 */
+
+	// the speed to climb or fall by. Default 300 for easy mode
 	private int altitudeChangeSpeed = 300;
 
-	/**
-	 * Whether this aircraft is currently in the airport
-	 */
+	// Whether this aircraft is currently in the airport
 	private boolean atAirport = false;
+
+	// Which info text to display now, from Aircraft.Texts
+	private String infoText = Texts.LAND_ME;
 
 	/**
 	 * Flags whether the collision warning sound has been played before. If set,
@@ -144,9 +133,7 @@ public class Aircraft {
 	 */
 	private final static Sound WARNING_SOUND = audio.newSoundEffect("sfx"
 			+ File.separator + "beep.ogg");
-	/**
-	 * The number of points an aircraft enters the airspace with.
-	 */
+	// The number of points an aircraft enters the airspace with.
 	private int points;
 
 	private boolean wasBreachingInLastFrame = false;
@@ -194,8 +181,10 @@ public class Aircraft {
 		altitudeList.add(5000);
 		altitudeList.add(10000);
 		altitudeList.add(15000);
+
 		targetAltitudeIndex = RandomNumber.randInclusiveInt(1,
 				altitudeList.size() - 1);
+
 		int altitude = altitudeList.get(targetAltitudeIndex);
 
 		// Checking that if an aircraft is near the waypoint that the new
@@ -205,11 +194,16 @@ public class Aircraft {
 			if (flightplan.getOrigin().position()
 					.sub(aircraft.position()).magnitude() < 200
 					&& altitude == aircraft.position.z()) {
+
 				int newTargetAltitudeIndex = targetAltitudeIndex;
-				while (newTargetAltitudeIndex == targetAltitudeIndex)
+
+				while (newTargetAltitudeIndex == targetAltitudeIndex) {
 					newTargetAltitudeIndex = RandomNumber.randInclusiveInt(1,
 							altitudeList.size() - 1);
-				altitude = altitudeList.get(newTargetAltitudeIndex);
+
+					altitude = altitudeList.get(newTargetAltitudeIndex);
+				}
+				targetAltitudeIndex = newTargetAltitudeIndex;
 			}
 		}
 
@@ -244,7 +238,7 @@ public class Aircraft {
 		// separation rules.
 		case Demo.DIFFICULTY_EASY:
 			separationRule = 128;
-			velocity = velocity.scaleBy(1.5);
+			velocity = velocity.scaleBy(1.0);
 			altitudeChangeSpeed = 800;
 			points = 10;
 			break;
@@ -322,7 +316,7 @@ public class Aircraft {
 	/**
 	 * Whether the aircraft is in the airport at the moment.
 	 * 
-	 * @return
+	 * @return whether the aircraft is at the airport
 	 */
 	public boolean atAirport() {
 		return atAirport;
@@ -338,7 +332,11 @@ public class Aircraft {
 		return isManuallyControlled;
 	}
 
-	// Allow access to whether plane is in the process of landing
+	/**
+	 * Allow access to whether plane is in the process of landing
+	 * 
+	 * @return
+	 */
 	public boolean isLanding() {
 		return isLanding;
 	}
@@ -366,8 +364,8 @@ public class Aircraft {
 	public boolean outOfBounds() {
 		double x = position.x();
 		double y = position.y();
-		return (x < RADIUS || x > window.width() + RADIUS - 32 || y < RADIUS || y > window
-				.height() + RADIUS - 144);
+		return (x < 0 || x > window.width() - 32 || y < 0 || y > window
+				.height() - 144);
 	}
 
 	/**
@@ -451,6 +449,7 @@ public class Aircraft {
 				&& (destination instanceof Airport)) {
 			return;
 		}
+
 		route[routeStage] = newWaypoint;
 
 		if (!isManuallyControlled)
@@ -458,7 +457,6 @@ public class Aircraft {
 
 		if (routeStage == currentRouteStage) {
 			currentTarget = newWaypoint;
-			// turnTowardsTarget(0);
 		}
 	}
 
@@ -495,11 +493,13 @@ public class Aircraft {
 	 * whether it has finished its flight.
 	 * 
 	 * @param dt
-	 * @throws Exception
+	 * @throws IllegalStateException
+	 *             when landing an aircraft that will overflow the airport
 	 */
 	public void update(double dt) throws IllegalStateException {
 		if (hasFinished)
 			return;
+
 		// handles aircrafts' altitude, comparing the aircrafts' altitude to its
 		// target altitude.
 		if (altitudeList.get(targetAltitudeIndex) + 100 >= (int) this.position
@@ -535,6 +535,7 @@ public class Aircraft {
 			currentTarget = destination;
 
 		} else if (isAt(currentTarget.position())) {
+			// handles what happens when the aircraft is circling the airport
 			if (currentTarget instanceof HoldingWaypoint) {
 
 				// Changes the current waypoint to the next holding waypoint in
@@ -545,6 +546,7 @@ public class Aircraft {
 				currentRouteStage++;
 				currentTarget = route[currentRouteStage];
 			}
+
 		}
 
 		// Update bearing
@@ -630,7 +632,6 @@ public class Aircraft {
 	 * Draws the plane and any warning circles if necessary.
 	 */
 	public void draw() {
-		float alpha = 255;
 		float scale = 2;
 
 		Color grey = new Color(128, 128, 128, 255);
@@ -648,7 +649,7 @@ public class Aircraft {
 		// draw the 'land me' message once an aircraft is circling the airport
 		if (currentTarget instanceof HoldingWaypoint) {
 			graphics.setColour(grey);
-			graphics.print("Land me!", position.x() - 28, position.y() - 22);
+			graphics.print(infoText, position.x() - 28, position.y() - 22);
 		}
 
 		drawWarningCircles();
@@ -786,8 +787,6 @@ public class Aircraft {
 	 * 
 	 * @param dt
 	 *            the time elapsed since the last frame.
-	 * @param scene
-	 *            the game scene object.
 	 * @return 0 if no collisions, 1 if separation violation, 2 if crash
 	 */
 	public int updateCollisions(double dt, ArrayList<Aircraft> aircraftList) {
@@ -813,7 +812,7 @@ public class Aircraft {
 				}
 				if (wasBreachingInLastFrame == false) {
 					wasBreachingInLastFrame = true;
-					points -= 5;
+					points -= 20;
 				}
 			}
 		}
@@ -822,6 +821,7 @@ public class Aircraft {
 			collisionWarningSoundFlag = false;
 			wasBreachingInLastFrame = false;
 		}
+
 		return -1;
 	}
 
@@ -853,6 +853,12 @@ public class Aircraft {
 			resetBearing();
 	}
 
+	/**
+	 * Another method to manually change the "manual control". Used so the
+	 * player can directly the control instead of click the button or space.
+	 * 
+	 * @param manual
+	 */
 	public void setManualControl(boolean manual) {
 		isManuallyControlled = manual;
 	}
@@ -863,13 +869,20 @@ public class Aircraft {
 	 * 
 	 * The command to land an aircraft cannot be reneged upon.
 	 */
-	public void toggleLand() {
+	public void toggleLand(Waypoint landWaypoint) {
 		isLanding = !isLanding;
+
 		if (isLanding && (currentTarget instanceof HoldingWaypoint)) {
+			// advance the route, breaking loose of the holding waypoints
 			currentRouteStage++;
-			currentTarget = destination;
+			currentTarget = landWaypoint;
+
+			// reduce altitude to 100 ft and speed to a lower one
 			targetAltitudeIndex = 0;
-			velocity = velocity.scaleBy(0.7);
+			velocity = velocity.scaleBy(LANDING_SPEED);
+
+			// update the text above the aircraft to display "Landing"
+			infoText = Texts.LANDING;
 		}
 	}
 
@@ -888,9 +901,9 @@ public class Aircraft {
 	private void resetBearing() {
 		if (currentRouteStage < route.length) {
 			currentTarget = route[currentRouteStage];
-		}
 
-		turnTowardsTarget(0);
+			turnTowardsTarget(0);
+		}
 	}
 
 	/**
@@ -899,6 +912,7 @@ public class Aircraft {
 	public void climb() {
 		if (position.z() < altitudeList.get(targetAltitudeIndex))
 			changeAltitude(altitudeChangeSpeed);
+
 		if (position.z() >= altitudeList.get(targetAltitudeIndex)) {
 			changeAltitude(0);
 			position = new Vector(position.x(), position.y(),
@@ -940,6 +954,9 @@ public class Aircraft {
 		}
 	}
 
+	/**
+	 * Increases the target altitude by an index of 1.
+	 */
 	public void increaseTargetAltitude() {
 		if (targetAltitudeIndex == 3)
 			return;
@@ -948,14 +965,31 @@ public class Aircraft {
 		}
 	}
 
+	/**
+	 * Manually set the altitude to a specific value. Used when an aircraft
+	 * takes off.
+	 * 
+	 * @param altitude
+	 */
 	public void setAltitude(int altitude) {
 		position.setZ(altitude);
 	}
 
+	/**
+	 * Get how many points the aircraft as accumulated after all the breaches
+	 * (if there were any).
+	 * 
+	 * @return points
+	 */
 	public int getPoints() {
 		return this.points;
 	}
 
+	/**
+	 * The destination of the aircraft.
+	 * 
+	 * @return Waypoint destination
+	 */
 	public Waypoint getDestination() {
 		return destination;
 	}
