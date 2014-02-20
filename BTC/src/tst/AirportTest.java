@@ -1,7 +1,6 @@
 package tst;
 
-import static org.junit.Assert.*;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 
@@ -13,6 +12,7 @@ import org.junit.Test;
 
 import cls.Aircraft;
 import cls.Airport;
+import cls.Flightplan;
 import cls.HoldingWaypoint;
 import cls.Waypoint;
 import cls.Waypoint.WaypointType;
@@ -109,10 +109,11 @@ public class AirportTest {
 
 		aircraftInAirspace = new ArrayList<Aircraft>();
 
-		testAircraft = new Aircraft("testAircraft", "Exit", "Entry",
-				locationWaypoints[0], locationWaypoints[1], null, 10.0,
-				airspaceWaypoints, 1, holdingWaypoints, takeoffWaypoint,
-				aircraftInAirspace);
+		testAircraft = new Aircraft("testAircraft", null,
+				32 + (int) (10 * Math.random()), 10, takeoffWaypoint,
+				aircraftInAirspace, new Flightplan(locationWaypoints[0],
+						locationWaypoints[1], airspaceWaypoints,
+						holdingWaypoints));
 	}
 
 	@After

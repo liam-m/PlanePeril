@@ -14,6 +14,7 @@ import org.junit.Test;
 
 import cls.Aircraft;
 import cls.Airport;
+import cls.Flightplan;
 import cls.HoldingWaypoint;
 import cls.Vector;
 import cls.Waypoint;
@@ -111,10 +112,11 @@ public class AircraftTest2 {
 
 		aircraftInAirspace = new ArrayList<Aircraft>();
 
-		testAircraft = new Aircraft("testAircraft", "Exit", "Entry",
-				locationWaypoints[0], locationWaypoints[1], null, 10.0,
-				airspaceWaypoints, 1, holdingWaypoints, takeoffWaypoint,
-				aircraftInAirspace);
+		testAircraft = new Aircraft("testAircraft", null,
+				32 + (int) (10 * Math.random()), 10, takeoffWaypoint,
+				aircraftInAirspace, new Flightplan(locationWaypoints[0],
+						locationWaypoints[1], airspaceWaypoints,
+						holdingWaypoints));
 	}
 
 	@After
@@ -151,10 +153,11 @@ public class AircraftTest2 {
 	public void testIsFinished() {
 		assertFalse(testAircraft.isFinished());
 
-		Aircraft testAircraft2 = new Aircraft("testAircraft", "Exit", "Entry",
-				locationWaypoints[0], locationWaypoints[1], null, 10.0,
-				airspaceWaypoints, 1, holdingWaypoints, takeoffWaypoint,
-				aircraftInAirspace);
+		Aircraft testAircraft2 = new Aircraft("testAircraft", null,
+				32 + (int) (10 * Math.random()), 10, takeoffWaypoint,
+				aircraftInAirspace, new Flightplan(locationWaypoints[0],
+						locationWaypoints[1], airspaceWaypoints,
+						holdingWaypoints));
 
 		ArrayList<Aircraft> testAircrafts = new ArrayList<Aircraft>();
 		testAircrafts.add(testAircraft);
@@ -270,16 +273,6 @@ public class AircraftTest2 {
 	}
 
 	@Test
-	public void testIsMouseOver() {
-		// fail("Not yet implemented");
-	}
-
-	@Test
-	public void testUpdate() {
-		// fail("Not yet implemented");
-	}
-
-	@Test
 	public void testTurnLeft() {
 		testAircraft.turnLeft(0.5);
 
@@ -300,42 +293,12 @@ public class AircraftTest2 {
 	}
 
 	@Test
-	public void testDraw() {
-		// fail("Not yet implemented");
-	}
-
-	@Test
-	public void testDrawCompass() {
-		// fail("Not yet implemented");
-	}
-
-	@Test
-	public void testDrawFlightPath() {
-		// fail("Not yet implemented");
-	}
-
-	@Test
-	public void testDrawModifiedPath() {
-		// fail("Not yet implemented");
-	}
-
-	@Test
-	public void testFindGreedyRoute() {
-		Waypoint[] testRoute = testAircraft.findGreedyRoute(
-				locationWaypoints[1], locationWaypoints[0], airspaceWaypoints,
-				holdingWaypoints);
-
-		assertTrue(testRoute[0].equals(airspaceWaypoints[1]));
-		assertTrue(testRoute[1].equals(airspaceWaypoints[0]));
-		assertTrue(testRoute[2].equals(locationWaypoints[0]));
-	}
-
-	@Test
 	public void testUpdateCollisions() {
-		Aircraft testAircraft2 = new Aircraft("testAircraft", "Exit", "Entry",
-				locationWaypoints[0], locationWaypoints[1], null, 10.0,
-				airspaceWaypoints, 1, holdingWaypoints, takeoffWaypoint,
-				aircraftInAirspace);
+		Aircraft testAircraft2 = new Aircraft("testAircraft", null,
+				32 + (int) (10 * Math.random()), 10, takeoffWaypoint,
+				aircraftInAirspace, new Flightplan(locationWaypoints[0],
+						locationWaypoints[1], airspaceWaypoints,
+						holdingWaypoints));
 
 		ArrayList<Aircraft> testAircrafts = new ArrayList<Aircraft>();
 		testAircrafts.add(testAircraft);

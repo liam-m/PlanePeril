@@ -12,7 +12,20 @@ public class Flightplan {
 	private Waypoint[] waypoints;
 	private ArrayList<HoldingWaypoint> holdingWaypoints;
 	
-	public Flightplan(Waypoint origin, Waypoint destination, Waypoint[] waypoints, ArrayList<HoldingWaypoint> holdingWaypoints) {
+	/**
+	 * Generates a flightplan using the origin and the destination
+	 * 
+	 * @param origin
+	 *            The first waypoint to start the route from
+	 * @param destination
+	 *            The destination point
+	 * @param waypoints
+	 *            All the waypoints in the screen
+	 * @param holdingWaypoints
+	 *            The holding waypoints used for circling
+	 */
+	public Flightplan(Waypoint origin, Waypoint destination,
+			Waypoint[] waypoints, ArrayList<HoldingWaypoint> holdingWaypoints) {
 		this.origin = origin;
 		this.destination = destination;
 		this.waypoints = waypoints;
@@ -93,7 +106,8 @@ public class Flightplan {
 				}
 
 			} // end for - evaluated all waypoints
-				// The cheapest waypoint must have been found
+
+			// The cheapest waypoint must have been found
 			assert cheapest != null : "The cheapest waypoint was not found";
 
 			if (cheapest.position().equals(destination.position())) {
@@ -102,6 +116,7 @@ public class Flightplan {
 				 */
 				atDestination = true;
 			}
+
 			// update the selected route
 			// consider further points in route from the position of the
 			// selected point
@@ -109,6 +124,7 @@ public class Flightplan {
 			selectedWaypoints.remove(cheapest);
 			selectedWaypoints.add(cheapest);
 			currentPos = cheapest;
+
 			// resaturate cost for next loop
 			cost = 99999999999.0;
 
