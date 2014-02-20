@@ -17,47 +17,35 @@ import cls.Aircraft;
 import cls.Vector;
 
 public class GameOver extends Scene {
-	/**
-	 * Text box to write the details of the game failure
-	 */
+
+	// Text box to write the details of the game failure
 	private TextBox textBox;
 
-	/**
-	 * The two crashed aircraft, passed to the scene by the scene in which they
-	 * crashed Used to position the explosion, and provide graphical feedback of
-	 * how and where the player failed
-	 */
+	// The two crashed aircraft, passed to the scene by the scene in which they
+	// crashed Used to position the explosion, and provide graphical feedback of
+	// how and where the player failed
 	private final Aircraft crashedPlane1;
 	private final Aircraft crashedPlane2;
-	/**
-	 * A randon number of deaths caused by the crash
-	 */
+
+	// A randon number of deaths caused by the crash
 	private int deaths;
 
-	/**
-	 * The position of the crash - the vector midpoint of the positions of the
-	 * two crashed planes
-	 */
+	// The position of the crash - the vector midpoint of the positions of the
+	// two crashed planes
 	private final Vector crash;
-	/**
-	 * A sprite animation to handle the frame by frame drawing of the explosion
-	 */
+
+	// A sprite animation to handle the frame by frame drawing of the explosion
 	private final SpriteAnimation explosionAnim;
-	/**
-	 * The explosion image to use for the animation
-	 */
+
+	// The explosion image to use for the animation
 	private final Image explosion;
 
-	private int keyPressed;
-	/**
-	 * To store value of the score passed to this class in the constructor by
-	 * the previous screen.
-	 */
+	// To store value of the score passed to this class in the constructor by
+	// the previous screen.
 	private int score;
-	/**
-	 * Timer to allow for explosion and plane to be shown for a period, followed
-	 * by the text box.
-	 */
+
+	// Timer to allow for explosion and plane to be shown for a period, followed
+	// by the text box.
 	private double timer;
 
 	/**
@@ -105,10 +93,6 @@ public class GameOver extends Scene {
 
 		textBox = new lib.TextBox(64, 96, window.width() - 128,
 				window.height() - 96, 32);
-		textBox.addText("You managed to earn " + this.score
-				+ " rubles before making your fatal error.");
-		textBox.delay(1);
-		textBox.newline();
 		textBox.addText(String.valueOf(deaths) + " people died in the crash.");
 		textBox.delay(0.4);
 		textBox.addText("British Bearways is facing heavy legal pressure from the family and loved-ones of the dead and an investigation into the incident will be performed.");
@@ -133,6 +117,9 @@ public class GameOver extends Scene {
 		saveScore();
 	}
 
+	/**
+	 * Used to save the scores in a file defined in Main.java
+	 */
 	private void saveScore() {
 		if (Serializer.deserialize(Main.SCORES_FILE)) {
 			@SuppressWarnings("unchecked")
@@ -175,7 +162,6 @@ public class GameOver extends Scene {
 	 * Prevents the scene instantly ending due to a key press from previous scene
 	 */
 	public void keyPressed(int key) {
-		keyPressed = key;
 	}
 
 	/**
@@ -199,6 +185,11 @@ public class GameOver extends Scene {
 		graphics.setColour(Main.GREEN);
 		graphics.printCentred(crashedPlane1.name() + " crashed into "
 				+ crashedPlane2.name() + ".", 0, 32, 2, window.width());
+
+		graphics.setColour(Main.GREEN);
+		graphics.printCentred("You managed to earn " + this.score
+				+ " rubles before making your fatal error.", 0, 64, 2,
+				window.width());
 
 		if (explosionAnim.hasFinished()) {
 

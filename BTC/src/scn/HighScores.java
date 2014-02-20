@@ -13,14 +13,12 @@ import btc.Main;
 
 public class HighScores extends Scene {
 
+	// Maximum number of scores to display on screen; if amount of scores stored
+	// is lower, uses that.
 	private static final int SCORES_TO_DISPLAY = 10;
 
-	/**
-	 * Text box to write the details of the game failure
-	 */
+	// Text box to write the details of the game failure
 	private TextBox textBox;
-
-	private int keyPressed;
 
 	public HighScores(Main main) {
 		super(main);
@@ -86,7 +84,6 @@ public class HighScores extends Scene {
 	 * Prevents the scene instantly ending due to a key press from previous scene
 	 */
 	public void keyPressed(int key) {
-		keyPressed = key;
 	}
 
 	/**
@@ -94,9 +91,7 @@ public class HighScores extends Scene {
 	 */
 	@Override
 	public void keyReleased(int key) {
-		if (key == keyPressed) {
-			main.closeScene();
-		}
+		main.closeScene();
 	}
 
 	@Override
