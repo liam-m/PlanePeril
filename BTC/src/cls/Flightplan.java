@@ -60,6 +60,7 @@ public class Flightplan {
 		// to track the closest next waypoint
 		double cost = 99999999999999.0;
 		Waypoint cheapest = null;
+
 		// to track if the route is complete
 		boolean atDestination = false;
 
@@ -92,10 +93,9 @@ public class Flightplan {
 					continue;
 
 				} else {
-					/*
-					 * get cost of visiting waypoint compare cost vs current
-					 * cheapest if smaller, replace
-					 */
+
+					// get cost of visiting waypoint compare cost vs current
+					// cheapest if smaller, replace
 					if (point.getCost(currentPos) + 0.5
 							* Waypoint.getCostBetween(point, destination) < cost) {
 						// cheaper route found, update
@@ -111,9 +111,7 @@ public class Flightplan {
 			assert cheapest != null : "The cheapest waypoint was not found";
 
 			if (cheapest.position().equals(destination.position())) {
-				/*
-				 * route has reached destination break out of while loop
-				 */
+				// route has reached destination break out of while loop
 				atDestination = true;
 			}
 

@@ -121,18 +121,15 @@ public class Aircraft {
 	// Which info text to display now, from Aircraft.Texts
 	private String infoText = Texts.LAND_ME;
 
-	/**
-	 * Flags whether the collision warning sound has been played before. If set,
-	 * plane will not play warning again until it the separation violation
-	 * involving it ends
-	 */
+	// Flags whether the collision warning sound has been played before. If set,
+	// plane will not play warning again until it the separation violation
+	// involving it ends
 	private boolean collisionWarningSoundFlag = false;
 
-	/**
-	 * A warning sound to be played when the plane enters separation violation.
-	 */
+	// A warning sound to be played when the plane enters separation violation.
 	private final static Sound WARNING_SOUND = audio.newSoundEffect("sfx"
 			+ File.separator + "beep.ogg");
+
 	// The number of points an aircraft enters the airspace with.
 	private int points;
 
@@ -143,22 +140,23 @@ public class Aircraft {
 	 * 
 	 * @param name
 	 *            the name of the flight.
-	 * @param nameOrigin
-	 *            the name of the location from which the plane hails.
-	 * @param nameDestination
-	 *            the name of the location to which the plane is going.
-	 * @param originPoint
-	 *            the point to initialise the plane.
-	 * @param destinationPoint
-	 *            the end point of the plane's route.
 	 * @param img
 	 *            the image to draw to represent the plane.
 	 * @param speed
 	 *            the speed the plane will travel at.
-	 * @param sceneWaypoints
-	 *            the waypoints on the map.
 	 * @param difficulty
-	 *            the difficulty the game is set to
+	 *            difficulty of the game, changes speed of aircraft and starting
+	 *            points for each aircraft
+	 * @param takeoffWaypoint
+	 *            so the the first waypoint is overwritten if the origin is the
+	 *            waypoint
+	 * @param aircraftList
+	 *            all aircrafts in the the screen, used to detect collisions and
+	 *            make sure this aircraft doesn't spawn in the same altitude as
+	 *            another one nearby
+	 * @param flightplan
+	 *            the flightplan, has the destination, origin and used to
+	 *            generate the actual route
 	 */
 	public Aircraft(String name, Image img, double speed, int difficulty,
 			Waypoint takeoffWaypoint, ArrayList<Aircraft> aircraftList,
