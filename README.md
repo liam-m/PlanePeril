@@ -1,18 +1,13 @@
-INI-FLR bear_traffic_controller
+bear_traffic_controller
 =======================
-
-This is an extension by Team INI, which made [Controller Concern](https://github.com/CremboC/INI).
-
-
-Original by Team FLR:
 
 ![Bear Traffic Controller](http://i.imgur.com/KHlkiaj.jpg)
 
-Team FLR's Contribution to the University of York 2nd Year Software Engineering Project.
+Team MQV's Contribution to the University of York 2nd Year Software Engineering Project. This project was created by Team FLR, then extended by Team INI before we picked it up.
 
 Wiki
 ----
-FRL's SEPR Wiki page can be found [here](http://www-module.cs.york.ac.uk/sepr/wiki/index.php?title=FLR). Permissions are required.
+MQV's SEPR Wiki page can be found [here](http://www-module.cs.york.ac.uk/sepr/wiki/index.php?title=MQV). Permissions are required.
 
 Building
 --------
