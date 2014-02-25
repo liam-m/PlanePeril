@@ -901,35 +901,18 @@ public class Demo extends Scene {
 	 * @return the create aircraft object
 	 */
 	private Aircraft createAircraft(boolean fromAirport) {
-		// Origin and Destination
-		int o = RandomNumber.randInclusiveInt(0, locationWaypoints.length - 1);
-		int d = RandomNumber.randInclusiveInt(0, locationWaypoints.length - 1);
+		int origin = RandomNumber.randInclusiveInt(0, locationWaypoints.length - 2); // -2 to exclude the airport
+		int destination = RandomNumber.randInclusiveInt(0, locationWaypoints.length - 1);
+		
+		Waypoint originPoint = fromAirport ? airport : locationWaypoints[origin];
 
-		// make sure airport doesn't spawn random aircrafts
-		while (locationWaypoints[o] instanceof Airport) {
-			o = RandomNumber.randInclusiveInt(0, locationWaypoints.length - 1);
+		// Make sure origin and destination aren't the same
+		while (locationWaypoints[destination].equals(locationWaypoints[origin]) || fromAirport && locationWaypoints[destination] instanceof Airport) {
+			destination = RandomNumber.randInclusiveInt(0, locationWaypoints.length - 1);
 		}
 
-		// make sure origin and destination is not the same waypoint
-		while (locationWaypoints[d].equals(locationWaypoints[o])) {
-			d = RandomNumber.randInclusiveInt(0, locationWaypoints.length - 1);
-		}
+		Waypoint destinationPoint = locationWaypoints[destination];
 
-		Waypoint originPoint = locationWaypoints[o];
-
-		// if from airport, make sure destination is not airport
-		if (fromAirport) {
-			while (locationWaypoints[d] instanceof Airport) {
-				d = RandomNumber.randInclusiveInt(0,
-						locationWaypoints.length - 1);
-			}
-
-			originPoint = airport;
-		}
-
-		Waypoint destinationPoint = locationWaypoints[d];
-
-		// Name
 		String name = "";
 		boolean nameTaken = true;
 
