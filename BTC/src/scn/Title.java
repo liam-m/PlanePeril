@@ -73,7 +73,7 @@ public class Title extends Scene {
 
 		};
 
-		buttons[i] = new ButtonText("Play", demo, window.height(),
+		buttons[i] = new ButtonText("Single Player", demo, window.height(),
 				window.height() / 2 + (offset + buttonHeight * i),
 				window.width() - window.height(), 24, 8, 6);
 

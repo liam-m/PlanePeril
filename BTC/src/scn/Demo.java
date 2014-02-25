@@ -16,7 +16,7 @@ import btc.Main;
 import cls.Aircraft;
 import cls.Airport;
 import cls.Altimeter;
-import cls.Flightplan;
+import cls.FlightPlan;
 import cls.HoldingWaypoint;
 import cls.OrdersBox;
 import cls.Waypoint;
@@ -914,7 +914,7 @@ public class Demo extends Scene {
 
 		return new Aircraft(name, aircraftImage,
 				32 + (int) (10 * Math.random()), difficulty, takeoffWaypoint,
-				aircraftInAirspace, new Flightplan(originPoint,
+				aircraftInAirspace, new FlightPlan(originPoint,
 						destinationPoint, airspaceWaypoints, holdingWaypoints));
 	}
 

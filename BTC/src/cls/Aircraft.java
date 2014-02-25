@@ -160,7 +160,7 @@ public class Aircraft {
 	 */
 	public Aircraft(String name, Image img, double speed, int difficulty,
 			Waypoint takeoffWaypoint, ArrayList<Aircraft> aircraftList,
-			Flightplan flightplan) {
+			FlightPlan flightplan) {
 		flightName = name;
 		destinationName = flightplan.getDestinationName();
 		originName = flightplan.getOriginName();
