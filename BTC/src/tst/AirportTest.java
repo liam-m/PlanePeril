@@ -110,7 +110,7 @@ public class AirportTest {
 		aircraftInAirspace = new ArrayList<Aircraft>();
 
 		testAircraft = new Aircraft("testAircraft", null,
-				32 + (int) (10 * Math.random()), 10, takeoffWaypoint,
+				32 + (int) (10 * Math.random()), 1, takeoffWaypoint,
 				aircraftInAirspace, new Flightplan(locationWaypoints[0],
 						locationWaypoints[1], airspaceWaypoints,
 						holdingWaypoints));
