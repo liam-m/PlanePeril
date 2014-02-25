@@ -12,6 +12,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import scn.Demo;
+
 import cls.Aircraft;
 import cls.Airport;
 import cls.Flightplan;
@@ -113,7 +115,7 @@ public class AircraftTest2 {
 		aircraftInAirspace = new ArrayList<Aircraft>();
 
 		testAircraft = new Aircraft("testAircraft", null,
-				32 + (int) (10 * Math.random()), 10, takeoffWaypoint,
+				32 + (int) (10 * Math.random()), Demo.DIFFICULTY_EASY, takeoffWaypoint,
 				aircraftInAirspace, new Flightplan(locationWaypoints[0],
 						locationWaypoints[1], airspaceWaypoints,
 						holdingWaypoints));
@@ -146,7 +148,7 @@ public class AircraftTest2 {
 
 	@Test
 	public void testDestinationName() {
-		assertTrue(testAircraft.destinationName().equals("Exit"));
+		assertTrue(testAircraft.destinationName().equals("Test Entry 2"));
 	}
 
 	@Test
@@ -154,7 +156,7 @@ public class AircraftTest2 {
 		assertFalse(testAircraft.isFinished());
 
 		Aircraft testAircraft2 = new Aircraft("testAircraft", null,
-				32 + (int) (10 * Math.random()), 10, takeoffWaypoint,
+				32 + (int) (10 * Math.random()), Demo.DIFFICULTY_EASY, takeoffWaypoint,
 				aircraftInAirspace, new Flightplan(locationWaypoints[0],
 						locationWaypoints[1], airspaceWaypoints,
 						holdingWaypoints));
@@ -216,18 +218,18 @@ public class AircraftTest2 {
 
 	@Test
 	public void testSpeed() {
-		assertEquals(testAircraft.speed(), 20.0, 0.1);
+		assertEquals(testAircraft.speed(), 37, 5); // Between 32 and 42
 	}
 
 	@Test
 	public void testIsAt() {
 		Vector point1 = new Vector(10.0, 10.0, 10.0);
 
-		assertFalse(testAircraft.isAt(point1));
+		assertTrue(testAircraft.isAt(point1));
 
 		Vector point2 = new Vector(10.0, 1000.0, 10.0);
 
-		assertTrue(testAircraft.isAt(point2));
+		assertFalse(testAircraft.isAt(point2));
 	}
 
 	@Test
@@ -254,20 +256,16 @@ public class AircraftTest2 {
 
 	@Test
 	public void testAlterPath() {
-
 		testAircraft.alterPath(1, airspaceWaypoints[2]);
 
-		assertEquals(testAircraft.flightPathContains(airspaceWaypoints[1]), 0,
-				0);
-		assertEquals(testAircraft.flightPathContains(airspaceWaypoints[2]), 0,
-				1);
-		assertEquals(testAircraft.flightPathContains(locationWaypoints[0]), 2,
-				0);
+		assertEquals(testAircraft.flightPathContains(airspaceWaypoints[1]), -1);
+		assertEquals(testAircraft.flightPathContains(airspaceWaypoints[2]), 1);
+		assertEquals(testAircraft.flightPathContains(locationWaypoints[0]), -1);
 	}
 
 	@Test
 	public void testIsMouseOverIntInt() {
-		assertTrue(testAircraft.isMouseOver(10, 1000));
+		assertTrue(testAircraft.isMouseOver(10, 10));
 
 		// GUI
 	}
@@ -295,7 +293,7 @@ public class AircraftTest2 {
 	@Test
 	public void testUpdateCollisions() {
 		Aircraft testAircraft2 = new Aircraft("testAircraft", null,
-				32 + (int) (10 * Math.random()), 10, takeoffWaypoint,
+				32 + (int) (10 * Math.random()), Demo.DIFFICULTY_EASY, takeoffWaypoint,
 				aircraftInAirspace, new Flightplan(locationWaypoints[0],
 						locationWaypoints[1], airspaceWaypoints,
 						holdingWaypoints));

@@ -63,7 +63,7 @@ public class VectorTest2 {
 	@Test
 	public void testMagnitude() {
 		Vector testVector3 = new Vector(1.0, 2.0, 4.0);
-		assertTrue("Magnitude = 3", 3.0 == testVector3.magnitude());		
+		assertEquals("Magnitude = 3", 4.58, testVector3.magnitude(), 0.01);
 	}
 
 	@Test

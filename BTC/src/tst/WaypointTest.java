@@ -30,7 +30,7 @@ public class WaypointTest {
 	
 	@Test
 	public void testIsEntryOrExit2() {
-		Waypoint testWaypoint = new Waypoint(0, 0);
+		Waypoint testWaypoint = new Waypoint(0, 0, WaypointType.ENTRY_EXIT);
 		assertTrue("Entry/Exit = true",
 				WaypointType.ENTRY_EXIT == testWaypoint.getType());
 	}

@@ -48,6 +48,12 @@ public class Waypoint {
 		this.type = type;
 		this.name = name;
 	}
+	
+	public Waypoint(double x, double y, WaypointType type) {
+		position = new Vector(x, y, 0);
+		this.type = type;
+		this.name = "";
+	}
 
 	public Waypoint(double x, double y) {
 		position = new Vector(x, y, 0);
