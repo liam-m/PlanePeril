@@ -17,9 +17,6 @@ public class Airport extends Waypoint {
 
 	public final static int MOUSE_LENIANCY = 32;
 
-	// Required altitude for an aircraft to land
-	public final static int MIN_ALTITUDE = 5000;
-
 	private int timeLeft = 0;
 
 	private ArrayList<Aircraft> aircraftList = new ArrayList<Aircraft>();
