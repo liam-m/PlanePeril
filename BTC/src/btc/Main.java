@@ -20,8 +20,8 @@ import scn.Title;
 /**
  * <h1>Main</h1>
  * <p>
- * Main class that is run when file is run. Main handles the scenes
- * (gamestates).
+ * Main class that is run when file is run. 
+ * Handles the scenes (gamestates)
  * </p>
  * 
  * @author Huw Taylor
@@ -44,29 +44,28 @@ public class Main implements EventHandler {
 	final private String TITLE = "Bear Traffic Controller";
 	final private int WIDTH = 1280;
 	final private int HEIGHT = 720;
-	final private String[] ICONS = { "gfx" + File.separator + "icon16.png", // 16
-			"gfx" + File.separator + "icon32.png", // 32
-			"gfx" + File.separator + "icon64.png", // 64
+	final private String[] ICON_FILENAMES = { 
+			"gfx" + File.separator + "icon16.png",
+			"gfx" + File.separator + "icon32.png",
+			"gfx" + File.separator + "icon64.png"
 	};
 
-	private double lastFrameTime;
-	private double dt;
-	private Stack<Scene> sceneStack;
-	private Scene currentScene;
-	private int fps;
-	private long lastfps;
+	private double last_frame_time;
+	private Stack<Scene> scene_stack;
+	private Scene current_scene;
+	private int fps_counter;
+	private long last_fps_time;
 
 	/**
 	 * Constructor for Main. Initialises the jog library classes, and then
 	 * begins the game loop, calculating time between frames, and then when the
-	 * window is closed it releases resources and closes the programme
-	 * successfully.
+	 * window is closed it releases resources and closes the program
 	 */
 	public Main() {
 		start();
 		while (!window.isClosed()) {
-			dt = getDeltaTime();
-			update(dt);
+			double time_difference = getTimeSinceLastFrame();
+			update(time_difference);
 			draw();
 		}
 		quit();
@@ -77,10 +76,9 @@ public class Main implements EventHandler {
 	 * variables.
 	 */
 	private void start() {
-		lastFrameTime = (double) (Sys.getTime()) / Sys.getTimerResolution();
 
 		window.initialise(TITLE, WIDTH, HEIGHT);
-		window.setIcon(ICONS);
+		window.setIcon(ICON_FILENAMES);
 
 		graphics.initialise();
 
@@ -90,11 +88,11 @@ public class Main implements EventHandler {
 						"ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz1234567890.,_-!?()[]><#~:;/\\^'\"{}£$@@@@@@@@");
 		graphics.setFont(font);
 
-		sceneStack = new Stack<Scene>();
+		scene_stack = new Stack<Scene>();
 		setScene(new Title(this));
 
-		// set lastFPS to current Time
-		lastfps = ((Sys.getTime() * 1000) / Sys.getTimerResolution());
+		last_frame_time = (double) (Sys.getTime()) / Sys.getTimerResolution();
+		last_fps_time = ((Sys.getTime() * 1000) / Sys.getTimerResolution()); // Set to current time
 
 		if (!Serializer.deserialize(Main.SCORES_FILE)) {
 			Serializer.serialize(Main.SCORES_FILE, new ArrayList<Integer>());
@@ -102,7 +100,7 @@ public class Main implements EventHandler {
 	}
 
 	/**
-	 * Updates input handling, the window and the current scene.
+	 * Updates audio, input handling, the window, the current scene and FPS.
 	 * 
 	 * @param dt
 	 *            the time elapsed since the last frame.
@@ -110,21 +108,21 @@ public class Main implements EventHandler {
 	private void update(double dt) {
 		audio.update();
 		input.update(this);
-		updateFPS();
 		window.update();
-		currentScene.update(dt);
+		current_scene.update(dt);
+		updateFPS();
 	}
 
 	/**
-	 * Calculates the time taken since the last tick in seconds as a
+	 * Calculates the time since the last frame in seconds as a
 	 * double-precision floating point number.
 	 * 
 	 * @return the time in seconds since the last frame.
 	 */
-	private double getDeltaTime() {
-		double time = (double) (Sys.getTime()) / Sys.getTimerResolution();
-		double delta = (time - lastFrameTime);
-		lastFrameTime = time;
+	private double getTimeSinceLastFrame() {
+		double current_time = (double) (Sys.getTime()) / Sys.getTimerResolution();
+		double delta = (current_time - last_frame_time);
+		last_frame_time = current_time; // Update last frame time
 		return delta;
 	}
 
@@ -134,75 +132,75 @@ public class Main implements EventHandler {
 	 */
 	private void draw() {
 		graphics.clear();
-		currentScene.draw();
+		current_scene.draw();
 	}
 
 	/**
-	 * Closes the current scene, releases the audio resources and closes the
+	 * Closes the current scene, closes the window, releases the audio resources and quits the process
 	 * window.
 	 */
 	public void quit() {
-		currentScene.close();
+		current_scene.close();
 		window.dispose();
 		audio.dispose();
 		System.exit(0);
 	}
 
 	/**
+	 * Closes the current scene, adds new scene to scene stack and starts it
 	 * 
-	 * @param newScene
+	 * @param new_scene The scene to set as current scene
 	 */
-	public void setScene(Scene newScene) {
-		if (currentScene != null)
-			currentScene.close();
+	public void setScene(Scene new_scene) {
+		if (current_scene != null)
+			current_scene.close();
 
-		sceneStack.push(newScene);
-		currentScene = sceneStack.peek();
-		currentScene.start();
+		current_scene = scene_stack.push(new_scene); // Add new_scene to scene_stack and assign to current_scene
+		current_scene.start();
 	}
 
 	/**
-	 * Closes the current scene and pops it from the stack.
+	 * Closes the current scene, pops it from the stack and sets the current scene to stop of stack.
 	 */
 	public void closeScene() {
-		currentScene.close();
-		sceneStack.pop();
-		currentScene = sceneStack.peek();
+		current_scene.close();
+		scene_stack.pop();
+		current_scene = scene_stack.peek();
 	}
 
 	/**
-	 * Updates the fps
+	 * Updates the fps - increments the fps counter
+	 * If it has been over a second since the fps was updated, update it
 	 */
 	public void updateFPS() {
-		// set lastFPS to current Time
-		long time = ((Sys.getTime() * 1000) / Sys.getTimerResolution());
+		long current_time = ((Sys.getTime() * 1000) / Sys.getTimerResolution());
 
-		if (time - lastfps > 1000) {
-			window.setTitle("Bear Traffic Controller - FPS: " + fps);
-			fps = 0; // reset the FPS counter
-			lastfps += 1000; // add one second
+		if (current_time - last_fps_time > 1000) { // Update once a second
+			window.setTitle(TITLE + " - FPS: " + fps_counter);
+			fps_counter = 0; // Reset the FPS counter
+			last_fps_time += current_time - last_fps_time; // Add on time difference
 		}
-		fps++;
+		fps_counter++;
 	}
 
 	@Override
 	public void mousePressed(int key, int x, int y) {
-		currentScene.mousePressed(key, x, y);
+		current_scene.mousePressed(key, x, y);
 	}
 
 	@Override
 	public void mouseReleased(int key, int x, int y) {
-		currentScene.mouseReleased(key, x, y);
+		current_scene.mouseReleased(key, x, y);
 	}
 
 	@Override
 	public void keyPressed(int key) {
-		currentScene.keyPressed(key);
+		current_scene.keyPressed(key);
 	}
 
 	@Override
 	public void keyReleased(int key) {
-		currentScene.keyReleased(key);
+		current_scene.keyReleased(key);
 	}
 
 }
