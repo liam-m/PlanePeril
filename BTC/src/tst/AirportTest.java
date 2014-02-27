@@ -10,6 +10,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import scn.Demo;
+
 import cls.Aircraft;
 import cls.Airport;
 import cls.Flightplan;
@@ -110,7 +112,7 @@ public class AirportTest {
 		aircraftInAirspace = new ArrayList<Aircraft>();
 
 		testAircraft = new Aircraft("testAircraft", null,
-				32 + (int) (10 * Math.random()), 10, takeoffWaypoint,
+				32 + (int) (10 * Math.random()), Demo.DIFFICULTY_EASY, takeoffWaypoint,
 				aircraftInAirspace, new Flightplan(locationWaypoints[0],
 						locationWaypoints[1], airspaceWaypoints,
 						holdingWaypoints));
