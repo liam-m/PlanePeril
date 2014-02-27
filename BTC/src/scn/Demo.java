@@ -16,7 +16,7 @@ import btc.Main;
 import cls.Aircraft;
 import cls.Airport;
 import cls.Altimeter;
-import cls.Flightplan;
+import cls.FlightPlan;
 import cls.HoldingWaypoint;
 import cls.OrdersBox;
 import cls.Waypoint;
@@ -48,14 +48,11 @@ public class Demo extends Scene {
 	public static int difficulty = DIFFICULTY_EASY;
 
 	private final static int TAKEOFF_DELAY = 5;
-	private final static int LAND_DELAY = 5;
 
 	// texts for the buttons in this class
 	private final class Texts {
 		public final static String TAKE_CONTROL = "Take Control";
 		public final static String REMOVE_CONTROL = "Remove Control";
-
-		public final static String LOWER_ALT = "Lower Altitude!";
 		public final static String LAND = "Land";
 	}
 
@@ -326,7 +323,7 @@ public class Demo extends Scene {
 	 * Causes a selected aircraft to call methods to land
 	 */
 	private void toggleLand() {
-		if (selectedAircraft == null || selectedAircraft.position().z() > 5000)
+		if (selectedAircraft == null)
 			return;
 
 		if (selectedAircraft.isLanding())
@@ -334,7 +331,6 @@ public class Demo extends Scene {
 
 		selectedAircraft.toggleLand(landWaypoints[0]);
 
-		landButton.setText(Texts.LAND);
 	}
 
 	/**
@@ -720,12 +716,15 @@ public class Demo extends Scene {
 
 		for (Aircraft aircraft : aircraftInAirspace) {
 			aircraft.draw();
+			if (aircraft.isMouseOver()) {
+				aircraft.drawFlightPath(false);
+			}
 		}
 
 		if (selectedAircraft != null) {
 
 			// Flight Path
-			selectedAircraft.drawFlightPath();
+			selectedAircraft.drawFlightPath(true);
 			graphics.setColour(Main.GREEN);
 
 			// Override Button
@@ -745,22 +744,10 @@ public class Demo extends Scene {
 				graphics.setColour(Main.GREEN);
 				graphics.rectangle(false, (window.width() - 500) / 2, 16, 128,
 						32);
-
-				// if the altitude is appropriate, i.e. required altitude for
-				// the aircraft to land
-				if (selectedAircraft.position().z() <= Airport.MIN_ALTITUDE) {
-					landButton.setText(Texts.LAND);
-				}
-
-				// otherwise, set the text to "lower altitude"
-				if (selectedAircraft.position().z() > Airport.MIN_ALTITUDE) {
-					landButton.setText(Texts.LOWER_ALT);
-				}
-
+			
 				landButton.draw();
 			}
 
-			selectedAircraft.drawFlightPath();
 			graphics.setColour(Main.GREEN);
 		}
 
@@ -927,7 +914,7 @@ public class Demo extends Scene {
 
 		return new Aircraft(name, aircraftImage,
 				32 + (int) (10 * Math.random()), difficulty, takeoffWaypoint,
-				aircraftInAirspace, new Flightplan(originPoint,
+				aircraftInAirspace, new FlightPlan(originPoint,
 						destinationPoint, airspaceWaypoints, holdingWaypoints));
 	}
 

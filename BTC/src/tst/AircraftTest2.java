@@ -15,7 +15,7 @@ import org.junit.Test;
 import scn.Demo;
 import cls.Aircraft;
 import cls.Airport;
-import cls.Flightplan;
+import cls.FlightPlan;
 import cls.HoldingWaypoint;
 import cls.Vector;
 import cls.Waypoint;
@@ -107,7 +107,7 @@ public class AircraftTest2 {
 
 		testAircraft = new Aircraft("testAircraft", null, 10,
 				Demo.DIFFICULTY_HARD, takeoffWaypoint, aircraftInAirspace,
-				new Flightplan(locationWaypoints[0], locationWaypoints[1],
+				new FlightPlan(locationWaypoints[0], locationWaypoints[1],
 						airspaceWaypoints, holdingWaypoints));
 	}
 
@@ -150,7 +150,7 @@ public class AircraftTest2 {
 
 		Aircraft testAircraft2 = new Aircraft("testAircraft", null, 10,
 				Demo.DIFFICULTY_HARD, takeoffWaypoint, aircraftInAirspace,
-				new Flightplan(locationWaypoints[0], locationWaypoints[1],
+				new FlightPlan(locationWaypoints[0], locationWaypoints[1],
 						airspaceWaypoints, holdingWaypoints));
 
 		ArrayList<Aircraft> testAircrafts = new ArrayList<Aircraft>();
@@ -253,7 +253,7 @@ public class AircraftTest2 {
 	public void testUpdateCollisions() {
 		Aircraft testAircraft2 = new Aircraft("testAircraft", null, 10,
 				Demo.DIFFICULTY_HARD, takeoffWaypoint, aircraftInAirspace,
-				new Flightplan(locationWaypoints[0], locationWaypoints[1],
+				new FlightPlan(locationWaypoints[0], locationWaypoints[1],
 						airspaceWaypoints, holdingWaypoints));
 
 		ArrayList<Aircraft> testAircrafts = new ArrayList<Aircraft>();

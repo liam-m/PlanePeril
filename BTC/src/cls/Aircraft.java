@@ -160,7 +160,7 @@ public class Aircraft {
 	 */
 	public Aircraft(String name, Image img, double speed, int difficulty,
 			Waypoint takeoffWaypoint, ArrayList<Aircraft> aircraftList,
-			Flightplan flightplan) {
+			FlightPlan flightplan) {
 		flightName = name;
 		destinationName = flightplan.getDestinationName();
 		originName = flightplan.getOriginName();
@@ -717,8 +717,12 @@ public class Aircraft {
 	 * Draws lines starting from the plane, along its flight path to its
 	 * destination.
 	 */
-	public void drawFlightPath() {
-		graphics.setColour(0, 128, 128);
+	public void drawFlightPath(boolean is_selected) {
+		if (is_selected) {
+			graphics.setColour(0, 128, 128);
+		} else {
+			graphics.setColour(0, 128, 128, 128);
+		}
 
 		if (currentTarget != destination) {
 			graphics.line(position.x(), position.y(), route[currentRouteStage]

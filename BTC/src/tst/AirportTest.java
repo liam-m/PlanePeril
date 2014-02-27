@@ -14,7 +14,7 @@ import scn.Demo;
 
 import cls.Aircraft;
 import cls.Airport;
-import cls.Flightplan;
+import cls.FlightPlan;
 import cls.HoldingWaypoint;
 import cls.Waypoint;
 import cls.Waypoint.WaypointType;
@@ -113,7 +113,7 @@ public class AirportTest {
 
 		testAircraft = new Aircraft("testAircraft", null,
 				32 + (int) (10 * Math.random()), Demo.DIFFICULTY_EASY, takeoffWaypoint,
-				aircraftInAirspace, new Flightplan(locationWaypoints[0],
+				aircraftInAirspace, new FlightPlan(locationWaypoints[0],
 						locationWaypoints[1], airspaceWaypoints,
 						holdingWaypoints));
 	}

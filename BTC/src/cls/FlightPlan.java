@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import cls.Waypoint.WaypointType;
 
-public class Flightplan {
+public class FlightPlan {
 	
 	private Waypoint origin;
 	private Waypoint destination;
@@ -24,7 +24,7 @@ public class Flightplan {
 	 * @param holdingWaypoints
 	 *            The holding waypoints used for circling
 	 */
-	public Flightplan(Waypoint origin, Waypoint destination,
+	public FlightPlan(Waypoint origin, Waypoint destination,
 			Waypoint[] waypoints, ArrayList<HoldingWaypoint> holdingWaypoints) {
 		this.origin = origin;
 		this.destination = destination;
