@@ -1,7 +1,5 @@
-bear_traffic_controller
+Plane Peril
 =======================
-
-![Bear Traffic Controller](http://i.imgur.com/KHlkiaj.jpg)
 
 Team MQV's Contribution to the University of York 2nd Year Software Engineering Project. This project was created by Team FLR, then extended by Team INI before we picked it up.
 
