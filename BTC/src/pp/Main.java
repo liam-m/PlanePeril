@@ -1,4 +1,4 @@
-package btc;
+package pp;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -41,7 +41,7 @@ public class Main implements EventHandler {
 		new Main();
 	}
 
-	final private String TITLE = "Bear Traffic Controller";
+	public final static String TITLE = "Plane Peril";
 	final private int WIDTH = 1280;
 	final private int HEIGHT = 720;
 	final private String[] ICON_FILENAMES = { 

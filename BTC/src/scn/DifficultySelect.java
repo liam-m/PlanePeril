@@ -1,12 +1,12 @@
 package scn;
 
+import pp.Main;
 import lib.ButtonText;
 import lib.TextBox;
 import lib.jog.audio.Sound;
 import lib.jog.graphics;
 import lib.jog.input;
 import lib.jog.window;
-import btc.Main;
 
 public class DifficultySelect extends Scene {
 

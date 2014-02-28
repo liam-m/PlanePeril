@@ -2,13 +2,14 @@ package scn;
 
 import java.io.File;
 
+import pp.Main;
+
 import lib.jog.audio;
 import lib.jog.audio.Music;
 import lib.jog.audio.Sound;
 import lib.jog.graphics;
 import lib.jog.input;
 import lib.jog.window;
-import btc.Main;
 
 public class Credits extends Scene {
 

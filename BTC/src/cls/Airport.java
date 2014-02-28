@@ -2,9 +2,10 @@ package cls;
 
 import java.util.ArrayList;
 
+import pp.Main;
+
 import lib.RandomNumber;
 import lib.jog.graphics;
-import btc.Main;
 
 public class Airport extends Waypoint {
 

@@ -6,12 +6,12 @@
 	<classpathentry exported="true" kind="lib" path="ext/jorbis-0.0.15.jar"/>
 	<classpathentry exported="true" kind="lib" path="ext/lwjgl.jar">
 		<attributes>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="SEPR-MQV-3/ext/natives/windows"/>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="PlanePeril/ext/natives/windows"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry exported="true" kind="lib" path="ext/slick.jar">
 		<attributes>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="SEPR-MQV-3/ext/natives/windows"/>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="PlanePeril/ext/natives/windows"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry exported="true" kind="lib" path="ext/junit-4.11.jar" sourcepath="ext/junit-4.11.jar"/>

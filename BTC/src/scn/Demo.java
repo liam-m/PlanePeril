@@ -4,6 +4,8 @@ import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
+import pp.Main;
+
 import lib.ButtonText;
 import lib.RandomNumber;
 import lib.jog.audio;
@@ -12,7 +14,6 @@ import lib.jog.graphics;
 import lib.jog.graphics.Image;
 import lib.jog.input;
 import lib.jog.window;
-import btc.Main;
 import cls.Aircraft;
 import cls.Airport;
 import cls.Altimeter;

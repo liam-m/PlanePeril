@@ -4,12 +4,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
+import pp.Main;
+
 import lib.Serializer;
 import lib.TextBox;
 import lib.jog.audio.Sound;
 import lib.jog.graphics;
 import lib.jog.window;
-import btc.Main;
 
 public class HighScores extends Scene {
 

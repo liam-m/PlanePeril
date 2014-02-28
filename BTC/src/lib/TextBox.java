@@ -1,7 +1,7 @@
 package lib;
 
+import pp.Main;
 import lib.jog.graphics;
-import btc.Main;
 
 /**
  * Class for a visual representation text. It has word wrap enabled 

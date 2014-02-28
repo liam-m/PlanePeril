@@ -13,8 +13,9 @@ import lib.jog.window;
 
 import org.newdawn.slick.Color;
 
+import pp.Main;
+
 import scn.Demo;
-import btc.Main;
 
 /**
  * <h1>Aircraft</h1>

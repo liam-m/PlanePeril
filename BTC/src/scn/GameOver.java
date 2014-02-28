@@ -3,6 +3,8 @@ package scn;
 import java.io.File;
 import java.util.ArrayList;
 
+import pp.Main;
+
 import lib.Serializer;
 import lib.SpriteAnimation;
 import lib.TextBox;
@@ -12,7 +14,6 @@ import lib.jog.graphics;
 import lib.jog.graphics.Image;
 import lib.jog.input;
 import lib.jog.window;
-import btc.Main;
 import cls.Aircraft;
 import cls.Vector;
 

@@ -6,12 +6,13 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import pp.Main;
+
 import lib.ButtonText;
 import lib.jog.audio;
 import lib.jog.audio.Sound;
 import lib.jog.graphics;
 import lib.jog.window;
-import btc.Main;
 
 public class Title extends Scene {
 
@@ -253,7 +254,7 @@ public class Title extends Scene {
 				window.height() / 2 - 32, radarAngle, -1 * Math.PI / 8);
 
 		// Title
-		String title = "INI-FLR Bear Traffic Controller";
+		String title = Main.TITLE;
 
 		// fades title string's characters over time
 		// characters brighten when the sweep passes over them
@@ -266,8 +267,8 @@ public class Title extends Scene {
 			opacity = 256 - opacity;
 			opacity %= 256;
 			graphics.setColour(0, 128, 0, opacity);
-			graphics.print(title.substring(i, i + 1), 35 * 4.5 + i * 14, 344,
-					1.8);
+			graphics.print(title.substring(i, i + 1), 35 * 7.8 + i * 17, 325,
+					2.5);
 		}
 	}
 

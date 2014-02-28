@@ -1,9 +1,9 @@
 package cls;
 
+import pp.Main;
 import lib.jog.graphics;
 import lib.jog.input;
 import lib.jog.input.EventHandler;
-import btc.Main;
 
 /**
  * Shows the planes height in feet (whatever units you want). And the current
