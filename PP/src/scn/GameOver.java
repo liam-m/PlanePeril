@@ -18,102 +18,71 @@ import cls.Aircraft;
 import cls.Vector;
 
 public class GameOver extends Scene {
-
-	// Text box to write the details of the game failure
-	private TextBox textBox;
-
+	private TextBox text_box; // Text box to write the details of the game failure
+	private final SpriteAnimation explosion_animation; // A sprite animation to handle the frame by frame drawing of the explosion
+	private final Image explosion = graphics.newImage("gfx" + File.separator + "explosionFrames.png"); // The explosion image to use for the animation
+	private double timer = 0; // Timer to allow for explosion and plane to be shown for a period, followed by the text box.
+	
 	// The two crashed aircraft, passed to the scene by the scene in which they
 	// crashed Used to position the explosion, and provide graphical feedback of
 	// how and where the player failed
-	private final Aircraft crashedPlane1;
-	private final Aircraft crashedPlane2;
-
-	// A randon number of deaths caused by the crash
-	private int deaths;
-
-	// The position of the crash - the vector midpoint of the positions of the
-	// two crashed planes
-	private final Vector crash;
-
-	// A sprite animation to handle the frame by frame drawing of the explosion
-	private final SpriteAnimation explosionAnim;
-
-	// The explosion image to use for the animation
-	private final Image explosion;
-
-	// To store value of the score passed to this class in the constructor by
-	// the previous screen.
-	private int score;
-
-	// Timer to allow for explosion and plane to be shown for a period, followed
-	// by the text box.
-	private double timer;
+	private final Aircraft crashed_plane_1;
+	private final Aircraft crashed_plane_2;
+	private final Vector crash_position; // The position of the crash - the vector midpoint of the positions of the two crashed planes
+	private int num_deaths = (int)(Math.random() * 500) + 300; // A random number of deaths caused by the crash
+	private int score; // To store value of the score passed to this class in the constructor by the previous screen.
 
 	/**
 	 * Constructor for the Game Over scene
 	 * 
-	 * @param main
-	 *            the main containing the scene
-	 * @param plane1
-	 *            one of the planes involved in the crash
-	 * @param plane2
-	 *            the second plane involved in the crash
+	 * @param main The main containing the scene
+	 * @param plane_1 One of the planes involved in the crash
+	 * @param plane_2 The second plane involved in the crash
 	 */
-	public GameOver(Main main, Aircraft plane1, Aircraft plane2, int score) {
+	public GameOver(Main main, Aircraft plane_1, Aircraft plane_2, int score) {
 		super(main);
 		this.score = score;
-		crashedPlane1 = plane1;
-		crashedPlane2 = plane2;
-		crash = new Vector(plane1.getPosition().x(), plane1.getPosition().y(), 0);
+		crashed_plane_1 = plane_1;
+		crashed_plane_2 = plane_2;
+		crash_position = new Vector(plane_1.getPosition().x(), plane_1.getPosition().y(), 0);
 
 		int framesAcross = 8;
 		int framesDown = 4;
 
-		explosion = graphics.newImage("gfx" + File.separator
-				+ "explosionFrames.png");
-		Vector midPoint = crashedPlane1.getPosition()
-				.add(crashedPlane2.getPosition()).scaleBy(0.5);
-		Vector explosionPos = midPoint
-				.sub(new Vector(explosion.width() / (framesAcross * 2),
-						explosion.height() / (framesDown * 2), 0));
+		Vector midPoint = crashed_plane_1.getPosition().add(crashed_plane_2.getPosition()).scaleBy(0.5);
+		Vector explosionPos = midPoint.sub(new Vector(explosion.width() / (framesAcross * 2), explosion.height() / (framesDown * 2), 0));
 
-		explosionAnim = new SpriteAnimation(explosion, (int) explosionPos.x(),
-				(int) explosionPos.y(), 6, 16, framesAcross, framesDown, false);
+		explosion_animation = new SpriteAnimation(explosion, (int) explosionPos.x(), (int) explosionPos.y(), 6, 16, framesAcross, framesDown, false);
 	}
 
 	/**
-	 * initialises the random number of deaths, timer, and text box with strings
+	 * Initialises the random number of deaths, timer, and text box with strings
 	 * to be written about the game failure
 	 */
 	@Override
 	public void start() {
 		playSound(audio.newSoundEffect("sfx" + File.separator + "crash.ogg"));
 
-		deaths = (int) (Math.random() * 500) + 300;
-		timer = 0;
-
-		textBox = new lib.TextBox(64, 96, window.width() - 128,
+		text_box = new lib.TextBox(64, 96, window.width() - 128,
 				window.height() - 96, 32);
-		textBox.addText(String.valueOf(deaths) + " people died in the crash.");
-		textBox.delay(0.4);
-		textBox.addText("British Bearways is facing heavy legal pressure from the family and loved-ones of the dead and an investigation into the incident will be performed.");
-		textBox.newline();
-		textBox.delay(0.4);
-		textBox.addText("The inquery into your incompetance will lead to humanity discovering your true bear nature.");
-		textBox.newline();
-		textBox.delay(0.4);
-		textBox.addText("Your guilt for the deaths you caused, and your failure to pass as a human, will gnaw at you and you will have to revert to your drinking problem to attempt to cope.");
-		textBox.newline();
-		textBox.newline();
-		textBox.delay(0.4);
-		textBox.addText("With no income, there is no way your family can survive the fast-approaching winter months.");
-		textBox.newline();
-		textBox.newline();
-		textBox.delay(0.4);
-		textBox.newline();
-		textBox.addText("Game Over.");
-		textBox.delay(0.5);
-		textBox.addText("You Lose.");
+		text_box.addText(String.valueOf(num_deaths) + " people died in the crash.");
+		text_box.delay(0.4);
+		text_box.addText("British Bearways is facing heavy legal pressure from the family and loved-ones of the dead and an investigation into the incident will be performed.");
+		text_box.newline();
+		text_box.delay(0.4);
+		text_box.addText("The inquery into your incompetance will lead to humanity discovering your true bear nature.");
+		text_box.newline();
+		text_box.delay(0.4);
+		text_box.addText("Your guilt for the deaths you caused, and your failure to pass as a human, will gnaw at you and you will have to revert to your drinking problem to attempt to cope.");
+		text_box.newlines(2);
+		text_box.delay(0.4);
+		text_box.addText("With no income, there is no way your family can survive the fast-approaching winter months.");
+		text_box.newlines(2);
+		text_box.delay(0.4);
+		text_box.newline();
+		text_box.addText("Game Over.");
+		text_box.delay(0.5);
+		text_box.addText("You Lose.");
 
 		saveScore();
 	}
@@ -122,14 +91,11 @@ public class GameOver extends Scene {
 	 * Used to save the scores in a file defined in Main.java
 	 */
 	private void saveScore() {
-		if (Serializer.deserialize(Main.SCORES_FILE)) {
-			@SuppressWarnings("unchecked")
-			ArrayList<Integer> scores = (ArrayList<Integer>) Serializer
-					.getRecovered();
-
-			if (this.score > 0) {
+		if (this.score > 0) {
+			if (Serializer.deserialize(Main.SCORES_FILE)) {
+				@SuppressWarnings("unchecked")
+				ArrayList<Integer> scores = (ArrayList<Integer>) Serializer.getRecovered();
 				scores.add(this.score);
-
 				Serializer.serialize(Main.SCORES_FILE, scores);
 			}
 		}
@@ -140,12 +106,12 @@ public class GameOver extends Scene {
 	 * If before explosion has finished, update the explosion
 	 * otherwise, update text box instead
 	 */
-	public void update(double dt) {
-		if (explosionAnim.hasFinished()) {
-			timer += dt;
-			textBox.update(dt);
+	public void update(double time_difference) {
+		if (explosion_animation.hasFinished()) {
+			timer += time_difference;
+			text_box.update(time_difference);
 		} else {
-			explosionAnim.update(dt);
+			explosion_animation.update(time_difference);
 		}
 	}
 
@@ -157,11 +123,11 @@ public class GameOver extends Scene {
 	public void mouseReleased(int key, int x, int y) {
 	}
 
-	@Override
 	/**
 	 * Tracks if any keys are pressed when the game over screen begins
 	 * Prevents the scene instantly ending due to a key press from previous scene
 	 */
+	@Override
 	public void keyPressed(int key) {
 	}
 
@@ -178,41 +144,35 @@ public class GameOver extends Scene {
 
 	@Override
 	/**
-	 * draws game over
+	 * Draws game over
 	 * If explosion has finished, draw the textbox
 	 * Otherwise, draw the planes and explosion
 	 */
 	public void draw() {
 		graphics.setColour(Main.GREEN);
-		graphics.printCentred(crashedPlane1.getName() + " crashed into "
-				+ crashedPlane2.getName() + ".", 0, 32, 2, window.width());
+		graphics.printCentred(crashed_plane_1.getName() + " crashed into "
+				+ crashed_plane_2.getName() + ".", 0, 32, 2, window.width());
 
 		graphics.setColour(Main.GREEN);
 		graphics.printCentred("You managed to earn " + this.score
-				+ " rubles before making your fatal error.", 0, 64, 2,
-				window.width());
+				+ " rubles before making your fatal error.", 0, 64, 2, window.width());
 
-		if (explosionAnim.hasFinished()) {
-
-			textBox.draw();
-
+		if (explosion_animation.hasFinished()) {
+			text_box.draw();
 		} else {
-
-			crashedPlane1.draw();
-			crashedPlane2.draw();
-			Vector midPoint = crash.add(crashedPlane2.getPosition()).scaleBy(0.5);
+			crashed_plane_1.draw();
+			crashed_plane_2.draw();
+			Vector midPoint = crash_position.add(crashed_plane_2.getPosition()).scaleBy(0.5);
 			double radius = 20;
 			graphics.setColour(128, 0, 0);
 			graphics.circle(false, midPoint.x(), midPoint.y(), radius);
-			explosionAnim.draw();
-
+			explosion_animation.draw();
 		}
 
 		int opacity = (int) (255 * Math.sin(timer));
 
 		graphics.setColour(0, 128, 0, opacity);
-		graphics.printCentred("Press space to continue", 0,
-				window.height() - 256, 1, window.width());
+		graphics.printCentred("Press space to continue", 0,	window.height() - 256, 1, window.width());
 	}
 
 	@Override
@@ -224,5 +184,4 @@ public class GameOver extends Scene {
 		sound.stop();
 		sound.play();
 	}
-
 }

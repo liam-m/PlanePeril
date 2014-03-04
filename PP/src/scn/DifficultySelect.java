@@ -27,7 +27,7 @@ public class DifficultySelect extends Scene {
 	private final int HARD_BUTTON_H = EASY_BUTTON_H;
 
 	private ButtonText[] buttons; // List of buttons	
-	private TextBox textBox; // Text box to write flavour text about the game setting into
+	private TextBox text_box; // Text box to write flavour text about the game setting into
 	private static final String place_name = "Moscow";
 
 	private final int scene_to_create; // To allow the difficulty selection to work with multiple potential game scenes, e.g. separate Demo and a Full Game
@@ -95,18 +95,18 @@ public class DifficultySelect extends Scene {
 		buttons[2] = new ButtonText("Hard", hard, HARD_BUTTON_X, HARD_BUTTON_Y,
 				HARD_BUTTON_W, HARD_BUTTON_H);
 
-		textBox = new TextBox(128, 96, window.width() - 256, window.height() - 96, 32);
-		textBox.addText("You are a 500 kilogram ferocious Grizzly Bear." + TextBox.DELAY_START + "0.5" + TextBox.DELAY_END
+		text_box = new TextBox(128, 96, window.width() - 256, window.height() - 96, 32);
+		text_box.addText("You are a 500 kilogram ferocious Grizzly Bear." + TextBox.DELAY_START + "0.5" + TextBox.DELAY_END
 				+ " The Humans are not aware of your hidden identity.");
-		textBox.delay(0.5);
-		textBox.addText("You have become an air traffic controller at "	+ DifficultySelect.place_name
+		text_box.delay(0.5);
+		text_box.addText("You have become an air traffic controller at "	+ DifficultySelect.place_name
 				+ " international in order to provide for your family during the harsh winters ahead.");
-		textBox.delay(0.5);
-		textBox.newline();
-		textBox.addText("Somehow, miraculously, your true nature has not yet been discovered.");
-		textBox.newlines(3);
-		textBox.delay(1);
-		textBox.addText("Guide planes to their destination successfully and you will be rewarded." + TextBox.DELAY_START
+		text_box.delay(0.5);
+		text_box.newline();
+		text_box.addText("Somehow, miraculously, your true nature has not yet been discovered.");
+		text_box.newlines(3);
+		text_box.delay(1);
+		text_box.addText("Guide planes to their destination successfully and you will be rewarded." + TextBox.DELAY_START
 				+ "0.5"	+ TextBox.DELAY_END + " Fail," + TextBox.DELAY_START + "0.5" + TextBox.DELAY_END + " and the humans may " +
 				"discover your secret identity and put you in a zoo."	+ TextBox.DELAY_START + "1" + TextBox.DELAY_END + " Or worse.");
 	}
@@ -116,7 +116,7 @@ public class DifficultySelect extends Scene {
 	 */
 	@Override
 	public void update(double time_difference) {
-		textBox.update(time_difference);
+		text_box.update(time_difference);
 	}
 
 	/**
@@ -134,7 +134,7 @@ public class DifficultySelect extends Scene {
 			button.draw();
 		}
 
-		textBox.draw();
+		text_box.draw();
 	}
 
 	@Override
