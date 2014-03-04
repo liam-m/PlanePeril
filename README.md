@@ -1,7 +1,7 @@
 Plane Peril
 =======================
 
-Team MQV's Contribution to the University of York 2nd Year Software Engineering Project. This project was created by Team FLR, then extended by Team INI before we picked it up.
+Team MQV's Contribution to the University of York 2nd Year Software Engineering Project. This project was [created by Team FLR](https://github.com/IMP1/bear_traffic_controller), then [extended by Team INI](https://github.com/CremboC/bear_traffic_controller/) before we picked it up.
 
 Wiki
 ----
