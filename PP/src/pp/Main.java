@@ -1,5 +1,7 @@
 package pp;
 
+import java.awt.GraphicsEnvironment;
+import java.awt.Rectangle;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Stack;
@@ -33,19 +35,10 @@ public class Main implements EventHandler {
 	public final static Color RED = new Color(128, 0, 0);
 	public final static String SCORES_FILE = "scores.ser";
 
-	/**
-	 * Creates a new instance of Main, starting a new game.
-	 * 
-	 * @param args
-	 *            any command-line arguments.
-	 */
-	public static void main(String[] args) {
-		new Main();
-	}
-
 	public final static String TITLE = "Plane Peril";
 	final private int WIDTH = 1280;
 	final private int HEIGHT = 720;
+	float scale = 1;
 	final private String[] ICON_FILENAMES = { 
 			"gfx" + File.separator + "icon16.png",
 			"gfx" + File.separator + "icon32.png",
@@ -64,7 +57,17 @@ public class Main implements EventHandler {
 	 * window is closed it releases resources and closes the program
 	 */
 	public Main() {
-		start();
+		// Resize width and height based on display dimensions
+		Rectangle window_bounds = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
+		int display_width = window_bounds.width;
+		int display_height = window_bounds.height;
+
+		float width_scale = display_width/(float)WIDTH;
+		float height_scale = display_height/(float)HEIGHT;
+		
+		scale = (float)(Math.min(width_scale, height_scale) * 0.98);	
+		start((int)(WIDTH*scale), (int)(HEIGHT*scale));
+		
 		while (!window.isClosed()) {
 			double time_difference = getTimeSinceLastFrame();
 			update(time_difference);
@@ -77,9 +80,8 @@ public class Main implements EventHandler {
 	 * Creates window, initialises jog classes and sets starting values to
 	 * variables.
 	 */
-	private void start() {
-
-		window.initialise(TITLE, WIDTH, HEIGHT);
+	private void start(int width, int height) {
+		window.initialise(TITLE, width, height);
 		window.setIcon(ICON_FILENAMES);
 
 		graphics.initialise();
@@ -204,5 +206,14 @@ public class Main implements EventHandler {
 	public void keyReleased(int key) {
 		current_scene.keyReleased(key);
 	}
+	
 
+	/**
+	 * Creates a new instance of Main, starting a new game.
+	 * 
+	 * @param args Any command-line arguments.
+	 */
+	public static void main(String[] args) {
+		new Main();
+	}
 }

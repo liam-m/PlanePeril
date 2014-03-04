@@ -235,7 +235,7 @@ public class Title extends Scene {
 			opacity = 256 - opacity;
 			opacity %= 256;
 			graphics.setColour(0, 128, 0, opacity);
-			graphics.print(title.substring(i, i + 1), 35 * 7.8 + i * 17, 325, 2.5);
+			graphics.print(title.substring(i, i + 1), 35 * 10 + i * 17, window.height()/2 - 60, 2.5);
 		}
 	}
 
