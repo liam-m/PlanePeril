@@ -12,7 +12,7 @@ import lib.jog.graphics;
  */
 public class HoldingWaypoint extends Waypoint {
 
-	private Waypoint nextWaypoint;
+	private Waypoint next_waypoint;
 
 	public HoldingWaypoint(double x, double y) {
 		super(x, y);
@@ -21,10 +21,10 @@ public class HoldingWaypoint extends Waypoint {
 	/**
 	 * Set the next waypoint, should be done only once.
 	 * 
-	 * @param nextWaypoint
+	 * @param next_waypoint
 	 */
-	public void setNextWaypoint(Waypoint nextWaypoint) {
-		this.nextWaypoint = nextWaypoint;
+	public void setNextWaypoint(Waypoint next_waypoint) {
+		this.next_waypoint = next_waypoint;
 	}
 
 	/**
@@ -33,7 +33,7 @@ public class HoldingWaypoint extends Waypoint {
 	 * @return Waypoint next waypoint
 	 */
 	public Waypoint getNextWaypoint() {
-		return this.nextWaypoint;
+		return this.next_waypoint;
 	}
 
 	/**

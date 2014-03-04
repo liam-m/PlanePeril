@@ -16,14 +16,14 @@ public class Altimeter implements EventHandler {
 	/**
 	 * Whether or not the Altimeter should be drawn
 	 */
-	private boolean isVisible;
+	private boolean is_visible;
 
 	/**
 	 * The current aircraft associated with the altimeter
 	 */
-	private Aircraft currentAircraft;
+	private Aircraft current_aircraft;
 
-	private final double positionX, positionY, width, height;
+	private final double position_x, position_y, width, height;
 
 	/**
 	 * Constructor for the altimeter
@@ -38,8 +38,8 @@ public class Altimeter implements EventHandler {
 	 *            the height of the altimeter
 	 */
 	public Altimeter(double x, double y, double w, double h) {
-		positionX = x;
-		positionY = y;
+		position_x = x;
+		position_y = y;
 		width = w;
 		height = h;
 		hide();
@@ -55,16 +55,16 @@ public class Altimeter implements EventHandler {
 		if (aircraft == null)
 			return;
 
-		currentAircraft = aircraft;
-		isVisible = true;
+		current_aircraft = aircraft;
+		is_visible = true;
 	}
 
 	/**
 	 * Makes the altimeter invisible
 	 */
 	public void hide() {
-		currentAircraft = null;
-		isVisible = false;
+		current_aircraft = null;
+		is_visible = false;
 	}
 
 	/**
@@ -77,7 +77,7 @@ public class Altimeter implements EventHandler {
 	 * @return boolean marking if the mouse is over the altimeter
 	 */
 	public boolean isMouseOver(int mx, int my) {
-		return (mx >= positionX && mx <= positionX + width && my >= positionY && my <= positionY
+		return (mx >= position_x && mx <= position_x + width && my >= position_y && my <= position_y
 				+ height);
 	}
 
@@ -90,7 +90,7 @@ public class Altimeter implements EventHandler {
 	 * Handler for mouse clicks
 	 */
 	public void mousePressed(int key, int x, int y) {
-		if (!isVisible)
+		if (!is_visible)
 			return;
 	}
 
@@ -99,14 +99,14 @@ public class Altimeter implements EventHandler {
 	 * Handler for mouse releases
 	 */
 	public void mouseReleased(int key, int mx, int my) {
-		if (!isVisible)
+		if (!is_visible)
 			return;
 
 		if (key == input.MOUSE_LEFT) {
 			if (mouseOverTopButton(mx, my)) {
-				currentAircraft.increaseTargetAltitude();
+				current_aircraft.increaseTargetAltitude();
 			} else if (mouseOverBottomButton(mx, my)) {
-				currentAircraft.decreaseTargetAltitude();
+				current_aircraft.decreaseTargetAltitude();
 			}
 		}
 	}
@@ -128,7 +128,7 @@ public class Altimeter implements EventHandler {
 	public void draw() {
 		drawRectangle();
 
-		if (isVisible) {
+		if (is_visible) {
 			drawPlaneIcon();
 			drawAltitudes();
 			drawArrows();
@@ -140,7 +140,7 @@ public class Altimeter implements EventHandler {
 	 */
 	private void drawRectangle() {
 		graphics.setColour(Main.GREEN);
-		graphics.rectangle(false, positionX, positionY, width, height);
+		graphics.rectangle(false, position_x, position_y, width, height);
 	}
 
 	/**
@@ -150,14 +150,14 @@ public class Altimeter implements EventHandler {
 		// angle to draw plane
 		double r = 0;
 
-		if (currentAircraft.isTurningLeft()) {
+		if (current_aircraft.isTurningLeft()) {
 			r = -Math.PI / 12;
-		} else if (currentAircraft.isTurningRight()) {
+		} else if (current_aircraft.isTurningRight()) {
 			r = Math.PI / 12;
 		}
 
-		double x = positionX + (width / 2);
-		double y = positionY + (height / 2);
+		double x = position_x + (width / 2);
+		double y = position_y + (height / 2);
 		double wingLength = width / 3 - 8;
 		double tailLength = width / 9;
 
@@ -174,8 +174,8 @@ public class Altimeter implements EventHandler {
 		graphics.setColour(Main.GREEN);
 		graphics.circle(false, x, y, 4);
 		graphics.printCentred(
-				String.format("%.0f", currentAircraft.getPosition().z()),
-				positionX, y + 32, 1, width);
+				String.format("%.0f", current_aircraft.getPosition().z()),
+				position_x, y + 32, 1, width);
 	}
 
 	/**
@@ -184,7 +184,7 @@ public class Altimeter implements EventHandler {
 	 */
 	private void drawAltitudes() {
 		graphics.setColour(0, 128, 0, 32);
-		graphics.setViewport((int) positionX, (int) positionY, (int) width,
+		graphics.setViewport((int) position_x, (int) position_y, (int) width,
 				(int) height);
 
 		int midX = (int) (width / 2);
@@ -192,7 +192,7 @@ public class Altimeter implements EventHandler {
 
 		for (int i = -5; i <= 4; i++) {
 
-			int alt = (int) (currentAircraft.getPosition().z() + (1000 * i));
+			int alt = (int) (current_aircraft.getPosition().z() + (1000 * i));
 			int offset = (int) (16.0 * (alt % 1000) / 1000);
 			int y = midY - (i * 16) + offset;
 
@@ -208,36 +208,36 @@ public class Altimeter implements EventHandler {
 	}
 
 	private void drawArrows() {
-		int midX = (int) (positionX + (width / 2));
+		int midX = (int) (position_x + (width / 2));
 		graphics.setColour(Main.GREEN);
 
 		if (mouseOverTopButton()) {
 			graphics.setColour(128, 128, 128);
 		}
 
-		graphics.triangle(true, midX - 10, positionY + 10, midX, positionY + 4,
-				midX + 10, positionY + 10);
+		graphics.triangle(true, midX - 10, position_y + 10, midX, position_y + 4,
+				midX + 10, position_y + 10);
 		graphics.setColour(Main.GREEN);
 
 		if (mouseOverBottomButton()) {
 			graphics.setColour(128, 128, 128);
 		}
 
-		graphics.triangle(true, midX - 10, positionY + height - 10, midX,
-				positionY + height - 4, midX + 10, positionY + height - 10);
+		graphics.triangle(true, midX - 10, position_y + height - 10, midX,
+				position_y + height - 4, midX + 10, position_y + height - 10);
 	}
 
 	private boolean mouseOverTopButton(int mx, int my) {
-		if (!isVisible)
+		if (!is_visible)
 			return false;
 
-		if (mx < positionX || mx > positionX + width)
+		if (mx < position_x || mx > position_x + width)
 			return false;
 
-		if (my < positionY || my > positionY + height)
+		if (my < position_y || my > position_y + height)
 			return false;
 
-		return (my <= positionY + 16);
+		return (my <= position_y + 16);
 	}
 
 	private boolean mouseOverTopButton() {
@@ -245,16 +245,16 @@ public class Altimeter implements EventHandler {
 	}
 
 	private boolean mouseOverBottomButton(int mx, int my) {
-		if (!isVisible)
+		if (!is_visible)
 			return false;
 
-		if (mx < positionX || mx > positionX + width)
+		if (mx < position_x || mx > position_x + width)
 			return false;
 
-		if (my < positionY || my > positionY + height)
+		if (my < position_y || my > position_y + height)
 			return false;
 
-		return (my >= positionY + height - 16);
+		return (my >= position_y + height - 16);
 	}
 
 	private boolean mouseOverBottomButton() {
