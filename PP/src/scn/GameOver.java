@@ -64,15 +64,15 @@ public class GameOver extends Scene {
 		this.score = score;
 		crashedPlane1 = plane1;
 		crashedPlane2 = plane2;
-		crash = new Vector(plane1.position().x(), plane1.position().y(), 0);
+		crash = new Vector(plane1.getPosition().x(), plane1.getPosition().y(), 0);
 
 		int framesAcross = 8;
 		int framesDown = 4;
 
 		explosion = graphics.newImage("gfx" + File.separator
 				+ "explosionFrames.png");
-		Vector midPoint = crashedPlane1.position()
-				.add(crashedPlane2.position()).scaleBy(0.5);
+		Vector midPoint = crashedPlane1.getPosition()
+				.add(crashedPlane2.getPosition()).scaleBy(0.5);
 		Vector explosionPos = midPoint
 				.sub(new Vector(explosion.width() / (framesAcross * 2),
 						explosion.height() / (framesDown * 2), 0));
@@ -184,8 +184,8 @@ public class GameOver extends Scene {
 	 */
 	public void draw() {
 		graphics.setColour(Main.GREEN);
-		graphics.printCentred(crashedPlane1.name() + " crashed into "
-				+ crashedPlane2.name() + ".", 0, 32, 2, window.width());
+		graphics.printCentred(crashedPlane1.getName() + " crashed into "
+				+ crashedPlane2.getName() + ".", 0, 32, 2, window.width());
 
 		graphics.setColour(Main.GREEN);
 		graphics.printCentred("You managed to earn " + this.score
@@ -200,7 +200,7 @@ public class GameOver extends Scene {
 
 			crashedPlane1.draw();
 			crashedPlane2.draw();
-			Vector midPoint = crash.add(crashedPlane2.position()).scaleBy(0.5);
+			Vector midPoint = crash.add(crashedPlane2.getPosition()).scaleBy(0.5);
 			double radius = 20;
 			graphics.setColour(128, 0, 0);
 			graphics.circle(false, midPoint.x(), midPoint.y(), radius);

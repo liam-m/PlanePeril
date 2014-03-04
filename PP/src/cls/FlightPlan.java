@@ -4,10 +4,11 @@ import java.util.ArrayList;
 
 import cls.Waypoint.WaypointType;
 
-public class FlightPlan {
-	
+public class FlightPlan {	
 	private Waypoint origin;
-	private Waypoint destination;
+	private final Waypoint destination;
+
+	private final Waypoint[] route;
 	
 	private Waypoint[] waypoints;
 	private ArrayList<HoldingWaypoint> holdingWaypoints;
@@ -24,12 +25,21 @@ public class FlightPlan {
 	 * @param holdingWaypoints
 	 *            The holding waypoints used for circling
 	 */
-	public FlightPlan(Waypoint origin, Waypoint destination,
-			Waypoint[] waypoints, ArrayList<HoldingWaypoint> holdingWaypoints) {
+	public FlightPlan(Waypoint origin, Waypoint destination, Waypoint[] waypoints, ArrayList<HoldingWaypoint> holdingWaypoints, Waypoint takeoff_waypoint) {
 		this.origin = origin;
 		this.destination = destination;
 		this.waypoints = waypoints;
 		this.holdingWaypoints = holdingWaypoints;
+		this.route = this.generateGreedyRoute();
+		
+		// If origin is airport, use the takeoff waypoint as the first one
+		if (this.getOrigin() instanceof Airport) {
+			route[0] = takeoff_waypoint;
+		}
+	}
+	
+	public Waypoint[] getRoute() {
+		return route;
 	}
 
 	/**
@@ -58,7 +68,7 @@ public class FlightPlan {
 		Waypoint currentPos = origin;
 
 		// to track the closest next waypoint
-		double cost = 99999999999999.0;
+		double cost = Double.MAX_VALUE;
 		Waypoint cheapest = null;
 
 		// to track if the route is complete
@@ -84,24 +94,18 @@ public class FlightPlan {
 				// do not consider offscreen waypoints which are not the
 				// destination
 				// also skip if flagged as a previously selected waypoint
-				if (skip == true
-						|| point.position().equals(currentPos.position())
-						|| point.position().equals(origin.position())
-						|| (point.getType() == WaypointType.ENTRY_EXIT && (point
-								.position().equals(destination.position()) == false))) {
+				if (skip == true || point.position().equals(currentPos.position()) || 
+						point.position().equals(origin.position()) || 
+						(point.getType() == WaypointType.ENTRY_EXIT && (point.position().equals(destination.position()) == false))) {
 					skip = false; // reset flag
 					continue;
-
 				} else {
-
 					// get cost of visiting waypoint compare cost vs current
 					// cheapest if smaller, replace
-					if (point.getCost(currentPos) + 0.5
-							* Waypoint.getCostBetween(point, destination) < cost) {
+					if (point.getCost(currentPos) + 0.5 * Waypoint.getCostBetween(point, destination) < cost) {
 						// cheaper route found, update
 						cheapest = point;
-						cost = point.getCost(currentPos) + 0.5
-								* Waypoint.getCostBetween(point, destination);
+						cost = point.getCost(currentPos) + 0.5 * Waypoint.getCostBetween(point, destination);
 					}
 				}
 
@@ -124,7 +128,7 @@ public class FlightPlan {
 			currentPos = cheapest;
 
 			// resaturate cost for next loop
-			cost = 99999999999.0;
+			cost = Double.MAX_VALUE;
 
 		} // end while
 
@@ -139,8 +143,7 @@ public class FlightPlan {
 				}
 			}
 
-			selectedWaypoints.add(selectedWaypoints.size() - 1,
-					nearestHoldingWaypoint);
+			selectedWaypoints.add(selectedWaypoints.size() - 1, nearestHoldingWaypoint);
 		}
 
 		// create a Waypoint[] to hold the new route

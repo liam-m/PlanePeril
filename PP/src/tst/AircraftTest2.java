@@ -106,9 +106,9 @@ public class AircraftTest2 {
 		aircraftInAirspace = new ArrayList<Aircraft>();
 
 		testAircraft = new Aircraft("testAircraft", null, 10,
-				Demo.DIFFICULTY_HARD, takeoffWaypoint, aircraftInAirspace,
+				Demo.DIFFICULTY_HARD, aircraftInAirspace,
 				new FlightPlan(locationWaypoints[0], locationWaypoints[1],
-						airspaceWaypoints, holdingWaypoints));
+						airspaceWaypoints, holdingWaypoints, takeoffWaypoint));
 	}
 
 	@After
@@ -122,51 +122,51 @@ public class AircraftTest2 {
 
 	@Test
 	public void testPosition() {
-		assertEquals(testAircraft.position().x(), locationWaypoints[0]
+		assertEquals(testAircraft.getPosition().x(), locationWaypoints[0]
 				.position().x(), 0);
-		assertEquals(testAircraft.position().y(), locationWaypoints[0]
+		assertEquals(testAircraft.getPosition().y(), locationWaypoints[0]
 				.position().y(), 0);
 	}
 
 	@Test
 	public void testName() {
 
-		assertTrue(testAircraft.name().equals("testAircraft"));
+		assertTrue(testAircraft.getName().equals("testAircraft"));
 	}
 
 	@Test
 	public void testOriginName() {
-		assertTrue(testAircraft.originName().equals("Entry"));
+		assertTrue(testAircraft.getFlightPlan().getOriginName().equals("Entry"));
 	}
 
 	@Test
 	public void testDestinationName() {
-		assertTrue(testAircraft.destinationName().equals("Exit"));
+		assertTrue(testAircraft.getFlightPlan().getDestinationName().equals("Exit"));
 	}
 
 	@Test
 	public void testIsFinished() {
-		assertFalse(testAircraft.isFinished());
+		assertFalse(testAircraft.hasFinished());
 
 		Aircraft testAircraft2 = new Aircraft("testAircraft", null, 10,
-				Demo.DIFFICULTY_HARD, takeoffWaypoint, aircraftInAirspace,
+				Demo.DIFFICULTY_HARD, aircraftInAirspace,
 				new FlightPlan(locationWaypoints[0], locationWaypoints[1],
-						airspaceWaypoints, holdingWaypoints));
+						airspaceWaypoints, holdingWaypoints, takeoffWaypoint));
 
 		ArrayList<Aircraft> testAircrafts = new ArrayList<Aircraft>();
 		testAircrafts.add(testAircraft);
 		testAircrafts.add(testAircraft2);
 
-		testAircraft2.setAltitude((int) testAircraft.position().z());
+		testAircraft2.setAltitude((int) testAircraft.getPosition().z());
 
 		testAircraft.updateCollisions(1, testAircrafts);
 
-		assertTrue(testAircraft.isFinished());
+		assertTrue(testAircraft.hasFinished());
 	}
 
 	@Test
 	public void testAtAirport() {
-		assertFalse(testAircraft.atAirport());
+		assertFalse(testAircraft.isAtAirport());
 
 		// need another test. put aircraft into airport, test if this returns
 		// true.
@@ -198,12 +198,12 @@ public class AircraftTest2 {
 			testAircraft.update(0.3);
 		}
 
-		assertTrue(testAircraft.outOfBounds());
+		assertTrue(testAircraft.isOutOfBounds());
 	}
 
 	@Test
 	public void testSpeed() {
-		assertEquals(testAircraft.speed(), 30.0, 0.1);
+		assertEquals(testAircraft.getSpeed(), 30.0, 0.1);
 	}
 
 	@Test
@@ -226,16 +226,16 @@ public class AircraftTest2 {
 
 	@Test
 	public void testFlightPathContains() {
-		assertEquals(testAircraft.flightPathContains(airspaceWaypoints[0]), 0,
+		assertEquals(testAircraft.indexInFlightPath(airspaceWaypoints[0]), 0,
 				0);
 
-		assertEquals(testAircraft.flightPathContains(airspaceWaypoints[1]), 0,
+		assertEquals(testAircraft.indexInFlightPath(airspaceWaypoints[1]), 0,
 				1);
 
-		assertEquals(testAircraft.flightPathContains(locationWaypoints[1]), 2,
+		assertEquals(testAircraft.indexInFlightPath(locationWaypoints[1]), 2,
 				0);
 
-		assertEquals(testAircraft.flightPathContains(airspaceWaypoints[4]), -1,
+		assertEquals(testAircraft.indexInFlightPath(airspaceWaypoints[4]), -1,
 				0);
 	}
 
@@ -244,7 +244,7 @@ public class AircraftTest2 {
 
 		testAircraft.alterPath(1, airspaceWaypoints[2]);
 
-		assertEquals(testAircraft.flightPathContains(airspaceWaypoints[2]), 0,
+		assertEquals(testAircraft.indexInFlightPath(airspaceWaypoints[2]), 0,
 				1);
 
 	}
@@ -252,19 +252,19 @@ public class AircraftTest2 {
 	@Test
 	public void testUpdateCollisions() {
 		Aircraft testAircraft2 = new Aircraft("testAircraft", null, 10,
-				Demo.DIFFICULTY_HARD, takeoffWaypoint, aircraftInAirspace,
+				Demo.DIFFICULTY_HARD, aircraftInAirspace,
 				new FlightPlan(locationWaypoints[0], locationWaypoints[1],
-						airspaceWaypoints, holdingWaypoints));
+						airspaceWaypoints, holdingWaypoints, takeoffWaypoint));
 
 		ArrayList<Aircraft> testAircrafts = new ArrayList<Aircraft>();
 		testAircrafts.add(testAircraft);
 		testAircrafts.add(testAircraft2);
 
-		testAircraft2.setAltitude((int) testAircraft.position().z());
+		testAircraft2.setAltitude((int) testAircraft.getPosition().z());
 
 		testAircraft.updateCollisions(1, testAircrafts);
 
-		assertTrue(testAircraft.isFinished());
+		assertTrue(testAircraft.hasFinished());
 	}
 
 	@Test
@@ -301,86 +301,86 @@ public class AircraftTest2 {
 
 	@Test
 	public void testClimb() {
-		double currentAltitude = testAircraft.position().z();
+		double currentAltitude = testAircraft.getPosition().z();
 
 		if (currentAltitude == 15000.0) {
 			testAircraft.decreaseTargetAltitude();
 			testAircraft.update(0.6);
-			currentAltitude = testAircraft.position().z();
+			currentAltitude = testAircraft.getPosition().z();
 		}
 
 		testAircraft.increaseTargetAltitude();
 		testAircraft.update(0.3);
 
-		assertTrue(testAircraft.position().z() > currentAltitude);
+		assertTrue(testAircraft.getPosition().z() > currentAltitude);
 	}
 
 	@Test
 	public void testFall() {
-		double currentAltitude = testAircraft.position().z();
+		double currentAltitude = testAircraft.getPosition().z();
 
 		if (currentAltitude == 5000.0) {
 			testAircraft.increaseTargetAltitude();
 			testAircraft.update(0.6);
-			currentAltitude = testAircraft.position().z();
+			currentAltitude = testAircraft.getPosition().z();
 		}
 
 		testAircraft.decreaseTargetAltitude();
 		testAircraft.update(0.3);
 
-		assertTrue(testAircraft.position().z() < currentAltitude);
+		assertTrue(testAircraft.getPosition().z() < currentAltitude);
 	}
 
 	@Test
 	public void testDecreaseTargetAltitude() {
-		double currentAltitude = testAircraft.position().z();
+		double currentAltitude = testAircraft.getPosition().z();
 
 		if (currentAltitude == 5000.0) {
 			testAircraft.increaseTargetAltitude();
 			testAircraft.update(0.6);
-			currentAltitude = testAircraft.position().z();
+			currentAltitude = testAircraft.getPosition().z();
 		}
 
 		testAircraft.decreaseTargetAltitude();
 		testAircraft.update(0.3);
 
-		assertTrue(testAircraft.position().z() < currentAltitude);
+		assertTrue(testAircraft.getPosition().z() < currentAltitude);
 	}
 
 	@Test
 	public void testIncreaseTargetAltitude() {
-		double currentAltitude = testAircraft.position().z();
+		double currentAltitude = testAircraft.getPosition().z();
 
 		if (currentAltitude == 15000.0) {
 			testAircraft.decreaseTargetAltitude();
 			testAircraft.update(0.6);
-			currentAltitude = testAircraft.position().z();
+			currentAltitude = testAircraft.getPosition().z();
 		}
 
 		testAircraft.increaseTargetAltitude();
 		testAircraft.update(0.3);
 
-		assertTrue(testAircraft.position().z() > currentAltitude);
+		assertTrue(testAircraft.getPosition().z() > currentAltitude);
 	}
 
 	@Test
 	public void testSetAltitude() {
 		testAircraft.setAltitude(5000);
-		assertEquals(testAircraft.position().z(), 5000, 0);
+		assertEquals(testAircraft.getPosition().z(), 5000, 0);
 
 		testAircraft.setAltitude(10000);
-		assertEquals(testAircraft.position().z(), 10000, 0);
+		assertEquals(testAircraft.getPosition().z(), 10000, 0);
 
 	}
 
 	@Test
 	public void testGetPoints() {
-		assertEquals(testAircraft.getPoints(), 20, 0);
+		assertEquals(testAircraft.getNumPoints(), 20, 0);
 	}
 
 	@Test
 	public void testGetDestination() {
-		assertTrue(testAircraft.getDestination().equals(locationWaypoints[1]));
+		assertTrue(testAircraft.getFlightPlan().getDestination().equals(locationWaypoints[1]));
 	}
 
 }

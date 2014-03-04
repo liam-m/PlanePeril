@@ -381,17 +381,17 @@ public class Demo extends Scene {
 			}
 
 			// if aircraft landed
-			if (plane.atAirport()) {
-				ordersBox.addOrder("<<< Aircraft " + plane.name()
+			if (plane.isAtAirport()) {
+				ordersBox.addOrder("<<< Aircraft " + plane.getName()
 						+ " has landed safely at Aerodromio Medved'");
 			}
 			// if aircraft has completed it's journey correctly
-			if (plane.isFinished()) {
+			if (plane.hasFinished()) {
 				// add points held by aircraft to score, take no action if the
 				// points are in negatives.
-				if (plane.getPoints() <= 0) {
+				if (plane.getNumPoints() <= 0) {
 				} else {
-					score += plane.getPoints();
+					score += plane.getNumPoints();
 				}
 				switch (RandomNumber.randInclusiveInt(0, 2)) {
 				case 0:
@@ -411,7 +411,7 @@ public class Demo extends Scene {
 
 		for (int i = aircraftInAirspace.size() - 1; i >= 0; i--) {
 
-			if (aircraftInAirspace.get(i).isFinished()) {
+			if (aircraftInAirspace.get(i).hasFinished()) {
 
 				if (aircraftInAirspace.get(i) == selectedAircraft) {
 					deselectAircraft();
@@ -444,10 +444,10 @@ public class Demo extends Scene {
 					: Texts.TAKE_CONTROL);
 			// Check if the aircraft is out of bounds. If true, remove aircraft
 			// from play.
-			if (selectedAircraft.outOfBounds()) {
+			if (selectedAircraft.isOutOfBounds()) {
 				ordersBox
 						.addOrder(">>> "
-								+ selectedAircraft.name()
+								+ selectedAircraft.getName()
 								+ " is out of bounds, contact lost. Do better Comrade.");
 				aircraftInAirspace.remove(selectedAircraft);
 				deselectAircraft();
@@ -529,19 +529,19 @@ public class Demo extends Scene {
 
 				for (Waypoint w : airspaceWaypoints) {
 					if (w.isMouseOver(x - 16, y - 16)
-							&& selectedAircraft.flightPathContains(w) > -1) {
+							&& selectedAircraft.indexInFlightPath(w) > -1) {
 						selectedWaypoint = w;
 						selectedPathpoint = selectedAircraft
-								.flightPathContains(w);
+								.indexInFlightPath(w);
 					}
 				}
 
 				if (selectedWaypoint == null
 						&& selectedAircraft.isManuallyControlled()) {
 					// If mouse is over compass
-					double dx = selectedAircraft.position().x()
+					double dx = selectedAircraft.getPosition().x()
 							- input.mouseX();
-					double dy = selectedAircraft.position().y()
+					double dy = selectedAircraft.getPosition().y()
 							- input.mouseY();
 					int r = Aircraft.COMPASS_RADIUS;
 					if (dx * dx + dy * dy < r * r) {
@@ -592,7 +592,7 @@ public class Demo extends Scene {
 
 					if (w.isMouseOver(x - 16, y - 16)) {
 						selectedAircraft.alterPath(selectedPathpoint, w);
-						ordersBox.addOrder(">>> " + selectedAircraft.name()
+						ordersBox.addOrder(">>> " + selectedAircraft.getName()
 								+ " please alter your course");
 						ordersBox
 								.addOrder("<<< Roger that. Altering course now.");
@@ -609,8 +609,8 @@ public class Demo extends Scene {
 		altimeter.mouseReleased(key, x, y);
 
 		if (compassDragged && selectedAircraft != null) {
-			double dx = input.mouseX() - selectedAircraft.position().x();
-			double dy = input.mouseY() - selectedAircraft.position().y();
+			double dx = input.mouseX() - selectedAircraft.getPosition().x();
+			double dy = input.mouseY() - selectedAircraft.getPosition().y();
 			double newHeading = Math.atan2(dy, dx);
 
 			selectedAircraft.setBearing(newHeading);
@@ -737,7 +737,7 @@ public class Demo extends Scene {
 
 			// if aircraft is flying towards the airport (i.e. it's its
 			// destination point, draw the land button)
-			if (selectedAircraft.getDestination() instanceof Airport) {
+			if (selectedAircraft.getFlightPlan().getDestination() instanceof Airport) {
 				// Land Button with valid altitude
 				graphics.setColour(0, 0, 0);
 				graphics.rectangle(true, (window.width() - 500) / 2, 16, 128,
@@ -787,11 +787,11 @@ public class Demo extends Scene {
 
 			graphics.setViewport(PLANE_INFO_X, PLANE_INFO_Y, PLANE_INFO_W,
 					PLANE_INFO_H);
-			graphics.printCentred(selectedAircraft.name(), 0, 5, 2,
+			graphics.printCentred(selectedAircraft.getName(), 0, 5, 2,
 					PLANE_INFO_W);
 
 			// Altitude
-			String altitude = String.format("%.0f", selectedAircraft.position()
+			String altitude = String.format("%.0f", selectedAircraft.getPosition()
 					.z())
 					+ "£";
 			graphics.print("Altitude:", 10, 40);
@@ -800,19 +800,17 @@ public class Demo extends Scene {
 
 			// Speed
 			String speed = String.format("%.2f",
-					selectedAircraft.speed() * 1.687810) + "$";
+					selectedAircraft.getSpeed() * 1.687810) + "$";
 			graphics.print("Speed:", 10, 55);
 			graphics.print(speed, PLANE_INFO_W - 10 - speed.length() * 8, 55);
 
 			// Origin
 			graphics.print("Origin:", 10, 70);
-			graphics.print(selectedAircraft.originName(), PLANE_INFO_W - 10
-					- selectedAircraft.originName().length() * 8, 70);
+			graphics.print(selectedAircraft.getFlightPlan().getOriginName(), PLANE_INFO_W - 10 - selectedAircraft.getFlightPlan().getOriginName().length() * 8, 70);
 
 			// Destination
 			graphics.print("Destination:", 10, 85);
-			graphics.print(selectedAircraft.destinationName(), PLANE_INFO_W
-					- 10 - selectedAircraft.destinationName().length() * 8, 85);
+			graphics.print(selectedAircraft.getFlightPlan().getDestinationName(), PLANE_INFO_W - 10 - selectedAircraft.getFlightPlan().getDestinationName().length() * 8, 85);
 			graphics.setViewport();
 		}
 	}
@@ -875,9 +873,8 @@ public class Demo extends Scene {
 			a.increaseTargetAltitude();
 		}
 
-		ordersBox.addOrder("<<< " + a.name() + " incoming from "
-				+ a.originName() + " heading towards " + a.destinationName()
-				+ ".");
+		ordersBox.addOrder("<<< " + a.getName() + " incoming from " + a.getFlightPlan().getOriginName() + " heading towards " 
+				+ a.getFlightPlan().getDestinationName() + ".");
 
 		aircraftInAirspace.add(a);
 	}
@@ -908,15 +905,15 @@ public class Demo extends Scene {
 			name = "Flight " + (int) (900 * Math.random() + 100);
 			nameTaken = false;
 			for (Aircraft a : aircraftInAirspace) {
-				if (a.name() == name)
+				if (a.getName() == name)
 					nameTaken = true;
 			}
 		}
 
 		return new Aircraft(name, aircraftImage,
-				32 + (int) (10 * Math.random()), difficulty, takeoffWaypoint,
+				32 + (int) (10 * Math.random()), difficulty,
 				aircraftInAirspace, new FlightPlan(originPoint,
-						destinationPoint, airspaceWaypoints, holdingWaypoints));
+						destinationPoint, airspaceWaypoints, holdingWaypoints, takeoffWaypoint));
 	}
 
 	@Override

@@ -11,259 +11,145 @@ import lib.jog.graphics.Image;
 import lib.jog.input;
 import lib.jog.window;
 
-import org.newdawn.slick.Color;
-
 import pp.Main;
 
 import scn.Demo;
 
 /**
  * <h1>Aircraft</h1>
- * <p>
- * Represents an in-game aircraft. Calculates velocity, route-following, etc.
- * </p>
+ * <p>Represents an in-game aircraft. Calculates velocity, route-following, etc.</p>
  */
 public class Aircraft {
+	public final static int RADIUS = 16; // The physical size of the plane in pixels. This determines crashes.
+	public final static int MOUSE_LENIANCY = 16; // How far away (in pixels) the mouse can be from the plane but still select it
+	public final static int COMPASS_RADIUS = 64; // How large to draw the bearing circle.
 
-	/**
-	 * The physical size of the plane in pixels. This determines crashes.
-	 */
-	public final static int RADIUS = 16;
-
-	/**
-	 * How far away (in pixels) the mouse can be from the plane but still
-	 * selectit.
-	 */
-	public final static int MOUSE_LENIANCY = 16;
-
-	/**
-	 * How large to draw the bearing circle.
-	 */
-	public final static int COMPASS_RADIUS = 64;
-
-	/**
-	 * How far (in pixels) planes have to be away to not cause a separation
-	 * violation.
-	 */
-	public int separationRule = 64;
-
-	// Text to show above the aircraft
-	private final class Texts {
+	private final class Texts { // Text to show above the aircraft
 		public final static String LAND_ME = "Land me!";
 		public final static String LANDING = "Landing";
 	}
+	private String infoText = Texts.LAND_ME; // Which info text to display now, from Aircraft.Texts
+	
+	private boolean collision_warning_sound_flag = false; // Flags whether the collision warning sound has been played before. If set, plane will not play warning again until it the separation violation involving it ends
+	private final static Sound WARNING_SOUND = audio.newSoundEffect("sfx" + File.separator + "beep.ogg"); // A warning sound to be played when the plane enters separation violation.
+	private boolean was_breaching_in_last_frame = false;
+	
+	public int minimum_separation_distance;
+	private int num_points; // The number of points (score) an aircraft enters the airspace with.
+	private final static float LANDING_SPEED = 0.6f; // Scalar for the velocity which is imposed upon landing	
 
-	// Scalar for the velocity which is imposed upon landing
-	private final static float LANDING_SPEED = 0.6f;
+	private double turning_speed = Math.PI / 4; // How much the plane can turn per second, in radians.
+	private int altitude_change_speed = 300; // the speed to climb or fall by. Default 300 for easy mode
+	private final String name; // An array of waypoints from the plane's origin to its destination.
+	private final Image image; // The image to be drawn representing the plane.
 
-	// How much the plane can turn per second, in radians.
-	private double turnSpeed = Math.PI / 4;
+	private FlightPlan flight_plan;
+	private int current_route_stage; // The current stage the plane is at in its flight_plan.getRoute().
 
-	// aircraft position and velocity
-	private Vector position;
-	private Vector velocity;
+	private Vector position, velocity;
+	private boolean is_manually_controlled, is_landing;
+	private boolean has_finished; // Whether the plane has reached its destination and can be disposed of.
+	private Waypoint current_target; // The position the plane is currently flying towards
+	private double manual_bearing_target; // The target the player has told the plane to fly at when manually controlled.
+	private double current_turning_angle; // The angle the plane is currently turning by.
+	private boolean is_at_airport = false; // Whether this aircraft is currently in the airport
 
-	// Whether the plane is being manually controlled.
-	private boolean isManuallyControlled;
+	private final ArrayList<Aircraft> planes_too_near = new ArrayList<Aircraft>(); // List of planes currently in violation of separation rules with this plane
 
-	// Whether the plane is landing.
-	private boolean isLanding;
-
-	private final String flightName;
-
-	// The position the plane is currently flying towards
-	private Waypoint currentTarget;
-
-	// The target the player has told the plane to fly at when manually
-	// controlled.
-	private double manualBearingTarget;
-
-	// The name of the location the plane is flying from.
-	private final String originName;
-
-	// The name of the location the plane is flying to.
-	private final String destinationName;
-
-	// An array of waypoints from the plane's origin to its destination.
-	private final Waypoint[] route;
-
-	// The current stage the plane is at in its route.
-	private int currentRouteStage;
-
-	// The off-screen point the plane will end up at before disappearing.
-	private final Waypoint destination;
-
-	// The image to be drawn representing the plane.
-	private final Image image;
-
-	// Whether the plane has reached its destination and can be disposed of.
-	private boolean hasFinished;
-
-	// The angle the plane is currently turning by.
-	private double currentlyTurningBy;
-
-	// Holds a list of planes currently in violation of separation rules with
-	// this plane
-	private final ArrayList<Aircraft> planesTooNear = new ArrayList<Aircraft>();
-
-	// Index of altidudeList for the value of the Altidude the aircraft desires
-	// to be at.
-	private int targetAltitudeIndex;
-
-	// A list holding the list of possible altitudes for the aircraft.
-	private ArrayList<Integer> altitudeList = new ArrayList<Integer>();
-
-	// the speed to climb or fall by. Default 300 for easy mode
-	private int altitudeChangeSpeed = 300;
-
-	// Whether this aircraft is currently in the airport
-	private boolean atAirport = false;
-
-	// Which info text to display now, from Aircraft.Texts
-	private String infoText = Texts.LAND_ME;
-
-	// Flags whether the collision warning sound has been played before. If set,
-	// plane will not play warning again until it the separation violation
-	// involving it ends
-	private boolean collisionWarningSoundFlag = false;
-
-	// A warning sound to be played when the plane enters separation violation.
-	private final static Sound WARNING_SOUND = audio.newSoundEffect("sfx"
-			+ File.separator + "beep.ogg");
-
-	// The number of points an aircraft enters the airspace with.
-	private int points;
-
-	private boolean wasBreachingInLastFrame = false;
+	private int target_altitude_index; // Index of altidudeList for the value of the Altidude the aircraft desires to be at.
+	private ArrayList<Integer> altitude_list = new ArrayList<Integer>(); // A list holding the list of possible altitudes for the aircraft.
 
 	/**
 	 * Constructor for an aircraft.
 	 * 
-	 * @param name
-	 *            the name of the flight.
-	 * @param img
-	 *            the image to draw to represent the plane.
-	 * @param speed
-	 *            the speed the plane will travel at.
-	 * @param difficulty
-	 *            difficulty of the game, changes speed of aircraft and starting
+	 * @param name The name of the flight.
+	 * @param img The image to draw to represent the plane.
+	 * @param speed The speed the plane will travel at.
+	 * @param difficulty Difficulty of the game, changes speed of aircraft and starting
 	 *            points for each aircraft
-	 * @param takeoffWaypoint
-	 *            so the the first waypoint is overwritten if the origin is the
-	 *            waypoint
-	 * @param aircraftList
-	 *            all aircrafts in the the screen, used to detect collisions and
+	 * @param aircraft_list All aircrafts in the the screen, used to detect collisions and
 	 *            make sure this aircraft doesn't spawn in the same altitude as
 	 *            another one nearby
-	 * @param flightplan
-	 *            the flightplan, has the destination, origin and used to
+	 * @param flight_plan The flightplan, has the destination, origin and used to
 	 *            generate the actual route
 	 */
 	public Aircraft(String name, Image img, double speed, int difficulty,
-			Waypoint takeoffWaypoint, ArrayList<Aircraft> aircraftList,
-			FlightPlan flightplan) {
-		flightName = name;
-		destinationName = flightplan.getDestinationName();
-		originName = flightplan.getOriginName();
-		image = img;
+			ArrayList<Aircraft> aircraft_list, FlightPlan flight_plan) {
+		this.name = name;
+		this.flight_plan = flight_plan;
+		this.image = img;
 
-		// Find route
-		route = flightplan.generateGreedyRoute();
-		destination = flightplan.getDestination();
+		this.position = flight_plan.getOrigin().position(); // Place on spawn waypoint
 
-		// place on spawn waypoint
-		position = flightplan.getOrigin().position();
+		// Add list of aircraft cruising heights. First entry only used when aircraft is landing/taking off.
+		altitude_list.add(100);
+		altitude_list.add(5000);
+		altitude_list.add(10000);
+		altitude_list.add(15000);
 
-		// Add list of aircraft cruising heights. First entry only used when
-		// aircraft is landing/taking off.
-		altitudeList.add(100);
-		altitudeList.add(5000);
-		altitudeList.add(10000);
-		altitudeList.add(15000);
+		this.target_altitude_index = RandomNumber.randInclusiveInt(1, altitude_list.size() - 1);
 
-		targetAltitudeIndex = RandomNumber.randInclusiveInt(1,
-				altitudeList.size() - 1);
-
-		int altitude = altitudeList.get(targetAltitudeIndex);
+		int altitude = altitude_list.get(target_altitude_index);
 
 		// Checking that if an aircraft is near the waypoint that the new
 		// aircraft is to be spawned at and has the same altitude, the new
 		// aircraft must choose a different altitude.
-		for (Aircraft aircraft : aircraftList) {
-			if (flightplan.getOrigin().position()
-					.sub(aircraft.position()).magnitude() < 200
-					&& altitude == aircraft.position.z()) {
+		for (Aircraft aircraft : aircraft_list) {
+			if (flight_plan.getOrigin().position().sub(aircraft.getPosition()).magnitude() < 200 &&
+					altitude == aircraft.position.z()) {
+				int newTargetAltitudeIndex = target_altitude_index;
 
-				int newTargetAltitudeIndex = targetAltitudeIndex;
-
-				while (newTargetAltitudeIndex == targetAltitudeIndex) {
-					newTargetAltitudeIndex = RandomNumber.randInclusiveInt(1,
-							altitudeList.size() - 1);
-
-					altitude = altitudeList.get(newTargetAltitudeIndex);
+				while (newTargetAltitudeIndex == target_altitude_index) {
+					newTargetAltitudeIndex = RandomNumber.randInclusiveInt(1, altitude_list.size() - 1);
+					altitude = altitude_list.get(newTargetAltitudeIndex);
 				}
-				targetAltitudeIndex = newTargetAltitudeIndex;
+				target_altitude_index = newTargetAltitudeIndex;
 			}
 		}
 
-		position = position.add(new Vector(0, 0, altitude));
+		this.position = position.add(new Vector(0, 0, altitude));
 
-		// if origin is airport, use the takeoff waypoint as the first one
-		if (flightplan.getOrigin() instanceof Airport) {
-			route[0] = takeoffWaypoint;
-		}
+		this.current_target = flight_plan.getRoute()[0]; // Calculate initial velocity (direction)
 
-		// Calculate initial velocity (direction)
-		currentTarget = route[0];
+		double x = current_target.position().x() - position.x();
+		double y = current_target.position().y() - position.y();
 
-		double x = currentTarget.position().x() - position.x();
-		double y = currentTarget.position().y() - position.y();
-
-		velocity = new Vector(x, y, 0).normalise().scaleBy(speed);
-		isLanding = false;
-		isManuallyControlled = false;
-		hasFinished = false;
-		currentRouteStage = 0;
-		currentlyTurningBy = 0;
-		manualBearingTarget = Double.NaN;
+		this.velocity = new Vector(x, y, 0).normalise().scaleBy(speed);
+		this.is_landing = false;
+		this.is_manually_controlled = false;
+		this.has_finished = false;
+		this.current_route_stage = 0;
+		this.current_turning_angle = 0;
+		this.manual_bearing_target = Double.NaN;
 
 		// Speed up plane for higher difficulties
 		switch (difficulty) {
-		// adjust the aircraft's attributes according to the difficulty of the
-		// parent scene.
-		// 0 has the easiest attributes (slower aircraft, more forgiving
-		// separation rules.
-		// 2 has the hardest attributes (faster aircraft, least forgiving
-		// separation rules.
-		case Demo.DIFFICULTY_EASY:
-			separationRule = 128;
-			velocity = velocity.scaleBy(1.0);
-			altitudeChangeSpeed = 800;
-			points = 10;
-			break;
-
-		case Demo.DIFFICULTY_MEDIUM:
-			separationRule = 128;
-			velocity = velocity.scaleBy(2);
-			turnSpeed = Math.PI / 3;
-			altitudeChangeSpeed = 600;
-			points = 15;
-			break;
-
-		case Demo.DIFFICULTY_HARD:
-			separationRule = 128;
-			velocity = velocity.scaleBy(3);
-			// At high velocities, the aircraft is allowed to turn faster
-			// this helps keep the aircraft on track.
-			turnSpeed = Math.PI / 2;
-			altitudeChangeSpeed = 400;
-			points = 20;
-			break;
-
-		default:
-			Exception e = new Exception("Invalid Difficulty : " + difficulty
-					+ ".");
-			e.printStackTrace();
+			case Demo.DIFFICULTY_EASY:
+				this.minimum_separation_distance = 128;
+				this.velocity = velocity.scaleBy(1.0);
+				this.altitude_change_speed = 800;
+				this.num_points = 10;
+				break;
+	
+			case Demo.DIFFICULTY_MEDIUM:
+				this.minimum_separation_distance = 128;
+				this.velocity = velocity.scaleBy(2);
+				this.turning_speed = Math.PI / 3;
+				this.altitude_change_speed = 600;
+				this.num_points = 15;
+				break;
+	
+			case Demo.DIFFICULTY_HARD:
+				this.minimum_separation_distance = 128;
+				this.velocity = velocity.scaleBy(3);
+				this.turning_speed = Math.PI / 2; // At high velocities, the aircraft is allowed to turn faster - this helps keep the aircraft on track.
+				this.altitude_change_speed = 400;
+				this.num_points = 20;
+				break;
+	
+			default:
+				Exception e = new Exception("Invalid Difficulty : " + difficulty + ".");
+				e.printStackTrace();
 		}
 	}
 
@@ -272,7 +158,7 @@ public class Aircraft {
 	 * 
 	 * @return the plane's current position.
 	 */
-	public Vector position() {
+	public Vector getPosition() {
 		return position;
 	}
 
@@ -281,26 +167,8 @@ public class Aircraft {
 	 * 
 	 * @return the plane's name.
 	 */
-	public String name() {
-		return flightName;
-	}
-
-	/**
-	 * Allows access to the name of the location from which this plane hails.
-	 * 
-	 * @return the origin's name.
-	 */
-	public String originName() {
-		return originName;
-	}
-
-	/**
-	 * Allows access to the name of the location to which this plane travels.
-	 * 
-	 * @return the destination's name.
-	 */
-	public String destinationName() {
-		return destinationName;
+	public String getName() {
+		return name;
 	}
 
 	/**
@@ -308,8 +176,8 @@ public class Aircraft {
 	 * 
 	 * @return true, if the plane is to be disposed. False, otherwise.
 	 */
-	public boolean isFinished() {
-		return hasFinished;
+	public boolean hasFinished() {
+		return has_finished;
 	}
 
 	/**
@@ -317,18 +185,17 @@ public class Aircraft {
 	 * 
 	 * @return whether the aircraft is at the airport
 	 */
-	public boolean atAirport() {
-		return atAirport;
+	public boolean isAtAirport() {
+		return is_at_airport;
 	}
 
 	/**
 	 * Allows access to whether the plane is being manually controlled.
 	 * 
-	 * @return true, if the plane is currently manually controlled. False,
-	 *         otherwise.
+	 * @return True, if the plane is currently manually controlled. False, otherwise.
 	 */
 	public boolean isManuallyControlled() {
-		return isManuallyControlled;
+		return is_manually_controlled;
 	}
 
 	/**
@@ -337,7 +204,7 @@ public class Aircraft {
 	 * @return
 	 */
 	public boolean isLanding() {
-		return isLanding;
+		return is_landing;
 	}
 
 	/**
@@ -346,12 +213,10 @@ public class Aircraft {
 	 * @return an angle in radians to the plane's current target.
 	 */
 	private double angleToTarget() {
-		if (isManuallyControlled) {
-			return (manualBearingTarget == Double.NaN) ? bearing()
-					: manualBearingTarget;
+		if (is_manually_controlled) {
+			return (manual_bearing_target == Double.NaN) ? getBearing() : manual_bearing_target;
 		} else {
-			return Math.atan2(currentTarget.position().y() - position.y(),
-					currentTarget.position().x() - position.x());
+			return Math.atan2(current_target.position().y() - position.y(),	current_target.position().x() - position.x());
 		}
 	}
 
@@ -360,11 +225,10 @@ public class Aircraft {
 	 * 
 	 * @return true, if the plane is out of the airspace. False, otherwise.
 	 */
-	public boolean outOfBounds() {
+	public boolean isOutOfBounds() {
 		double x = position.x();
 		double y = position.y();
-		return (x < 0 || x > window.width() - 32 || y < 0 || y > window
-				.height() - 144);
+		return (x < 0 || x > window.width() - 32 || y < 0 || y > window.height() - 144);
 	}
 
 	/**
@@ -372,7 +236,7 @@ public class Aircraft {
 	 * 
 	 * @return the angle in radians of the plane's current velocity.
 	 */
-	public double bearing() {
+	public double getBearing() {
 		return Math.atan2(velocity.y(), velocity.x());
 	}
 
@@ -381,12 +245,29 @@ public class Aircraft {
 	 * 
 	 * @return the speed at which the plane is currently going.
 	 */
-	public double speed() {
+	public double getSpeed() {
 		return velocity.magnitude();
+	}
+	
+	/**
+	 * Get how many points the aircraft has accumulated after all the breaches
+	 * 
+	 * @return points
+	 */
+	public int getNumPoints() {
+		return this.num_points;
 	}
 
 	/**
+	 * The aircraft's flight plan
 	 * 
+	 * @return Flight plan
+	 */
+	public FlightPlan getFlightPlan() {
+		return flight_plan;
+	}
+
+	/**
 	 * @param point
 	 * @return true, if the plane is near enough the point. False, otherwise.
 	 */
@@ -399,79 +280,116 @@ public class Aircraft {
 	/**
 	 * Checks whether the angle at which the plane is turning is less than 0.
 	 * 
-	 * @return true, if the plane is turning left (anti-clockwise). False,
-	 *         otherwise.
+	 * @return true, if the plane is turning left (anti-clockwise). False, otherwise.
 	 */
 	public boolean isTurningLeft() {
-		return currentlyTurningBy < 0;
+		return current_turning_angle < 0;
 	}
 
 	/**
 	 * Checks whether the angle at which the plane is turning is greater than 0.
 	 * 
-	 * @return true, if the plane is turning right (clockwise). False,
-	 *         otherwise.
+	 * @return true, if the plane is turning right (clockwise). False, otherwise.
 	 */
 	public boolean isTurningRight() {
-		return currentlyTurningBy > 0;
+		return current_turning_angle > 0;
 	}
 
 	/**
 	 * Checks the plane's route to see if a waypoint is included in it.
 	 * 
-	 * @param waypoint
-	 *            the waypoint to check for.
-	 * @return true, if the waypoint is in the plane's route. False, otherwise.
+	 * @param waypoint The waypoint to check for.
+	 * @return The index of the waypoint in the flight path. If it is not in the flight path, -1.
 	 */
-	public int flightPathContains(Waypoint waypoint) {
-		int index = -1;
-
-		for (int i = 0; i < route.length; i++) {
-			if (route[i] == waypoint)
-				index = i;
+	public int indexInFlightPath(Waypoint waypoint) {
+		for (int i = 0; i < flight_plan.getRoute().length; i++) {
+			if (flight_plan.getRoute()[i] == waypoint)
+				return i;
 		}
+		return -1;
+	}
+	
+	/**
+	 * Changes the plane's altitude by a given amount.
+	 * 
+	 * @param height The height by which to change altitude.
+	 */
+	private void changeAltitude(int height) {
+		velocity.setZ(height);
+	}
 
-		return index;
+	/**
+	 * Decrements the targetAltitudeIndex by 1.
+	 */
+	public void decreaseTargetAltitude() {
+		if (target_altitude_index > 1)
+			target_altitude_index--;
+	}
+
+	/**
+	 * Increases the target altitude by an index of 1.
+	 */
+	public void increaseTargetAltitude() {
+		if (target_altitude_index < 3)
+			target_altitude_index++;
+	}
+
+	/**
+	 * Manually set the altitude to a specific value. Used when an aircraft takes off.
+	 * 
+	 * @param altitude
+	 */
+	public void setAltitude(int altitude) {
+		position.setZ(altitude);
+	}
+	
+	/**
+	 * Changes the direction the plane is going towards.
+	 * 
+	 * @param new_heading
+	 */
+	public void setBearing(double new_heading) {
+		manual_bearing_target = new_heading;
+	}
+
+	/**
+	 * Resets the direction towards which the plane will head.
+	 */
+	private void resetBearing() {
+		if (current_route_stage < flight_plan.getRoute().length) {
+			current_target = flight_plan.getRoute()[current_route_stage];
+			turnTowardsTarget(0);
+		}
 	}
 
 	/**
 	 * Edits the plane's path by changing the waypoint it will go to at a
-	 * certain stage in its route.
+	 * certain stage in its flight_plan.getRoute().
 	 * 
-	 * @param routeStage
-	 *            the stage at which the new waypoint will replace the old.
-	 * @param newWaypoint
-	 *            the new waypoint to travel to.
+	 * @param route_stage The stage at which the new waypoint will replace the old.
+	 * @param new_waypoint The new waypoint to travel to.
 	 */
-	public void alterPath(int routeStage, Waypoint newWaypoint) {
-		if ((routeStage == route.length - 1)
-				&& (destination instanceof Airport)) {
-			return;
-		}
+	public void alterPath(int route_stage, Waypoint new_waypoint) {
+		if (route_stage != flight_plan.getRoute().length-1 || !(flight_plan.getDestination() instanceof Airport)) {
+			flight_plan.getRoute()[route_stage] = new_waypoint;
 
-		route[routeStage] = newWaypoint;
-
-		if (!isManuallyControlled)
-			resetBearing();
-
-		if (routeStage == currentRouteStage) {
-			currentTarget = newWaypoint;
+			if (!is_manually_controlled)
+				resetBearing();
+			if (route_stage == current_route_stage)
+				current_target = new_waypoint;
 		}
 	}
 
 	/**
 	 * Checks whether the mouse cursor is over this plane.
 	 * 
-	 * @param mx
-	 *            the x coordinate of the mouse cursor.
-	 * @param my
-	 *            the y coordinate of the mouse cursor.
-	 * @return true, if the mouse is close enough to this plane. False,
-	 *         otherwise.
+	 * @param mouse_x The x coordinate of the mouse cursor.
+	 * @param mouse_y The y coordinate of the mouse cursor.
+	 * @return true, if the mouse is close enough to this plane. False, otherwise.
 	 */
-	public boolean isMouseOver(int mx, int my) {
-		double dx = position.x() - mx;
-		double dy = position.y() - my;
+	public boolean isMouseOver(int mouse_x, int mouse_y) {
+		double dx = position.x() - mouse_x;
+		double dy = position.y() - mouse_y;
 
 		return dx * dx + dy * dy < MOUSE_LENIANCY * MOUSE_LENIANCY;
 	}
@@ -480,8 +398,7 @@ public class Aircraft {
 	 * Calls {@link isMouseOver()} using {@link input.mouseX()} and {@link
 	 * input.mouseY()} as the arguments.
 	 * 
-	 * @return true, if the mouse is close enough to this plane. False,
-	 *         otherwise.
+	 * @return true, if the mouse is close enough to this plane. False, otherwise.
 	 */
 	public boolean isMouseOver() {
 		return isMouseOver(input.mouseX(), input.mouseY());
@@ -491,100 +408,86 @@ public class Aircraft {
 	 * Updates the plane's position and bearing, the stage of its route, and
 	 * whether it has finished its flight.
 	 * 
-	 * @param dt
-	 * @throws IllegalStateException
-	 *             when landing an aircraft that will overflow the airport
+	 * @param time_difference
+	 * @throws IllegalStateException When landing an aircraft that will overflow the airport
 	 */
-	public void update(double dt) throws IllegalStateException {
-		if (hasFinished)
+	public void update(double time_difference) throws IllegalStateException {
+		if (has_finished)
 			return;
 
-		// handles aircrafts' altitude, comparing the aircrafts' altitude to its
-		// target altitude.
-		if (altitudeList.get(targetAltitudeIndex) + 100 >= (int) this.position
-				.z()
-				&& altitudeList.get(targetAltitudeIndex) - 100 <= (int) this.position
-						.z()) {
-			this.position.setZ(altitudeList.get(targetAltitudeIndex));
+		// Handles aircrafts' altitude, comparing the aircrafts' altitude to its target altitude.
+		if (altitude_list.get(target_altitude_index) + 100 >= (int) this.position.z() &&
+				altitude_list.get(target_altitude_index) - 100 <= (int) this.position.z()) {
+			this.position.setZ(altitude_list.get(target_altitude_index));
 			changeAltitude(0);
-		} else if (altitudeList.get(targetAltitudeIndex) > (int) this.position
-				.z()) {
+		} else if (altitude_list.get(target_altitude_index) > (int) this.position.z()) {
 			climb();
 		} else {
 			fall();
 		}
 
 		// Update position
-		Vector dv = velocity.scaleBy(dt);
+		Vector dv = velocity.scaleBy(time_difference);
 		position = position.add(dv);
 
-		currentlyTurningBy = 0;
+		current_turning_angle = 0;
 
 		// Update target waypoint
-		if (isAt(currentTarget.position()) && currentTarget.equals(destination)) {
-			hasFinished = true;
-			if (destination instanceof Airport) {
-				((Airport) destination).insertAircraft(this);
-				atAirport = true;
+		if (isAt(current_target.position()) && current_target.equals(flight_plan.getDestination())) {
+			has_finished = true;
+			if (flight_plan.getDestination() instanceof Airport) {
+				((Airport) flight_plan.getDestination()).insertAircraft(this);
+				is_at_airport = true;
 			}
-
-		} else if (isAt(currentTarget.position())
-				&& (currentRouteStage == route.length - 1)) {
-			currentRouteStage++;
-			currentTarget = destination;
-
-		} else if (isAt(currentTarget.position())) {
+		} else if (isAt(current_target.position()) && (current_route_stage == flight_plan.getRoute().length-1)) {
+			current_route_stage++;
+			current_target = flight_plan.getDestination();
+		} else if (isAt(current_target.position())) {
 			// handles what happens when the aircraft is circling the airport
-			if (currentTarget instanceof HoldingWaypoint) {
-
+			if (current_target instanceof HoldingWaypoint) {
 				// Changes the current waypoint to the next holding waypoint in
 				// the airport circle
-				this.alterPath(this.flightPathContains(currentTarget),
-						((HoldingWaypoint) currentTarget).getNextWaypoint());
+				this.alterPath(this.indexInFlightPath(current_target), ((HoldingWaypoint) current_target).getNextWaypoint());
 			} else {
-				currentRouteStage++;
-				currentTarget = route[currentRouteStage];
+				current_route_stage++;
+				current_target = flight_plan.getRoute()[current_route_stage];
 			}
-
 		}
 
 		// Update bearing
-		if (Math.abs(angleToTarget() - bearing()) > 0.01) {
-			turnTowardsTarget(dt);
+		if (Math.abs(angleToTarget() - getBearing()) > 0.01) {
+			turnTowardsTarget(time_difference);
 		}
 	}
 
 	/**
 	 * Turns the plane left.
 	 * 
-	 * @param dt
-	 *            the time elapsed since the last frame.
+	 * @param time_difference The time elapsed since the last frame.
 	 */
-	public void turnLeft(double dt) {
-		turnBy(-dt * turnSpeed);
-		manualBearingTarget = Double.NaN;
+	public void turnLeft(double time_difference) {
+		turnBy(-time_difference * turning_speed);
+		manual_bearing_target = Double.NaN;
 	}
 
 	/**
 	 * Turns the plane right.
 	 * 
-	 * @param dt
-	 *            the time elapsed since the last frame.
+	 * @param time_difference The time elapsed since the last frame.
 	 */
-	public void turnRight(double dt) {
-		turnBy(dt * turnSpeed);
-		manualBearingTarget = Double.NaN;
+	public void turnRight(double time_difference) {
+		turnBy(time_difference * turning_speed);
+		manual_bearing_target = Double.NaN;
 	}
 
 	/**
 	 * Turns the plane by a certain angle (in radians). Positive angles turn the
 	 * plane clockwise.
 	 * 
-	 * @param angle
-	 *            the angle by which to turn.
+	 * @param angle The angle by which to turn.
 	 */
 	private void turnBy(double angle) {
-		currentlyTurningBy = angle;
+		current_turning_angle = angle;
 
 		double cosA = Math.cos(angle);
 		double sinA = Math.sin(angle);
@@ -592,62 +495,135 @@ public class Aircraft {
 		double x = velocity.x();
 		double y = velocity.y();
 
-		velocity = new Vector(x * cosA - y * sinA, y * cosA + x * sinA,
-				velocity.z());
+		velocity = new Vector(x * cosA - y * sinA, y * cosA + x * sinA, velocity.z());
 	}
 
 	/**
 	 * Turns the plane towards its current target. How much it turns is
 	 * determined by the plane's {@link turnSpeed}.
 	 * 
-	 * @param dt
-	 *            the time elapsed since the last frame.
+	 * @param time_difference The time elapsed since the last frame.
 	 */
-	private void turnTowardsTarget(double dt) {
+	private void turnTowardsTarget(double time_difference) {
 		// Get difference in angle
-		double angleDifference = (angleToTarget() % (2 * Math.PI))
-				- (bearing() % (2 * Math.PI));
-		boolean crossesPositiveNegativeDivide = angleDifference < -Math.PI * 7 / 8;
+		double angle_difference = (angleToTarget() % (2 * Math.PI)) - (getBearing() % (2 * Math.PI));
+		boolean crosses_positive_negative_divide = angle_difference < -Math.PI * 7 / 8;
 
 		// Correct difference
-		angleDifference += Math.PI;
-		angleDifference %= (2 * Math.PI);
-		angleDifference -= Math.PI;
+		angle_difference += Math.PI;
+		angle_difference %= (2 * Math.PI);
+		angle_difference -= Math.PI;
 
 		// Get which way to turn.
-		int angleDirection = (int) (angleDifference /= Math
-				.abs(angleDifference));
+		int angleDirection = (int)(angle_difference /= Math.abs(angle_difference));
 
-		if (crossesPositiveNegativeDivide)
+		if (crosses_positive_negative_divide)
 			angleDirection *= -1;
 
-		double angleMagnitude = Math.min(Math.abs((dt * turnSpeed)),
-				Math.abs(angleDifference));
+		double angleMagnitude = Math.min(Math.abs((time_difference * turning_speed)), Math.abs(angle_difference));
 
 		turnBy(angleMagnitude * angleDirection);
 	}
 
+	/**
+	 * Checks whether an aircraft is within a certain distance from this one.
+	 * 
+	 * @param aircraft The aircraft to check.
+	 * @param distance The distance within which to care about.
+	 * @return True, if the aircraft is within the distance. False, otherwise.
+	 */
+	private boolean isWithin(Aircraft aircraft, int distance) {
+		double dx = aircraft.getPosition().x() - position.x();
+		double dy = aircraft.getPosition().y() - position.y();
+		double dz = aircraft.getPosition().z() - position.z();
+
+		return dx * dx + dy * dy + dz * dz < distance * distance;
+	}
+
+	/**
+	 * Toggles the state of whether this plane is manually controlled.
+	 */
+	public void toggleManualControl() {
+		is_manually_controlled = !is_manually_controlled;
+
+		if (!is_manually_controlled)
+			resetBearing();
+	}
+
+	/**
+	 * Another method to manually change the "manual control". Used so the
+	 * player can directly the control instead of click the button or space.
+	 * 
+	 * @param manual
+	 */
+	public void setManualControl(boolean manual) {
+		is_manually_controlled = manual;
+	}
+
+	/**
+	 * Triggered when land button is pressed. Causes plane to immediately target
+	 * airport, and changes other aircraft properties shown below.
+	 * 
+	 * The command to land an aircraft cannot be reneged upon.
+	 */
+	public void toggleLand(Waypoint landing_waypoint) {
+		is_landing = !is_landing;
+
+		if (is_landing && (current_target instanceof HoldingWaypoint)) {
+			// Advance the route, breaking loose of the holding waypoints
+			current_route_stage++;
+			current_target = landing_waypoint;
+
+			// Reduce altitude to 100 ft and speed to a lower one
+			target_altitude_index = 0;
+			velocity = velocity.scaleBy(LANDING_SPEED);
+
+			// Update the text above the aircraft to display "Landing"
+			infoText = Texts.LANDING;
+		}
+	}
+
+	/**
+	 * Increases the plane's altitude to altitudeList.get(targetAltitudeIndex).
+	 */
+	public void climb() {
+		if (position.z() < altitude_list.get(target_altitude_index))
+			changeAltitude(altitude_change_speed);
+
+		if (position.z() >= altitude_list.get(target_altitude_index)) {
+			changeAltitude(0);
+			position = new Vector(position.x(), position.y(), altitude_list.get(target_altitude_index));
+		}
+	}
+
+	/**
+	 * Decreases the plane's altitude to altitudeList.get(targetAltitudeIndex).
+	 */
+	public void fall() {
+		if (position.z() > altitude_list.get(target_altitude_index))
+			changeAltitude(-altitude_change_speed);
+
+		if (position.z() <= altitude_list.get(target_altitude_index)) {
+			position = new Vector(position.x(), position.y(), altitude_list.get(target_altitude_index));
+		}
+	}
+	
 	/**
 	 * Draws the plane and any warning circles if necessary.
 	 */
 	public void draw() {
 		float scale = 2;
 
-		Color grey = new Color(128, 128, 128, 255);
+		// Draws the aircraft itself
+		graphics.setColour(Main.GREY);
+		graphics.draw(image, scale, position.x(), position.y(), getBearing(), 8, 8);
 
-		// draws the aircraft itself
-		graphics.setColour(grey);
-		graphics.draw(image, scale, position.x(), position.y(), bearing(), 8, 8);
+		// Draw the altitude near the aircraft
+		// £ is rendered as cursive "ft" from font file
+		graphics.print(String.format("%.0f", position.z()) + "£", position.x() - 22, position.y() + 15);
 
-		// draw the altitude near the aircraft
-		// £ is rendered as cursive "ft" for mysterious reasons
-		graphics.setColour(grey);
-		graphics.print(String.format("%.0f", position.z()) + "£",
-				position.x() - 22, position.y() + 15);
-
-		// draw the 'land me' message once an aircraft is circling the airport
-		if (currentTarget instanceof HoldingWaypoint) {
-			graphics.setColour(grey);
+		// Draw the 'land me' message once an aircraft is circling the airport
+		if (current_target instanceof HoldingWaypoint) {
 			graphics.print(infoText, position.x() - 28, position.y() - 22);
 		}
 
@@ -658,10 +634,8 @@ public class Aircraft {
 	 * Draws the compass around this plane
 	 */
 	public void drawCompass() {
-
 		graphics.setColour(Main.GREEN);
-		graphics.circle(false, position.x() + 16, position.y() + 16,
-				COMPASS_RADIUS);
+		graphics.circle(false, position.x() + 16, position.y() + 16, COMPASS_RADIUS);
 
 		for (int i = 0; i < 360; i += 60) {
 			double r = Math.toRadians(i - 90);
@@ -676,10 +650,9 @@ public class Aircraft {
 
 		double x, y;
 
-		if (isManuallyControlled && input.isMouseDown(input.MOUSE_LEFT)) {
+		if (is_manually_controlled && input.isMouseDown(input.MOUSE_LEFT)) {
 			graphics.setColour(0, 128, 0, 128);
-			double r = Math.atan2(input.mouseY() - position.y(), input.mouseX()
-					- position.x());
+			double r = Math.atan2(input.mouseY() - position.y(), input.mouseX() - position.x());
 			x = 16 + position.x() + (COMPASS_RADIUS * Math.cos(r));
 			y = 16 + position.y() + (COMPASS_RADIUS * Math.sin(r));
 			graphics.line(position.x() + 16, position.y() + 16, x, y);
@@ -690,26 +663,25 @@ public class Aircraft {
 			graphics.setColour(0, 128, 0, 16);
 		}
 
-		x = 16 + position.x() + (COMPASS_RADIUS * Math.cos(bearing()));
-		y = 16 + position.y() + (COMPASS_RADIUS * Math.sin(bearing()));
+		x = 16 + position.x() + (COMPASS_RADIUS * Math.cos(getBearing()));
+		y = 16 + position.y() + (COMPASS_RADIUS * Math.sin(getBearing()));
 
 		graphics.line(position.x() + 16, position.y() + 16, x, y);
 		graphics.line(position.x() + 15, position.y() + 16, x, y);
 		graphics.line(position.x() + 16, position.y() + 15, x, y);
 		graphics.line(position.x() + 17, position.y() + 16, x, y);
 		graphics.line(position.x() + 17, position.y() + 17, x, y);
-
 	}
 
 	/**
 	 * Draws warning circles around this plane and any others that are too near.
 	 */
 	private void drawWarningCircles() {
-		for (Aircraft plane : planesTooNear) {
+		for (Aircraft plane : planes_too_near) {
 			Vector midPoint = position.add(plane.position).scaleBy(0.5);
 			double radius = position.sub(midPoint).magnitude() * 2;
 
-			graphics.setColour(128, 0, 0);
+			graphics.setColour(Main.RED);
 			graphics.circle(false, midPoint.x(), midPoint.y(), radius);
 		}
 	}
@@ -725,62 +697,46 @@ public class Aircraft {
 			graphics.setColour(0, 128, 128, 128);
 		}
 
-		if (currentTarget != destination) {
-			graphics.line(position.x(), position.y(), route[currentRouteStage]
-					.position().x(), route[currentRouteStage].position().y());
+		if (current_target != flight_plan.getDestination()) {
+			graphics.line(position.x(), position.y(), flight_plan.getRoute()[current_route_stage].position().x(), flight_plan.getRoute()[current_route_stage].position().y());
 		}
 
-		for (int i = currentRouteStage; i < route.length - 1; i++) {
-			graphics.line(route[i].position().x(), route[i].position().y(),
-					route[i + 1].position().x(), route[i + 1].position().y());
+		for (int i = current_route_stage; i < flight_plan.getRoute().length - 1; i++) {
+			graphics.line(flight_plan.getRoute()[i].position().x(), flight_plan.getRoute()[i].position().y(),	flight_plan.getRoute()[i + 1].position().x(), flight_plan.getRoute()[i + 1].position().y());
 		}
 
-		if (currentTarget == destination) {
-			graphics.line(position.x(), position.y(), destination.position()
-					.x(), destination.position().y());
+		if (current_target == flight_plan.getDestination()) {
+			graphics.line(position.x(), position.y(), flight_plan.getDestination().position().x(), flight_plan.getDestination().position().y());
 		} else {
-			graphics.line(route[route.length - 1].position().x(),
-					route[route.length - 1].position().y(), destination
-							.position().x(), destination.position().y());
+			graphics.line(flight_plan.getRoute()[flight_plan.getRoute().length - 1].position().x(), flight_plan.getRoute()[flight_plan.getRoute().length - 1].position().y(), flight_plan.getDestination().position().x(), flight_plan.getDestination().position().y());
 		}
 	}
 
 	/**
 	 * Visually represents the pathpoint being moved.
 	 * 
-	 * @param mouseX
-	 *            current position of mouse
-	 * @param mouseY
-	 *            current position of mouse
+	 * @param mouse_x Current x position of mouse
+	 * @param mouse_y Current y position of mouse
 	 */
-	public void drawModifiedPath(int modified, double mouseX, double mouseY) {
+	public void drawModifiedPath(int modified, double mouse_x, double mouse_y) {
 		graphics.setColour(0, 128, 128, 128);
 
-		if (currentRouteStage > modified - 1) {
-			graphics.line(position().x(), position().y(), mouseX, mouseY);
+		if (current_route_stage > modified - 1) {
+			graphics.line(getPosition().x(), getPosition().y(), mouse_x, mouse_y);
 		} else {
-			graphics.line(route[modified - 1].position().x(),
-					route[modified - 1].position().y(), mouseX, mouseY);
+			graphics.line(flight_plan.getRoute()[modified - 1].position().x(), flight_plan.getRoute()[modified - 1].position().y(), mouse_x, mouse_y);
 		}
 
-		if (currentTarget == destination) {
-
-			graphics.line(mouseX, mouseY, destination.position().x(),
-					destination.position().y());
-
+		if (current_target == flight_plan.getDestination()) {
+			graphics.line(mouse_x, mouse_y, flight_plan.getDestination().position().x(), flight_plan.getDestination().position().y());
 		} else {
-
 			int index = modified + 1;
 
-			if (index == route.length) { // modifying final waypoint in route
-				// line drawn to final waypoint
-				graphics.line(mouseX, mouseY, destination.position().x(),
-						destination.position().y());
+			if (index == flight_plan.getRoute().length) { // Modifying final waypoint in route
+				graphics.line(mouse_x, mouse_y, flight_plan.getDestination().position().x(), flight_plan.getDestination().position().y()); // Line drawn to final waypoint
 			} else {
-				graphics.line(mouseX, mouseY, route[index].position().x(),
-						route[index].position().y());
+				graphics.line(mouse_x, mouse_y, flight_plan.getRoute()[index].position().x(), flight_plan.getRoute()[index].position().y());
 			}
-
 		}
 	}
 
@@ -788,212 +744,38 @@ public class Aircraft {
 	 * Updates the amount of planes that are too close, violating the separation
 	 * rules, and also checks for crashes.
 	 * 
-	 * @param dt
-	 *            the time elapsed since the last frame.
-	 * @return 0 if no collisions, 1 if separation violation, 2 if crash
+	 * @param time_difference The time elapsed since the last frame.
+	 * @param aircraft_list List of aircraft in airspace
+	 * @return The index of the aircraft in aircraft_list this aircraft collides with. -1 if no collision.
 	 */
-	public int updateCollisions(double dt, ArrayList<Aircraft> aircraftList) {
-		planesTooNear.clear();
+	public int updateCollisions(double time_difference, ArrayList<Aircraft> aircraft_list) {
+		planes_too_near.clear();
 
-		for (int i = 0; i < aircraftList.size(); i++) {
-
-			Aircraft plane = aircraftList.get(i);
-
+		for (int i = 0; i < aircraft_list.size(); i++) {
+			Aircraft plane = aircraft_list.get(i);
 			if (plane != this && isWithin(plane, RADIUS)) {
-
-				hasFinished = true;
-
+				has_finished = true;
 				return i;
-
-			} else if (plane != this && isWithin(plane, separationRule)) {
+			} else if (plane != this && isWithin(plane, minimum_separation_distance)) {
 				// When separation rules are breached
-				planesTooNear.add(plane);
+				planes_too_near.add(plane);
 
-				if (collisionWarningSoundFlag == false) {
-					collisionWarningSoundFlag = true;
+				if (!collision_warning_sound_flag) {
+					collision_warning_sound_flag = true;
 					WARNING_SOUND.play();
 				}
-				if (wasBreachingInLastFrame == false) {
-					wasBreachingInLastFrame = true;
-					points -= 20;
+				if (!was_breaching_in_last_frame) {
+					was_breaching_in_last_frame = true;
+					num_points -= 20;
 				}
 			}
 		}
 
-		if (planesTooNear.isEmpty()) {
-			collisionWarningSoundFlag = false;
-			wasBreachingInLastFrame = false;
+		if (planes_too_near.isEmpty()) {
+			collision_warning_sound_flag = false;
+			was_breaching_in_last_frame = false;
 		}
 
 		return -1;
-	}
-
-	/**
-	 * Checks whether an aircraft is within a certain distance from this one.
-	 * 
-	 * @param aircraft
-	 *            the aircraft to check.
-	 * @param distance
-	 *            the distance within which to care about.
-	 * @return true, if the aircraft is within the distance. False, otherwise.
-	 */
-	private boolean isWithin(Aircraft aircraft, int distance) {
-
-		double dx = aircraft.position().x() - position.x();
-		double dy = aircraft.position().y() - position.y();
-		double dz = aircraft.position().z() - position.z();
-
-		return dx * dx + dy * dy + dz * dz < distance * distance;
-	}
-
-	/**
-	 * Toggles the state of whether this plane is manually controlled.
-	 */
-	public void toggleManualControl() {
-		isManuallyControlled = !isManuallyControlled;
-
-		if (!isManuallyControlled)
-			resetBearing();
-	}
-
-	/**
-	 * Another method to manually change the "manual control". Used so the
-	 * player can directly the control instead of click the button or space.
-	 * 
-	 * @param manual
-	 */
-	public void setManualControl(boolean manual) {
-		isManuallyControlled = manual;
-	}
-
-	/**
-	 * Triggered when land button is pressed. Causes plane to immediately target
-	 * airport, and changes other aircraft properties shown below.
-	 * 
-	 * The command to land an aircraft cannot be reneged upon.
-	 */
-	public void toggleLand(Waypoint landWaypoint) {
-		isLanding = !isLanding;
-
-		if (isLanding && (currentTarget instanceof HoldingWaypoint)) {
-			// advance the route, breaking loose of the holding waypoints
-			currentRouteStage++;
-			currentTarget = landWaypoint;
-
-			// reduce altitude to 100 ft and speed to a lower one
-			targetAltitudeIndex = 0;
-			velocity = velocity.scaleBy(LANDING_SPEED);
-
-			// update the text above the aircraft to display "Landing"
-			infoText = Texts.LANDING;
-		}
-	}
-
-	/**
-	 * Changes the direction the plane is going towards.
-	 * 
-	 * @param newHeading
-	 */
-	public void setBearing(double newHeading) {
-		manualBearingTarget = newHeading;
-	}
-
-	/**
-	 * Resets the direction towards which the plane will head.
-	 */
-	private void resetBearing() {
-		if (currentRouteStage < route.length) {
-			currentTarget = route[currentRouteStage];
-
-			turnTowardsTarget(0);
-		}
-	}
-
-	/**
-	 * Increases the plane's altitude to altitudeList.get(targetAltitudeIndex).
-	 */
-	public void climb() {
-		if (position.z() < altitudeList.get(targetAltitudeIndex))
-			changeAltitude(altitudeChangeSpeed);
-
-		if (position.z() >= altitudeList.get(targetAltitudeIndex)) {
-			changeAltitude(0);
-			position = new Vector(position.x(), position.y(),
-					altitudeList.get(targetAltitudeIndex));
-		}
-	}
-
-	/**
-	 * Decreases the plane's altitude to altitudeList.get(targetAltitudeIndex).
-	 */
-	public void fall() {
-		if (position.z() > altitudeList.get(targetAltitudeIndex))
-			changeAltitude(-altitudeChangeSpeed);
-
-		if (position.z() <= altitudeList.get(targetAltitudeIndex)) {
-			position = new Vector(position.x(), position.y(),
-					altitudeList.get(targetAltitudeIndex));
-		}
-	}
-
-	/**
-	 * Changes the plane's altitude by a given amount.
-	 * 
-	 * @param height
-	 *            the height by which to change altitude.
-	 */
-	private void changeAltitude(int height) {
-		velocity.setZ(height);
-	}
-
-	/**
-	 * Decrements the targetAltitudeIndex by 1.
-	 */
-	public void decreaseTargetAltitude() {
-		if (targetAltitudeIndex <= 1)
-			return;
-		else {
-			targetAltitudeIndex--;
-		}
-	}
-
-	/**
-	 * Increases the target altitude by an index of 1.
-	 */
-	public void increaseTargetAltitude() {
-		if (targetAltitudeIndex == 3)
-			return;
-		else {
-			targetAltitudeIndex++;
-		}
-	}
-
-	/**
-	 * Manually set the altitude to a specific value. Used when an aircraft
-	 * takes off.
-	 * 
-	 * @param altitude
-	 */
-	public void setAltitude(int altitude) {
-		position.setZ(altitude);
-	}
-
-	/**
-	 * Get how many points the aircraft as accumulated after all the breaches
-	 * (if there were any).
-	 * 
-	 * @return points
-	 */
-	public int getPoints() {
-		return this.points;
-	}
-
-	/**
-	 * The destination of the aircraft.
-	 * 
-	 * @return Waypoint destination
-	 */
-	public Waypoint getDestination() {
-		return destination;
 	}
 }
