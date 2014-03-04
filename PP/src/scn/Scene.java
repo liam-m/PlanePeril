@@ -11,9 +11,7 @@ public abstract class Scene implements EventHandler {
 	/**
 	 * Top level Constructor for a scene
 	 * 
-	 * @param main
-	 *            the main class holding the scene, ie the running instance of
-	 *            the game
+	 * @param main The main class holding the scene, i.e. the running instance of the game
 	 */
 	protected Scene(Main main) {
 		this.main = main;
@@ -29,10 +27,9 @@ public abstract class Scene implements EventHandler {
 	 * Handles updates of all objects requiring updates in the scene Runs
 	 * regularly when called by Main
 	 * 
-	 * @param dt
-	 *            the delta time since the last update was carried out
+	 * @param time_difference The delta time since the last update was carried out
 	 */
-	abstract public void update(double dt);
+	abstract public void update(double time_difference);
 
 	/**
 	 * Handles drawing of all drawable objects in the scene to the window Runs
@@ -51,9 +48,7 @@ public abstract class Scene implements EventHandler {
 	 * to be played, e.g. aircraft can request a warning beep when their
 	 * separation radius is infringed.
 	 * 
-	 * @param sound
-	 *            the sound to be played
+	 * @param sound The sound to be played
 	 */
 	abstract public void playSound(Sound sound);
-
 }
