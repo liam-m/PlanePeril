@@ -38,7 +38,6 @@ public class Main implements EventHandler {
 	public final static String TITLE = "Plane Peril";
 	final private int WIDTH = 1280;
 	final private int HEIGHT = 720;
-	float scale = 1;
 	final private String[] ICON_FILENAMES = { 
 			"gfx" + File.separator + "icon16.png",
 			"gfx" + File.separator + "icon32.png",
@@ -65,7 +64,7 @@ public class Main implements EventHandler {
 		float width_scale = display_width/(float)WIDTH;
 		float height_scale = display_height/(float)HEIGHT;
 		
-		scale = (float)(Math.min(width_scale, height_scale) * 0.98);	
+		float scale = (float)(Math.min(width_scale, height_scale) * 0.98);	
 		start((int)(WIDTH*scale), (int)(HEIGHT*scale));
 		
 		while (!window.isClosed()) {
@@ -86,9 +85,7 @@ public class Main implements EventHandler {
 
 		graphics.initialise();
 
-		graphics.Font font = graphics
-				.newBitmapFont(
-						"gfx" + File.separator + "font.png",
+		graphics.Font font = graphics.newBitmapFont("gfx" + File.separator + "font.png",
 						"ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz1234567890.,_-!?()[]><#~:;/\\^'\"{}£$@@@@@@@@");
 		graphics.setFont(font);
 

@@ -55,26 +55,14 @@ public class Title extends Scene {
 	public void start() {
 		beep_sound = audio.newSoundEffect("sfx" + File.separator + "beep.ogg");
 		beep_sound.setVolume(0.2f);
-
-		int i = 0;
-		int offset = 96;
-		int buttonHeight = 30;
-
-		buttons = new ButtonText[6];
-		// Single player Button
+		
 		ButtonText.Action single_player = new ButtonText.Action() {
 			@Override
 			public void action() {
-				main.setScene(new DifficultySelect(main,
-						DifficultySelect.CREATE_DEMO));
+				main.setScene(new DifficultySelect(main, DifficultySelect.CREATE_DEMO));
 			}
 		};
 
-		buttons[i] = new ButtonText("Single Player", single_player, window.height(),
-				window.height() / 2 + (offset + buttonHeight * i), window.width() - window.height(), 24, 8, 6);
-		i++;
-		
-		// Multiplayer Button
 		ButtonText.Action multiplayer = new ButtonText.Action() {
 			@Override
 			public void action() {
@@ -82,37 +70,20 @@ public class Title extends Scene {
 			}
 		};
 
-		buttons[i] = new ButtonText("Multiplayer", multiplayer, window.height(),
-				window.height() / 2 + (offset + buttonHeight * i), window.width() - window.height(), 24, 8, 6);
-		i++;
-
-		// High Scores Button
-		ButtonText.Action highScores = new ButtonText.Action() {
+		ButtonText.Action high_scores = new ButtonText.Action() {
 			@Override
 			public void action() {
 				main.setScene(new HighScores(main));
 			}
 		};
 
-		buttons[i] = new ButtonText("High Scores", highScores,
-				window.height(), window.height() / 2 + (offset + buttonHeight * i), window.width()
-				- window.height(), 24, 8, 6);
-		i++;
-
-		// Credits Button
 		ButtonText.Action credits = new ButtonText.Action() {
 			@Override
 			public void action() {
 				main.setScene(new Credits(main));
 			}
 		};
-
-		buttons[i] = new ButtonText("Credits", credits, window.height(),
-				window.height() / 2 + (offset + buttonHeight * i),
-				window.width() - window.height(), 24, 8, 6);
-		i++;
-
-		// Help Button
+		
 		ButtonText.Action help = new ButtonText.Action() {
 			@Override
 			public void action() {
@@ -123,12 +94,7 @@ public class Title extends Scene {
 				}
 			}
 		};
-
-		buttons[i] = new ButtonText("Help               (Opens in Browser)", help, window.height(), window.height() / 2
-						+ (offset + buttonHeight * i), window.width() - window.height(), 24, 8, 6);
-		i++;
-
-		// Exit Button
+		
 		ButtonText.Action exit = new ButtonText.Action() {
 			@Override
 			public void action() {
@@ -136,12 +102,18 @@ public class Title extends Scene {
 			}
 		};
 
-		buttons[i] = new ButtonText("Exit", exit, window.height(),
-				window.height() / 2 + (offset + buttonHeight * i),
-				window.width() - window.height(), 24, 8, 6);
-
-		i++;
-
+		int offset = 96;
+		int button_height = 30;
+		
+		ButtonText.Action[] button_actions = new ButtonText.Action[]{single_player,	multiplayer, high_scores, credits, help, exit};
+		String[] button_labels = new String[]{"Single Player", "Multiplayer", "High Scores", "Credits", "Help               (Opens in Browser)", "Exit"};
+		buttons = new ButtonText[button_actions.length];
+		
+		for (int i = 0; i < button_actions.length; i++) {
+			buttons[i] = new ButtonText(button_labels[i], button_actions[i], window.height(), 
+					window.height()/2 + (offset + button_height * i), window.width() - window.height(), 24, 8, 6);
+		}
+		
 		radar_sweep_angle = 0;
 	}
 
@@ -235,7 +207,7 @@ public class Title extends Scene {
 			opacity = 256 - opacity;
 			opacity %= 256;
 			graphics.setColour(0, 128, 0, opacity);
-			graphics.print(title.substring(i, i + 1), 35 * 10 + i * 17, window.height()/2 - 60, 2.5);
+			graphics.print(title.substring(i, i + 1), window.width()/2-260-title.length()*17 + i*17, window.height()/2 - 60, 2.5);
 		}
 	}
 
@@ -270,7 +242,7 @@ public class Title extends Scene {
 	}
 
 	/**
-	 * cleanly exits the title scene
+	 * Cleanly exits the title scene
 	 */
 	@Override
 	public void close() {
