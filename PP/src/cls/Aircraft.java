@@ -2,6 +2,7 @@ package cls;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import lib.RandomNumber;
 import lib.jog.audio;
@@ -44,14 +45,15 @@ public class Aircraft {
 	private final Image image; // The image to be drawn representing the plane.
 
 	private FlightPlan flight_plan;
-	private int current_route_stage; // The current stage the plane is at in its flight_plan.getRoute().
+	private int current_route_stage = 0; // The current stage the plane is at in its flight_plan.getRoute().
 
 	private Vector position, velocity;
-	private boolean is_manually_controlled, is_landing;
-	private boolean has_finished; // Whether the plane has reached its destination and can be disposed of.
+	private boolean is_manually_controlled = false;
+	private boolean is_landing = false;
+	private boolean has_finished = false; // Whether the plane has reached its destination and can be disposed of.
 	private Waypoint current_target; // The position the plane is currently flying towards
-	private double manual_bearing_target; // The target the player has told the plane to fly at when manually controlled.
-	private double current_turning_angle; // The angle the plane is currently turning by.
+	private double manual_bearing_target = Double.NaN; // The target the player has told the plane to fly at when manually controlled.
+	private double current_turning_angle = 0; // The angle the plane is currently turning by.
 	private boolean is_at_airport = false; // Whether this aircraft is currently in the airport
 
 	private final ArrayList<Aircraft> planes_too_near = new ArrayList<Aircraft>(); // List of planes currently in violation of separation rules with this plane
@@ -82,10 +84,7 @@ public class Aircraft {
 		this.position = flight_plan.getOrigin().position(); // Place on spawn waypoint
 
 		// Add list of aircraft cruising heights. First entry only used when aircraft is landing/taking off.
-		altitude_list.add(100);
-		altitude_list.add(5000);
-		altitude_list.add(10000);
-		altitude_list.add(15000);
+		altitude_list = new ArrayList<Integer>(Arrays.asList(100, 5000, 10000, 15000));
 
 		this.target_altitude_index = RandomNumber.randInclusiveInt(1, altitude_list.size() - 1);
 
@@ -115,12 +114,6 @@ public class Aircraft {
 		double y = current_target.position().y() - position.y();
 
 		this.velocity = new Vector(x, y, 0).normalise().scaleBy(speed);
-		this.is_landing = false;
-		this.is_manually_controlled = false;
-		this.has_finished = false;
-		this.current_route_stage = 0;
-		this.current_turning_angle = 0;
-		this.manual_bearing_target = Double.NaN;
 
 		// Speed up plane for higher difficulties
 		switch (difficulty) {
