@@ -106,10 +106,10 @@ public class Demo extends Scene {
 	private double flight_generation_interval;
 
 	// The time eleapsed since the last flight was generated
-	private double flightGenerationTimeElapsed = 6;
+	private double flight_generation_time_elapsed = 6;
 
 	// Max aircraft in the airspace at once Change to 10 for Assessment 3.
-	private final int maxAircraft = 20;
+	private final int max_aircraft = 20;
 
 	// Music to play during the game scene
 	private Music music;
@@ -128,7 +128,7 @@ public class Demo extends Scene {
 	/**
 	 * The set of waypoints in the airspace which are origins / destinations
 	 */
-	public final Waypoint[] locationWaypoints = new Waypoint[] {
+	public final Waypoint[] location_waypoints = new Waypoint[] {
 			/* A set of Waypoints which are origin / destination points */
 
 			// top left
@@ -166,11 +166,11 @@ public class Demo extends Scene {
 
 			// destination/origin waypoints - present in this list for
 			// pathfinding.
-			locationWaypoints[0], // 10
-			locationWaypoints[1], // 11
-			locationWaypoints[2], // 12
-			locationWaypoints[3], // 13
-			locationWaypoints[4], // 14 - Airport
+			location_waypoints[0], // 10
+			location_waypoints[1], // 11
+			location_waypoints[2], // 12
+			location_waypoints[3], // 13
+			location_waypoints[4], // 14 - Airport
 	};
 
 	// All aircraft taking off must go through this waypoint, allows for
@@ -179,7 +179,7 @@ public class Demo extends Scene {
 			.x() - 120, airport.position().y());
 
 	// All aircraft that land must pass through this waypoint.
-	private final HoldingWaypoint[] landWaypoints = {
+	private final HoldingWaypoint[] land_waypoints = {
 
 			new HoldingWaypoint(airport.position().x() + 200, airport
 					.position().y()),
@@ -191,7 +191,7 @@ public class Demo extends Scene {
 	/**
 	 * Used for circling around airport
 	 */
-	public ArrayList<HoldingWaypoint> holdingWaypoints = new ArrayList<HoldingWaypoint>();
+	public ArrayList<HoldingWaypoint> holding_waypoints = new ArrayList<HoldingWaypoint>();
 
 	/**
 	 * Constructor
@@ -220,23 +220,23 @@ public class Demo extends Scene {
 
 		// Initialise Holding Waypoints, positions are relative to the airport.
 		// these are used to circle the airport.
-		holdingWaypoints.add(new HoldingWaypoint(airport.position().x() - 150,
+		holding_waypoints.add(new HoldingWaypoint(airport.position().x() - 150,
 				airport.position().y() - 100));
-		holdingWaypoints.add(new HoldingWaypoint(airport.position().x() + 150,
+		holding_waypoints.add(new HoldingWaypoint(airport.position().x() + 150,
 				airport.position().y() - 100));
-		holdingWaypoints.add(new HoldingWaypoint(airport.position().x() + 150,
+		holding_waypoints.add(new HoldingWaypoint(airport.position().x() + 150,
 				airport.position().y() + 100));
-		holdingWaypoints.add(new HoldingWaypoint(airport.position().x() - 150,
+		holding_waypoints.add(new HoldingWaypoint(airport.position().x() - 150,
 				airport.position().y() + 100));
 
 		// Initialise values of setNextWaypoint for each holding waypoint.
-		holdingWaypoints.get(0).setNextWaypoint(holdingWaypoints.get(1));
-		holdingWaypoints.get(1).setNextWaypoint(holdingWaypoints.get(2));
-		holdingWaypoints.get(2).setNextWaypoint(holdingWaypoints.get(3));
-		holdingWaypoints.get(3).setNextWaypoint(holdingWaypoints.get(0));
+		holding_waypoints.get(0).setNextWaypoint(holding_waypoints.get(1));
+		holding_waypoints.get(1).setNextWaypoint(holding_waypoints.get(2));
+		holding_waypoints.get(2).setNextWaypoint(holding_waypoints.get(3));
+		holding_waypoints.get(3).setNextWaypoint(holding_waypoints.get(0));
 
-		landWaypoints[0].setNextWaypoint(landWaypoints[1]);
-		landWaypoints[1].setNextWaypoint(airport);
+		land_waypoints[0].setNextWaypoint(land_waypoints[1]);
+		land_waypoints[1].setNextWaypoint(airport);
 
 		orders_box = new OrdersBox(ORDERSBOX_X, ORDERSBOX_Y, ORDERSBOX_W,
 				ORDERSBOX_H, 6);
@@ -315,9 +315,7 @@ public class Demo extends Scene {
 		is_manually_controlling = !is_manually_controlling;
 		selected_aircraft.toggleManualControl();
 
-		manual_override_button
-				.setText(selected_aircraft.isManuallyControlled() ? Texts.REMOVE_CONTROL
-						: Texts.TAKE_CONTROL);
+		manual_override_button.setText(selected_aircraft.isManuallyControlled() ? Texts.REMOVE_CONTROL : Texts.TAKE_CONTROL);
 	}
 
 	/**
@@ -330,7 +328,7 @@ public class Demo extends Scene {
 		if (selected_aircraft.isLanding())
 			return;
 
-		selected_aircraft.toggleLand(landWaypoints[0]);
+		selected_aircraft.toggleLand(land_waypoints[0]);
 
 	}
 
@@ -369,8 +367,7 @@ public class Demo extends Scene {
 			try {
 				plane.update(dt);
 			} catch (IllegalStateException e) {
-				orders_box
-						.addOrder("<<< Aerodromio Medved' is full, divert aircraft Comrade!");
+				orders_box.addOrder("<<< Aerodromio Medved' is full, divert aircraft Comrade!");
 
 				// simple way to end the game if the airport is full
 				Aircraft a1 = createAircraft(false);
@@ -382,8 +379,7 @@ public class Demo extends Scene {
 
 			// if aircraft landed
 			if (plane.isAtAirport()) {
-				orders_box.addOrder("<<< Aircraft " + plane.getName()
-						+ " has landed safely at Aerodromio Medved'");
+				orders_box.addOrder("<<< Aircraft " + plane.getName() + " has landed safely at Aerodromio Medved'");
 			}
 			// if aircraft has completed it's journey correctly
 			if (plane.hasFinished()) {
@@ -429,8 +425,7 @@ public class Demo extends Scene {
 			if (input.isKeyDown(input.KEY_LEFT) || input.isKeyDown(input.KEY_A)) {
 				selected_aircraft.turnLeft(dt);
 				is_manually_controlling = true;
-			} else if (input.isKeyDown(input.KEY_RIGHT)
-					|| input.isKeyDown(input.KEY_D)) {
+			} else if (input.isKeyDown(input.KEY_RIGHT) || input.isKeyDown(input.KEY_D)) {
 				selected_aircraft.turnRight(dt);
 				is_manually_controlling = true;
 			}
@@ -439,26 +434,21 @@ public class Demo extends Scene {
 			selected_aircraft.setManualControl(is_manually_controlling);
 
 			// update manual control button text
-			manual_override_button.setText(selected_aircraft
-					.isManuallyControlled() ? Texts.REMOVE_CONTROL
-					: Texts.TAKE_CONTROL);
+			manual_override_button.setText(selected_aircraft.isManuallyControlled() ? Texts.REMOVE_CONTROL : Texts.TAKE_CONTROL);
 			// Check if the aircraft is out of bounds. If true, remove aircraft
 			// from play.
 			if (selected_aircraft.isOutOfBounds()) {
-				orders_box
-						.addOrder(">>> "
-								+ selected_aircraft.getName()
-								+ " is out of bounds, contact lost. Do better Comrade.");
+				orders_box.addOrder(">>> " + selected_aircraft.getName() + " is out of bounds, contact lost. Do better Comrade.");
 				aircraft_in_airspace.remove(selected_aircraft);
 				deselectAircraft();
 			}
 
 		}
 
-		flightGenerationTimeElapsed += dt;
-		if (flightGenerationTimeElapsed >= flight_generation_interval) {
-			flightGenerationTimeElapsed -= flight_generation_interval;
-			if (aircraft_in_airspace.size() < maxAircraft) {
+		flight_generation_time_elapsed += dt;
+		if (flight_generation_time_elapsed >= flight_generation_interval) {
+			flight_generation_time_elapsed -= flight_generation_interval;
+			if (aircraft_in_airspace.size() < max_aircraft) {
 				generateFlight(false);
 			}
 		}
@@ -473,10 +463,10 @@ public class Demo extends Scene {
 	 */
 	private void checkCollisions(double dt) {
 		for (Aircraft plane : aircraft_in_airspace) {
-			int collisionState = plane.updateCollisions(dt, aircraftList());
+			int collision_state = plane.updateCollisions(dt, aircraftList());
 
-			if (collisionState >= 0) {
-				gameOver(plane, aircraftList().get(collisionState));
+			if (collision_state >= 0) {
+				gameOver(plane, aircraftList().get(collision_state));
 				return;
 			}
 		}
@@ -510,17 +500,17 @@ public class Demo extends Scene {
 	public void mousePressed(int key, int x, int y) {
 		if (key == input.MOUSE_LEFT) {
 
-			Aircraft newSelected = selected_aircraft;
+			Aircraft new_selected = selected_aircraft;
 
 			for (Aircraft a : aircraft_in_airspace) {
 				if (a.isMouseOver(x - 16, y - 16)) {
-					newSelected = a;
+					new_selected = a;
 				}
 			}
 
-			if (newSelected != selected_aircraft) {
+			if (new_selected != selected_aircraft) {
 				deselectAircraft();
-				selected_aircraft = newSelected;
+				selected_aircraft = new_selected;
 			}
 
 			altimeter.show(selected_aircraft);
@@ -528,11 +518,9 @@ public class Demo extends Scene {
 			if (selected_aircraft != null) {
 
 				for (Waypoint w : airspaceWaypoints) {
-					if (w.isMouseOver(x - 16, y - 16)
-							&& selected_aircraft.indexInFlightPath(w) > -1) {
+					if (w.isMouseOver(x - 16, y - 16) && selected_aircraft.indexInFlightPath(w) > -1) {
 						selected_waypoint = w;
-						selected_pathpoint = selected_aircraft
-								.indexInFlightPath(w);
+						selected_pathpoint = selected_aircraft.indexInFlightPath(w);
 					}
 				}
 
@@ -574,8 +562,7 @@ public class Demo extends Scene {
 					generateFlight(true);
 					next_take_off = time_elapsed + TAKEOFF_DELAY;
 				} catch (IllegalStateException e) {
-					orders_box
-							.addOrder("<<< There are no aircraft in the airport, Comrade.");
+					orders_box.addOrder("<<< There are no aircraft in the airport, Comrade.");
 				}
 			}
 		}
@@ -592,10 +579,8 @@ public class Demo extends Scene {
 
 					if (w.isMouseOver(x - 16, y - 16)) {
 						selected_aircraft.alterPath(selected_pathpoint, w);
-						orders_box.addOrder(">>> " + selected_aircraft.getName()
-								+ " please alter your course");
-						orders_box
-								.addOrder("<<< Roger that. Altering course now.");
+						orders_box.addOrder(">>> " + selected_aircraft.getName() + " please alter your course");
+						orders_box.addOrder("<<< Roger that. Altering course now.");
 						selected_pathpoint = -1;
 						selected_waypoint = null;
 					} else {
@@ -611,9 +596,9 @@ public class Demo extends Scene {
 		if (compass_dragged && selected_aircraft != null) {
 			double dx = input.mouseX() - selected_aircraft.getPosition().x();
 			double dy = input.mouseY() - selected_aircraft.getPosition().y();
-			double newHeading = Math.atan2(dy, dx);
+			double new_heading = Math.atan2(dy, dx);
 
-			selected_aircraft.setBearing(newHeading);
+			selected_aircraft.setBearing(new_heading);
 		}
 
 		compass_dragged = false;
@@ -674,8 +659,7 @@ public class Demo extends Scene {
 	@Override
 	public void draw() {
 		graphics.setColour(Main.GREEN);
-		graphics.rectangle(false, 16, 16, window.width() - 32,
-				window.height() - 144);
+		graphics.rectangle(false, 16, 16, window.width() - 32, window.height() - 144);
 
 		graphics.setViewport(16, 16, window.width() - 32, window.height() - 144);
 
@@ -707,7 +691,7 @@ public class Demo extends Scene {
 			waypoint.draw();
 		}
 
-		for (HoldingWaypoint waypoint : holdingWaypoints) {
+		for (HoldingWaypoint waypoint : holding_waypoints) {
 			waypoint.draw();
 		}
 
@@ -760,18 +744,15 @@ public class Demo extends Scene {
 
 		graphics.setViewport();
 		graphics.setColour(Main.GREEN);
+		
 		graphics.print(LOCATION_NAMES[0],
-				locationWaypoints[0].position().x() + 25, locationWaypoints[0]
-						.position().y() + 10);
+				location_waypoints[0].position().x() + 25, location_waypoints[0].position().y() + 10);
 		graphics.print(LOCATION_NAMES[1],
-				locationWaypoints[1].position().x() + 25, locationWaypoints[1]
-						.position().y() + 10);
+				location_waypoints[1].position().x() + 25, location_waypoints[1].position().y() + 10);
 		graphics.print(LOCATION_NAMES[2],
-				locationWaypoints[2].position().x() - 125, locationWaypoints[2]
-						.position().y() + 10);
+				location_waypoints[2].position().x() - 125, location_waypoints[2].position().y() + 10);
 		graphics.print(LOCATION_NAMES[3],
-				locationWaypoints[3].position().x() - 75, locationWaypoints[3]
-						.position().y() + 10);
+				location_waypoints[3].position().x() - 75, location_waypoints[3].position().y() + 10);
 
 	}
 
@@ -780,27 +761,20 @@ public class Demo extends Scene {
 	 */
 	private void drawPlaneInfo() {
 		graphics.setColour(Main.GREEN);
-		graphics.rectangle(false, PLANE_INFO_X, PLANE_INFO_Y, PLANE_INFO_W,
-				PLANE_INFO_H);
+		graphics.rectangle(false, PLANE_INFO_X, PLANE_INFO_Y, PLANE_INFO_W, PLANE_INFO_H);
 
 		if (selected_aircraft != null) {
 
-			graphics.setViewport(PLANE_INFO_X, PLANE_INFO_Y, PLANE_INFO_W,
-					PLANE_INFO_H);
-			graphics.printCentred(selected_aircraft.getName(), 0, 5, 2,
-					PLANE_INFO_W);
+			graphics.setViewport(PLANE_INFO_X, PLANE_INFO_Y, PLANE_INFO_W, PLANE_INFO_H);
+			graphics.printCentred(selected_aircraft.getName(), 0, 5, 2, PLANE_INFO_W);
 
 			// Altitude
-			String altitude = String.format("%.0f", selected_aircraft.getPosition()
-					.z())
-					+ "£";
+			String altitude = String.format("%.0f", selected_aircraft.getPosition().z())+ "£";
 			graphics.print("Altitude:", 10, 40);
-			graphics.print(altitude, PLANE_INFO_W - 10 - altitude.length() * 8,
-					40);
+			graphics.print(altitude, PLANE_INFO_W - 10 - altitude.length() * 8, 40);
 
 			// Speed
-			String speed = String.format("%.2f",
-					selected_aircraft.getSpeed() * 1.687810) + "$";
+			String speed = String.format("%.2f", selected_aircraft.getSpeed() * 1.687810) + "$";
 			graphics.print("Speed:", 10, 55);
 			graphics.print(speed, PLANE_INFO_W - 10 - speed.length() * 8, 55);
 
@@ -822,9 +796,9 @@ public class Demo extends Scene {
 	private static String whiteSpace(int text) {
 		String spaces = "";
 
-		int ScoreLength = 5 - Integer.toString(text).length();
+		int score_length = 5 - Integer.toString(text).length();
 
-		for (int i = 0; i < ScoreLength; i++) {
+		for (int i = 0; i < score_length; i++) {
 			spaces += " ";
 		}
 
@@ -840,7 +814,7 @@ public class Demo extends Scene {
 
 		// padding for all of the top text so it doesn't touch the edge of the
 		// window
-		int paddingFromTop = 4;
+		int padding_from_top = 4;
 
 		minutes %= 60;
 
@@ -850,14 +824,11 @@ public class Demo extends Scene {
 
 		String timePlayed = String.format("%d:%02d:", hours, minutes)
 				+ df.format(seconds);
-		graphics.print("Score: " + score + whiteSpace(score) + timePlayed,
-				window.width() - (timePlayed.length() * 8) - 150,
-				paddingFromTop);
+		graphics.print("Score: " + score + whiteSpace(score) + timePlayed, window.width() - (timePlayed.length() * 8) - 150, padding_from_top);
 
 		int planes = aircraft_in_airspace.size();
 
-		graphics.print(String.valueOf(aircraft_in_airspace.size()) + " plane"
-				+ (planes == 1 ? "" : "s") + " in the sky.", 32, paddingFromTop);
+		graphics.print(String.valueOf(aircraft_in_airspace.size()) + " plane" + (planes == 1 ? "" : "s") + " in the sky.", 32, padding_from_top);
 	}
 
 	/**
@@ -873,8 +844,7 @@ public class Demo extends Scene {
 			a.increaseTargetAltitude();
 		}
 
-		orders_box.addOrder("<<< " + a.getName() + " incoming from " + a.getFlightPlan().getOriginName() + " heading towards " 
-				+ a.getFlightPlan().getDestinationName() + ".");
+		orders_box.addOrder("<<< " + a.getName() + " incoming from " + a.getFlightPlan().getOriginName() + " heading towards " + a.getFlightPlan().getDestinationName() + ".");
 
 		aircraft_in_airspace.add(a);
 	}
@@ -886,17 +856,17 @@ public class Demo extends Scene {
 	 * @return the create aircraft object
 	 */
 	private Aircraft createAircraft(boolean fromAirport) {
-		int origin = RandomNumber.randInclusiveInt(0, locationWaypoints.length - 2); // -2 to exclude the airport
-		int destination = RandomNumber.randInclusiveInt(0, locationWaypoints.length - 1);
+		int origin = RandomNumber.randInclusiveInt(0, location_waypoints.length - 2); // -2 to exclude the airport
+		int destination = RandomNumber.randInclusiveInt(0, location_waypoints.length - 1);
 		
-		Waypoint originPoint = fromAirport ? airport : locationWaypoints[origin];
+		Waypoint originPoint = fromAirport ? airport : location_waypoints[origin];
 
 		// Make sure origin and destination aren't the same
-		while (locationWaypoints[destination].equals(locationWaypoints[origin]) || fromAirport && locationWaypoints[destination] instanceof Airport) {
-			destination = RandomNumber.randInclusiveInt(0, locationWaypoints.length - 1);
+		while (location_waypoints[destination].equals(location_waypoints[origin]) || fromAirport && location_waypoints[destination] instanceof Airport) {
+			destination = RandomNumber.randInclusiveInt(0, location_waypoints.length - 1);
 		}
 
-		Waypoint destinationPoint = locationWaypoints[destination];
+		Waypoint destinationPoint = location_waypoints[destination];
 
 		String name = "";
 		boolean nameTaken = true;
@@ -913,7 +883,7 @@ public class Demo extends Scene {
 		return new Aircraft(name, aircraft_image,
 				32 + (int) (10 * Math.random()), difficulty,
 				aircraft_in_airspace, new FlightPlan(originPoint,
-						destinationPoint, airspaceWaypoints, holdingWaypoints, takeoffWaypoint));
+						destinationPoint, airspaceWaypoints, holding_waypoints, takeoffWaypoint));
 	}
 
 	@Override
