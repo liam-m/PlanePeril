@@ -56,35 +56,35 @@ public class Title extends Scene {
 		beep_sound = audio.newSoundEffect("sfx" + File.separator + "beep.ogg");
 		beep_sound.setVolume(0.2f);
 		
-		ButtonText.Action single_player = new ButtonText.Action() {
+		ButtonText.Action launch_single_player = new ButtonText.Action() {
 			@Override
 			public void action() {
 				main.setScene(new DifficultySelect(main, DifficultySelect.CREATE_DEMO));
 			}
 		};
 
-		ButtonText.Action multiplayer = new ButtonText.Action() {
+		ButtonText.Action launch_multiplayer = new ButtonText.Action() {
 			@Override
 			public void action() {
 				// Launch multiplayer
 			}
 		};
 
-		ButtonText.Action high_scores = new ButtonText.Action() {
+		ButtonText.Action open_high_scores = new ButtonText.Action() {
 			@Override
 			public void action() {
 				main.setScene(new HighScores(main));
 			}
 		};
 
-		ButtonText.Action credits = new ButtonText.Action() {
+		ButtonText.Action open_credits = new ButtonText.Action() {
 			@Override
 			public void action() {
 				main.setScene(new Credits(main));
 			}
 		};
 		
-		ButtonText.Action help = new ButtonText.Action() {
+		ButtonText.Action open_help = new ButtonText.Action() {
 			@Override
 			public void action() {
 				try {
@@ -105,11 +105,11 @@ public class Title extends Scene {
 		int offset = 96;
 		int button_height = 30;
 		
-		ButtonText.Action[] button_actions = new ButtonText.Action[]{single_player,	multiplayer, high_scores, credits, help, exit};
+		ButtonText.Action[] button_actions = new ButtonText.Action[]{launch_single_player,	launch_multiplayer, open_high_scores, open_credits, open_help, exit};
 		String[] button_labels = new String[]{"Single Player", "Multiplayer", "High Scores", "Credits", "Help               (Opens in Browser)", "Exit"};
 		buttons = new ButtonText[button_actions.length];
 		
-		for (int i = 0; i < button_actions.length; i++) {
+		for (int i = 0; i < buttons.length; i++) {
 			buttons[i] = new ButtonText(button_labels[i], button_actions[i], window.height(), 
 					window.height()/2 + (offset + button_height * i), window.width() - window.height(), 24, 8, 6);
 		}
