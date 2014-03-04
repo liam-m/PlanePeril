@@ -62,9 +62,9 @@ public class Title extends Scene {
 		int offset = 96;
 		int buttonHeight = 30;
 
-		buttons = new ButtonText[5];
-		// Demo Button
-		ButtonText.Action demo = new ButtonText.Action() {
+		buttons = new ButtonText[6];
+		// Single player Button
+		ButtonText.Action single_player = new ButtonText.Action() {
 
 			@Override
 			public void action() {
@@ -74,7 +74,23 @@ public class Title extends Scene {
 
 		};
 
-		buttons[i] = new ButtonText("Single Player", demo, window.height(),
+		buttons[i] = new ButtonText("Single Player", single_player, window.height(),
+				window.height() / 2 + (offset + buttonHeight * i),
+				window.width() - window.height(), 24, 8, 6);
+
+		i++;
+		
+		// Multiplayer Button
+		ButtonText.Action multiplayer = new ButtonText.Action() {
+
+			@Override
+			public void action() {
+				// Launch multiplayer
+			}
+
+		};
+
+		buttons[i] = new ButtonText("Multiplayer", multiplayer, window.height(),
 				window.height() / 2 + (offset + buttonHeight * i),
 				window.width() - window.height(), 24, 8, 6);
 

@@ -35,7 +35,7 @@ public class Aircraft {
 	private final static Sound WARNING_SOUND = audio.newSoundEffect("sfx" + File.separator + "beep.ogg"); // A warning sound to be played when the plane enters separation violation.
 	private boolean was_breaching_in_last_frame = false;
 	
-	public int minimum_separation_distance;
+	public int minimum_separation_distance = 128;
 	private int num_points; // The number of points (score) an aircraft enters the airspace with.
 	private final static float LANDING_SPEED = 0.6f; // Scalar for the velocity which is imposed upon landing	
 
@@ -59,7 +59,7 @@ public class Aircraft {
 	private final ArrayList<Aircraft> planes_too_near = new ArrayList<Aircraft>(); // List of planes currently in violation of separation rules with this plane
 
 	private int target_altitude_index; // Index of altidudeList for the value of the Altidude the aircraft desires to be at.
-	private ArrayList<Integer> altitude_list = new ArrayList<Integer>(); // A list holding the list of possible altitudes for the aircraft.
+	private ArrayList<Integer> altitude_list; // A list holding the list of possible altitudes for the aircraft.
 
 	/**
 	 * Constructor for an aircraft.
@@ -118,14 +118,12 @@ public class Aircraft {
 		// Speed up plane for higher difficulties
 		switch (difficulty) {
 			case Demo.DIFFICULTY_EASY:
-				this.minimum_separation_distance = 128;
 				this.velocity = velocity.scaleBy(1.0);
 				this.altitude_change_speed = 800;
 				this.num_points = 10;
 				break;
 	
 			case Demo.DIFFICULTY_MEDIUM:
-				this.minimum_separation_distance = 128;
 				this.velocity = velocity.scaleBy(2);
 				this.turning_speed = Math.PI / 3;
 				this.altitude_change_speed = 600;
@@ -133,7 +131,6 @@ public class Aircraft {
 				break;
 	
 			case Demo.DIFFICULTY_HARD:
-				this.minimum_separation_distance = 128;
 				this.velocity = velocity.scaleBy(3);
 				this.turning_speed = Math.PI / 2; // At high velocities, the aircraft is allowed to turn faster - this helps keep the aircraft on track.
 				this.altitude_change_speed = 400;
