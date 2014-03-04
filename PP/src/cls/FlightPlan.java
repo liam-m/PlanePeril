@@ -11,7 +11,7 @@ public class FlightPlan {
 	private final Waypoint[] route;
 	
 	private Waypoint[] waypoints;
-	private ArrayList<HoldingWaypoint> holdingWaypoints;
+	private ArrayList<HoldingWaypoint> holding_waypoints;
 	
 	/**
 	 * Generates a flightplan using the origin and the destination
@@ -22,14 +22,14 @@ public class FlightPlan {
 	 *            The destination point
 	 * @param waypoints
 	 *            All the waypoints in the screen
-	 * @param holdingWaypoints
+	 * @param holding_waypoints
 	 *            The holding waypoints used for circling
 	 */
-	public FlightPlan(Waypoint origin, Waypoint destination, Waypoint[] waypoints, ArrayList<HoldingWaypoint> holdingWaypoints, Waypoint takeoff_waypoint) {
+	public FlightPlan(Waypoint origin, Waypoint destination, Waypoint[] waypoints, ArrayList<HoldingWaypoint> holding_waypoints, Waypoint takeoff_waypoint) {
 		this.origin = origin;
 		this.destination = destination;
 		this.waypoints = waypoints;
-		this.holdingWaypoints = holdingWaypoints;
+		this.holding_waypoints = holding_waypoints;
 		this.route = this.generateGreedyRoute();
 		
 		// If origin is airport, use the takeoff waypoint as the first one
@@ -133,10 +133,10 @@ public class FlightPlan {
 		} // end while
 
 		if (destination instanceof Airport) {
-			Waypoint nearestHoldingWaypoint = holdingWaypoints.get(3);
-			double cheapestCost = holdingWaypoints.get(0).getCost(origin);
+			Waypoint nearestHoldingWaypoint = holding_waypoints.get(3);
+			double cheapestCost = holding_waypoints.get(0).getCost(origin);
 
-			for (HoldingWaypoint holdingPoint : holdingWaypoints) {
+			for (HoldingWaypoint holdingPoint : holding_waypoints) {
 				if (holdingPoint.getCost(origin) < cheapestCost) {
 					nearestHoldingWaypoint = holdingPoint;
 					cheapestCost = holdingPoint.getCost(origin);

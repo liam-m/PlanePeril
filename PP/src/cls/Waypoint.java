@@ -12,7 +12,7 @@ public class Waypoint {
 	 * Leniancy to allow mouse input to be accepted in a small area around the
 	 * waypoint For ease of use.
 	 */
-	public final static int MOUSE_LENIANCY = 16;
+	public final static int MOUSE_LENIANCY = 32;
 
 	/**
 	 * Radius of the waypoint icon

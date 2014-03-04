@@ -18,9 +18,9 @@ public class Airport extends Waypoint {
 
 	public final static int MOUSE_LENIANCY = 32;
 
-	private int timeLeft = 0;
+	private int time_Left = 0;
 
-	private ArrayList<Aircraft> aircraftList = new ArrayList<Aircraft>();
+	private ArrayList<Aircraft> aircraft_list = new ArrayList<Aircraft>();
 
 	/**
 	 * An airport. In general, it is basically a waypoint (more specifically and
@@ -44,30 +44,25 @@ public class Airport extends Waypoint {
 	 * in the Demo class, one must pass it here on every iteration. Later on
 	 * displayed near the airport as text.
 	 * 
-	 * @param timeLeft
+	 * @param time_left
 	 */
-	public void setTimeLeft(int timeLeft) {
+	public void setTimeLeft(int time_left) {
 		// avoid the timer becoming lower than 0 i.e. negative
-		if (timeLeft >= 0) {
-			this.timeLeft = timeLeft;
+		if (time_left >= 0) {
+			this.time_Left = time_left;
 		}
 	}
 
 	/**
-	 * Inserts an aircraft into the airport, done by reference.
+	 * Inserts an aircraft into the airport, done by reference. if the list is already full then nothing happens
 	 * 
 	 * @param aircraft
 	 *            to insert
-	 * @throws IllegalStateException
-	 *             if insertion will overflow airport
 	 */
-	public void insertAircraft(Aircraft aircraft) throws IllegalStateException {
-		if (aircraftList.size() + 1 > MAX_AIRCRAFT_NUMBER) {
-			throw new IllegalStateException(
-					"Tried landing an aircraft into a full airport.");
+	public void insertAircraft(Aircraft aircraft) {
+		if (aircraft_list.size() < MAX_AIRCRAFT_NUMBER) {
+			aircraft_list.add(aircraft);
 		}
-
-		aircraftList.add(aircraft);
 	}
 
 	/**
@@ -80,13 +75,13 @@ public class Airport extends Waypoint {
 	 *             if there are no aircraft in the airport
 	 */
 	public Aircraft takeoff() throws IllegalStateException {
-		if (aircraftList.size() == 0)
+		if (aircraft_list.size() == 0)
 			throw new IllegalStateException("No aircraft in airport");
 
-		int i = RandomNumber.randInclusiveInt(0, aircraftList.size() - 1);
+		int i = RandomNumber.randInclusiveInt(0, aircraft_list.size() - 1);
 
-		Aircraft aircraft = aircraftList.get(i);
-		aircraftList.remove(i);
+		Aircraft aircraft = aircraft_list.get(i);
+		aircraft_list.remove(i);
 
 		return aircraft;
 	}
@@ -108,12 +103,12 @@ public class Airport extends Waypoint {
 				- TEXT_POSITION);
 
 		// print how many aircraft are currently in the airport
-		graphics.print("Aircraft in: " + aircraftList.size(),
+		graphics.print("Aircraft in: " + aircraft_list.size(),
 				position.x() - 40, position.y() - (TEXT_POSITION - TEXT_OFFSET));
 
 		// hide the timer if it is 0.
-		if (timeLeft != 0) {
-			graphics.print("Takeoff in: " + this.timeLeft, position.x() - 40,
+		if (time_Left != 0) {
+			graphics.print("Takeoff in: " + this.time_Left, position.x() - 40,
 					position.y() - (TEXT_POSITION - TEXT_OFFSET * 2));
 		}
 

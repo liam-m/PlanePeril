@@ -11,7 +11,7 @@ import lib.TextBox;
 public class OrdersBox extends TextBox {
 
 	private final double REMOVAL_WAIT = 6;
-	private double removalTimer;
+	private double removal_timer;
 
 	/**
 	 * Constructor of a OrdersBox.
@@ -29,7 +29,7 @@ public class OrdersBox extends TextBox {
 	 */
 	public OrdersBox(int x, int y, int width, int height, int lines) {
 		super(x, y, width, height, lines);
-		removalTimer = 0;
+		removal_timer = 0;
 	}
 
 	/**
@@ -51,12 +51,12 @@ public class OrdersBox extends TextBox {
 	@Override
 	public void update(double dt) {
 
-		if (!isTyping) {
+		if (!is_typing) {
 
-			removalTimer += dt;
+			removal_timer += dt;
 
-			if (removalTimer >= REMOVAL_WAIT) {
-				removalTimer -= REMOVAL_WAIT;
+			if (removal_timer >= REMOVAL_WAIT) {
+				removal_timer -= REMOVAL_WAIT;
 				ripple();
 			}
 
