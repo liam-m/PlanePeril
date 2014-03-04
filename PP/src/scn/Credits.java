@@ -12,17 +12,15 @@ import lib.jog.input;
 import lib.jog.window;
 
 public class Credits extends Scene {
-
 	/**
-	 * default speed to scroll the credits
+	 * Default speed to scroll the credits
 	 */
 	private final static int SCROLL_SPEED = 64;
 
-	private float speed;
 	/**
 	 * The position to print the credits text at. Initially offscreen
 	 */
-	private double scrollPosition;
+	private double scroll_position;
 	/**
 	 * Music to play during the credits
 	 */
@@ -31,79 +29,48 @@ public class Credits extends Scene {
 	/**
 	 * Constructor
 	 * 
-	 * @param main
-	 *            the main containing the scene
+	 * @param main The main containing the scene
 	 */
 	public Credits(Main main) {
 		super(main);
 	}
 
 	/**
-	 * INPUT HANDLERS
-	 */
-	@Override
-	public void mousePressed(int key, int x, int y) {
-	}
-
-	@Override
-	public void mouseReleased(int key, int x, int y) {
-	}
-
-	@Override
-	public void keyPressed(int key) {
-	}
-
-	@Override
-	/**
-	 * exit to the title screen if escape is pressed
-	 */
-	public void keyReleased(int key) {
-		if (key == input.KEY_ESCAPE) {
-			main.closeScene();
-		}
-	}
-
-	/**
-	 * Init musis, and the credits text to be offscreen
+	 * Initialise music, set scroll position to offscreen
 	 */
 	@Override
 	public void start() {
-		speed = 1f;
-		scrollPosition = -window.height();
+		scroll_position = -window.height();
 		music = audio.newMusic("sfx" + File.separator + "piano.ogg");
 		music.play();
 	}
 
-	@Override
 	/**
-	 * update the credits's scroll position
-	 * hurry the credits movement if certain keys pressed
+	 * Update the credits's scroll position
+	 * Hurry the credits movement if certain keys pressed
 	 */
-	public void update(double dt) {
-		boolean hurried = input.isKeyDown(input.KEY_SPACE)
-				|| input.isMouseDown(input.MOUSE_LEFT);
+	@Override
+	public void update(double time_difference) {
+		int speed = input.isKeyDown(input.KEY_SPACE) || input.isMouseDown(input.MOUSE_LEFT) ? 4 * SCROLL_SPEED : SCROLL_SPEED;
+		scroll_position += speed * time_difference;
 
-		speed = hurried ? 4f : 1f;
-
-		scrollPosition += SCROLL_SPEED * dt * speed;
-
-		if (scrollPosition > 1100)
-			scrollPosition = -window.height();
+		if (scroll_position > 1100)
+			scroll_position = -window.height();
 	}
 
-	@Override
 	/**
 	 * print the credits based on the current scroll position
 	 */
+	@Override
 	public void draw() {
 		int gap = 64;
 		int currentHeight = 0;
 
 		graphics.setColour(Main.GREEN);
 		graphics.push();
-		graphics.translate(0, scrollPosition);
+		graphics.translate(0, scroll_position);
 		currentHeight += gap;
-		graphics.printCentred("Bear Traffic Controller", 0, currentHeight, 3,
+		graphics.printCentred(Main.TITLE, 0, currentHeight, 3,
 				window.width());
 		currentHeight += gap * 2;
 
@@ -236,7 +203,28 @@ public class Credits extends Scene {
 
 	@Override
 	public void playSound(Sound sound) {
-
+	}
+	
+	
+	@Override
+	public void mousePressed(int key, int x, int y) {
 	}
 
+	@Override
+	public void mouseReleased(int key, int x, int y) {
+	}
+
+	@Override
+	public void keyPressed(int key) {
+	}
+
+	/**
+	 * Exit to the title screen if escape is pressed
+	 */
+	@Override
+	public void keyReleased(int key) {
+		if (key == input.KEY_ESCAPE) {
+			main.closeScene();
+		}
+	}
 }

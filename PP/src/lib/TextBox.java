@@ -93,7 +93,11 @@ public class TextBox {
 	 */
 	public void newline() {
 		addText(" ");
-//		_buffer += SEPARATOR;
+	}
+	
+	public void newlines(int num) {
+		for (int i=0; i<num; i++)
+			newline();
 	}
 	
 	/**
