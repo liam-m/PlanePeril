@@ -1,5 +1,7 @@
 package scn;
 
+import java.util.Random;
+
 import org.lwjgl.input.Keyboard;
 import org.newdawn.slick.Input;
 
@@ -23,6 +25,16 @@ public class EnterName extends Scene {
 	public EnterName(Main main) {
 		super(main);
 	}
+	
+	private void validateName() {
+		while (name.charAt(name.length()-1) == ' ')
+			name = name.substring(0, name.length()-1);
+		if (name.toLowerCase().equals("jack chapman")) {
+			String[] firsts = new String[]{"Platt", "Flap", "Durk", "Gurt", "Wack", "Chap"};
+			String[] lasts = new String[]{"Dap", "Chuck", "Nap", "Chup", "Bap", "Jack"};
+			name = firsts[new Random().nextInt(firsts.length)]+" "+lasts[new Random().nextInt(lasts.length)]+"man";
+		}
+	}
 
 	@Override
 	public void mousePressed(int key, int x, int y) {
@@ -31,7 +43,8 @@ public class EnterName extends Scene {
 	@Override
 	public void mouseReleased(int key, int x, int y) {
 		for (ButtonText button : buttons) {
-			if (button.isMouseOver(x, y)) {
+			if (button.isMouseOver(x, y) && name.length() > 0) {
+				validateName();
 				button.act();
 			}
 		}

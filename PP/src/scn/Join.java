@@ -5,6 +5,8 @@ import java.net.UnknownHostException;
 
 import org.lwjgl.input.Keyboard;
 
+import cls.JoinClient;
+
 import lib.ButtonText;
 import lib.jog.graphics;
 import lib.jog.input;
@@ -21,14 +23,14 @@ public class Join extends Scene {
 	
 	ButtonText join_button;
 	
+	JoinClient join_client;
+	
 	private final int JOIN_X_POSITION = window.width() /2;
 	private final int JOIN_Y_POSITION = 800;
 	private final int JOIN_WIDTH = 100;
 	private final int JOIN_HEIGHT = 25;
 	
-	
-	
-	protected Join(Main main, String player_name) {
+	public Join(Main main, String player_name) {
 		super(main);
 		this.player_name = player_name;
 		try {
@@ -36,6 +38,8 @@ public class Join extends Scene {
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
+		
+		join_client = new JoinClient();
 	}
 	
 	@Override
@@ -43,7 +47,7 @@ public class Join extends Scene {
 		ButtonText.Action join = new ButtonText.Action() {
 			@Override
 			public void action() {
-				//TODO send IP
+				join_client.connect(their_address, this_address, player_name);
 			}
 		};
 		join_button = new ButtonText("Join", join, JOIN_X_POSITION, JOIN_Y_POSITION, JOIN_WIDTH, JOIN_HEIGHT);
