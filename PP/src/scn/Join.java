@@ -22,8 +22,11 @@ public class Join extends Scene {
 	private final int JOIN_WIDTH = 100;
 	private final int JOIN_HEIGHT = 50;
 	
+	String player_name;
+	
 	protected Join(Main main, String player_name) {
 		super(main);
+		this.player_name = player_name;
 		try {
 			this_address = (InetAddress.getLocalHost().getHostAddress()).toString();
 		} catch (UnknownHostException e) {
@@ -131,9 +134,13 @@ public class Join extends Scene {
 	@Override
 	public void draw() {
 		graphics.setColour(Main.GREEN);
-			
+		graphics.printCentred(player_name, window.width() / 2, 100, 5, 100);
+		
 		graphics.printCentred("Enter IP: ", window.width() / 2, 200, 5, 100);
 		graphics.printCentred(their_address, window.width() / 2, 300, 5, 100);
+		
+		graphics.rectangle(false, JOIN_X_POSITION, JOIN_Y_POSITION, JOIN_WIDTH, JOIN_HEIGHT);
+		graphics.print("Join", JOIN_X_POSITION + 10, JOIN_Y_POSITION + 10);
 	}
 
 	@Override
