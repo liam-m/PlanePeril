@@ -4,6 +4,7 @@ import pp.Main;
 import lib.jog.audio.Sound;
 
 public class EnterName extends Scene {
+	String name = "";
 
 	public EnterName(Main main) {
 		super(main);
@@ -19,6 +20,7 @@ public class EnterName extends Scene {
 
 	@Override
 	public void keyPressed(int key) {
+		main.setScene(new Join(main, name)); // For now, pressing any key takes you to the Join scene
 	}
 
 	@Override
