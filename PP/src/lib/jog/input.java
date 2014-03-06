@@ -55,11 +55,11 @@ public abstract class input {
 		while (Mouse.next()) {
 			if (Mouse.getEventButtonState()) {
 				if (Mouse.getEventButton() >= 0) {
-					handler.mousePressed(Mouse.getEventButton(), mouseX(), mouseY());
+					handler.mousePressed(Mouse.getEventButton(), mouse_x(), mouse_y());
 				}
 			} else {
 				if (Mouse.getEventButton() >= 0) {
-					handler.mouseReleased(Mouse.getEventButton(), mouseX(), mouseY());
+					handler.mouseReleased(Mouse.getEventButton(), mouse_x(), mouse_y());
 				}
 			}
 		}
@@ -72,9 +72,9 @@ public abstract class input {
 		}
 		int mouseScroll = Mouse.getDWheel();
 		if (mouseScroll < 0) {
-			handler.mouseReleased(MOUSE_WHEEL_DOWN, mouseX(), mouseY());
+			handler.mouseReleased(MOUSE_WHEEL_DOWN, mouse_x(), mouse_y());
 		} else if (mouseScroll > 0) {
-			handler.mouseReleased(MOUSE_WHEEL_UP, mouseX(), mouseY());
+			handler.mouseReleased(MOUSE_WHEEL_UP, mouse_x(), mouse_y());
 		}
 	}
 	
@@ -105,8 +105,8 @@ public abstract class input {
 	 * @return whether the mouse's coordinates are in the rectangle
 	 */
 	public static boolean isMouseInRect(int x, int y, int width, int height) {
-		int mx = mouseX();
-		int my = mouseY();
+		int mx = mouse_x();
+		int my = mouse_y();
 		return (mx >= x && mx <= x + width && my >= y && my <= y + height);
 	}
 	
@@ -114,7 +114,7 @@ public abstract class input {
 	 * Access the horizontal coordinate of the mouse's position, with the upper left being the origin.
 	 * @return the current x coordinate of the mouse
 	 */
-	public static int mouseX() {
+	public static int mouse_x() {
 		return Mouse.getX();
 	}
 	
@@ -122,7 +122,7 @@ public abstract class input {
 	 * Access the vertical coordinate of the mouse's position, with the upper left being the origin.
 	 * @return the current y coordinate of the mouse
 	 */
-	public static int mouseY() {
+	public static int mouse_y() {
 		return window.height() - Mouse.getY();
 	}
 	
