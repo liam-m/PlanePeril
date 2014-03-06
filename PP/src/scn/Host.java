@@ -48,8 +48,8 @@ public class Host extends Scene {
 	public void draw() {
 		graphics.setColour(Main.GREEN);
 		graphics.printCentred("Welcome!:", window.width() / 2, 100, 5, 100);
-		graphics.printCentred(player_name, window.width() / 2, 300, 10, 100);
-		graphics.printCentred("Your IP: "+this_address, window.width()/2, 400, 5, 200);
+		graphics.printCentred(player_name, window.width() / 2, 200, 10, 100);
+		graphics.printCentred("Your IP: "+this_address, window.width()/2, 300, 5, 200);
 
 		if (waiting_dot++ > 25) {
 			waiting_dot = 0;

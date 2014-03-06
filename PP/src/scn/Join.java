@@ -55,8 +55,9 @@ public class Join extends Scene {
 	}
 	@Override
 	public void mousePressed(int key, int x, int y) {
-		// TODO Auto-generated method stub
-		
+		if (join_button.isMouseOver(x, y)) {
+			join_button.act();
+		}		
 	}
 
 	@Override
