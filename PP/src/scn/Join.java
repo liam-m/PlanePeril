@@ -69,57 +69,13 @@ public class Join extends Scene {
 		if (their_address.length() > 13) {
 			if (key == input.KEY_BACKSPACE)
 				their_address = their_address.substring(0, their_address.length()-1);
-		} else {
-			switch(key) {
-				case input.KEY_0:
-				case 82:
-					their_address += '0';
-					break;
-				case input.KEY_1:
-				case 79:
-					their_address += '1';
-					break;
-				case input.KEY_2:
-				case 80:
-					their_address += '2';
-					break;
-				case input.KEY_3:
-				case 81:
-					their_address += '3';
-					break;
-				case input.KEY_4:
-				case 75:
-					their_address += '4';
-					break;
-				case input.KEY_5:
-				case 76:
-					their_address += '5';
-					break;
-				case input.KEY_6:
-				case 77:
-					their_address += '6';
-					break;
-				case input.KEY_7:
-				case 71:
-					their_address += '7';
-					break;
-				case input.KEY_8:
-				case 72:
-					their_address += '8';
-					break;
-				case input.KEY_9:
-				case 73:
-					their_address += '9';
-					break;
-				case Keyboard.KEY_DECIMAL:
-				case 52:
-					their_address += '.';
-					break;
-				case input.KEY_BACKSPACE:
-					if (their_address.length() > 0)
-						their_address = their_address.substring(0, their_address.length()-1);
-					break;
-			}			
+		} else if ((key >= input.KEY_1 && key <= input.KEY_0) || (key >= input.KEY_7_NP && key <= input.KEY_0_NP && key != 74 && key != 78)) { // Number key
+			their_address += Keyboard.getEventCharacter();	
+		} else if (key == input.KEY_DECIMAL || key == input.KEY_PERIOD) {
+			their_address +='.';
+		} else if (key == input.KEY_BACKSPACE) {
+			if (their_address.length() > 0)
+				their_address = their_address.substring(0, their_address.length()-1);
 		}
 	}
 
