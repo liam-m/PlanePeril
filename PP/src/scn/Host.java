@@ -49,6 +49,7 @@ public class Host extends Scene {
 		graphics.setColour(Main.GREEN);
 		graphics.printCentred("Welcome!:", window.width() / 2, 100, 5, 100);
 		graphics.printCentred(player_name, window.width() / 2, 300, 10, 100);
+		graphics.printCentred("Your IP: "+this_address, window.width()/2, 400, 5, 200);
 
 		if (waiting_dot++ > 25) {
 			waiting_dot = 0;
@@ -59,8 +60,8 @@ public class Host extends Scene {
 			}
 		}
 		
-		graphics.printCentred("Waiting for player", window.width() / 2, 700, 5, 100);
-		graphics.printCentred(dot, window.width() / 2, 800, 5, 100);
+		graphics.printCentred("Waiting for player", window.width() / 2, 800, 5, 100);
+		graphics.printCentred(dot, window.width() / 2, 850, 5, 100);
 		
 		if (connected) {
 			graphics.printCentred("Connected to:", window.width() / 2, 400, 4, 100);
