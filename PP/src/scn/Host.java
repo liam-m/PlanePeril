@@ -60,13 +60,13 @@ public class Host extends Scene {
 			}
 		}
 		
-		graphics.printCentred("Waiting for player", window.width() / 2, 800, 5, 100);
-		graphics.printCentred(dot, window.width() / 2, 850, 5, 100);
-		
 		if (connected) {
 			graphics.printCentred("Connected to:", window.width() / 2, 400, 4, 100);
 			graphics.printCentred(their_name, window.width() / 2, 500, 4, 100);
 			graphics.printCentred(their_address, window.width() / 2, 600, 4, 100);
+		} else {
+			graphics.printCentred("Waiting for player", window.width() / 2, 800, 5, 100);
+			graphics.printCentred(dot, window.width() / 2, 850, 5, 100);
 		}
 	}
 

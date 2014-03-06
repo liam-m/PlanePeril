@@ -82,6 +82,8 @@ public class Join extends Scene {
 		} else if (key == input.KEY_BACKSPACE) {
 			if (their_address.length() > 0)
 				their_address = their_address.substring(0, their_address.length()-1);
+		} else if (key == input.KEY_RETURN || key == input.KEY_NUMPADENTER) {
+			join_button.act();
 		}
 	}
 

@@ -220,6 +220,7 @@ public abstract class input {
 	public final static int KEY_CAPS_LOCK = Keyboard.KEY_CAPITAL;
 	public final static int KEY_TAB = Keyboard.KEY_TAB;
 	public final static int KEY_RETURN = Keyboard.KEY_RETURN;
+	public final static int KEY_NUMPADENTER = Keyboard.KEY_NUMPADENTER;
 	public final static int KEY_BACKSPACE = Keyboard.KEY_BACK;
 	
 	public final static int KEY_UP = Keyboard.KEY_UP;
