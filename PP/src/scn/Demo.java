@@ -528,9 +528,9 @@ public class Demo extends Scene {
 						&& selected_aircraft.isManuallyControlled()) {
 					// If mouse is over compass
 					double dx = selected_aircraft.getPosition().x()
-							- input.mouse_x();
+							- input.mouseX();
 					double dy = selected_aircraft.getPosition().y()
-							- input.mouse_y();
+							- input.mouseY();
 					int r = Aircraft.COMPASS_RADIUS;
 					if (dx * dx + dy * dy < r * r) {
 						compass_dragged = true;
@@ -594,8 +594,8 @@ public class Demo extends Scene {
 		altimeter.mouseReleased(key, x, y);
 
 		if (compass_dragged && selected_aircraft != null) {
-			double dx = input.mouse_x() - selected_aircraft.getPosition().x();
-			double dy = input.mouse_y() - selected_aircraft.getPosition().y();
+			double dx = input.mouseX() - selected_aircraft.getPosition().x();
+			double dy = input.mouseY() - selected_aircraft.getPosition().y();
 			double new_heading = Math.atan2(dy, dx);
 
 			selected_aircraft.setBearing(new_heading);
@@ -739,7 +739,7 @@ public class Demo extends Scene {
 		if (selected_waypoint != null
 				&& selected_aircraft.isManuallyControlled() == false) {
 			selected_aircraft.drawModifiedPath(selected_pathpoint,
-					input.mouse_x() - 16, input.mouse_y() - 16);
+					input.mouseX() - 16, input.mouseY() - 16);
 		}
 
 		graphics.setViewport();

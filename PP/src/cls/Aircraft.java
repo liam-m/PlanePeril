@@ -391,7 +391,7 @@ public class Aircraft {
 	 * @return true, if the mouse is close enough to this plane. False, otherwise.
 	 */
 	public boolean isMouseOver() {
-		return isMouseOver(input.mouse_x(), input.mouse_y());
+		return isMouseOver(input.mouseX(), input.mouseY());
 	}
 
 	/**
@@ -642,7 +642,7 @@ public class Aircraft {
 
 		if (is_manually_controlled && input.isMouseDown(input.MOUSE_LEFT)) {
 			graphics.setColour(0, 128, 0, 128);
-			double r = Math.atan2(input.mouse_y() - position.y(), input.mouse_x() - position.x());
+			double r = Math.atan2(input.mouseY() - position.y(), input.mouseX() - position.x());
 			x = 16 + position.x() + (COMPASS_RADIUS * Math.cos(r));
 			y = 16 + position.y() + (COMPASS_RADIUS * Math.sin(r));
 			graphics.line(position.x() + 16, position.y() + 16, x, y);

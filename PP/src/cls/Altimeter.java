@@ -82,7 +82,7 @@ public class Altimeter implements EventHandler {
 	}
 
 	public boolean isMouseOver() {
-		return isMouseOver(input.mouse_x(), input.mouse_y());
+		return isMouseOver(input.mouseX(), input.mouseY());
 	}
 
 	@Override
@@ -241,7 +241,7 @@ public class Altimeter implements EventHandler {
 	}
 
 	private boolean mouseOverTopButton() {
-		return mouseOverTopButton(input.mouse_x(), input.mouse_y());
+		return mouseOverTopButton(input.mouseX(), input.mouseY());
 	}
 
 	private boolean mouseOverBottomButton(int mx, int my) {
@@ -258,7 +258,7 @@ public class Altimeter implements EventHandler {
 	}
 
 	private boolean mouseOverBottomButton() {
-		return mouseOverBottomButton(input.mouse_x(), input.mouse_y());
+		return mouseOverBottomButton(input.mouseX(), input.mouseY());
 	}
 
 }

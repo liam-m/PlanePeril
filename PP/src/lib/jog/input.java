@@ -17,33 +17,33 @@ public abstract class input {
 	 */
 	public interface EventHandler {
 		
-		/**
-		 * Called when a mouse button has been depressed.
-		 * @param key the button being pressed.
-		 * @param x the horizontal position of the mouse.
-		 * @param y the vertical position of the mouse.
-		 */
-		public void mousePressed(int key, int x, int y);
+	/**
+	 * Called when a mouse button has been depressed.
+	 * @param key the button being pressed.
+	 * @param mouse_x the horizontal position of the mouse.
+	 * @param mouse_y the vertical position of the mouse.
+	 */
+	public void mousePressed(int key, int mouse_x , int mouse_y );
 		
-		/**
-		 * Called when a mouse button has been released.
-		 * @param key the button being released.
-		 * @param x the horizontal position of the mouse.
-		 * @param y the vertical position of the mouse.
-		 */
-		public void mouseReleased(int key, int x, int y);
+	/**
+	 * Called when a mouse button has been released.
+	 * @param key the button being released.
+	 * @param mouse_x the horizontal position of the mouse.
+	 * @param mouse_y the vertical position of the mouse.
+	 */
+	public void mouseReleased(int key, int mouse_x, int mouse_y);
 		
-		/**
-		 * Called when a keyboard key has been depressed.
-		 * @param key the key being pressed.
-		 */
-		public void keyPressed(int key);
+	/**
+	 * Called when a keyboard key has been depressed.
+	 * @param key the key being pressed.
+	 */
+	public void keyPressed(int key);
 		
-		/**
-		 * Called when a keyboard key has been released. 
-		 * @param key the key being released.
-		 */
-		public void keyReleased(int key);
+	/**
+	 * Called when a keyboard key has been released. 
+	 * @param key the key being released.
+	 */
+	public void keyReleased(int key);
 
 	}
 
@@ -55,26 +55,29 @@ public abstract class input {
 		while (Mouse.next()) {
 			if (Mouse.getEventButtonState()) {
 				if (Mouse.getEventButton() >= 0) {
-					handler.mousePressed(Mouse.getEventButton(), mouse_x(), mouse_y());
+					handler.mousePressed(Mouse.getEventButton(), mouseX(), mouseY());
 				}
-			} else {
+			} 
+			else {
 				if (Mouse.getEventButton() >= 0) {
-					handler.mouseReleased(Mouse.getEventButton(), mouse_x(), mouse_y());
+					handler.mouseReleased(Mouse.getEventButton(), mouseX(), mouseY());
 				}
 			}
 		}
 		while (Keyboard.next()) {
 			if (Keyboard.getEventKeyState()) {
 				handler.keyPressed(Keyboard.getEventKey());
-			} else {
+			} 
+			else {
 				handler.keyReleased(Keyboard.getEventKey());
 			}
 		}
 		int mouseScroll = Mouse.getDWheel();
 		if (mouseScroll < 0) {
-			handler.mouseReleased(MOUSE_WHEEL_DOWN, mouse_x(), mouse_y());
-		} else if (mouseScroll > 0) {
-			handler.mouseReleased(MOUSE_WHEEL_UP, mouse_x(), mouse_y());
+			handler.mouseReleased(MOUSE_WHEEL_DOWN, mouseX(), mouseY());
+		} 
+		else if (mouseScroll > 0) {
+			handler.mouseReleased(MOUSE_WHEEL_UP, mouseX(), mouseY());
 		}
 	}
 	
@@ -104,17 +107,15 @@ public abstract class input {
 	 * @param height the rectangle's height
 	 * @return whether the mouse's coordinates are in the rectangle
 	 */
-	public static boolean isMouseInRect(int x, int y, int width, int height) {
-		int mx = mouse_x();
-		int my = mouse_y();
-		return (mx >= x && mx <= x + width && my >= y && my <= y + height);
+	public static boolean isMouseInRect(int x_coordinate, int y_coordinate, int width, int height) {
+		return (mouseX() >= x_coordinate && mouseX() <= x_coordinate + width && mouseY() >= y_coordinate && mouseY() <= y_coordinate + height);
 	}
 	
 	/**
 	 * Access the horizontal coordinate of the mouse's position, with the upper left being the origin.
 	 * @return the current x coordinate of the mouse
 	 */
-	public static int mouse_x() {
+	public static int mouseX() {
 		return Mouse.getX();
 	}
 	
@@ -122,22 +123,22 @@ public abstract class input {
 	 * Access the vertical coordinate of the mouse's position, with the upper left being the origin.
 	 * @return the current y coordinate of the mouse
 	 */
-	public static int mouse_y() {
+	public static int mouseY() {
 		return window.height() - Mouse.getY();
 	}
 	
-	/*
-	 * Static Mouse Constants
-	 */
+	
+	// Static Mouse Constants
+
 	public final static int MOUSE_LEFT = 0;
 	public final static int MOUSE_RIGHT = 1;
 	public final static int MOUSE_MIDDLE = 2;
 	public final static int MOUSE_WHEEL_UP = 3;
 	public final static int MOUSE_WHEEL_DOWN = 4;
 	
-	/*
-	 * Static Keyboard Constants
-	 */
+	
+	// Static Keyboard Constants
+	
 	public final static int KEY_A = Keyboard.KEY_A;
 	public final static int KEY_B = Keyboard.KEY_B;
 	public final static int KEY_C = Keyboard.KEY_C;
