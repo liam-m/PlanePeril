@@ -17,16 +17,20 @@ public class Join extends Scene {
 	String this_address = null;
 	private String their_address = "";
 	
+	String player_name;
+	
+	ButtonText join_button;
+	
 	private final int JOIN_X_POSITION = window.width() /2;
 	private final int JOIN_Y_POSITION = 800;
 	private final int JOIN_WIDTH = 100;
 	private final int JOIN_HEIGHT = 25;
 	
-	String player_name;
+	
 	
 	protected Join(Main main, String player_name) {
 		super(main);
-		this.player_name = "xXLiamWellacottXx";//player_name;
+		this.player_name = player_name;
 		try {
 			this_address = (InetAddress.getLocalHost().getHostAddress()).toString();
 		} catch (UnknownHostException e) {
@@ -42,7 +46,7 @@ public class Join extends Scene {
 				//TODO send IP
 			}
 		};
-		
+		join_button = new ButtonText("Join", join, JOIN_X_POSITION, JOIN_Y_POSITION, JOIN_WIDTH, JOIN_HEIGHT);
 	}
 	@Override
 	public void mousePressed(int key, int x, int y) {
@@ -141,7 +145,7 @@ public class Join extends Scene {
 		graphics.printCentred(their_address, window.width() / 2, 700, 5, 100);
 		
 		graphics.rectangle(false, JOIN_X_POSITION, JOIN_Y_POSITION, JOIN_WIDTH, JOIN_HEIGHT);
-		graphics.print("Join", JOIN_X_POSITION + 10, JOIN_Y_POSITION + 10);
+		join_button.draw();
 	}
 
 	@Override
