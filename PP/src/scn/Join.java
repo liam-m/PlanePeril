@@ -18,15 +18,15 @@ public class Join extends Scene {
 	private String their_address = "";
 	
 	private final int JOIN_X_POSITION = window.width() /2;
-	private final int JOIN_Y_POSITION = 400;
+	private final int JOIN_Y_POSITION = 800;
 	private final int JOIN_WIDTH = 100;
-	private final int JOIN_HEIGHT = 50;
+	private final int JOIN_HEIGHT = 25;
 	
 	String player_name;
 	
 	protected Join(Main main, String player_name) {
 		super(main);
-		this.player_name = player_name;
+		this.player_name = "xXLiamWellacottXx";//player_name;
 		try {
 			this_address = (InetAddress.getLocalHost().getHostAddress()).toString();
 		} catch (UnknownHostException e) {
@@ -58,8 +58,10 @@ public class Join extends Scene {
 
 	@Override
 	public void keyPressed(int key) {
-		if (key == input.KEY_ESCAPE) 
+		if (key == input.KEY_ESCAPE) {
 			main.closeScene();
+			main.closeScene();
+		}	
 		if (their_address.length() > 13) {
 			if (key == input.KEY_BACKSPACE)
 				their_address = their_address.substring(0, their_address.length()-1);
@@ -123,8 +125,6 @@ public class Join extends Scene {
 		
 	}
 
-	
-
 	@Override
 	public void update(double time_difference) {
 		// TODO Auto-generated method stub
@@ -134,10 +134,11 @@ public class Join extends Scene {
 	@Override
 	public void draw() {
 		graphics.setColour(Main.GREEN);
-		graphics.printCentred(player_name, window.width() / 2, 100, 5, 100);
+		graphics.printCentred("Welcome!:", window.width() / 2, 100, 5, 100);
+		graphics.printCentred(player_name, window.width() / 2, 300, 10, 100);
 		
-		graphics.printCentred("Enter IP: ", window.width() / 2, 200, 5, 100);
-		graphics.printCentred(their_address, window.width() / 2, 300, 5, 100);
+		graphics.printCentred("Enter IP: ", window.width() / 2, 600, 5, 100);
+		graphics.printCentred(their_address, window.width() / 2, 700, 5, 100);
 		
 		graphics.rectangle(false, JOIN_X_POSITION, JOIN_Y_POSITION, JOIN_WIDTH, JOIN_HEIGHT);
 		graphics.print("Join", JOIN_X_POSITION + 10, JOIN_Y_POSITION + 10);
