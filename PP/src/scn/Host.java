@@ -4,7 +4,7 @@ import pp.Main;
 import lib.jog.audio.Sound;
 
 public class Host extends Scene {
-	public Host(Main main) {
+	public Host(Main main, String player_name) {
 		super(main);
 	}
 
