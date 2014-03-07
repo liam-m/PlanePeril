@@ -1,17 +1,44 @@
 package scn;
 
+import java.io.File;
+import java.util.ArrayList;
+
+import cls.Aircraft;
+import cls.Airport;
+import cls.Altimeter;
+import cls.OrdersBox;
+import cls.Waypoint;
 import pp.Main;
 import lib.jog.audio.Sound;
 import lib.jog.graphics;
+import lib.jog.input;
+import lib.jog.graphics.Image;
+import lib.jog.window;
 
 public class Multiplayer extends Scene {
-	String player_name, their_name, their_address;
+	String left_name, right_name;
+	Waypoint[] left_waypoints, right_waypoints;
+	ArrayList<Aircraft> aircraft = new ArrayList<Aircraft>();
+	Aircraft selected_aircraft;
+	Airport left_airport, right_airport;
+	// PerformanceBar left_performance, right_performance;
+	OrdersBox orders_box;
+	// AirportControlBox airport_control_box;
+	Altimeter altimeter;
+	Image background;
 	
-	public Multiplayer(Main main, String player_name, String their_address, String their_name) {
+	public Multiplayer(Main main, String left_name, String right_name) {
 		super(main);
-		this.player_name = player_name;
-		this.their_name = their_name;
-		this.their_address = their_address;
+		this.left_name = left_name;
+		this.right_name = right_name;
+		this.background = graphics.newImage("gfx" + File.separator + "map.png");
+		left_waypoints = new Waypoint[]{
+			new Waypoint(10, 10),
+		};
+		
+		right_waypoints = new Waypoint[]{
+				new Waypoint(1300, 10),
+		};
 	}
 
 	@Override
@@ -24,6 +51,9 @@ public class Multiplayer extends Scene {
 
 	@Override
 	public void keyPressed(int key) {
+		if (key == input.KEY_ESCAPE) {
+			main.closeScene();
+		}
 	}
 
 	@Override
@@ -40,8 +70,33 @@ public class Multiplayer extends Scene {
 
 	@Override
 	public void draw() {
-		graphics.printCentred(player_name, 100, 100, 5, 100);
-		graphics.printCentred(their_name, 100, 200, 5, 100);
+		graphics.setColour(Main.GREEN);
+		graphics.print(left_name, 10, 10, 2);
+		graphics.print(right_name, window.width()-100, 10, 2);
+		graphics.rectangle(false, 16, 40, window.width() - 32, window.height() - 180);
+		
+		graphics.setViewport(16, 40, window.width() - 32, window.height() - 180);
+		graphics.setColour(255, 255, 255, 100);
+		graphics.draw(background, 0, 0);
+		
+		for (int i=0; i<left_waypoints.length; i++) { // Should be same length
+			left_waypoints[i].draw();
+			right_waypoints[i].draw();
+		}
+		
+		for (Aircraft a : aircraft) {
+			a.draw();
+			if (a.isMouseOver()) {
+				a.drawFlightPath(false);
+			}
+		}
+		
+		if (selected_aircraft != null) {
+			selected_aircraft.drawFlightPath(true);
+			graphics.setColour(Main.GREEN);
+		}
+		
+		graphics.setViewport();
 	}
 
 	@Override

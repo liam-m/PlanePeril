@@ -50,7 +50,7 @@ public class Join extends Scene {
 			public void action() {
 				their_name = join_client.connect(their_address, this_address, player_name);
 				main.closeScene();
-				main.setScene(new Multiplayer(main, player_name, their_name, their_address));
+				main.setScene(new Multiplayer(main, their_name, player_name));
 			}
 		};
 		join_button = new ButtonText("Join", join, JOIN_X_POSITION, JOIN_Y_POSITION, JOIN_WIDTH, JOIN_HEIGHT);

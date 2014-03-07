@@ -724,11 +724,9 @@ public class SinglePlayer extends Scene {
 			if (selected_aircraft.getFlightPlan().getDestination() instanceof Airport) {
 				// Land Button with valid altitude
 				graphics.setColour(0, 0, 0);
-				graphics.rectangle(true, (window.width() - 500) / 2, 16, 128,
-						32);
+				graphics.rectangle(true, (window.width() - 500) / 2, 16, 128, 32);
 				graphics.setColour(Main.GREEN);
-				graphics.rectangle(false, (window.width() - 500) / 2, 16, 128,
-						32);
+				graphics.rectangle(false, (window.width() - 500) / 2, 16, 128, 32);
 			
 				land_button.draw();
 			}

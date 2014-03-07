@@ -64,7 +64,7 @@ public class Main implements EventHandler {
 		float width_scale = display_width/(float)WIDTH;
 		float height_scale = display_height/(float)HEIGHT;
 		
-		float scale = (float)(Math.min(width_scale, height_scale) * 0.98);	
+		float scale = (float)(Math.min(width_scale, height_scale) * 0.99);	
 		start((int)(WIDTH*scale), (int)(HEIGHT*scale));
 		
 		while (!window.isClosed()) {
