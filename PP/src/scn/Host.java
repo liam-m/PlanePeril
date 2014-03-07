@@ -9,6 +9,7 @@ import cls.HostServer;
 import pp.Main;
 import lib.ButtonText;
 import lib.jog.graphics;
+import lib.jog.input;
 import lib.jog.window;
 import lib.jog.audio.Sound;
 
@@ -80,6 +81,9 @@ public class Host extends Scene {
 
 	@Override
 	public void keyPressed(int key) {
+		if (key == input.KEY_ESCAPE) {
+			main.closeScene();
+		}
 	}
 
 	@Override

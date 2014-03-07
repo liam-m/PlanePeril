@@ -60,8 +60,8 @@ public class EnterName extends Scene {
 			name += c;
 		} else if (key == Input.KEY_SPACE && name.length() > 0) { // Can't start with space
 			name += ' ';
-		} else if (key == Input.KEY_ENTER) {
-			
+		} else if (key == Input.KEY_ESCAPE) {
+			main.closeScene();
 		}
 	}
 
@@ -76,16 +76,20 @@ public class EnterName extends Scene {
 		ButtonText.Action host = new ButtonText.Action() {
 			@Override
 			public void action() {
-				if (name.length() > 0)
+				if (name.length() > 0) {
+					main.closeScene();
 					main.setScene(new Host(main, name));
+				}
 			}
 		};
 		
 		ButtonText.Action join = new ButtonText.Action() {
 			@Override
 			public void action() {
-				if (name.length() > 0)
+				if (name.length() > 0) {
+					main.closeScene();
 					main.setScene(new Join(main, name));
+				}
 			}
 		};
 
