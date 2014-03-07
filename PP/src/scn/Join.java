@@ -49,6 +49,8 @@ public class Join extends Scene {
 			@Override
 			public void action() {
 				their_name = join_client.connect(their_address, this_address, player_name);
+				main.closeScene();
+				main.setScene(new Multiplayer(main, player_name, their_name, their_address));
 			}
 		};
 		join_button = new ButtonText("Join", join, JOIN_X_POSITION, JOIN_Y_POSITION, JOIN_WIDTH, JOIN_HEIGHT);
@@ -108,8 +110,6 @@ public class Join extends Scene {
 		
 		graphics.rectangle(false, JOIN_X_POSITION, JOIN_Y_POSITION, JOIN_WIDTH, JOIN_HEIGHT);
 		join_button.draw();
-		
-		graphics.printCentred(their_name, window.width() / 2, 400, 10, 100);
 	}
 
 	@Override

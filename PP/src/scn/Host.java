@@ -15,9 +15,6 @@ import lib.jog.audio.Sound;
 
 public class Host extends Scene {
 	String this_address = null;
-	private String their_address = "";
-	boolean connected = false;
-	String their_name;
 	HostServer host_server;
 	
 	String player_name;
@@ -40,9 +37,8 @@ public class Host extends Scene {
 	}
 	
 	public void connected(String address, String name) {
-		connected = true;
-		their_address = address;
-		their_name = name;
+		main.closeScene();
+		main.setScene(new Multiplayer(main, player_name, name, address));
 	}
 	
 	@Override
@@ -60,15 +56,9 @@ public class Host extends Scene {
 				dot += '.'; 
 			}
 		}
-		
-		if (connected) {
-			graphics.printCentred("Connected to:", window.width() / 2, 400, 4, 100);
-			graphics.printCentred(their_name, window.width() / 2, 500, 4, 100);
-			graphics.printCentred(their_address, window.width() / 2, 600, 4, 100);
-		} else {
-			graphics.printCentred("Waiting for player", window.width() / 2, 800, 5, 100);
-			graphics.printCentred(dot, window.width() / 2, 850, 5, 100);
-		}
+			
+		graphics.printCentred("Waiting for player", window.width() / 2, 800, 5, 100);
+		graphics.printCentred(dot, window.width() / 2, 850, 5, 100);
 	}
 
 	@Override

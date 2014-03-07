@@ -12,7 +12,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import scn.Demo;
+import scn.SinglePlayer;
 import cls.Aircraft;
 import cls.Airport;
 import cls.FlightPlan;
@@ -106,7 +106,7 @@ public class AircraftTest2 {
 		aircraftInAirspace = new ArrayList<Aircraft>();
 
 		testAircraft = new Aircraft("testAircraft", null, 10,
-				Demo.DIFFICULTY_HARD, aircraftInAirspace,
+				SinglePlayer.DIFFICULTY_HARD, aircraftInAirspace,
 				new FlightPlan(locationWaypoints[0], locationWaypoints[1],
 						airspaceWaypoints, holdingWaypoints, takeoffWaypoint));
 	}
@@ -149,7 +149,7 @@ public class AircraftTest2 {
 		assertFalse(testAircraft.hasFinished());
 
 		Aircraft testAircraft2 = new Aircraft("testAircraft", null, 10,
-				Demo.DIFFICULTY_HARD, aircraftInAirspace,
+				SinglePlayer.DIFFICULTY_HARD, aircraftInAirspace,
 				new FlightPlan(locationWaypoints[0], locationWaypoints[1],
 						airspaceWaypoints, holdingWaypoints, takeoffWaypoint));
 
@@ -252,7 +252,7 @@ public class AircraftTest2 {
 	@Test
 	public void testUpdateCollisions() {
 		Aircraft testAircraft2 = new Aircraft("testAircraft", null, 10,
-				Demo.DIFFICULTY_HARD, aircraftInAirspace,
+				SinglePlayer.DIFFICULTY_HARD, aircraftInAirspace,
 				new FlightPlan(locationWaypoints[0], locationWaypoints[1],
 						airspaceWaypoints, holdingWaypoints, takeoffWaypoint));
 
