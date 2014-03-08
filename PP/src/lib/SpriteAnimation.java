@@ -1,8 +1,8 @@
 package lib;
 
-import lib.jog.graphics;
-import lib.jog.graphics.Image;
-import lib.jog.graphics.Quad;
+import lib.jog.Graphics;
+import lib.jog.Graphics.Image;
+import lib.jog.Graphics.Quad;
 
 public class SpriteAnimation {
 
@@ -38,9 +38,9 @@ public class SpriteAnimation {
 	 */
 	public SpriteAnimation(Image image, int x_coordinate, int y_coordinate, int fps, int frame_count, int frames_wide, int frames_high, boolean looping){
 		this.image = image;
-		image_width = image.width();
+		image_width = image.getWidth();
 		System.out.println("-----");
-		image_height = image.height();
+		image_height = image.getHeight();
 		System.out.println("-----");
 		this.x_coordinate = x_coordinate;
 		this.y_coordinate = y_coordinate;
@@ -56,7 +56,7 @@ public class SpriteAnimation {
 		for (int n = 0; n < frame_count; n ++) {
 			int i = n % frames_wide;
 			int j = n / frames_wide;
-			quads[n] = graphics.newQuad(i * sprite_width, j * sprite_height, sprite_width, sprite_height, image_width, image_height);
+			quads[n] = Graphics.newQuad(i * sprite_width, j * sprite_height, sprite_width, sprite_height, image_width, image_height);
 		}
 		is_looping = looping;
 		has_finished = false;
@@ -76,7 +76,7 @@ public class SpriteAnimation {
 	 * @param looping whether to loop the animation
 	 */
 	public SpriteAnimation(String image_filepath, int x_coordinate, int y_coordinate, int fps, int frame_count, int frames_wide, int frames_high, boolean looping){
-		new SpriteAnimation(graphics.newImage(image_filepath), x_coordinate, y_coordinate, fps, frame_count, frames_wide, frames_high, looping);
+		new SpriteAnimation(Graphics.newImage(image_filepath), x_coordinate, y_coordinate, fps, frame_count, frames_wide, frames_high, looping);
 	
 	}
 	/**
@@ -106,7 +106,7 @@ public class SpriteAnimation {
 	 */
 	public void draw() {
 		if (has_finished) return;
-		graphics.drawq(image, quads[current_frame], x_coordinate, y_coordinate);
+		Graphics.drawQ(image, quads[current_frame], x_coordinate, y_coordinate);
 	}
 	
 	/**

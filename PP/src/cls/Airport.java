@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import pp.Main;
 
 import lib.RandomNumber;
-import lib.jog.graphics;
+import lib.jog.Graphics;
 
 public class Airport extends Waypoint {
 
@@ -96,19 +96,19 @@ public class Airport extends Waypoint {
 	 * takeoff</b>
 	 */
 	public void drawAirportInfo() {
-		graphics.setColour(Main.GREEN);
+		Graphics.setColour(Main.GREEN);
 
 		// print the name of the airport
-		graphics.print("Aero Medved'", position.x() - 40, position.y()
+		Graphics.print("Aero Medved'", position.x() - 40, position.y()
 				- TEXT_POSITION);
 
 		// print how many aircraft are currently in the airport
-		graphics.print("Aircraft in: " + aircraft_list.size(),
+		Graphics.print("Aircraft in: " + aircraft_list.size(),
 				position.x() - 40, position.y() - (TEXT_POSITION - TEXT_OFFSET));
 
 		// hide the timer if it is 0.
 		if (time_Left != 0) {
-			graphics.print("Takeoff in: " + this.time_Left, position.x() - 40,
+			Graphics.print("Takeoff in: " + this.time_Left, position.x() - 40,
 					position.y() - (TEXT_POSITION - TEXT_OFFSET * 2));
 		}
 

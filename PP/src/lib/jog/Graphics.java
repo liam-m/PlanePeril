@@ -13,63 +13,41 @@ import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.util.ResourceLoader;
 
 /**
- * <h1>jog.graphics</h1>
  * <p>Provides a layer upon OpenGL methods. jog.graphics allows drawing basic shapes to the screen,
  * as well as images and limited font capabilities. jog.graphics (unlike OpenGL) has the graphical origin to be the window's
  * upper-left corner.</p>
  * @author IMP1
  */
-public abstract class graphics {
+public abstract class Graphics {
 	
 	/**
-	 * <h1>jog.graphics.Font</h1>
 	 * <p>Abstract font class with print methods.</p>
 	 * @author IMP1
 	 */
 	public static abstract class Font {
-		
 		protected abstract void print(double x, double y, String text, double size);
-
-		protected abstract void printCentred(double x, double y, double width, String text, double size);
-		
+		protected abstract void printCentred(double x, double y, double width, String text, double size);	
 	}
 	
 	/**
-	 * <h1>jog.graphics.BitmapFont</h1>
 	 * <p>A font generated from an image. Each glyph is as wide as the entire image as high.</p>
 	 * @author IMP1
 	 */
 	private static class BitmapFont extends Font {
-		
-		/**
-		 * A string containing the characters in the same order that the image has them.
-		 */
-		private String glyphs;
+		private String glyphs; //string containing the characters in the same order that the image has them
 		private Image image;
-		
-		/**
-		 * Constructor for a bitmap font.
-		 * @param filepath the path to the image file.
-		 * @param chars a String containing the characters in the same order that the image has them.
-		 */
+
 		private BitmapFont(String filepath, String chars) {
 			image = newImage(filepath);
 			glyphs = chars;
 		}
 		
-		/**
-		 * Prints the text to the display.
-		 * @param x the x coordinate for the text to be drawn to.
-		 * @param y the y coordinate for the text to be drawn to.
-		 * @param text the text to be drawn.
-		 * @param size the size of the drawn text.
-		 */
 		@Override
 		protected void print(double x, double y, String text, double size) {
 			y = window.height() - y;
-			double w = image.height();
-			double h = -image.height();
-			double qw = w / image.width();
+			double w = image.getHeight();
+			double h = -image.getHeight();
+			double qw = w / image.getWidth();
 			double qh = 1;
 			
 	    	glEnable(GL_TEXTURE_2D);
@@ -80,7 +58,7 @@ public abstract class graphics {
 			glScaled(size, size, 1);
 			glBegin(GL_QUADS);
 			for (int i = 0; i < text.length(); i ++) {
-				double qx = glyphs.indexOf(text.charAt(i)) * w / image.width();
+				double qx = glyphs.indexOf(text.charAt(i)) * w / image.getWidth();
 				glTexCoord2d(qx, 0);
 				glVertex2d(w * i, 0);
 				glTexCoord2d(qx + qw, 0);
@@ -95,20 +73,12 @@ public abstract class graphics {
 			glDisable(GL_TEXTURE_2D);
 		}
 		
-		/**
-		 * Prints the text to the display centred within specified boundaries.
-		 * @param x the x coordinate for the text to be drawn to.
-		 * @param y the y coordinate for the text to be drawn to.
-		 * @param width the width the text should be centred around.
-		 * @param text the text to be drawn.
-		 * @param size the size of the drawn text.
-		 */
 		@Override
 		protected void printCentred(double x, double y, double width, String text, double size) {
 			y = window.height() - y;
-			double w = image.height();
-			double h = -image.height();
-			double qw = w / image.width();
+			double w = image.getHeight();
+			double h = -image.getHeight();
+			double qw = w / image.getWidth();
 			double qh = 1;
 			x += (width - (w * text.length() * size)) / 2;
 			
@@ -119,7 +89,7 @@ public abstract class graphics {
 			glScaled(size, size, 1);
 			glBegin(GL_QUADS);
 			for (int i = 0; i < text.length(); i ++) {
-				double qx = glyphs.indexOf(text.charAt(i)) * w / image.width();
+				double qx = glyphs.indexOf(text.charAt(i)) * w / image.getWidth();
 				glTexCoord2d(qx, 0);
 				glVertex2d(w * i, 0);
 				glTexCoord2d(qx + qw, 0);
@@ -137,7 +107,6 @@ public abstract class graphics {
 	}
 	
 	/**
-	 * <h1>jog.graphics.SystemFont</h1>
 	 * <p>A font that the exists within the default font folder in the OS. Essentially SystemFont is a wrapper for TrueTypeFont.</p>
 	 * @author IMP1
 	 * @see TrueTypeFont
@@ -156,17 +125,9 @@ public abstract class graphics {
 			_font = new TrueTypeFont(awtFont, false);
 		}
 		
-		/**
-		 * Prints the text to the display.
-		 * @param x the x coordinate for the text to be drawn to.
-		 * @param y the y coordinate for the text to be drawn to.
-		 * @param text the text to be drawn.
-		 * @param size the size of the drawn text.
-		 */
 		@Override
 		protected void print(double x, double y, String text, double size) {
 			y = y - window.height();
-			
 			glPushMatrix();
 			glScaled(1, -1, 0);
 			_font.drawString((int)x, (int)y, text);
@@ -185,7 +146,6 @@ public abstract class graphics {
 		public void printCentred(double x, double y, double width, String text, double size) {
 			y = y - window.height();
 			x += (width - _font.getWidth(text)) / 2;
-			
 			glPushMatrix();
 			glScaled(1, -1, 0);
 			_font.drawString((int)x, (int)y, text);
@@ -195,19 +155,13 @@ public abstract class graphics {
 	}
 	
 	/**
-	 * <h1>jog.graphics.Image</h1>
 	 * <p>Essentially an object-orientated wrapper for the slick Texture.</p>
 	 * @author IMP1
 	 * @see Texture
 	 */
 	public static class Image {
-		
 		private Texture texture;
-		
-		/**
-		 * Constructor for an image.
-		 * @param filepath the path to the image file.
-		 */
+
 		private Image(String filepath) {
 			try {
 				String format = filepath.split("\\.")[1].toUpperCase();
@@ -218,19 +172,11 @@ public abstract class graphics {
 			}
 		}
 		
-		/**
-		 * Allows access of the dimensions of the image.
-		 * @return the width of the image in pixels.
-		 */
-		public double width() { 
+		public double getWidth() { 
 			return texture.getTextureWidth();
 		}
 		
-		/**
-		 * Allows access of the dimensions of the image.
-		 * @return the height of the image in pixels.
-		 */
-		public double height() { 
+		public double getHeight() { 
 			return texture.getTextureHeight(); 
 		}
 		
@@ -241,10 +187,10 @@ public abstract class graphics {
 		 * @return the colour at the specified pixel.
 		 */
 		public Color pixelAt(int x, int y) {
-			int r = texture.getTextureData()[y * (int)width() + x ] * -255;
-			int g = texture.getTextureData()[y * (int)width() + x + 1] * -255;
-			int b = texture.getTextureData()[y * (int)width() + x + 2] * -255;
-			int a = texture.getTextureData()[y * (int)width() + x + 3] * -255;
+			int r = texture.getTextureData()[y * (int)getWidth() + x ] * -255;
+			int g = texture.getTextureData()[y * (int)getWidth() + x + 1] * -255;
+			int b = texture.getTextureData()[y * (int)getWidth() + x + 2] * -255;
+			int a = texture.getTextureData()[y * (int)getWidth() + x + 3] * -255;
 			return new Color(r, g, b, a);
 		}
 		
@@ -321,20 +267,15 @@ public abstract class graphics {
 		double alpha = Math.max(0, Math.min(255, a)) / 255;
 		glColor4d(red, green, blue, alpha);
 	}
-	static public void setColour(int r, int g, int b) { setColour(r, g, b, 255); }
 	
-	/**
-	 * Accesses the colour things are currently being drawn.
-	 * @return the current colour.
-	 */
+	static public void setColour(int r, int g, int b) { 
+		setColour(r, g, b, 255); 
+	}
+	
 	static public Color getColour() {
 		return currentColour;
 	}
 	
-	/**
-	 * Sets the font to print text with.
-	 * @param font the new font to be active.
-	 */
 	static public void setFont(Font font) {
 		currentFont = font;
 	}
@@ -478,8 +419,8 @@ public abstract class graphics {
 	 */
 	static public void draw(Image drawable, double x, double y) {
 		y = window.height() - y;
-		double w = drawable.width();
-		double h = -drawable.height();
+		double w = drawable.getWidth();
+		double h = -drawable.getHeight();
 		
 		glEnable(GL_TEXTURE_2D);
     	drawable.texture.bind();
@@ -506,7 +447,7 @@ public abstract class graphics {
 	 * @param x the horizontal pixel to draw at.
 	 * @param y the vertical pixel to draw at.
 	 */
-	static public void drawq(Image drawable, Quad quad, double x, double y) {
+	static public void drawQ(Image drawable, Quad quad, double x, double y) {
 		y = window.height() - y;
 		double w = quad.quadWidth;
 		double h = -quad.quadHeight;
@@ -529,14 +470,7 @@ public abstract class graphics {
 		glDisable(GL_TEXTURE_2D);
 	}
 	
-	/**
-	 * Draws a line from one point to another.
-	 * @param x1 the x coordinate of the first point.
-	 * @param y1 the y coordinate of the first point.
-	 * @param x2 the x coordinate of the second point.
-	 * @param y2 the y coordinate of the second point.
-	 */
-	static public void line(double x1, double y1, double x2, double y2) {
+	static public void line(double x1, double y1, double x2, double y2) {//x1,y1 are coords of the first point etc. 
 		y1 = window.height() - y1;
 		y2 = window.height() - y2;
 		
@@ -546,17 +480,8 @@ public abstract class graphics {
 		glEnd();
 	}
 	
-	/**
-	 * Draws a triangle.
-	 * @param fill whether to fill with colour (false just draws the lines).
-	 * @param x1 the x coordinate of the first point of the triangle.
-	 * @param y1 the y coordinate of the first point of the triangle.
-	 * @param x2 the x coordinate of the second point of the triangle.
-	 * @param y2 the y coordinate of the second point of the triangle.
-	 * @param x3 the x coordinate of the third point of the triangle.
-	 * @param y3 the y coordinate of the third point of the triangle.
-	 */
-	public static void triangle(boolean fill, double x1, double y1, double x2, double y2, double x3, double y3) {
+	//x1,y1 are coords of the first point etc. 
+	public static void triangle(boolean fill, double x1, double y1, double x2, double y2, double x3, double y3) { 
 		y1 = window.height() - y1;
 		y2 = window.height() - y2;
 		y3 = window.height() - y3;
@@ -575,14 +500,6 @@ public abstract class graphics {
 	    glEnd();
 	}
 	
-	/**
-	 * Draws a rectangle.
-	 * @param fill whether to fill with colour (false just draws the lines).
-	 * @param x the x coordinate of the rectangle.
-	 * @param y the y coordinate of the rectangle.
-	 * @param width the width of the rectangle.
-	 * @param height the height of the rectangle.
-	 */
 	static public void rectangle(boolean fill, double x, double y, double width, double height) {
 		y = window.height() - y;
 		height = -height;
@@ -640,20 +557,13 @@ public abstract class graphics {
 		arc(fill, x, y, r, startAngle, angle, 20);
 	}
 	
-	/**
-	 * Draws a circle.
-	 * @param fill whether to fill with colour.
-	 * @param x the x coordinate of the centre of the circle.
-	 * @param y the y coordinate of the centre of the circle.
-	 * @param r the radius of the circle.
-	 * @param segments how many lines segments to draw to approximate the curve.
-	 */
-	static public void circle(boolean fill, double x, double y, double r, double segments) {
+
+	static public void circle(boolean fill, double x, double y, double radius, double segments) {
 		y = window.height() - y;
 		
 		glPushMatrix();
 		glTranslated(x, y, 0);
-		glScaled(r, r, 1);
+		glScaled(radius, radius, 1);
 		if (fill) {
 			glBegin(GL_TRIANGLE_FAN);
 			glVertex2d(0, 0);
@@ -670,31 +580,17 @@ public abstract class graphics {
 	static public void circle(boolean fill, double x, double y, double r) {
 		circle(fill, x, y, r, 20);
 	}
-	
-	/**
-	 * Draws text to the screen using the current font. If no font has yet been made, it creates a default.
-	 * @param text the characters to be drawn.
-	 * @param x the x coordinate to draw the text at.
-	 * @param y the y coordinate to draw the text at.
-	 * @param size the size to draw the text at.
-	 */
-	static public void print(String text, double x, double y, double size) {
+
+	static public void printText(String text, double x, double y, double size) {
 		if (currentFont == null) currentFont = newSystemFont("Times New Roman");
 		currentFont.print(x, y, text, size);
 	}
 	static public void print(String text, double x, double y){
-		print(text, x, y, 1);
+		printText(text, x, y, 1);
 	}
 	
-	/**
-	 * Draws text to the screen using the current font. If no font has yet been made, it creates a default.
-	 * @param text the characters to be drawn.
-	 * @param x the x coordinate to draw the text at.
-	 * @param y the y coordinate to draw the text at.
-	 * @param size the size to draw the text at.
-	 * @param width the width the text is centred around.
-	 */
-	static public void printCentred(String text, double x, double y, double size, double width) {
+
+	static public void printTextCentred(String text, double x, double y, double size, double width) {
 		if (currentFont == null) currentFont = newSystemFont("Times New Roman");
 		currentFont.printCentred(x, y, width, text, size);
 	}

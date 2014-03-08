@@ -1,7 +1,7 @@
 package cls;
 
 import pp.Main;
-import lib.jog.graphics;
+import lib.jog.Graphics;
 import lib.jog.input;
 import lib.jog.input.EventHandler;
 
@@ -139,8 +139,8 @@ public class Altimeter implements EventHandler {
 	 * Draws the box around the altimeter
 	 */
 	private void drawRectangle() {
-		graphics.setColour(Main.GREEN);
-		graphics.rectangle(false, position_x, position_y, width, height);
+		Graphics.setColour(Main.GREEN);
+		Graphics.rectangle(false, position_x, position_y, width, height);
 	}
 
 	/**
@@ -161,19 +161,19 @@ public class Altimeter implements EventHandler {
 		double wingLength = width / 3 - 8;
 		double tailLength = width / 9;
 
-		graphics.line(x, y, x + wingLength * Math.cos(r),
+		Graphics.line(x, y, x + wingLength * Math.cos(r),
 				y + wingLength * Math.sin(r));
 		r -= Math.PI / 2;
-		graphics.line(x, y, x + tailLength * Math.cos(r),
+		Graphics.line(x, y, x + tailLength * Math.cos(r),
 				y + tailLength * Math.sin(r));
 		r -= Math.PI / 2;
-		graphics.line(x, y, x + wingLength * Math.cos(r),
+		Graphics.line(x, y, x + wingLength * Math.cos(r),
 				y + wingLength * Math.sin(r));
-		graphics.setColour(0, 0, 0);
-		graphics.circle(true, x, y, 4);
-		graphics.setColour(Main.GREEN);
-		graphics.circle(false, x, y, 4);
-		graphics.printCentred(
+		Graphics.setColour(0, 0, 0);
+		Graphics.circle(true, x, y, 4);
+		Graphics.setColour(Main.GREEN);
+		Graphics.circle(false, x, y, 4);
+		Graphics.printTextCentred(
 				String.format("%.0f", current_aircraft.getPosition().z()),
 				position_x, y + 32, 1, width);
 	}
@@ -183,8 +183,8 @@ public class Altimeter implements EventHandler {
 	 * aircraft is climbing or falling
 	 */
 	private void drawAltitudes() {
-		graphics.setColour(0, 128, 0, 32);
-		graphics.setViewport((int) position_x, (int) position_y, (int) width,
+		Graphics.setColour(0, 128, 0, 32);
+		Graphics.setViewport((int) position_x, (int) position_y, (int) width,
 				(int) height);
 
 		int midX = (int) (width / 2);
@@ -196,34 +196,34 @@ public class Altimeter implements EventHandler {
 			int offset = (int) (16.0 * (alt % 1000) / 1000);
 			int y = midY - (i * 16) + offset;
 
-			graphics.line(midX - 64, y, midX + 64, y);
+			Graphics.line(midX - 64, y, midX + 64, y);
 			alt -= (alt % 1000);
-			graphics.print(String.valueOf(alt), midX + 72, y);
-			graphics.print(String.valueOf(alt), midX - 72 - 40, y);
+			Graphics.print(String.valueOf(alt), midX + 72, y);
+			Graphics.print(String.valueOf(alt), midX - 72 - 40, y);
 
 		}
 
-		graphics.setViewport();
-		graphics.setColour(Main.GREEN);
+		Graphics.setViewport();
+		Graphics.setColour(Main.GREEN);
 	}
 
 	private void drawArrows() {
 		int midX = (int) (position_x + (width / 2));
-		graphics.setColour(Main.GREEN);
+		Graphics.setColour(Main.GREEN);
 
 		if (mouseOverTopButton()) {
-			graphics.setColour(128, 128, 128);
+			Graphics.setColour(128, 128, 128);
 		}
 
-		graphics.triangle(true, midX - 10, position_y + 10, midX, position_y + 4,
+		Graphics.triangle(true, midX - 10, position_y + 10, midX, position_y + 4,
 				midX + 10, position_y + 10);
-		graphics.setColour(Main.GREEN);
+		Graphics.setColour(Main.GREEN);
 
 		if (mouseOverBottomButton()) {
-			graphics.setColour(128, 128, 128);
+			Graphics.setColour(128, 128, 128);
 		}
 
-		graphics.triangle(true, midX - 10, position_y + height - 10, midX,
+		Graphics.triangle(true, midX - 10, position_y + height - 10, midX,
 				position_y + height - 4, midX + 10, position_y + height - 10);
 	}
 

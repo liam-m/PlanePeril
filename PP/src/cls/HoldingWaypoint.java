@@ -1,6 +1,6 @@
 package cls;
 
-import lib.jog.graphics;
+import lib.jog.Graphics;
 
 /**
  * A special case of a waypoint. Used to circle the airport. <br>
@@ -45,8 +45,8 @@ public class HoldingWaypoint extends Waypoint {
 	 *            the y location to draw at
 	 */
 	public void draw(double x, double y) {
-		graphics.setColour(128, 0, 0, 128);
-		graphics.print("X", x - 8, y - 8, 2);
+		Graphics.setColour(128, 0, 0, 128);
+		Graphics.printText("X", x - 8, y - 8, 2);
 
 	}
 

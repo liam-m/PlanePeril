@@ -1,6 +1,6 @@
 package lib;
 
-import lib.jog.graphics;
+import lib.jog.Graphics;
 import lib.jog.input;
 
 public class ButtonText {
@@ -69,14 +69,14 @@ public class ButtonText {
 	
 	public void draw() {
 		if (!available) {
-			graphics.setColour(colour_unavailable);
+			Graphics.setColour(colour_unavailable);
 		}
 		else if (isMouseOver()) {
-			graphics.setColour(colour_hover);
+			Graphics.setColour(colour_hover);
 		} else {
-			graphics.setColour(colour_default);
+			Graphics.setColour(colour_default);
 		}
-		graphics.print(text, x_coordinate + x_offset, y_coordinate + y_offset);
+		Graphics.print(text, x_coordinate + x_offset, y_coordinate + y_offset);
 	}
 
 }

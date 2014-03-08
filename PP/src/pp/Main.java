@@ -8,7 +8,7 @@ import java.util.Stack;
 
 import lib.Serializer;
 import lib.jog.audio;
-import lib.jog.graphics;
+import lib.jog.Graphics;
 import lib.jog.input;
 import lib.jog.input.EventHandler;
 import lib.jog.window;
@@ -83,11 +83,11 @@ public class Main implements EventHandler {
 		window.initialise(TITLE, width, height);
 		window.setIcon(ICON_FILENAMES);
 
-		graphics.initialise();
+		Graphics.initialise();
 
-		graphics.Font font = graphics.newBitmapFont("gfx" + File.separator + "font.png",
+		Graphics.Font font = Graphics.newBitmapFont("gfx" + File.separator + "font.png",
 						"ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz1234567890.,_-!?()[]><#~:;/\\^'\"{}£$@@@@@@@@");
-		graphics.setFont(font);
+		Graphics.setFont(font);
 
 		scene_stack = new Stack<Scene>();
 		setScene(new Title(this));
@@ -132,7 +132,7 @@ public class Main implements EventHandler {
 	 * scene.
 	 */
 	private void draw() {
-		graphics.clear();
+		Graphics.clear();
 		current_scene.draw();
 	}
 

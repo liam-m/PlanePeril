@@ -9,7 +9,7 @@ import pp.Main;
 import lib.Serializer;
 import lib.TextBox;
 import lib.jog.audio.Sound;
-import lib.jog.graphics;
+import lib.jog.Graphics;
 import lib.jog.window;
 
 public class HighScores extends Scene {
@@ -84,12 +84,12 @@ public class HighScores extends Scene {
 	/**
 	 */
 	public void draw() {
-		graphics.setColour(Main.GREEN);
+		Graphics.setColour(Main.GREEN);
 
 		text_box.draw();
 
-		graphics.setColour(0, 128, 0, 255);
-		graphics.printCentred("Press any key to continue", 0, window.height() - 256, 1, window.width());
+		Graphics.setColour(0, 128, 0, 255);
+		Graphics.printTextCentred("Press any key to continue", 0, window.height() - 256, 1, window.width());
 	}
 
 	@Override

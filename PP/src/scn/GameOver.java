@@ -10,8 +10,8 @@ import lib.SpriteAnimation;
 import lib.TextBox;
 import lib.jog.audio;
 import lib.jog.audio.Sound;
-import lib.jog.graphics;
-import lib.jog.graphics.Image;
+import lib.jog.Graphics;
+import lib.jog.Graphics.Image;
 import lib.jog.input;
 import lib.jog.window;
 import cls.Aircraft;
@@ -20,7 +20,7 @@ import cls.Vector;
 public class GameOver extends Scene {
 	private TextBox text_box; // Text box to write the details of the game failure
 	private final SpriteAnimation explosion_animation; // A sprite animation to handle the frame by frame drawing of the explosion
-	private final Image explosion = graphics.newImage("gfx" + File.separator + "explosionFrames.png"); // The explosion image to use for the animation
+	private final Image explosion = Graphics.newImage("gfx" + File.separator + "explosionFrames.png"); // The explosion image to use for the animation
 	private double timer = 0; // Timer to allow for explosion and plane to be shown for a period, followed by the text box.
 	
 	// The two crashed aircraft, passed to the scene by the scene in which they
@@ -50,7 +50,7 @@ public class GameOver extends Scene {
 		int framesDown = 4;
 
 		Vector midPoint = crashed_plane_1.getPosition().add(crashed_plane_2.getPosition()).scaleBy(0.5);
-		Vector explosionPos = midPoint.sub(new Vector(explosion.width() / (framesAcross * 2), explosion.height() / (framesDown * 2), 0));
+		Vector explosionPos = midPoint.sub(new Vector(explosion.getWidth() / (framesAcross * 2), explosion.getHeight() / (framesDown * 2), 0));
 
 		explosion_animation = new SpriteAnimation(explosion, (int) explosionPos.x(), (int) explosionPos.y(), 6, 16, framesAcross, framesDown, false);
 	}
@@ -149,12 +149,12 @@ public class GameOver extends Scene {
 	 * Otherwise, draw the planes and explosion
 	 */
 	public void draw() {
-		graphics.setColour(Main.GREEN);
-		graphics.printCentred(crashed_plane_1.getName() + " crashed into "
+		Graphics.setColour(Main.GREEN);
+		Graphics.printTextCentred(crashed_plane_1.getName() + " crashed into "
 				+ crashed_plane_2.getName() + ".", 0, 32, 2, window.width());
 
-		graphics.setColour(Main.GREEN);
-		graphics.printCentred("You managed to earn " + this.score
+		Graphics.setColour(Main.GREEN);
+		Graphics.printTextCentred("You managed to earn " + this.score
 				+ " rubles before making your fatal error.", 0, 64, 2, window.width());
 
 		if (explosion_animation.hasFinished()) {
@@ -164,15 +164,15 @@ public class GameOver extends Scene {
 			crashed_plane_2.draw();
 			Vector midPoint = crash_position.add(crashed_plane_2.getPosition()).scaleBy(0.5);
 			double radius = 20;
-			graphics.setColour(128, 0, 0);
-			graphics.circle(false, midPoint.x(), midPoint.y(), radius);
+			Graphics.setColour(128, 0, 0);
+			Graphics.circle(false, midPoint.x(), midPoint.y(), radius);
 			explosion_animation.draw();
 		}
 
 		int opacity = (int) (255 * Math.sin(timer));
 
-		graphics.setColour(0, 128, 0, opacity);
-		graphics.printCentred("Press space to continue", 0,	window.height() - 256, 1, window.width());
+		Graphics.setColour(0, 128, 0, opacity);
+		Graphics.printTextCentred("Press space to continue", 0,	window.height() - 256, 1, window.width());
 	}
 
 	@Override
