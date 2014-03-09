@@ -1,7 +1,7 @@
 package lib;
 
 import lib.jog.Graphics;
-import lib.jog.input;
+import lib.jog.Input;
 
 public class ButtonText {
 	
@@ -50,7 +50,7 @@ public class ButtonText {
 	}
 	
 	public boolean isMouseOver() { 
-		return isMouseOver(input.mouseX(), input.mouseY()); 
+		return isMouseOver(Input.getMouseX(), Input.getMouseY()); 
 	}
 	
 	public void setText(String newText) {

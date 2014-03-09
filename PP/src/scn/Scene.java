@@ -2,7 +2,7 @@ package scn;
 
 import pp.Main;
 import lib.jog.audio.Sound;
-import lib.jog.input.EventHandler;
+import lib.jog.Input.EventHandler;
 
 public abstract class Scene implements EventHandler {
 

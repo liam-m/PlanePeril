@@ -8,7 +8,7 @@ import lib.jog.audio;
 import lib.jog.audio.Music;
 import lib.jog.audio.Sound;
 import lib.jog.Graphics;
-import lib.jog.input;
+import lib.jog.Input;
 import lib.jog.window;
 
 public class Credits extends Scene {
@@ -51,7 +51,7 @@ public class Credits extends Scene {
 	 */
 	@Override
 	public void update(double time_difference) {
-		int speed = input.isKeyDown(input.KEY_SPACE) || input.isMouseDown(input.MOUSE_LEFT) ? 4 * SCROLL_SPEED : SCROLL_SPEED;
+		int speed = Input.isKeyDown(Input.KEY_SPACE) || Input.isMouseDown(Input.MOUSE_LEFT) ? 4 * SCROLL_SPEED : SCROLL_SPEED;
 		scroll_position += speed * time_difference;
 
 		if (scroll_position > 1100)
@@ -223,7 +223,7 @@ public class Credits extends Scene {
 	 */
 	@Override
 	public void keyReleased(int key) {
-		if (key == input.KEY_ESCAPE) {
+		if (key == Input.KEY_ESCAPE) {
 			main.closeScene();
 		}
 	}

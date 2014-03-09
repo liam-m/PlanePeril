@@ -5,7 +5,7 @@ import lib.ButtonText;
 import lib.TextBox;
 import lib.jog.audio.Sound;
 import lib.jog.Graphics;
-import lib.jog.input;
+import lib.jog.Input;
 import lib.jog.window;
 
 public class DifficultySelect extends Scene {
@@ -171,7 +171,7 @@ public class DifficultySelect extends Scene {
 	 */
 	@Override
 	public void keyReleased(int key) {
-		if (key == input.KEY_ESCAPE) {
+		if (key == Input.KEY_ESCAPE) {
 			main.closeScene();
 		}
 	}

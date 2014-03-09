@@ -9,7 +9,7 @@ import lib.jog.audio;
 import lib.jog.audio.Sound;
 import lib.jog.Graphics;
 import lib.jog.Graphics.Image;
-import lib.jog.input;
+import lib.jog.Input;
 import lib.jog.window;
 
 import pp.Main;
@@ -391,7 +391,7 @@ public class Aircraft {
 	 * @return true, if the mouse is close enough to this plane. False, otherwise.
 	 */
 	public boolean isMouseOver() {
-		return isMouseOver(input.mouseX(), input.mouseY());
+		return isMouseOver(Input.getMouseX(), Input.getMouseY());
 	}
 
 	/**
@@ -640,9 +640,9 @@ public class Aircraft {
 
 		double x, y;
 
-		if (is_manually_controlled && input.isMouseDown(input.MOUSE_LEFT)) {
+		if (is_manually_controlled && Input.isMouseDown(Input.MOUSE_LEFT)) {
 			Graphics.setColour(0, 128, 0, 128);
-			double r = Math.atan2(input.mouseY() - position.y(), input.mouseX() - position.x());
+			double r = Math.atan2(Input.getMouseY() - position.y(), Input.getMouseX() - position.x());
 			x = 16 + position.x() + (COMPASS_RADIUS * Math.cos(r));
 			y = 16 + position.y() + (COMPASS_RADIUS * Math.sin(r));
 			Graphics.line(position.x() + 16, position.y() + 16, x, y);

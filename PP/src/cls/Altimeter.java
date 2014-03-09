@@ -2,8 +2,8 @@ package cls;
 
 import pp.Main;
 import lib.jog.Graphics;
-import lib.jog.input;
-import lib.jog.input.EventHandler;
+import lib.jog.Input;
+import lib.jog.Input.EventHandler;
 
 /**
  * Shows the planes height in feet (whatever units you want). And the current
@@ -82,7 +82,7 @@ public class Altimeter implements EventHandler {
 	}
 
 	public boolean isMouseOver() {
-		return isMouseOver(input.mouseX(), input.mouseY());
+		return isMouseOver(Input.getMouseX(), Input.getMouseY());
 	}
 
 	@Override
@@ -102,7 +102,7 @@ public class Altimeter implements EventHandler {
 		if (!is_visible)
 			return;
 
-		if (key == input.MOUSE_LEFT) {
+		if (key == Input.MOUSE_LEFT) {
 			if (mouseOverTopButton(mx, my)) {
 				current_aircraft.increaseTargetAltitude();
 			} else if (mouseOverBottomButton(mx, my)) {
@@ -241,7 +241,7 @@ public class Altimeter implements EventHandler {
 	}
 
 	private boolean mouseOverTopButton() {
-		return mouseOverTopButton(input.mouseX(), input.mouseY());
+		return mouseOverTopButton(Input.getMouseX(), Input.getMouseY());
 	}
 
 	private boolean mouseOverBottomButton(int mx, int my) {
@@ -258,7 +258,7 @@ public class Altimeter implements EventHandler {
 	}
 
 	private boolean mouseOverBottomButton() {
-		return mouseOverBottomButton(input.mouseX(), input.mouseY());
+		return mouseOverBottomButton(Input.getMouseX(), Input.getMouseY());
 	}
 
 }

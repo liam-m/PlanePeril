@@ -9,8 +9,8 @@ import java.util.Stack;
 import lib.Serializer;
 import lib.jog.audio;
 import lib.jog.Graphics;
-import lib.jog.input;
-import lib.jog.input.EventHandler;
+import lib.jog.Input;
+import lib.jog.Input.EventHandler;
 import lib.jog.window;
 
 import org.lwjgl.Sys;
@@ -108,7 +108,7 @@ public class Main implements EventHandler {
 	 */
 	private void update(double dt) {
 		audio.update();
-		input.update(this);
+		Input.update(this);
 		window.update();
 		current_scene.update(dt);
 		updateFPS();

@@ -12,7 +12,7 @@ import lib.jog.audio;
 import lib.jog.audio.Music;
 import lib.jog.Graphics;
 import lib.jog.Graphics.Image;
-import lib.jog.input;
+import lib.jog.Input;
 import lib.jog.window;
 import cls.Aircraft;
 import cls.Airport;
@@ -422,10 +422,10 @@ public class Demo extends Scene {
 
 		if (selected_aircraft != null) {
 
-			if (input.isKeyDown(input.KEY_LEFT) || input.isKeyDown(input.KEY_A)) {
+			if (Input.isKeyDown(Input.KEY_LEFT) || Input.isKeyDown(Input.KEY_A)) {
 				selected_aircraft.turnLeft(dt);
 				is_manually_controlling = true;
-			} else if (input.isKeyDown(input.KEY_RIGHT) || input.isKeyDown(input.KEY_D)) {
+			} else if (Input.isKeyDown(Input.KEY_RIGHT) || Input.isKeyDown(Input.KEY_D)) {
 				selected_aircraft.turnRight(dt);
 				is_manually_controlling = true;
 			}
@@ -498,7 +498,7 @@ public class Demo extends Scene {
 	 */
 	@Override
 	public void mousePressed(int key, int x, int y) {
-		if (key == input.MOUSE_LEFT) {
+		if (key == Input.MOUSE_LEFT) {
 
 			Aircraft new_selected = selected_aircraft;
 
@@ -528,9 +528,9 @@ public class Demo extends Scene {
 						&& selected_aircraft.isManuallyControlled()) {
 					// If mouse is over compass
 					double dx = selected_aircraft.getPosition().x()
-							- input.mouseX();
+							- Input.getMouseX();
 					double dy = selected_aircraft.getPosition().y()
-							- input.mouseY();
+							- Input.getMouseY();
 					int r = Aircraft.COMPASS_RADIUS;
 					if (dx * dx + dy * dy < r * r) {
 						compass_dragged = true;
@@ -540,7 +540,7 @@ public class Demo extends Scene {
 			}
 		}
 
-		if (key == input.MOUSE_RIGHT)
+		if (key == Input.MOUSE_RIGHT)
 			deselectAircraft();
 
 		altimeter.mousePressed(key, x, y);
@@ -554,7 +554,7 @@ public class Demo extends Scene {
 		if (selected_aircraft != null && land_button.isMouseOver(x, y))
 			land_button.act();
 
-		if (key == input.MOUSE_LEFT && airport.isMouseOver(x - 16, y - 16)) {
+		if (key == Input.MOUSE_LEFT && airport.isMouseOver(x - 16, y - 16)) {
 			// must wait at least 5 seconds between aircraft takeoff
 			if (next_take_off - time_elapsed <= 0) {
 				try {
@@ -567,7 +567,7 @@ public class Demo extends Scene {
 			}
 		}
 
-		if (key == input.MOUSE_LEFT && selected_waypoint != null) {
+		if (key == Input.MOUSE_LEFT && selected_waypoint != null) {
 
 			if (selected_aircraft.isManuallyControlled() == true) {
 
@@ -594,8 +594,8 @@ public class Demo extends Scene {
 		altimeter.mouseReleased(key, x, y);
 
 		if (compass_dragged && selected_aircraft != null) {
-			double dx = input.mouseX() - selected_aircraft.getPosition().x();
-			double dy = input.mouseY() - selected_aircraft.getPosition().y();
+			double dx = Input.getMouseX() - selected_aircraft.getPosition().x();
+			double dy = Input.getMouseY() - selected_aircraft.getPosition().y();
 			double new_heading = Math.atan2(dy, dx);
 
 			selected_aircraft.setBearing(new_heading);
@@ -615,35 +615,35 @@ public class Demo extends Scene {
 	public void keyReleased(int key) {
 		switch (key) {
 
-		case input.KEY_S:
-		case input.KEY_DOWN:
+		case Input.KEY_S:
+		case Input.KEY_DOWN:
 			if (selected_aircraft != null)
 				selected_aircraft.decreaseTargetAltitude();
 			break;
 
-		case input.KEY_W:
-		case input.KEY_UP:
+		case Input.KEY_W:
+		case Input.KEY_UP:
 			if (selected_aircraft != null)
 				selected_aircraft.increaseTargetAltitude();
 			break;
 
-		case input.KEY_SPACE:
+		case Input.KEY_SPACE:
 			toggleManualControl();
 			break;
 
-		case input.KEY_F:
+		case Input.KEY_F:
 			toggleLand();
 			break;
 
-		case input.KEY_LCRTL:
+		case Input.KEY_LCRTL:
 			generateFlight(false);
 			break;
 
-		case input.KEY_ESCAPE:
+		case Input.KEY_ESCAPE:
 			main.closeScene();
 			break;
 
-		case input.KEY_F5:
+		case Input.KEY_F5:
 			Aircraft a1 = createAircraft(false);
 			Aircraft a2 = createAircraft(true);
 			gameOver(a1, a2);
@@ -739,7 +739,7 @@ public class Demo extends Scene {
 		if (selected_waypoint != null
 				&& selected_aircraft.isManuallyControlled() == false) {
 			selected_aircraft.drawModifiedPath(selected_pathpoint,
-					input.mouseX() - 16, input.mouseY() - 16);
+					Input.getMouseX() - 16, Input.getMouseY() - 16);
 		}
 
 		Graphics.setViewport();

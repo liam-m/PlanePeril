@@ -12,7 +12,7 @@ import lib.jog.audio;
 import lib.jog.audio.Sound;
 import lib.jog.Graphics;
 import lib.jog.Graphics.Image;
-import lib.jog.input;
+import lib.jog.Input;
 import lib.jog.window;
 import cls.Aircraft;
 import cls.Vector;
@@ -136,7 +136,7 @@ public class GameOver extends Scene {
 	 */
 	@Override
 	public void keyReleased(int key) {
-		if (key == input.KEY_SPACE) {
+		if (key == Input.KEY_SPACE) {
 			main.closeScene();
 			main.closeScene();
 		}
