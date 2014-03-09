@@ -9,7 +9,6 @@ import org.newdawn.slick.openal.SoundStore;
 import org.newdawn.slick.util.ResourceLoader;
 
 /**
- * <h1>jog.audio</h1>
  * <p>Provides a layer upon OpenGL methods. jog.graphics allows drawing basic shapes to the screen,
  * as well as images and limited font capabilities. jog.graphics (unlike OpenGL) has the graphical origin to be the window's
  * upper-left corner.</p>
@@ -18,7 +17,6 @@ import org.newdawn.slick.util.ResourceLoader;
 public abstract class audio {
 	
 	/**
-	 * <h1>jog.audio.Music</h1>
 	 * <p>Essentially an object-orientated wrapper for the slick Music object.</p>
 	 * @author IMP1
 	 */
@@ -59,32 +57,23 @@ public abstract class audio {
 		 */
 		public void play() {
 			if (_isPaused) {
-				resume();
+				resumeMusic();
 			} else {
 				_source.playAsMusic(_pitch, _volume, _looping);
 			}
 		}
 		
-		/**
-		 * Stops playback of the music.
-		 */
-		public void stop() {
+		public void stopMusic() {
 			_source.stop();
 		}
-		
-		/**
-		 * Pauses playback of the music.
-		 */
-		public void pause() {
+
+		public void pauseMusic() {
 			_pausedPosition = tell();
 			_source.stop();
 			_isPaused = true;
 		}
 		
-		/**
-		 * Unpauses playback of the music.
-		 */
-		public void resume() {
+		public void resumeMusic() {
 			_source.playAsMusic(_pitch, _volume, _looping);
 			seek(_pausedPosition);
 			_isPaused = false;
@@ -105,11 +94,7 @@ public abstract class audio {
 		public void seek(float position) {
 			_source.setPosition(position);
 		}
-		
-		/**
-		 * Sets the volume for the music to be played at.
-		 * @param volume the volume at which to play the music.
-		 */
+
 		public void setVolume(float volume) {
 			float position = tell();
 			_source.stop();
@@ -118,10 +103,6 @@ public abstract class audio {
 			_volume = volume;
 		}
 		
-		/**
-		 * Gets the current volume the music is being played at.
-		 * @return the current volume.
-		 */
 		public float getVolume() {
 			return _volume;
 		}
@@ -148,17 +129,11 @@ public abstract class audio {
 			}
 		}
 		
-		/**
-		 * Begins playback of the music.
-		 */
-		public void play() {
+		public void playSound() {
 			_source.playAsSoundEffect(_pitch, _volume, false);
 		}
-		
-		/**
-		 * Stops playback of the sound effect.
-		 */
-		public void stop() {
+
+		public void stopSound() {
 			_source.stop();
 		}
 		

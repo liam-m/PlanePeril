@@ -752,7 +752,7 @@ public class Aircraft {
 
 				if (!collision_warning_sound_flag) {
 					collision_warning_sound_flag = true;
-					WARNING_SOUND.play();
+					WARNING_SOUND.playSound();
 				}
 				if (!was_breaching_in_last_frame) {
 					was_breaching_in_last_frame = true;

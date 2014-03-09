@@ -181,7 +181,7 @@ public class GameOver extends Scene {
 
 	@Override
 	public void playSound(Sound sound) {
-		sound.stop();
-		sound.play();
+		sound.stopSound();
+		sound.playSound();
 	}
 }

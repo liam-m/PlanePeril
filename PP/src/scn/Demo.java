@@ -474,8 +474,8 @@ public class Demo extends Scene {
 
 	@Override
 	public void playSound(audio.Sound sound) {
-		sound.stop();
-		sound.play();
+		sound.stopSound();
+		sound.playSound();
 	}
 
 	/**
@@ -891,7 +891,7 @@ public class Demo extends Scene {
 	 * cleanly exit by stopping the scene's music
 	 */
 	public void close() {
-		music.stop();
+		music.stopMusic();
 	}
 
 }

@@ -198,7 +198,7 @@ public class Credits extends Scene {
 
 	@Override
 	public void close() {
-		music.stop();
+		music.stopMusic();
 	}
 
 	@Override
