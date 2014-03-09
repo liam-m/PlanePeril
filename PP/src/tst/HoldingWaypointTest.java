@@ -17,7 +17,7 @@ import cls.Waypoint.WaypointType;
 
 
 public class HoldingWaypointTest {
-	HoldingWaypoint testWaypoint = new HoldingWaypoint(10, 10);
+	HoldingWaypoint test_waypoint = new HoldingWaypoint(10, 10);
 	
 	public HoldingWaypointTest() {
 		
@@ -53,26 +53,26 @@ public class HoldingWaypointTest {
 
 	@Test
 	public void testHoldingWaypoint() {
-		assertEquals(testWaypoint.position().x(), 10, 0);
-		assertEquals(testWaypoint.position().y(), 10, 0);
+		assertEquals(test_waypoint.position().x(), 10, 0);
+		assertEquals(test_waypoint.position().y(), 10, 0);
 		
 	}
 
 	@Test
 	public void testSetNextWaypoint() {
 		HoldingWaypoint testNextWaypoint = new HoldingWaypoint(20, 20);
-		testWaypoint.setNextWaypoint(testNextWaypoint);
-		assertEquals(testWaypoint.getNextWaypoint().position().x(), 20, 0);
-		assertEquals(testWaypoint.getNextWaypoint().position().y(), 20, 0);
+		test_waypoint.setNextWaypoint(testNextWaypoint);
+		assertEquals(test_waypoint.getNextWaypoint().position().x(), 20, 0);
+		assertEquals(test_waypoint.getNextWaypoint().position().y(), 20, 0);
 	
 	}
 
 	@Test
 	public void testGetNextWaypoint() {
 		HoldingWaypoint testNextWaypoint = new HoldingWaypoint(20, 20);
-		testWaypoint.setNextWaypoint(testNextWaypoint);
-		assertEquals(testWaypoint.getNextWaypoint().position().x(), 20, 0);
-		assertEquals(testWaypoint.getNextWaypoint().position().y(), 20, 0);
+		test_waypoint.setNextWaypoint(testNextWaypoint);
+		assertEquals(test_waypoint.getNextWaypoint().position().x(), 20, 0);
+		assertEquals(test_waypoint.getNextWaypoint().position().y(), 20, 0);
 		//fail("Not yet implemented");
 	}
 

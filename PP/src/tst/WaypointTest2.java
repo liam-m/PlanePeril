@@ -14,7 +14,7 @@ import cls.Waypoint.WaypointType;
 
 public class WaypointTest2 {
 	
-	Waypoint testWaypoint = new Waypoint(10, 10);
+	Waypoint test_waypoint = new Waypoint(10, 10);
 
 	
 	
@@ -40,60 +40,60 @@ public class WaypointTest2 {
 
 	@Test
 	public void testWaypointDoubleDoubleWaypointTypeString() {
-		Waypoint testWaypoint = new Waypoint(10, 10, WaypointType.REGULAR, "" );
-		Vector resultVector = testWaypoint.position();
-		assertTrue("Position = (10, 10, 0)", (10 == resultVector.x())
-				&& (10 == resultVector.y()) && (0 == resultVector.z()));
+		Waypoint test_waypoint = new Waypoint(10, 10, WaypointType.REGULAR, "" );
+		Vector result_vector = test_waypoint.position();
+		assertTrue("Position = (10, 10, 0)", (10 == result_vector.x())
+				&& (10 == result_vector.y()) && (0 == result_vector.z()));
 		//fail("Not yet implemented");
 	}
 
 	@Test
 	public void testWaypointDoubleDouble() {
-		Waypoint testWaypoint = new Waypoint(10, 10);
-		Vector resultVector = testWaypoint.position();
-		assertTrue("Position = (10, 10, 0)", (10 == resultVector.x())
-				&& (10 == resultVector.y()) && (0 == resultVector.z()));
+		Waypoint test_waypoint = new Waypoint(10, 10);
+		Vector result_vector = test_waypoint.position();
+		assertTrue("Position = (10, 10, 0)", (10 == result_vector.x())
+				&& (10 == result_vector.y()) && (0 == result_vector.z()));
 		//fail("Not yet implemented");
 	}
 
 	@Test
 	public void testPosition() {
-		assertEquals(testWaypoint.position().x(), 10, 0);
-		assertEquals(testWaypoint.position().x(), 10, 0);
+		assertEquals(test_waypoint.position().x(), 10, 0);
+		assertEquals(test_waypoint.position().x(), 10, 0);
 	}
 
 	@Test
 	public void testIsMouseOver() {
 		assertTrue("Mouse over = true",
-				true == testWaypoint.isMouseOver(10, 10));
+				true == test_waypoint.isMouseOver(10, 10));
 		//fail("Not yet implemented");
 	}
 
 	@Test															
 	public void testGetType() {
-		assertEquals(testWaypoint.getType(), WaypointType.REGULAR);
+		assertEquals(test_waypoint.getType(), WaypointType.REGULAR);
 	}
 
 	@Test
 	public void testGetCost() {
-		Waypoint testWaypoint2 = new Waypoint(10, 12);
-		double result = testWaypoint.getCost(testWaypoint2);
+		Waypoint test_waypoint2 = new Waypoint(10, 12);
+		double result = test_waypoint.getCost(test_waypoint2);
 		assertTrue("Cost = 2", 2 == result);
 		
 	}
 
 	@Test
 	public void testGetCostBetween() {
-		Waypoint testWaypoint2 = new Waypoint(10, 12);
-		double result = testWaypoint.getCost(testWaypoint2);
+		Waypoint test_waypoint2 = new Waypoint(10, 12);
+		double result = test_waypoint.getCost(test_waypoint2);
 		assertTrue("Cost = 2", 2 == result);
 		
 	}
 
 	@Test
 	public void testGetName() {
-		Waypoint testWaypoint = new Waypoint(10, 10, WaypointType.REGULAR, "INI" );
-		assertEquals(testWaypoint.getName(), "INI");
+		Waypoint test_waypoint = new Waypoint(10, 10, WaypointType.REGULAR, "INI" );
+		assertEquals(test_waypoint.getName(), "INI");
 	}
 
 	@Test

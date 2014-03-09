@@ -25,11 +25,11 @@ public class AirportTest {
 	
 	final static int MAX_AIRCRAFT_NUMBER = 10;
 
-	public ArrayList<Aircraft> aircraftList = new ArrayList<Aircraft>();
+	public ArrayList<Aircraft> aircraft_list = new ArrayList<Aircraft>();
 	
-	public ArrayList<Aircraft> aircraftInAirspace;
+	public ArrayList<Aircraft> aircraft_in_airspace;
 
-	public final Waypoint[] locationWaypoints = new Waypoint[] {
+	public final Waypoint[] location_waypoints = new Waypoint[] {
 	/* A set of Waypoints which are origin / destination points */
 
 			// top left
@@ -47,7 +47,7 @@ public class AirportTest {
 			// The airport
 			airport = new Airport(500, 500, "Airport"), };
 
-	public Waypoint[] airspaceWaypoints = new Waypoint[] {
+	public Waypoint[] airspace_waypoints = new Waypoint[] {
 
 			// airspace waypoints
 			new Waypoint(160, 174), // 0
@@ -60,18 +60,18 @@ public class AirportTest {
 
 			// destination/origin waypoints - present in this list for
 			// pathfinding.
-			locationWaypoints[0], // 10
-			locationWaypoints[1], // 11
-			locationWaypoints[2], // 12
-			locationWaypoints[3], // 13
-			locationWaypoints[4], // 14 - Airport
+			location_waypoints[0], // 10
+			location_waypoints[1], // 11
+			location_waypoints[2], // 12
+			location_waypoints[3], // 13
+			location_waypoints[4], // 14 - Airport
 	};
 
-	public Aircraft testAircraft;
+	public Aircraft test_aircraft;
 
-	public ArrayList<HoldingWaypoint> holdingWaypoints = new ArrayList<HoldingWaypoint>();
+	public ArrayList<HoldingWaypoint> holding_waypoints = new ArrayList<HoldingWaypoint>();
 
-	public final Waypoint takeoffWaypoint = new Waypoint(
+	public final Waypoint takeoff_waypoint = new Waypoint(
 			airport.position().x() - 60, airport.position().y());
 
 	public AirportTest() {
@@ -90,32 +90,32 @@ public class AirportTest {
 
 	@Before
 	public void setUp() throws Exception {
-		holdingWaypoints.add(new HoldingWaypoint(locationWaypoints[4]
+		holding_waypoints.add(new HoldingWaypoint(location_waypoints[4]
 				.position().x() - 100,
-				locationWaypoints[4].position().y() - 100));
-		holdingWaypoints.add(new HoldingWaypoint(locationWaypoints[4]
+				location_waypoints[4].position().y() - 100));
+		holding_waypoints.add(new HoldingWaypoint(location_waypoints[4]
 				.position().x() + 100,
-				locationWaypoints[4].position().y() - 100));
-		holdingWaypoints.add(new HoldingWaypoint(locationWaypoints[4]
+				location_waypoints[4].position().y() - 100));
+		holding_waypoints.add(new HoldingWaypoint(location_waypoints[4]
 				.position().x() + 100,
-				locationWaypoints[4].position().y() + 100));
-		holdingWaypoints.add(new HoldingWaypoint(locationWaypoints[4]
+				location_waypoints[4].position().y() + 100));
+		holding_waypoints.add(new HoldingWaypoint(location_waypoints[4]
 				.position().x() - 100,
-				locationWaypoints[4].position().y() + 100));
+				location_waypoints[4].position().y() + 100));
 
 		// Initialise values of setNextWaypoint.
-		holdingWaypoints.get(0).setNextWaypoint(holdingWaypoints.get(1));
-		holdingWaypoints.get(1).setNextWaypoint(holdingWaypoints.get(2));
-		holdingWaypoints.get(2).setNextWaypoint(holdingWaypoints.get(3));
-		holdingWaypoints.get(3).setNextWaypoint(holdingWaypoints.get(0));
+		holding_waypoints.get(0).setNextWaypoint(holding_waypoints.get(1));
+		holding_waypoints.get(1).setNextWaypoint(holding_waypoints.get(2));
+		holding_waypoints.get(2).setNextWaypoint(holding_waypoints.get(3));
+		holding_waypoints.get(3).setNextWaypoint(holding_waypoints.get(0));
 
-		aircraftInAirspace = new ArrayList<Aircraft>();
+		aircraft_in_airspace = new ArrayList<Aircraft>();
 
-		testAircraft = new Aircraft("testAircraft", null,
+		test_aircraft = new Aircraft("testAircraft", null,
 				32 + (int) (10 * Math.random()), Demo.DIFFICULTY_EASY,
-				aircraftInAirspace, new FlightPlan(locationWaypoints[0],
-						locationWaypoints[1], airspaceWaypoints,
-						holdingWaypoints, takeoffWaypoint));
+				aircraft_in_airspace, new FlightPlan(location_waypoints[0],
+						location_waypoints[1], airspace_waypoints,
+						holding_waypoints, takeoff_waypoint));
 	}
 
 	@After
@@ -132,7 +132,7 @@ public class AirportTest {
 	public void testInsertAircraft() {
 		try{ 
 		for(int i=1; i<12; i++)
-			airport.insertAircraft(testAircraft);
+			airport.insertAircraft(test_aircraft);
 		}
 		catch (Exception IllegalStateException){ 
 		assertTrue(true);
