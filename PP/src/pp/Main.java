@@ -8,10 +8,10 @@ import java.util.Stack;
 
 import lib.Serializer;
 import lib.jog.audio;
-import lib.jog.Graphics;
-import lib.jog.Input;
-import lib.jog.Input.EventHandler;
-import lib.jog.Window;
+import lib.jog.graphics;
+import lib.jog.input;
+import lib.jog.input.EventHandler;
+import lib.jog.window;
 
 import org.lwjgl.Sys;
 import org.newdawn.slick.Color;
@@ -67,7 +67,7 @@ public class Main implements EventHandler {
 		float scale = (float)(Math.min(width_scale, height_scale) * 0.98);	
 		start((int)(WIDTH*scale), (int)(HEIGHT*scale));
 		
-		while (!Window.isClosed()) {
+		while (!window.isClosed()) {
 			double time_difference = getTimeSinceLastFrame();
 			update(time_difference);
 			draw();
@@ -80,14 +80,14 @@ public class Main implements EventHandler {
 	 * variables.
 	 */
 	private void start(int width, int height) {
-		Window.initialiseWindow(TITLE, width, height);
-		Window.setIcon(ICON_FILENAMES);
+		window.initialiseWindow(TITLE, width, height);
+		window.setIcon(ICON_FILENAMES);
 
-		Graphics.initialise();
+		graphics.initialise();
 
-		Graphics.Font font = Graphics.newBitmapFont("gfx" + File.separator + "font.png",
+		graphics.Font font = graphics.newBitmapFont("gfx" + File.separator + "font.png",
 						"ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz1234567890.,_-!?()[]><#~:;/\\^'\"{}£$@@@@@@@@");
-		Graphics.setFont(font);
+		graphics.setFont(font);
 
 		scene_stack = new Stack<Scene>();
 		setScene(new Title(this));
@@ -108,8 +108,8 @@ public class Main implements EventHandler {
 	 */
 	private void update(double dt) {
 		audio.update();
-		Input.update(this);
-		Window.update();
+		input.update(this);
+		window.update();
 		current_scene.update(dt);
 		updateFPS();
 	}
@@ -132,7 +132,7 @@ public class Main implements EventHandler {
 	 * scene.
 	 */
 	private void draw() {
-		Graphics.clear();
+		graphics.clear();
 		current_scene.draw();
 	}
 
@@ -142,7 +142,7 @@ public class Main implements EventHandler {
 	 */
 	public void quit() {
 		current_scene.close();
-		Window.dispose();
+		window.dispose();
 		audio.dispose();
 		System.exit(0);
 	}
@@ -177,7 +177,7 @@ public class Main implements EventHandler {
 		long current_time = ((Sys.getTime() * 1000) / Sys.getTimerResolution());
 
 		if (current_time - last_fps_time > 1000) { // Update once a second
-			Window.setTitle(TITLE + " - FPS: " + fps_counter);
+			window.setTitle(TITLE + " - FPS: " + fps_counter);
 			fps_counter = 0; // Reset the FPS counter
 			last_fps_time += current_time - last_fps_time; // Add on time difference
 		}

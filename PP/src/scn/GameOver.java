@@ -10,17 +10,17 @@ import lib.SpriteAnimation;
 import lib.TextBox;
 import lib.jog.audio;
 import lib.jog.audio.Sound;
-import lib.jog.Graphics;
-import lib.jog.Graphics.Image;
-import lib.jog.Input;
-import lib.jog.Window;
+import lib.jog.graphics;
+import lib.jog.graphics.Image;
+import lib.jog.input;
+import lib.jog.window;
 import cls.Aircraft;
 import cls.Vector;
 
 public class GameOver extends Scene {
 	private TextBox text_box; // Text box to write the details of the game failure
 	private final SpriteAnimation explosion_animation; // A sprite animation to handle the frame by frame drawing of the explosion
-	private final Image explosion = Graphics.newImage("gfx" + File.separator + "explosionFrames.png"); // The explosion image to use for the animation
+	private final Image explosion = graphics.newImage("gfx" + File.separator + "explosionFrames.png"); // The explosion image to use for the animation
 	private double timer = 0; // Timer to allow for explosion and plane to be shown for a period, followed by the text box.
 	
 	// The two crashed aircraft, passed to the scene by the scene in which they
@@ -63,8 +63,8 @@ public class GameOver extends Scene {
 	public void start() {
 		playSound(audio.newSoundEffect("sfx" + File.separator + "crash.ogg"));
 
-		text_box = new lib.TextBox(64, 96, Window.getWidth() - 128,
-				Window.getHeight() - 96, 32);
+		text_box = new lib.TextBox(64, 96, window.getWidth() - 128,
+				window.getHeight() - 96, 32);
 		text_box.addText(String.valueOf(num_deaths) + " people died in the crash.");
 		text_box.delay(0.4);
 		text_box.addText("British Bearways is facing heavy legal pressure from the family and loved-ones of the dead and an investigation into the incident will be performed.");
@@ -136,7 +136,7 @@ public class GameOver extends Scene {
 	 */
 	@Override
 	public void keyReleased(int key) {
-		if (key == Input.KEY_SPACE) {
+		if (key == input.KEY_SPACE) {
 			main.closeScene();
 			main.closeScene();
 		}
@@ -149,13 +149,13 @@ public class GameOver extends Scene {
 	 * Otherwise, draw the planes and explosion
 	 */
 	public void draw() {
-		Graphics.setColour(Main.GREEN);
-		Graphics.printTextCentred(crashed_plane_1.getName() + " crashed into "
-				+ crashed_plane_2.getName() + ".", 0, 32, 2, Window.getWidth());
+		graphics.setColour(Main.GREEN);
+		graphics.printTextCentred(crashed_plane_1.getName() + " crashed into "
+				+ crashed_plane_2.getName() + ".", 0, 32, 2, window.getWidth());
 
-		Graphics.setColour(Main.GREEN);
-		Graphics.printTextCentred("You managed to earn " + this.score
-				+ " rubles before making your fatal error.", 0, 64, 2, Window.getWidth());
+		graphics.setColour(Main.GREEN);
+		graphics.printTextCentred("You managed to earn " + this.score
+				+ " rubles before making your fatal error.", 0, 64, 2, window.getWidth());
 
 		if (explosion_animation.hasFinished()) {
 			text_box.draw();
@@ -164,15 +164,15 @@ public class GameOver extends Scene {
 			crashed_plane_2.draw();
 			Vector midPoint = crash_position.add(crashed_plane_2.getPosition()).scaleBy(0.5);
 			double radius = 20;
-			Graphics.setColour(128, 0, 0);
-			Graphics.circle(false, midPoint.x(), midPoint.y(), radius);
+			graphics.setColour(128, 0, 0);
+			graphics.circle(false, midPoint.x(), midPoint.y(), radius);
 			explosion_animation.draw();
 		}
 
 		int opacity = (int) (255 * Math.sin(timer));
 
-		Graphics.setColour(0, 128, 0, opacity);
-		Graphics.printTextCentred("Press space to continue", 0,	Window.getHeight() - 256, 1, Window.getWidth());
+		graphics.setColour(0, 128, 0, opacity);
+		graphics.printTextCentred("Press space to continue", 0,	window.getHeight() - 256, 1, window.getWidth());
 	}
 
 	@Override

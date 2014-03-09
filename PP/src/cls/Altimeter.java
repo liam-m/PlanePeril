@@ -1,9 +1,9 @@
 package cls;
 
 import pp.Main;
-import lib.jog.Graphics;
-import lib.jog.Input;
-import lib.jog.Input.EventHandler;
+import lib.jog.graphics;
+import lib.jog.input;
+import lib.jog.input.EventHandler;
 
 /**
  * Shows the planes height in feet (whatever units you want). And the current
@@ -82,7 +82,7 @@ public class Altimeter implements EventHandler {
 	}
 
 	public boolean isMouseOver() {
-		return isMouseOver(Input.getMouseX(), Input.getMouseY());
+		return isMouseOver(input.getMouseX(), input.getMouseY());
 	}
 
 	@Override
@@ -102,7 +102,7 @@ public class Altimeter implements EventHandler {
 		if (!is_visible)
 			return;
 
-		if (key == Input.MOUSE_LEFT) {
+		if (key == input.MOUSE_LEFT) {
 			if (mouseOverTopButton(mx, my)) {
 				current_aircraft.increaseTargetAltitude();
 			} else if (mouseOverBottomButton(mx, my)) {
@@ -139,8 +139,8 @@ public class Altimeter implements EventHandler {
 	 * Draws the box around the altimeter
 	 */
 	private void drawRectangle() {
-		Graphics.setColour(Main.GREEN);
-		Graphics.rectangle(false, position_x, position_y, width, height);
+		graphics.setColour(Main.GREEN);
+		graphics.rectangle(false, position_x, position_y, width, height);
 	}
 
 	/**
@@ -161,19 +161,19 @@ public class Altimeter implements EventHandler {
 		double wingLength = width / 3 - 8;
 		double tailLength = width / 9;
 
-		Graphics.line(x, y, x + wingLength * Math.cos(r),
+		graphics.line(x, y, x + wingLength * Math.cos(r),
 				y + wingLength * Math.sin(r));
 		r -= Math.PI / 2;
-		Graphics.line(x, y, x + tailLength * Math.cos(r),
+		graphics.line(x, y, x + tailLength * Math.cos(r),
 				y + tailLength * Math.sin(r));
 		r -= Math.PI / 2;
-		Graphics.line(x, y, x + wingLength * Math.cos(r),
+		graphics.line(x, y, x + wingLength * Math.cos(r),
 				y + wingLength * Math.sin(r));
-		Graphics.setColour(0, 0, 0);
-		Graphics.circle(true, x, y, 4);
-		Graphics.setColour(Main.GREEN);
-		Graphics.circle(false, x, y, 4);
-		Graphics.printTextCentred(
+		graphics.setColour(0, 0, 0);
+		graphics.circle(true, x, y, 4);
+		graphics.setColour(Main.GREEN);
+		graphics.circle(false, x, y, 4);
+		graphics.printTextCentred(
 				String.format("%.0f", current_aircraft.getPosition().z()),
 				position_x, y + 32, 1, width);
 	}
@@ -183,8 +183,8 @@ public class Altimeter implements EventHandler {
 	 * aircraft is climbing or falling
 	 */
 	private void drawAltitudes() {
-		Graphics.setColour(0, 128, 0, 32);
-		Graphics.setViewport((int) position_x, (int) position_y, (int) width,
+		graphics.setColour(0, 128, 0, 32);
+		graphics.setViewport((int) position_x, (int) position_y, (int) width,
 				(int) height);
 
 		int midX = (int) (width / 2);
@@ -196,34 +196,34 @@ public class Altimeter implements EventHandler {
 			int offset = (int) (16.0 * (alt % 1000) / 1000);
 			int y = midY - (i * 16) + offset;
 
-			Graphics.line(midX - 64, y, midX + 64, y);
+			graphics.line(midX - 64, y, midX + 64, y);
 			alt -= (alt % 1000);
-			Graphics.print(String.valueOf(alt), midX + 72, y);
-			Graphics.print(String.valueOf(alt), midX - 72 - 40, y);
+			graphics.print(String.valueOf(alt), midX + 72, y);
+			graphics.print(String.valueOf(alt), midX - 72 - 40, y);
 
 		}
 
-		Graphics.setViewport();
-		Graphics.setColour(Main.GREEN);
+		graphics.setViewport();
+		graphics.setColour(Main.GREEN);
 	}
 
 	private void drawArrows() {
 		int midX = (int) (position_x + (width / 2));
-		Graphics.setColour(Main.GREEN);
+		graphics.setColour(Main.GREEN);
 
 		if (mouseOverTopButton()) {
-			Graphics.setColour(128, 128, 128);
+			graphics.setColour(128, 128, 128);
 		}
 
-		Graphics.triangle(true, midX - 10, position_y + 10, midX, position_y + 4,
+		graphics.triangle(true, midX - 10, position_y + 10, midX, position_y + 4,
 				midX + 10, position_y + 10);
-		Graphics.setColour(Main.GREEN);
+		graphics.setColour(Main.GREEN);
 
 		if (mouseOverBottomButton()) {
-			Graphics.setColour(128, 128, 128);
+			graphics.setColour(128, 128, 128);
 		}
 
-		Graphics.triangle(true, midX - 10, position_y + height - 10, midX,
+		graphics.triangle(true, midX - 10, position_y + height - 10, midX,
 				position_y + height - 4, midX + 10, position_y + height - 10);
 	}
 
@@ -241,7 +241,7 @@ public class Altimeter implements EventHandler {
 	}
 
 	private boolean mouseOverTopButton() {
-		return mouseOverTopButton(Input.getMouseX(), Input.getMouseY());
+		return mouseOverTopButton(input.getMouseX(), input.getMouseY());
 	}
 
 	private boolean mouseOverBottomButton(int mx, int my) {
@@ -258,7 +258,7 @@ public class Altimeter implements EventHandler {
 	}
 
 	private boolean mouseOverBottomButton() {
-		return mouseOverBottomButton(Input.getMouseX(), Input.getMouseY());
+		return mouseOverBottomButton(input.getMouseX(), input.getMouseY());
 	}
 
 }

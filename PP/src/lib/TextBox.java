@@ -1,7 +1,7 @@
 package lib;
 
 import pp.Main;
-import lib.jog.Graphics;
+import lib.jog.graphics;
 
 /**
  * Class for a visual representation text. It has word wrap enabled and prints out orders 
@@ -182,9 +182,9 @@ public class TextBox {
 	 * Prints the currently available characters of the TextBox.
 	 */
 	public void draw() {
-		Graphics.setColour(Main.GREEN);
+		graphics.setColour(Main.GREEN);
 		for (int i = 0; i < linesBeingUsed(); i ++) {
-			Graphics.print(orders[i], x_coordinate + 4, y_coordinate + 4 + (i * (height-8) / LINES));
+			graphics.print(orders[i], x_coordinate + 4, y_coordinate + 4 + (i * (height-8) / LINES));
 		}
 	}
 

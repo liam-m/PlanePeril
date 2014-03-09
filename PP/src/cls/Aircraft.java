@@ -7,10 +7,10 @@ import java.util.Arrays;
 import lib.RandomNumber;
 import lib.jog.audio;
 import lib.jog.audio.Sound;
-import lib.jog.Graphics;
-import lib.jog.Graphics.Image;
-import lib.jog.Input;
-import lib.jog.Window;
+import lib.jog.graphics;
+import lib.jog.graphics.Image;
+import lib.jog.input;
+import lib.jog.window;
 
 import pp.Main;
 
@@ -218,7 +218,7 @@ public class Aircraft {
 	public boolean isOutOfBounds() {
 		double x = position.x();
 		double y = position.y();
-		return (x < 0 || x > Window.getWidth() - 32 || y < 0 || y > Window.getHeight() - 144);
+		return (x < 0 || x > window.getWidth() - 32 || y < 0 || y > window.getHeight() - 144);
 	}
 
 	/**
@@ -391,7 +391,7 @@ public class Aircraft {
 	 * @return true, if the mouse is close enough to this plane. False, otherwise.
 	 */
 	public boolean isMouseOver() {
-		return isMouseOver(Input.getMouseX(), Input.getMouseY());
+		return isMouseOver(input.getMouseX(), input.getMouseY());
 	}
 
 	/**
@@ -605,16 +605,16 @@ public class Aircraft {
 		float scale = 2;
 
 		// Draws the aircraft itself
-		Graphics.setColour(Main.GREY);
-		Graphics.draw(image, scale, position.x(), position.y(), getBearing(), 8, 8);
+		graphics.setColour(Main.GREY);
+		graphics.draw(image, scale, position.x(), position.y(), getBearing(), 8, 8);
 
 		// Draw the altitude near the aircraft
 		// £ is rendered as cursive "ft" from font file
-		Graphics.print(String.format("%.0f", position.z()) + "£", position.x() - 22, position.y() + 15);
+		graphics.print(String.format("%.0f", position.z()) + "£", position.x() - 22, position.y() + 15);
 
 		// Draw the 'land me' message once an aircraft is circling the airport
 		if (current_target instanceof HoldingWaypoint) {
-			Graphics.print(infoText, position.x() - 28, position.y() - 22);
+			graphics.print(infoText, position.x() - 28, position.y() - 22);
 		}
 
 		drawWarningCircles();
@@ -624,8 +624,8 @@ public class Aircraft {
 	 * Draws the compass around this plane
 	 */
 	public void drawCompass() {
-		Graphics.setColour(Main.GREEN);
-		Graphics.circle(false, position.x() + 16, position.y() + 16, COMPASS_RADIUS);
+		graphics.setColour(Main.GREEN);
+		graphics.circle(false, position.x() + 16, position.y() + 16, COMPASS_RADIUS);
 
 		for (int i = 0; i < 360; i += 60) {
 			double r = Math.toRadians(i - 90);
@@ -635,32 +635,32 @@ public class Aircraft {
 				x -= 24;
 			if (i == 180)
 				x += 12;
-			Graphics.print(String.valueOf(i), x, y);
+			graphics.print(String.valueOf(i), x, y);
 		}
 
 		double x, y;
 
-		if (is_manually_controlled && Input.isMouseDown(Input.MOUSE_LEFT)) {
-			Graphics.setColour(0, 128, 0, 128);
-			double r = Math.atan2(Input.getMouseY() - position.y(), Input.getMouseX() - position.x());
+		if (is_manually_controlled && input.isMouseDown(input.MOUSE_LEFT)) {
+			graphics.setColour(0, 128, 0, 128);
+			double r = Math.atan2(input.getMouseY() - position.y(), input.getMouseX() - position.x());
 			x = 16 + position.x() + (COMPASS_RADIUS * Math.cos(r));
 			y = 16 + position.y() + (COMPASS_RADIUS * Math.sin(r));
-			Graphics.line(position.x() + 16, position.y() + 16, x, y);
-			Graphics.line(position.x() + 15, position.y() + 16, x, y);
-			Graphics.line(position.x() + 16, position.y() + 15, x, y);
-			Graphics.line(position.x() + 17, position.y() + 16, x, y);
-			Graphics.line(position.x() + 17, position.y() + 17, x, y);
-			Graphics.setColour(0, 128, 0, 16);
+			graphics.line(position.x() + 16, position.y() + 16, x, y);
+			graphics.line(position.x() + 15, position.y() + 16, x, y);
+			graphics.line(position.x() + 16, position.y() + 15, x, y);
+			graphics.line(position.x() + 17, position.y() + 16, x, y);
+			graphics.line(position.x() + 17, position.y() + 17, x, y);
+			graphics.setColour(0, 128, 0, 16);
 		}
 
 		x = 16 + position.x() + (COMPASS_RADIUS * Math.cos(getBearing()));
 		y = 16 + position.y() + (COMPASS_RADIUS * Math.sin(getBearing()));
 
-		Graphics.line(position.x() + 16, position.y() + 16, x, y);
-		Graphics.line(position.x() + 15, position.y() + 16, x, y);
-		Graphics.line(position.x() + 16, position.y() + 15, x, y);
-		Graphics.line(position.x() + 17, position.y() + 16, x, y);
-		Graphics.line(position.x() + 17, position.y() + 17, x, y);
+		graphics.line(position.x() + 16, position.y() + 16, x, y);
+		graphics.line(position.x() + 15, position.y() + 16, x, y);
+		graphics.line(position.x() + 16, position.y() + 15, x, y);
+		graphics.line(position.x() + 17, position.y() + 16, x, y);
+		graphics.line(position.x() + 17, position.y() + 17, x, y);
 	}
 
 	/**
@@ -671,8 +671,8 @@ public class Aircraft {
 			Vector midPoint = position.add(plane.position).scaleBy(0.5);
 			double radius = position.sub(midPoint).magnitude() * 2;
 
-			Graphics.setColour(Main.RED);
-			Graphics.circle(false, midPoint.x(), midPoint.y(), radius);
+			graphics.setColour(Main.RED);
+			graphics.circle(false, midPoint.x(), midPoint.y(), radius);
 		}
 	}
 
@@ -682,23 +682,23 @@ public class Aircraft {
 	 */
 	public void drawFlightPath(boolean is_selected) {
 		if (is_selected) {
-			Graphics.setColour(0, 128, 128);
+			graphics.setColour(0, 128, 128);
 		} else {
-			Graphics.setColour(0, 128, 128, 128);
+			graphics.setColour(0, 128, 128, 128);
 		}
 
 		if (current_target != flight_plan.getDestination()) {
-			Graphics.line(position.x(), position.y(), flight_plan.getRoute()[current_route_stage].position().x(), flight_plan.getRoute()[current_route_stage].position().y());
+			graphics.line(position.x(), position.y(), flight_plan.getRoute()[current_route_stage].position().x(), flight_plan.getRoute()[current_route_stage].position().y());
 		}
 
 		for (int i = current_route_stage; i < flight_plan.getRoute().length - 1; i++) {
-			Graphics.line(flight_plan.getRoute()[i].position().x(), flight_plan.getRoute()[i].position().y(),	flight_plan.getRoute()[i + 1].position().x(), flight_plan.getRoute()[i + 1].position().y());
+			graphics.line(flight_plan.getRoute()[i].position().x(), flight_plan.getRoute()[i].position().y(),	flight_plan.getRoute()[i + 1].position().x(), flight_plan.getRoute()[i + 1].position().y());
 		}
 
 		if (current_target == flight_plan.getDestination()) {
-			Graphics.line(position.x(), position.y(), flight_plan.getDestination().position().x(), flight_plan.getDestination().position().y());
+			graphics.line(position.x(), position.y(), flight_plan.getDestination().position().x(), flight_plan.getDestination().position().y());
 		} else {
-			Graphics.line(flight_plan.getRoute()[flight_plan.getRoute().length - 1].position().x(), flight_plan.getRoute()[flight_plan.getRoute().length - 1].position().y(), flight_plan.getDestination().position().x(), flight_plan.getDestination().position().y());
+			graphics.line(flight_plan.getRoute()[flight_plan.getRoute().length - 1].position().x(), flight_plan.getRoute()[flight_plan.getRoute().length - 1].position().y(), flight_plan.getDestination().position().x(), flight_plan.getDestination().position().y());
 		}
 	}
 
@@ -709,23 +709,23 @@ public class Aircraft {
 	 * @param mouse_y Current y position of mouse
 	 */
 	public void drawModifiedPath(int modified, double mouse_x, double mouse_y) {
-		Graphics.setColour(0, 128, 128, 128);
+		graphics.setColour(0, 128, 128, 128);
 
 		if (current_route_stage > modified - 1) {
-			Graphics.line(getPosition().x(), getPosition().y(), mouse_x, mouse_y);
+			graphics.line(getPosition().x(), getPosition().y(), mouse_x, mouse_y);
 		} else {
-			Graphics.line(flight_plan.getRoute()[modified - 1].position().x(), flight_plan.getRoute()[modified - 1].position().y(), mouse_x, mouse_y);
+			graphics.line(flight_plan.getRoute()[modified - 1].position().x(), flight_plan.getRoute()[modified - 1].position().y(), mouse_x, mouse_y);
 		}
 
 		if (current_target == flight_plan.getDestination()) {
-			Graphics.line(mouse_x, mouse_y, flight_plan.getDestination().position().x(), flight_plan.getDestination().position().y());
+			graphics.line(mouse_x, mouse_y, flight_plan.getDestination().position().x(), flight_plan.getDestination().position().y());
 		} else {
 			int index = modified + 1;
 
 			if (index == flight_plan.getRoute().length) { // Modifying final waypoint in route
-				Graphics.line(mouse_x, mouse_y, flight_plan.getDestination().position().x(), flight_plan.getDestination().position().y()); // Line drawn to final waypoint
+				graphics.line(mouse_x, mouse_y, flight_plan.getDestination().position().x(), flight_plan.getDestination().position().y()); // Line drawn to final waypoint
 			} else {
-				Graphics.line(mouse_x, mouse_y, flight_plan.getRoute()[index].position().x(), flight_plan.getRoute()[index].position().y());
+				graphics.line(mouse_x, mouse_y, flight_plan.getRoute()[index].position().x(), flight_plan.getRoute()[index].position().y());
 			}
 		}
 	}

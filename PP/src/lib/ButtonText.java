@@ -1,7 +1,7 @@
 package lib;
 
-import lib.jog.Graphics;
-import lib.jog.Input;
+import lib.jog.graphics;
+import lib.jog.input;
 
 public class ButtonText {
 	
@@ -50,7 +50,7 @@ public class ButtonText {
 	}
 	
 	public boolean isMouseOver() { 
-		return isMouseOver(Input.getMouseX(), Input.getMouseY()); 
+		return isMouseOver(input.getMouseX(), input.getMouseY()); 
 	}
 	
 	public void setText(String newText) {
@@ -69,14 +69,14 @@ public class ButtonText {
 	
 	public void draw() {
 		if (!available) {
-			Graphics.setColour(colour_unavailable);
+			graphics.setColour(colour_unavailable);
 		}
 		else if (isMouseOver()) {
-			Graphics.setColour(colour_hover);
+			graphics.setColour(colour_hover);
 		} else {
-			Graphics.setColour(colour_default);
+			graphics.setColour(colour_default);
 		}
-		Graphics.print(text, x_coordinate + x_offset, y_coordinate + y_offset);
+		graphics.print(text, x_coordinate + x_offset, y_coordinate + y_offset);
 	}
 
 }

@@ -9,8 +9,8 @@ import pp.Main;
 import lib.Serializer;
 import lib.TextBox;
 import lib.jog.audio.Sound;
-import lib.jog.Graphics;
-import lib.jog.Window;
+import lib.jog.graphics;
+import lib.jog.window;
 
 public class HighScores extends Scene {
 	private static final int MAX_NUM_SCORES_TO_DISPLAY = 10;
@@ -33,7 +33,7 @@ public class HighScores extends Scene {
 			scores = (ArrayList<Integer>) Serializer.getRecovered();
 		}
 
-		text_box = new lib.TextBox(64, 96, Window.getWidth() - 128, Window.getHeight() - 96, 32);
+		text_box = new lib.TextBox(64, 96, window.getWidth() - 128, window.getHeight() - 96, 32);
 		text_box.addText("HIGH SCORES");
 
 		// Convert ArrayList into regular array to make sorting simpler
@@ -84,12 +84,12 @@ public class HighScores extends Scene {
 	/**
 	 */
 	public void draw() {
-		Graphics.setColour(Main.GREEN);
+		graphics.setColour(Main.GREEN);
 
 		text_box.draw();
 
-		Graphics.setColour(0, 128, 0, 255);
-		Graphics.printTextCentred("Press any key to continue", 0, Window.getHeight() - 256, 1, Window.getWidth());
+		graphics.setColour(0, 128, 0, 255);
+		graphics.printTextCentred("Press any key to continue", 0, window.getHeight() - 256, 1, window.getWidth());
 	}
 
 	@Override

@@ -4,24 +4,24 @@ import pp.Main;
 import lib.ButtonText;
 import lib.TextBox;
 import lib.jog.audio.Sound;
-import lib.jog.Graphics;
-import lib.jog.Input;
-import lib.jog.Window;
+import lib.jog.graphics;
+import lib.jog.input;
+import lib.jog.window;
 
 public class DifficultySelect extends Scene {
 
 	// Position of things to draw in the window
-	private final int EASY_BUTTON_X = Window.getWidth() / 4;
-	private final int EASY_BUTTON_Y = 2 * Window.getHeight() / 3;
+	private final int EASY_BUTTON_X = window.getWidth() / 4;
+	private final int EASY_BUTTON_Y = 2 * window.getHeight() / 3;
 	private final int EASY_BUTTON_W = 128;
 	private final int EASY_BUTTON_H = 16;
 
-	private final int MEDIUM_BUTTON_X = Window.getWidth() / 2;
+	private final int MEDIUM_BUTTON_X = window.getWidth() / 2;
 	private final int MEDIUM_BUTTON_Y = EASY_BUTTON_Y;
 	private final int MEDIUM_BUTTON_W = EASY_BUTTON_W;
 	private final int MEDIUM_BUTTON_H = EASY_BUTTON_H;
 
-	private final int HARD_BUTTON_X = 3 * Window.getWidth() / 4;
+	private final int HARD_BUTTON_X = 3 * window.getWidth() / 4;
 	private final int HARD_BUTTON_Y = EASY_BUTTON_Y;
 	private final int HARD_BUTTON_W = EASY_BUTTON_W;
 	private final int HARD_BUTTON_H = EASY_BUTTON_H;
@@ -95,7 +95,7 @@ public class DifficultySelect extends Scene {
 		buttons[2] = new ButtonText("Hard", hard, HARD_BUTTON_X, HARD_BUTTON_Y,
 				HARD_BUTTON_W, HARD_BUTTON_H);
 
-		text_box = new TextBox(128, 96, Window.getWidth() - 256, Window.getHeight() - 96, 32);
+		text_box = new TextBox(128, 96, window.getWidth() - 256, window.getHeight() - 96, 32);
 		text_box.addText("You are a 500 kilogram ferocious Grizzly Bear." + TextBox.DELAY_START + "0.5" + TextBox.DELAY_END
 				+ " The Humans are not aware of your hidden identity.");
 		text_box.delay(0.5);
@@ -124,11 +124,11 @@ public class DifficultySelect extends Scene {
 	 */
 	@Override
 	public void draw() {
-		Graphics.setColour(Main.GREEN);
-		Graphics.printTextCentred("Select the difficulty:", Window.getWidth() / 2,	Window.getHeight() / 2 + 50, 1, 100);
-		Graphics.rectangle(false, EASY_BUTTON_X, EASY_BUTTON_Y, EASY_BUTTON_W, EASY_BUTTON_H);
-		Graphics.rectangle(false, MEDIUM_BUTTON_X, MEDIUM_BUTTON_Y, MEDIUM_BUTTON_W, MEDIUM_BUTTON_H);
-		Graphics.rectangle(false, HARD_BUTTON_X, HARD_BUTTON_Y, HARD_BUTTON_W, HARD_BUTTON_H);
+		graphics.setColour(Main.GREEN);
+		graphics.printTextCentred("Select the difficulty:", window.getWidth() / 2,	window.getHeight() / 2 + 50, 1, 100);
+		graphics.rectangle(false, EASY_BUTTON_X, EASY_BUTTON_Y, EASY_BUTTON_W, EASY_BUTTON_H);
+		graphics.rectangle(false, MEDIUM_BUTTON_X, MEDIUM_BUTTON_Y, MEDIUM_BUTTON_W, MEDIUM_BUTTON_H);
+		graphics.rectangle(false, HARD_BUTTON_X, HARD_BUTTON_Y, HARD_BUTTON_W, HARD_BUTTON_H);
 
 		for (ButtonText button : buttons) {
 			button.draw();
@@ -171,7 +171,7 @@ public class DifficultySelect extends Scene {
 	 */
 	@Override
 	public void keyReleased(int key) {
-		if (key == Input.KEY_ESCAPE) {
+		if (key == input.KEY_ESCAPE) {
 			main.closeScene();
 		}
 	}

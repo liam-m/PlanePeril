@@ -9,7 +9,7 @@ import org.lwjgl.input.Keyboard;
  * jog.input gives all necessary methods, abstracting away, but also allowing for extension.</p>
  * @author IMP1
  */
-public abstract class Input {
+public abstract class input{
 	
 	/**
 	 * Interface for a class that is to receive keyboard and mouse events.
@@ -106,7 +106,7 @@ public abstract class Input {
 	}
 	
 	public static int getMouseY() {
-		return Window.getHeight() - Mouse.getY();
+		return window.getHeight() - Mouse.getY();
 	}
 	
 	

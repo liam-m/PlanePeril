@@ -1,6 +1,6 @@
 package cls;
 
-import lib.jog.Graphics;
+import lib.jog.graphics;
 
 public class Waypoint {
 
@@ -133,9 +133,9 @@ public class Waypoint {
 	 *            the y location to draw at
 	 */
 	public void draw(double x, double y) {
-		Graphics.setColour(128, 0, 0, 128);
-		Graphics.circle(false, x, y, RADIUS);
-		Graphics.circle(true, x, y, RADIUS - 2);
+		graphics.setColour(128, 0, 0, 128);
+		graphics.circle(false, x, y, RADIUS);
+		graphics.circle(true, x, y, RADIUS - 2);
 
 	}
 

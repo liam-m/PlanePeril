@@ -17,7 +17,7 @@ import org.newdawn.slick.util.ResourceLoader;
  * <p>Provides a layer upon LWJGL and Slick. jog.window allows a window to be created and managed.</p>
  * @author IMP1
  */
-public abstract class Window {
+public abstract class window{
 	
 	final private static int FPS = 60;
 	

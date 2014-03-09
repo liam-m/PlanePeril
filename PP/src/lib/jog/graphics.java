@@ -18,7 +18,7 @@ import org.newdawn.slick.util.ResourceLoader;
  * upper-left corner.</p>
  * @author IMP1
  */
-public abstract class Graphics {
+public abstract class graphics{
 	
 	/**
 	 * <p>Abstract font class with print methods.</p>
@@ -44,7 +44,7 @@ public abstract class Graphics {
 		
 		@Override
 		protected void print(double x, double y, String text, double size) {
-			y = Window.getHeight() - y;
+			y = window.getHeight() - y;
 			double w = image.getHeight();
 			double h = -image.getHeight();
 			double qw = w / image.getWidth();
@@ -75,7 +75,7 @@ public abstract class Graphics {
 		
 		@Override
 		protected void printCentred(double x, double y, double width, String text, double size) {
-			y = Window.getHeight() - y;
+			y = window.getHeight() - y;
 			double w = image.getHeight();
 			double h = -image.getHeight();
 			double qw = w / image.getWidth();
@@ -127,7 +127,7 @@ public abstract class Graphics {
 		
 		@Override
 		protected void print(double x, double y, String text, double size) {
-			y = y - Window.getHeight();
+			y = y - window.getHeight();
 			glPushMatrix();
 			glScaled(1, -1, 0);
 			_font.drawString((int)x, (int)y, text);
@@ -144,7 +144,7 @@ public abstract class Graphics {
 		 */
 		@Override
 		public void printCentred(double x, double y, double width, String text, double size) {
-			y = y - Window.getHeight();
+			y = y - window.getHeight();
 			x += (width - _font.getWidth(text)) / 2;
 			glPushMatrix();
 			glScaled(1, -1, 0);
@@ -234,7 +234,7 @@ public abstract class Graphics {
 	static public void initialise() {
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		glOrtho(0, Window.getWidth(), 0, Window.getHeight(), -1, 1);
+		glOrtho(0, window.getWidth(), 0, window.getHeight(), -1, 1);
 		glMatrixMode(GL_MODELVIEW);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -293,7 +293,7 @@ public abstract class Graphics {
 	static public void setViewport(int x, int y, int width, int height) {
 		glPushMatrix();
 		glTranslated(x, -y, 0);
-		y = Window.getHeight() - y;
+		y = window.getHeight() - y;
 		glEnable(GL_SCISSOR_TEST);		
 		glScissor(x, y - height, width, height);
 		viewPortEnabled = true;
@@ -364,7 +364,7 @@ public abstract class Graphics {
 	 * @param oy the y coordinate of the origin of the image around which it is rotated.
 	 */
 	static public void draw(Image drawable, double x, double y, double r, double ox, double oy) {
-		y = Window.getHeight() - y;
+		y = window.getHeight() - y;
 		r = -Math.toDegrees(r);
 		
     	glEnable(GL_TEXTURE_2D);
@@ -388,7 +388,7 @@ public abstract class Graphics {
 	}
 	
 	static public void draw(Image drawable, double scale, double x, double y, double r, double ox, double oy) {
-		y = Window.getHeight() - y;
+		y = window.getHeight() - y;
 		r = -Math.toDegrees(r);
 		
     	glEnable(GL_TEXTURE_2D);
@@ -418,7 +418,7 @@ public abstract class Graphics {
 	 * @param y the vertical pixel to draw at.
 	 */
 	static public void draw(Image drawable, double x, double y) {
-		y = Window.getHeight() - y;
+		y = window.getHeight() - y;
 		double w = drawable.getWidth();
 		double h = -drawable.getHeight();
 		
@@ -448,7 +448,7 @@ public abstract class Graphics {
 	 * @param y the vertical pixel to draw at.
 	 */
 	static public void drawQ(Image drawable, Quad quad, double x, double y) {
-		y = Window.getHeight() - y;
+		y = window.getHeight() - y;
 		double w = quad.quadWidth;
 		double h = -quad.quadHeight;
 		
@@ -471,8 +471,8 @@ public abstract class Graphics {
 	}
 	
 	static public void line(double x1, double y1, double x2, double y2) {//x1,y1 are coords of the first point etc. 
-		y1 = Window.getHeight() - y1;
-		y2 = Window.getHeight() - y2;
+		y1 = window.getHeight() - y1;
+		y2 = window.getHeight() - y2;
 		
 		glBegin(GL_LINE_STRIP);
 		glVertex2d(x1, y1);
@@ -482,9 +482,9 @@ public abstract class Graphics {
 	
 	//x1,y1 are coords of the first point etc. 
 	public static void triangle(boolean fill, double x1, double y1, double x2, double y2, double x3, double y3) { 
-		y1 = Window.getHeight() - y1;
-		y2 = Window.getHeight() - y2;
-		y3 = Window.getHeight() - y3;
+		y1 = window.getHeight() - y1;
+		y2 = window.getHeight() - y2;
+		y3 = window.getHeight() - y3;
 		
 	    if (fill) {
 		    glBegin(GL_TRIANGLES);
@@ -501,7 +501,7 @@ public abstract class Graphics {
 	}
 	
 	static public void rectangle(boolean fill, double x, double y, double width, double height) {
-		y = Window.getHeight() - y;
+		y = window.getHeight() - y;
 		height = -height;
 		
 		glPushMatrix();
@@ -533,7 +533,7 @@ public abstract class Graphics {
 	 * @param segments how many lines segments to draw to approximate the curve. 
 	 */
 	static public void arc(boolean fill, double x, double y, double r, double startAngle, double angle, double segments) {
-		y = Window.getHeight() - y;
+		y = window.getHeight() - y;
 		startAngle = -startAngle;
 		angle = -angle;
 		
@@ -559,7 +559,7 @@ public abstract class Graphics {
 	
 
 	static public void circle(boolean fill, double x, double y, double radius, double segments) {
-		y = Window.getHeight() - y;
+		y = window.getHeight() - y;
 		
 		glPushMatrix();
 		glTranslated(x, y, 0);

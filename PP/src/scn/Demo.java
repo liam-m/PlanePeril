@@ -10,10 +10,10 @@ import lib.ButtonText;
 import lib.RandomNumber;
 import lib.jog.audio;
 import lib.jog.audio.Music;
-import lib.jog.Graphics;
-import lib.jog.Graphics.Image;
-import lib.jog.Input;
-import lib.jog.Window;
+import lib.jog.graphics;
+import lib.jog.graphics.Image;
+import lib.jog.input;
+import lib.jog.window;
 import cls.Aircraft;
 import cls.Airport;
 import cls.Altimeter;
@@ -27,18 +27,18 @@ public class Demo extends Scene {
 
 	// Position of things drawn to window
 	private final int PLANE_INFO_X = 16;
-	private final int PLANE_INFO_Y = Window.getHeight() - 120;
-	private final int PLANE_INFO_W = Window.getWidth() / 4 - 16;
+	private final int PLANE_INFO_Y = window.getHeight() - 120;
+	private final int PLANE_INFO_W = window.getWidth() / 4 - 16;
 	private final int PLANE_INFO_H = 112;
 
 	private final int ALTIMETER_X = PLANE_INFO_X + PLANE_INFO_W + 8;
-	private final int ALTIMETER_Y = Window.getHeight() - 120;
+	private final int ALTIMETER_Y = window.getHeight() - 120;
 	private final int ALTIMETER_W = 244;
 	private final int ALTIMETER_H = 112;
 
 	private final int ORDERSBOX_X = ALTIMETER_X + ALTIMETER_W + 8;
-	private final static int ORDERSBOX_Y = Window.getHeight() - 120;
-	private final int ORDERSBOX_W = Window.getWidth() - (ORDERSBOX_X + 16);
+	private final static int ORDERSBOX_Y = window.getHeight() - 120;
+	private final int ORDERSBOX_W = window.getWidth() - (ORDERSBOX_X + 16);
 	private final static int ORDERSBOX_H = 112;
 
 	// Static Final Ints for difficulty settings
@@ -136,15 +136,15 @@ public class Demo extends Scene {
 					"North West Top Leftonia"),
 
 			// bottom left
-			new Waypoint(8, Window.getHeight() - ORDERSBOX_H - 40,
+			new Waypoint(8, window.getHeight() - ORDERSBOX_H - 40,
 					WaypointType.ENTRY_EXIT, "100 Acre Woods"),
 
 			// top right
-			new Waypoint(Window.getWidth() - 40, 8, WaypointType.ENTRY_EXIT,
+			new Waypoint(window.getWidth() - 40, 8, WaypointType.ENTRY_EXIT,
 					"City of Rightson"),
 
 			// bottom right
-			new Waypoint(Window.getWidth() - 40, Window.getHeight() - ORDERSBOX_H
+			new Waypoint(window.getWidth() - 40, window.getHeight() - ORDERSBOX_H
 					- 40, WaypointType.ENTRY_EXIT, "South Sea"),
 
 			// The airport
@@ -212,7 +212,7 @@ public class Demo extends Scene {
 	 * Shorten flight generation timer according to difficulty
 	 */
 	public void start() {
-		background = Graphics.newImage("gfx" + File.separator + "map.png");
+		background = graphics.newImage("gfx" + File.separator + "map.png");
 		music = audio.newMusic("sfx" + File.separator + "Gypsy_Shoegazer.ogg");
 		music.play();
 
@@ -243,7 +243,7 @@ public class Demo extends Scene {
 
 		aircraft_in_airspace = new ArrayList<Aircraft>();
 
-		aircraft_image = Graphics.newImage("gfx" + File.separator + "plane.png");
+		aircraft_image = graphics.newImage("gfx" + File.separator + "plane.png");
 
 		ButtonText.Action manual = new ButtonText.Action() {
 			@Override
@@ -253,7 +253,7 @@ public class Demo extends Scene {
 		};
 
 		manual_override_button = new ButtonText(Texts.TAKE_CONTROL, manual,
-				(Window.getWidth() - 128) / 2, 32, 128, 32, 8, 4);
+				(window.getWidth() - 128) / 2, 32, 128, 32, 8, 4);
 
 		// the action that is called once the land button is clicked.
 		ButtonText.Action land = new ButtonText.Action() {
@@ -265,7 +265,7 @@ public class Demo extends Scene {
 		};
 
 		land_button = new ButtonText(Texts.LAND, land,
-				(Window.getWidth() - 500) / 2, 32, 128, 32, 8, 4);
+				(window.getWidth() - 500) / 2, 32, 128, 32, 8, 4);
 
 		time_elapsed = 0;
 		compass_dragged = false;
@@ -422,10 +422,10 @@ public class Demo extends Scene {
 
 		if (selected_aircraft != null) {
 
-			if (Input.isKeyDown(Input.KEY_LEFT) || Input.isKeyDown(Input.KEY_A)) {
+			if (input.isKeyDown(input.KEY_LEFT) || input.isKeyDown(input.KEY_A)) {
 				selected_aircraft.turnLeft(dt);
 				is_manually_controlling = true;
-			} else if (Input.isKeyDown(Input.KEY_RIGHT) || Input.isKeyDown(Input.KEY_D)) {
+			} else if (input.isKeyDown(input.KEY_RIGHT) || input.isKeyDown(input.KEY_D)) {
 				selected_aircraft.turnRight(dt);
 				is_manually_controlling = true;
 			}
@@ -498,7 +498,7 @@ public class Demo extends Scene {
 	 */
 	@Override
 	public void mousePressed(int key, int x, int y) {
-		if (key == Input.MOUSE_LEFT) {
+		if (key == input.MOUSE_LEFT) {
 
 			Aircraft new_selected = selected_aircraft;
 
@@ -528,9 +528,9 @@ public class Demo extends Scene {
 						&& selected_aircraft.isManuallyControlled()) {
 					// If mouse is over compass
 					double dx = selected_aircraft.getPosition().x()
-							- Input.getMouseX();
+							- input.getMouseX();
 					double dy = selected_aircraft.getPosition().y()
-							- Input.getMouseY();
+							- input.getMouseY();
 					int r = Aircraft.COMPASS_RADIUS;
 					if (dx * dx + dy * dy < r * r) {
 						compass_dragged = true;
@@ -540,7 +540,7 @@ public class Demo extends Scene {
 			}
 		}
 
-		if (key == Input.MOUSE_RIGHT)
+		if (key == input.MOUSE_RIGHT)
 			deselectAircraft();
 
 		altimeter.mousePressed(key, x, y);
@@ -554,7 +554,7 @@ public class Demo extends Scene {
 		if (selected_aircraft != null && land_button.isMouseOver(x, y))
 			land_button.act();
 
-		if (key == Input.MOUSE_LEFT && airport.isMouseOver(x - 16, y - 16)) {
+		if (key == input.MOUSE_LEFT && airport.isMouseOver(x - 16, y - 16)) {
 			// must wait at least 5 seconds between aircraft takeoff
 			if (next_take_off - time_elapsed <= 0) {
 				try {
@@ -567,7 +567,7 @@ public class Demo extends Scene {
 			}
 		}
 
-		if (key == Input.MOUSE_LEFT && selected_waypoint != null) {
+		if (key == input.MOUSE_LEFT && selected_waypoint != null) {
 
 			if (selected_aircraft.isManuallyControlled() == true) {
 
@@ -594,8 +594,8 @@ public class Demo extends Scene {
 		altimeter.mouseReleased(key, x, y);
 
 		if (compass_dragged && selected_aircraft != null) {
-			double dx = Input.getMouseX() - selected_aircraft.getPosition().x();
-			double dy = Input.getMouseY() - selected_aircraft.getPosition().y();
+			double dx = input.getMouseX() - selected_aircraft.getPosition().x();
+			double dy = input.getMouseY() - selected_aircraft.getPosition().y();
 			double new_heading = Math.atan2(dy, dx);
 
 			selected_aircraft.setBearing(new_heading);
@@ -615,35 +615,35 @@ public class Demo extends Scene {
 	public void keyReleased(int key) {
 		switch (key) {
 
-		case Input.KEY_S:
-		case Input.KEY_DOWN:
+		case input.KEY_S:
+		case input.KEY_DOWN:
 			if (selected_aircraft != null)
 				selected_aircraft.decreaseTargetAltitude();
 			break;
 
-		case Input.KEY_W:
-		case Input.KEY_UP:
+		case input.KEY_W:
+		case input.KEY_UP:
 			if (selected_aircraft != null)
 				selected_aircraft.increaseTargetAltitude();
 			break;
 
-		case Input.KEY_SPACE:
+		case input.KEY_SPACE:
 			toggleManualControl();
 			break;
 
-		case Input.KEY_F:
+		case input.KEY_F:
 			toggleLand();
 			break;
 
-		case Input.KEY_LCRTL:
+		case input.KEY_LCRTL:
 			generateFlight(false);
 			break;
 
-		case Input.KEY_ESCAPE:
+		case input.KEY_ESCAPE:
 			main.closeScene();
 			break;
 
-		case Input.KEY_F5:
+		case input.KEY_F5:
 			Aircraft a1 = createAircraft(false);
 			Aircraft a2 = createAircraft(true);
 			gameOver(a1, a2);
@@ -658,17 +658,17 @@ public class Demo extends Scene {
 	 */
 	@Override
 	public void draw() {
-		Graphics.setColour(Main.GREEN);
-		Graphics.rectangle(false, 16, 16, Window.getWidth() - 32, Window.getHeight() - 144);
+		graphics.setColour(Main.GREEN);
+		graphics.rectangle(false, 16, 16, window.getWidth() - 32, window.getHeight() - 144);
 
-		Graphics.setViewport(16, 16, Window.getWidth() - 32, Window.getHeight() - 144);
+		graphics.setViewport(16, 16, window.getWidth() - 32, window.getHeight() - 144);
 
-		Graphics.setColour(255, 255, 255, 100);
-		Graphics.draw(background, 0, 0);
+		graphics.setColour(255, 255, 255, 100);
+		graphics.draw(background, 0, 0);
 
 		drawMap();
 
-		Graphics.setViewport();
+		graphics.setViewport();
 
 		if (selected_aircraft != null && selected_aircraft.isManuallyControlled()) {
 			selected_aircraft.drawCompass();
@@ -678,7 +678,7 @@ public class Demo extends Scene {
 		altimeter.draw();
 		drawPlaneInfo();
 
-		Graphics.setColour(Main.GREEN);
+		graphics.setColour(Main.GREEN);
 		drawScore();
 	}
 
@@ -697,7 +697,7 @@ public class Demo extends Scene {
 
 		airport.drawAirportInfo();
 
-		Graphics.setColour(255, 255, 255);
+		graphics.setColour(255, 255, 255);
 
 		for (Aircraft aircraft : aircraft_in_airspace) {
 			aircraft.draw();
@@ -710,48 +710,48 @@ public class Demo extends Scene {
 
 			// Flight Path
 			selected_aircraft.drawFlightPath(true);
-			Graphics.setColour(Main.GREEN);
+			graphics.setColour(Main.GREEN);
 
 			// Override Button
-			Graphics.setColour(0, 0, 0);
-			Graphics.rectangle(true, (Window.getWidth() - 128) / 2, 16, 128, 32);
-			Graphics.setColour(Main.GREEN);
-			Graphics.rectangle(false, (Window.getWidth() - 128) / 2, 16, 128, 32);
+			graphics.setColour(0, 0, 0);
+			graphics.rectangle(true, (window.getWidth() - 128) / 2, 16, 128, 32);
+			graphics.setColour(Main.GREEN);
+			graphics.rectangle(false, (window.getWidth() - 128) / 2, 16, 128, 32);
 			manual_override_button.draw();
 
 			// if aircraft is flying towards the airport (i.e. it's its
 			// destination point, draw the land button)
 			if (selected_aircraft.getFlightPlan().getDestination() instanceof Airport) {
 				// Land Button with valid altitude
-				Graphics.setColour(0, 0, 0);
-				Graphics.rectangle(true, (Window.getWidth() - 500) / 2, 16, 128,
+				graphics.setColour(0, 0, 0);
+				graphics.rectangle(true, (window.getWidth() - 500) / 2, 16, 128,
 						32);
-				Graphics.setColour(Main.GREEN);
-				Graphics.rectangle(false, (Window.getWidth() - 500) / 2, 16, 128,
+				graphics.setColour(Main.GREEN);
+				graphics.rectangle(false, (window.getWidth() - 500) / 2, 16, 128,
 						32);
 			
 				land_button.draw();
 			}
 
-			Graphics.setColour(Main.GREEN);
+			graphics.setColour(Main.GREEN);
 		}
 
 		if (selected_waypoint != null
 				&& selected_aircraft.isManuallyControlled() == false) {
 			selected_aircraft.drawModifiedPath(selected_pathpoint,
-					Input.getMouseX() - 16, Input.getMouseY() - 16);
+					input.getMouseX() - 16, input.getMouseY() - 16);
 		}
 
-		Graphics.setViewport();
-		Graphics.setColour(Main.GREEN);
+		graphics.setViewport();
+		graphics.setColour(Main.GREEN);
 		
-		Graphics.print(LOCATION_NAMES[0],
+		graphics.print(LOCATION_NAMES[0],
 				location_waypoints[0].position().x() + 25, location_waypoints[0].position().y() + 10);
-		Graphics.print(LOCATION_NAMES[1],
+		graphics.print(LOCATION_NAMES[1],
 				location_waypoints[1].position().x() + 25, location_waypoints[1].position().y() + 10);
-		Graphics.print(LOCATION_NAMES[2],
+		graphics.print(LOCATION_NAMES[2],
 				location_waypoints[2].position().x() - 125, location_waypoints[2].position().y() + 10);
-		Graphics.print(LOCATION_NAMES[3],
+		graphics.print(LOCATION_NAMES[3],
 				location_waypoints[3].position().x() - 75, location_waypoints[3].position().y() + 10);
 
 	}
@@ -760,32 +760,32 @@ public class Demo extends Scene {
 	 * draw the info of a selected plane in the scene GUI
 	 */
 	private void drawPlaneInfo() {
-		Graphics.setColour(Main.GREEN);
-		Graphics.rectangle(false, PLANE_INFO_X, PLANE_INFO_Y, PLANE_INFO_W, PLANE_INFO_H);
+		graphics.setColour(Main.GREEN);
+		graphics.rectangle(false, PLANE_INFO_X, PLANE_INFO_Y, PLANE_INFO_W, PLANE_INFO_H);
 
 		if (selected_aircraft != null) {
 
-			Graphics.setViewport(PLANE_INFO_X, PLANE_INFO_Y, PLANE_INFO_W, PLANE_INFO_H);
-			Graphics.printTextCentred(selected_aircraft.getName(), 0, 5, 2, PLANE_INFO_W);
+			graphics.setViewport(PLANE_INFO_X, PLANE_INFO_Y, PLANE_INFO_W, PLANE_INFO_H);
+			graphics.printTextCentred(selected_aircraft.getName(), 0, 5, 2, PLANE_INFO_W);
 
 			// Altitude
 			String altitude = String.format("%.0f", selected_aircraft.getPosition().z())+ "£";
-			Graphics.print("Altitude:", 10, 40);
-			Graphics.print(altitude, PLANE_INFO_W - 10 - altitude.length() * 8, 40);
+			graphics.print("Altitude:", 10, 40);
+			graphics.print(altitude, PLANE_INFO_W - 10 - altitude.length() * 8, 40);
 
 			// Speed
 			String speed = String.format("%.2f", selected_aircraft.getSpeed() * 1.687810) + "$";
-			Graphics.print("Speed:", 10, 55);
-			Graphics.print(speed, PLANE_INFO_W - 10 - speed.length() * 8, 55);
+			graphics.print("Speed:", 10, 55);
+			graphics.print(speed, PLANE_INFO_W - 10 - speed.length() * 8, 55);
 
 			// Origin
-			Graphics.print("Origin:", 10, 70);
-			Graphics.print(selected_aircraft.getFlightPlan().getOriginName(), PLANE_INFO_W - 10 - selected_aircraft.getFlightPlan().getOriginName().length() * 8, 70);
+			graphics.print("Origin:", 10, 70);
+			graphics.print(selected_aircraft.getFlightPlan().getOriginName(), PLANE_INFO_W - 10 - selected_aircraft.getFlightPlan().getOriginName().length() * 8, 70);
 
 			// Destination
-			Graphics.print("Destination:", 10, 85);
-			Graphics.print(selected_aircraft.getFlightPlan().getDestinationName(), PLANE_INFO_W - 10 - selected_aircraft.getFlightPlan().getDestinationName().length() * 8, 85);
-			Graphics.setViewport();
+			graphics.print("Destination:", 10, 85);
+			graphics.print(selected_aircraft.getFlightPlan().getDestinationName(), PLANE_INFO_W - 10 - selected_aircraft.getFlightPlan().getDestinationName().length() * 8, 85);
+			graphics.setViewport();
 		}
 	}
 
@@ -824,11 +824,11 @@ public class Demo extends Scene {
 
 		String timePlayed = String.format("%d:%02d:", hours, minutes)
 				+ df.format(seconds);
-		Graphics.print("Score: " + score + whiteSpace(score) + timePlayed, Window.getWidth() - (timePlayed.length() * 8) - 150, padding_from_top);
+		graphics.print("Score: " + score + whiteSpace(score) + timePlayed, window.getWidth() - (timePlayed.length() * 8) - 150, padding_from_top);
 
 		int planes = aircraft_in_airspace.size();
 
-		Graphics.print(String.valueOf(aircraft_in_airspace.size()) + " plane" + (planes == 1 ? "" : "s") + " in the sky.", 32, padding_from_top);
+		graphics.print(String.valueOf(aircraft_in_airspace.size()) + " plane" + (planes == 1 ? "" : "s") + " in the sky.", 32, padding_from_top);
 	}
 
 	/**
