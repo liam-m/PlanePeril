@@ -10,7 +10,7 @@ import lib.Serializer;
 import lib.TextBox;
 import lib.jog.audio.Sound;
 import lib.jog.Graphics;
-import lib.jog.window;
+import lib.jog.Window;
 
 public class HighScores extends Scene {
 	private static final int MAX_NUM_SCORES_TO_DISPLAY = 10;
@@ -33,7 +33,7 @@ public class HighScores extends Scene {
 			scores = (ArrayList<Integer>) Serializer.getRecovered();
 		}
 
-		text_box = new lib.TextBox(64, 96, window.width() - 128, window.height() - 96, 32);
+		text_box = new lib.TextBox(64, 96, Window.getWidth() - 128, Window.getHeight() - 96, 32);
 		text_box.addText("HIGH SCORES");
 
 		// Convert ArrayList into regular array to make sorting simpler
@@ -89,7 +89,7 @@ public class HighScores extends Scene {
 		text_box.draw();
 
 		Graphics.setColour(0, 128, 0, 255);
-		Graphics.printTextCentred("Press any key to continue", 0, window.height() - 256, 1, window.width());
+		Graphics.printTextCentred("Press any key to continue", 0, Window.getHeight() - 256, 1, Window.getWidth());
 	}
 
 	@Override

@@ -14,11 +14,10 @@ import org.lwjgl.opengl.DisplayMode;
 import org.newdawn.slick.util.ResourceLoader;
 
 /**
- * <h1>jog.window</h1>
  * <p>Provides a layer upon LWJGL and Slick. jog.window allows a window to be created and managed.</p>
  * @author IMP1
  */
-public abstract class window {
+public abstract class Window {
 	
 	final private static int FPS = 60;
 	
@@ -26,13 +25,7 @@ public abstract class window {
 	private static int _height;
 	private static boolean _closed;
 	
-	/**
-	 * Creates a new window.
-	 * @param title the title of the window.
-	 * @param width the width of the window.
-	 * @param height the height of the window.
-	 */
-	public static void initialise(String title, int width, int height) {
+	public static void initialiseWindow(String title, int width, int height) {
 		try {
 			setSize(width, height);
 			setTitle(title);
@@ -63,34 +56,18 @@ public abstract class window {
 		}
 	}
 	
-	/**
-	 * Allows access to the width of the window.
-	 * @return the width of the window.
-	 */
-	public static int width() {
+	public static int getWidth() {
 		return _width;
 	}
 	
-	/**
-	 * Allows access to the height of the window.
-	 * @return the height of the window.
-	 */
-	public static int height() {
+	public static int getHeight() {
 		return _height;
 	}
 	
-	/**
-	 * Allows access to the closed status of the window.
-	 * @return whether the window is closed.
-	 */
 	public static boolean isClosed() {
 		return _closed;
 	}
 	
-	/**
-	 * Allows for changing the title of the window.
-	 * @param title the new title for the window.
-	 */
 	public static void setTitle(String title) {
 		Display.setTitle(title);
 	}

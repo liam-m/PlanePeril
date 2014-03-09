@@ -106,7 +106,7 @@ public abstract class Input {
 	}
 	
 	public static int getMouseY() {
-		return window.height() - Mouse.getY();
+		return Window.getHeight() - Mouse.getY();
 	}
 	
 	

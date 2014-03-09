@@ -13,7 +13,7 @@ import lib.jog.audio.Music;
 import lib.jog.Graphics;
 import lib.jog.Graphics.Image;
 import lib.jog.Input;
-import lib.jog.window;
+import lib.jog.Window;
 import cls.Aircraft;
 import cls.Airport;
 import cls.Altimeter;
@@ -27,18 +27,18 @@ public class Demo extends Scene {
 
 	// Position of things drawn to window
 	private final int PLANE_INFO_X = 16;
-	private final int PLANE_INFO_Y = window.height() - 120;
-	private final int PLANE_INFO_W = window.width() / 4 - 16;
+	private final int PLANE_INFO_Y = Window.getHeight() - 120;
+	private final int PLANE_INFO_W = Window.getWidth() / 4 - 16;
 	private final int PLANE_INFO_H = 112;
 
 	private final int ALTIMETER_X = PLANE_INFO_X + PLANE_INFO_W + 8;
-	private final int ALTIMETER_Y = window.height() - 120;
+	private final int ALTIMETER_Y = Window.getHeight() - 120;
 	private final int ALTIMETER_W = 244;
 	private final int ALTIMETER_H = 112;
 
 	private final int ORDERSBOX_X = ALTIMETER_X + ALTIMETER_W + 8;
-	private final static int ORDERSBOX_Y = window.height() - 120;
-	private final int ORDERSBOX_W = window.width() - (ORDERSBOX_X + 16);
+	private final static int ORDERSBOX_Y = Window.getHeight() - 120;
+	private final int ORDERSBOX_W = Window.getWidth() - (ORDERSBOX_X + 16);
 	private final static int ORDERSBOX_H = 112;
 
 	// Static Final Ints for difficulty settings
@@ -136,15 +136,15 @@ public class Demo extends Scene {
 					"North West Top Leftonia"),
 
 			// bottom left
-			new Waypoint(8, window.height() - ORDERSBOX_H - 40,
+			new Waypoint(8, Window.getHeight() - ORDERSBOX_H - 40,
 					WaypointType.ENTRY_EXIT, "100 Acre Woods"),
 
 			// top right
-			new Waypoint(window.width() - 40, 8, WaypointType.ENTRY_EXIT,
+			new Waypoint(Window.getWidth() - 40, 8, WaypointType.ENTRY_EXIT,
 					"City of Rightson"),
 
 			// bottom right
-			new Waypoint(window.width() - 40, window.height() - ORDERSBOX_H
+			new Waypoint(Window.getWidth() - 40, Window.getHeight() - ORDERSBOX_H
 					- 40, WaypointType.ENTRY_EXIT, "South Sea"),
 
 			// The airport
@@ -253,7 +253,7 @@ public class Demo extends Scene {
 		};
 
 		manual_override_button = new ButtonText(Texts.TAKE_CONTROL, manual,
-				(window.width() - 128) / 2, 32, 128, 32, 8, 4);
+				(Window.getWidth() - 128) / 2, 32, 128, 32, 8, 4);
 
 		// the action that is called once the land button is clicked.
 		ButtonText.Action land = new ButtonText.Action() {
@@ -265,7 +265,7 @@ public class Demo extends Scene {
 		};
 
 		land_button = new ButtonText(Texts.LAND, land,
-				(window.width() - 500) / 2, 32, 128, 32, 8, 4);
+				(Window.getWidth() - 500) / 2, 32, 128, 32, 8, 4);
 
 		time_elapsed = 0;
 		compass_dragged = false;
@@ -659,9 +659,9 @@ public class Demo extends Scene {
 	@Override
 	public void draw() {
 		Graphics.setColour(Main.GREEN);
-		Graphics.rectangle(false, 16, 16, window.width() - 32, window.height() - 144);
+		Graphics.rectangle(false, 16, 16, Window.getWidth() - 32, Window.getHeight() - 144);
 
-		Graphics.setViewport(16, 16, window.width() - 32, window.height() - 144);
+		Graphics.setViewport(16, 16, Window.getWidth() - 32, Window.getHeight() - 144);
 
 		Graphics.setColour(255, 255, 255, 100);
 		Graphics.draw(background, 0, 0);
@@ -714,9 +714,9 @@ public class Demo extends Scene {
 
 			// Override Button
 			Graphics.setColour(0, 0, 0);
-			Graphics.rectangle(true, (window.width() - 128) / 2, 16, 128, 32);
+			Graphics.rectangle(true, (Window.getWidth() - 128) / 2, 16, 128, 32);
 			Graphics.setColour(Main.GREEN);
-			Graphics.rectangle(false, (window.width() - 128) / 2, 16, 128, 32);
+			Graphics.rectangle(false, (Window.getWidth() - 128) / 2, 16, 128, 32);
 			manual_override_button.draw();
 
 			// if aircraft is flying towards the airport (i.e. it's its
@@ -724,10 +724,10 @@ public class Demo extends Scene {
 			if (selected_aircraft.getFlightPlan().getDestination() instanceof Airport) {
 				// Land Button with valid altitude
 				Graphics.setColour(0, 0, 0);
-				Graphics.rectangle(true, (window.width() - 500) / 2, 16, 128,
+				Graphics.rectangle(true, (Window.getWidth() - 500) / 2, 16, 128,
 						32);
 				Graphics.setColour(Main.GREEN);
-				Graphics.rectangle(false, (window.width() - 500) / 2, 16, 128,
+				Graphics.rectangle(false, (Window.getWidth() - 500) / 2, 16, 128,
 						32);
 			
 				land_button.draw();
@@ -824,7 +824,7 @@ public class Demo extends Scene {
 
 		String timePlayed = String.format("%d:%02d:", hours, minutes)
 				+ df.format(seconds);
-		Graphics.print("Score: " + score + whiteSpace(score) + timePlayed, window.width() - (timePlayed.length() * 8) - 150, padding_from_top);
+		Graphics.print("Score: " + score + whiteSpace(score) + timePlayed, Window.getWidth() - (timePlayed.length() * 8) - 150, padding_from_top);
 
 		int planes = aircraft_in_airspace.size();
 

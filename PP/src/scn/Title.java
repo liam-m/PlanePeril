@@ -12,7 +12,7 @@ import lib.ButtonText;
 import lib.jog.audio;
 import lib.jog.audio.Sound;
 import lib.jog.Graphics;
-import lib.jog.window;
+import lib.jog.Window;
 
 public class Title extends Scene {
 
@@ -110,8 +110,8 @@ public class Title extends Scene {
 		buttons = new ButtonText[button_actions.length];
 		
 		for (int i = 0; i < buttons.length; i++) {
-			buttons[i] = new ButtonText(button_labels[i], button_actions[i], window.height(), 
-					window.height()/2 + (offset + button_height * i), window.width() - window.height(), 24, 8, 6);
+			buttons[i] = new ButtonText(button_labels[i], button_actions[i], Window.getHeight(), 
+					Window.getHeight()/2 + (offset + button_height * i), Window.getWidth() - Window.getHeight(), 24, 8, 6);
 		}
 		
 		radar_sweep_angle = 0;
@@ -172,26 +172,26 @@ public class Title extends Scene {
 	private void drawRadar() {
 		// Draw circles for radar
 		Graphics.setColour(Main.GREEN);
-		Graphics.circle(false, window.height() / 2, window.height() / 2,
-				window.height() / 2 - 32, 100);
+		Graphics.circle(false, Window.getHeight() / 2, Window.getHeight() / 2,
+				Window.getHeight() / 2 - 32, 100);
 		Graphics.setColour(0, 128, 0, 32);
-		Graphics.circle(false, window.height() / 2, window.height() / 2,
-				window.height() / 3, 100);
-		Graphics.circle(false, window.height() / 2, window.height() / 2,
-				window.height() / 4 - 16, 100);
-		Graphics.circle(false, window.height() / 2, window.height() / 2,
-				window.height() / 9, 100);
-		Graphics.circle(false, window.height() / 2, window.height() / 2, 2, 100);
+		Graphics.circle(false, Window.getHeight() / 2, Window.getHeight() / 2,
+				Window.getHeight() / 3, 100);
+		Graphics.circle(false, Window.getHeight() / 2, Window.getHeight() / 2,
+				Window.getHeight() / 4 - 16, 100);
+		Graphics.circle(false, Window.getHeight() / 2, Window.getHeight() / 2,
+				Window.getHeight() / 9, 100);
+		Graphics.circle(false, Window.getHeight() / 2, Window.getHeight() / 2, 2, 100);
 
 		// Draw radar sweep
 		double radar_angle = (radar_sweep_angle * 4) % (2 * Math.PI);
-		int width = (int) (Math.cos(radar_angle) * (window.height() / 2 - 32));
-		int height = (int) (Math.sin(radar_angle) * (window.height() / 2 - 32));
-		Graphics.line(window.height() / 2, window.height() / 2, window.height() / 2 + width, window.height() / 2 + height);
+		int width = (int) (Math.cos(radar_angle) * (Window.getHeight() / 2 - 32));
+		int height = (int) (Math.sin(radar_angle) * (Window.getHeight() / 2 - 32));
+		Graphics.line(Window.getHeight() / 2, Window.getHeight() / 2, Window.getHeight() / 2 + width, Window.getHeight() / 2 + height);
 		
 		Graphics.setColour(0, 128, 0, 8);
 		for (int i = -8; i <= -1; i++) {
-			Graphics.arc(true, window.height() / 2, window.height() / 2, window.height() / 2 - 32, radar_angle, i * Math.PI / 8);
+			Graphics.arc(true, Window.getHeight() / 2, Window.getHeight() / 2, Window.getHeight() / 2 - 32, radar_angle, i * Math.PI / 8);
 		}
 
 		// Title
@@ -207,7 +207,7 @@ public class Title extends Scene {
 			opacity = 256 - opacity;
 			opacity %= 256;
 			Graphics.setColour(0, 128, 0, opacity);
-			Graphics.printText(title.substring(i, i + 1), window.width()/2-260-title.length()*17 + i*17, window.height()/2 - 60, 2.5);
+			Graphics.printText(title.substring(i, i + 1), Window.getWidth()/2-260-title.length()*17 + i*17, Window.getHeight()/2 - 60, 2.5);
 		}
 	}
 
@@ -217,18 +217,18 @@ public class Title extends Scene {
 	private void drawMenu() {
 		// Draw Extras e.g. Date, Time, Credits
 		Graphics.setColour(Main.GREEN);
-		Graphics.line(window.height(), 16, window.height(), window.height() - 16);
+		Graphics.line(Window.getHeight(), 16, Window.getHeight(), Window.getHeight() - 16);
 		java.text.DateFormat dateFormat = new java.text.SimpleDateFormat("yyyy/MM/dd");
 		java.text.DateFormat timeFormat = new java.text.SimpleDateFormat("HH:mm:ss");
 		java.util.Date date = new java.util.Date();
-		Graphics.print(dateFormat.format(date), window.height() + 8, 20);
-		Graphics.print(timeFormat.format(date), window.height() + 8, 36);
-		Graphics.line(window.height(), 48, window.width() - 16, 48);
-		Graphics.print("Created by:", window.height() + 8, 56);
-		Graphics.print("TEAM FLR", window.height() + 8, 72);
+		Graphics.print(dateFormat.format(date), Window.getHeight() + 8, 20);
+		Graphics.print(timeFormat.format(date), Window.getHeight() + 8, 36);
+		Graphics.line(Window.getHeight(), 48, Window.getWidth() - 16, 48);
+		Graphics.print("Created by:", Window.getHeight() + 8, 56);
+		Graphics.print("TEAM FLR", Window.getHeight() + 8, 72);
 
-		Graphics.print("Fixed and Extended by:", window.height() + 8, 88);
-		Graphics.print("TEAM INI", window.height() + 8, 104);
+		Graphics.print("Fixed and Extended by:", Window.getHeight() + 8, 88);
+		Graphics.print("TEAM INI", Window.getHeight() + 8, 104);
 
 		// Draw Buttons
 		for (ButtonText b : buttons)
@@ -237,7 +237,7 @@ public class Title extends Scene {
 		// Draw lines between buttons
 		Graphics.setColour(Main.GREEN);
 		for (int i = 90; i <= 240; i += 30) {
-			Graphics.line(window.height(), window.height() / 2 + i, window.width() - 16, window.height() / 2 + i);			
+			Graphics.line(Window.getHeight(), Window.getHeight() / 2 + i, Window.getWidth() - 16, Window.getHeight() / 2 + i);			
 		}
 	}
 

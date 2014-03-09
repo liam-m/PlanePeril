@@ -10,7 +10,7 @@ import lib.jog.audio.Sound;
 import lib.jog.Graphics;
 import lib.jog.Graphics.Image;
 import lib.jog.Input;
-import lib.jog.window;
+import lib.jog.Window;
 
 import pp.Main;
 
@@ -218,7 +218,7 @@ public class Aircraft {
 	public boolean isOutOfBounds() {
 		double x = position.x();
 		double y = position.y();
-		return (x < 0 || x > window.width() - 32 || y < 0 || y > window.height() - 144);
+		return (x < 0 || x > Window.getWidth() - 32 || y < 0 || y > Window.getHeight() - 144);
 	}
 
 	/**

@@ -11,7 +11,7 @@ import lib.jog.audio;
 import lib.jog.Graphics;
 import lib.jog.Input;
 import lib.jog.Input.EventHandler;
-import lib.jog.window;
+import lib.jog.Window;
 
 import org.lwjgl.Sys;
 import org.newdawn.slick.Color;
@@ -67,7 +67,7 @@ public class Main implements EventHandler {
 		float scale = (float)(Math.min(width_scale, height_scale) * 0.98);	
 		start((int)(WIDTH*scale), (int)(HEIGHT*scale));
 		
-		while (!window.isClosed()) {
+		while (!Window.isClosed()) {
 			double time_difference = getTimeSinceLastFrame();
 			update(time_difference);
 			draw();
@@ -80,8 +80,8 @@ public class Main implements EventHandler {
 	 * variables.
 	 */
 	private void start(int width, int height) {
-		window.initialise(TITLE, width, height);
-		window.setIcon(ICON_FILENAMES);
+		Window.initialiseWindow(TITLE, width, height);
+		Window.setIcon(ICON_FILENAMES);
 
 		Graphics.initialise();
 
@@ -109,7 +109,7 @@ public class Main implements EventHandler {
 	private void update(double dt) {
 		audio.update();
 		Input.update(this);
-		window.update();
+		Window.update();
 		current_scene.update(dt);
 		updateFPS();
 	}
@@ -142,7 +142,7 @@ public class Main implements EventHandler {
 	 */
 	public void quit() {
 		current_scene.close();
-		window.dispose();
+		Window.dispose();
 		audio.dispose();
 		System.exit(0);
 	}
@@ -177,7 +177,7 @@ public class Main implements EventHandler {
 		long current_time = ((Sys.getTime() * 1000) / Sys.getTimerResolution());
 
 		if (current_time - last_fps_time > 1000) { // Update once a second
-			window.setTitle(TITLE + " - FPS: " + fps_counter);
+			Window.setTitle(TITLE + " - FPS: " + fps_counter);
 			fps_counter = 0; // Reset the FPS counter
 			last_fps_time += current_time - last_fps_time; // Add on time difference
 		}
