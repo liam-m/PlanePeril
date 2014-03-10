@@ -44,9 +44,9 @@ public class Host extends Scene {
 	@Override
 	public void draw() {
 		graphics.setColour(Main.GREEN);
-		graphics.printCentred("Welcome!:", window.width() / 2, 100, 5, 100);
-		graphics.printCentred(player_name, window.width() / 2, 200, 10, 100);
-		graphics.printCentred("Your IP: "+this_address, window.width()/2, 300, 5, 200);
+		graphics.printTextCentred("Welcome!:", window.getWidth() / 2, 100, 5, 100);
+		graphics.printTextCentred(player_name, window.getWidth() / 2, 200, 10, 100);
+		graphics.printTextCentred("Your IP: "+this_address, window.getWidth()/2, 300, 5, 200);
 
 		if (waiting_dot++ > 25) {
 			waiting_dot = 0;
@@ -57,8 +57,8 @@ public class Host extends Scene {
 			}
 		}
 			
-		graphics.printCentred("Waiting for player", window.width() / 2, 800, 5, 100);
-		graphics.printCentred(dot, window.width() / 2, 850, 5, 100);
+		graphics.printTextCentred("Waiting for player", window.getWidth() / 2, 800, 5, 100);
+		graphics.printTextCentred(dot, window.getWidth() / 2, 850, 5, 100);
 	}
 
 	@Override

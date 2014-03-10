@@ -71,11 +71,11 @@ public class Multiplayer extends Scene {
 	@Override
 	public void draw() {
 		graphics.setColour(Main.GREEN);
-		graphics.print(left_name, 10, 10, 2);
-		graphics.print(right_name, window.width()-100, 10, 2);
-		graphics.rectangle(false, 16, 40, window.width() - 32, window.height() - 180);
+		graphics.printText(left_name, 10, 10, 2);
+		graphics.printText(right_name, window.getWidth()-100, 10, 2);
+		graphics.rectangle(false, 16, 40, window.getWidth() - 32, window.getHeight() - 180);
 		
-		graphics.setViewport(16, 40, window.width() - 32, window.height() - 180);
+		graphics.setViewport(16, 40, window.getWidth() - 32, window.getHeight() - 180);
 		graphics.setColour(255, 255, 255, 100);
 		graphics.draw(background, 0, 0);
 		

@@ -26,7 +26,7 @@ public class Join extends Scene {
 	
 	JoinClient join_client;
 	
-	private final int JOIN_X_POSITION = window.width() /2;
+	private final int JOIN_X_POSITION = window.getWidth() /2;
 	private final int JOIN_Y_POSITION = 800;
 	private final int JOIN_WIDTH = 100;
 	private final int JOIN_HEIGHT = 25;
@@ -102,11 +102,11 @@ public class Join extends Scene {
 	@Override
 	public void draw() {
 		graphics.setColour(Main.GREEN);
-		graphics.printCentred("Welcome!:", window.width() / 2, 100, 5, 100);
-		graphics.printCentred(player_name, window.width() / 2, 300, 10, 100);
+		graphics.printTextCentred("Welcome!:", window.getWidth() / 2, 100, 5, 100);
+		graphics.printTextCentred(player_name, window.getWidth() / 2, 300, 10, 100);
 		
-		graphics.printCentred("Enter IP: ", window.width() / 2, 600, 5, 100);
-		graphics.printCentred(their_address, window.width() / 2, 700, 5, 100);
+		graphics.printTextCentred("Enter IP: ", window.getWidth() / 2, 600, 5, 100);
+		graphics.printTextCentred(their_address, window.getWidth() / 2, 700, 5, 100);
 		
 		graphics.rectangle(false, JOIN_X_POSITION, JOIN_Y_POSITION, JOIN_WIDTH, JOIN_HEIGHT);
 		join_button.draw();

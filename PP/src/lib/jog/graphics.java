@@ -585,7 +585,7 @@ public abstract class graphics{
 		if (currentFont == null) currentFont = newSystemFont("Times New Roman");
 		currentFont.print(x, y, text, size);
 	}
-	static public void print(String text, double x, double y){
+	static public void print(String text, double x, double y) {
 		printText(text, x, y, 1);
 	}
 	
