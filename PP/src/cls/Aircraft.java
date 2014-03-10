@@ -14,7 +14,7 @@ import lib.jog.window;
 
 import pp.Main;
 
-import scn.Demo;
+import scn.SinglePlayer;
 
 /**
  * <h1>Aircraft</h1>
@@ -117,20 +117,20 @@ public class Aircraft {
 
 		// Speed up plane for higher difficulties
 		switch (difficulty) {
-			case Demo.DIFFICULTY_EASY:
+			case SinglePlayer.DIFFICULTY_EASY:
 				this.velocity = velocity.scaleBy(1.0);
 				this.altitude_change_speed = 800;
 				this.num_points = 10;
 				break;
 	
-			case Demo.DIFFICULTY_MEDIUM:
+			case SinglePlayer.DIFFICULTY_MEDIUM:
 				this.velocity = velocity.scaleBy(2);
 				this.turning_speed = Math.PI / 3;
 				this.altitude_change_speed = 600;
 				this.num_points = 15;
 				break;
 	
-			case Demo.DIFFICULTY_HARD:
+			case SinglePlayer.DIFFICULTY_HARD:
 				this.velocity = velocity.scaleBy(3);
 				this.turning_speed = Math.PI / 2; // At high velocities, the aircraft is allowed to turn faster - this helps keep the aircraft on track.
 				this.altitude_change_speed = 400;

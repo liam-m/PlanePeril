@@ -156,6 +156,16 @@ public abstract class input{
 	public final static int KEY_8 = Keyboard.KEY_8;
 	public final static int KEY_9 = Keyboard.KEY_9;
 	public final static int KEY_0 = Keyboard.KEY_0;
+	public final static int KEY_0_NP = Keyboard.KEY_NUMPAD0;
+	public final static int KEY_1_NP = Keyboard.KEY_NUMPAD1;
+	public final static int KEY_2_NP = Keyboard.KEY_NUMPAD2;
+	public final static int KEY_3_NP = Keyboard.KEY_NUMPAD3;
+	public final static int KEY_4_NP = Keyboard.KEY_NUMPAD4;
+	public final static int KEY_5_NP = Keyboard.KEY_NUMPAD5;
+	public final static int KEY_6_NP = Keyboard.KEY_NUMPAD6;
+	public final static int KEY_7_NP = Keyboard.KEY_NUMPAD7;
+	public final static int KEY_8_NP = Keyboard.KEY_NUMPAD8;
+	public final static int KEY_9_NP = Keyboard.KEY_NUMPAD9;
 	
 	public final static int KEY_F1 = Keyboard.KEY_F1;
 	public final static int KEY_F2 = Keyboard.KEY_F2;
@@ -176,6 +186,9 @@ public abstract class input{
 	public final static int KEY_F17 = Keyboard.KEY_F17;
 	public final static int KEY_F18 = Keyboard.KEY_F18;
 	public final static int KEY_F19 = Keyboard.KEY_F19;
+
+	public final static int KEY_PERIOD = Keyboard.KEY_PERIOD;
+	public final static int KEY_DECIMAL = Keyboard.KEY_DECIMAL;
 	
 	public final static int KEY_ESCAPE = Keyboard.KEY_ESCAPE;
 	public final static int KEY_SCROLL_LOCK = Keyboard.KEY_SCROLL;
@@ -188,6 +201,7 @@ public abstract class input{
 	public final static int KEY_CAPS_LOCK = Keyboard.KEY_CAPITAL;
 	public final static int KEY_TAB = Keyboard.KEY_TAB;
 	public final static int KEY_RETURN = Keyboard.KEY_RETURN;
+	public final static int KEY_NUMPADENTER = Keyboard.KEY_NUMPADENTER;
 	public final static int KEY_BACKSPACE = Keyboard.KEY_BACK;
 	
 	public final static int KEY_UP = Keyboard.KEY_UP;

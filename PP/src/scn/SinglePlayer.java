@@ -23,7 +23,7 @@ import cls.OrdersBox;
 import cls.Waypoint;
 import cls.Waypoint.WaypointType;
 
-public class Demo extends Scene {
+public class SinglePlayer extends Scene {
 
 	// Position of things drawn to window
 	private final int PLANE_INFO_X = 16;
@@ -201,9 +201,9 @@ public class Demo extends Scene {
 	 * @param difficulty
 	 *            the difficulty the scene is to be initialised with
 	 */
-	public Demo(Main main, int difficulty) {
+	public SinglePlayer(Main main, int difficulty) {
 		super(main);
-		Demo.difficulty = difficulty;
+		SinglePlayer.difficulty = difficulty;
 	}
 
 	@Override
@@ -724,11 +724,9 @@ public class Demo extends Scene {
 			if (selected_aircraft.getFlightPlan().getDestination() instanceof Airport) {
 				// Land Button with valid altitude
 				graphics.setColour(0, 0, 0);
-				graphics.rectangle(true, (window.getWidth() - 500) / 2, 16, 128,
-						32);
+				graphics.rectangle(true, (window.getWidth() - 500) / 2, 16, 128, 32);
 				graphics.setColour(Main.GREEN);
-				graphics.rectangle(false, (window.getWidth() - 500) / 2, 16, 128,
-						32);
+				graphics.rectangle(false, (window.getWidth() - 500) / 2, 16, 128, 32);
 			
 				land_button.draw();
 			}

@@ -58,7 +58,7 @@ public class DifficultySelect extends Scene {
 			public void action() {
 				switch (scene_to_create) {
 				case DifficultySelect.CREATE_DEMO:
-					main.setScene(new Demo(main, Demo.DIFFICULTY_EASY));
+					main.setScene(new SinglePlayer(main, SinglePlayer.DIFFICULTY_EASY));
 					break;
 				}
 			}
@@ -72,7 +72,7 @@ public class DifficultySelect extends Scene {
 			public void action() {
 				switch (scene_to_create) {
 				case DifficultySelect.CREATE_DEMO:
-					main.setScene(new Demo(main, Demo.DIFFICULTY_MEDIUM));
+					main.setScene(new SinglePlayer(main, SinglePlayer.DIFFICULTY_MEDIUM));
 					break;
 				}
 			}
@@ -86,7 +86,7 @@ public class DifficultySelect extends Scene {
 			public void action() {
 				switch (scene_to_create) {
 				case DifficultySelect.CREATE_DEMO:
-					main.setScene(new Demo(main, Demo.DIFFICULTY_HARD));
+					main.setScene(new SinglePlayer(main, SinglePlayer.DIFFICULTY_HARD));
 					break;
 				}
 			}

@@ -66,7 +66,7 @@ public class Title extends Scene {
 		ButtonText.Action launch_multiplayer = new ButtonText.Action() {
 			@Override
 			public void action() {
-				// Launch multiplayer
+				main.setScene(new EnterName(main));
 			}
 		};
 
