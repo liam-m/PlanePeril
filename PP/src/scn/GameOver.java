@@ -136,8 +136,7 @@ public class GameOver extends Scene {
 	 */
 	@Override
 	public void keyReleased(int key) {
-		if (key == input.KEY_SPACE) {
-			main.closeScene();
+		if (key == input.KEY_SPACE || key == input.KEY_RETURN) {
 			main.closeScene();
 		}
 	}

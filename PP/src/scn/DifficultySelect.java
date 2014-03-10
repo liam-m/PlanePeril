@@ -157,6 +157,7 @@ public class DifficultySelect extends Scene {
 	public void mouseReleased(int key, int x, int y) {
 		for (ButtonText button : buttons) {
 			if (button.isMouseOver(x, y)) {
+				main.closeScene();
 				button.act();
 			}
 		}
