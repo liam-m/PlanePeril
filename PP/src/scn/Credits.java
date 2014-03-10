@@ -208,6 +208,9 @@ public class Credits extends Scene {
 	
 	@Override
 	public void mousePressed(int key, int x, int y) {
+		if (key == input.KEY_ESCAPE) {
+			main.closeScene();
+		}
 	}
 
 	@Override

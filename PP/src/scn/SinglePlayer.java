@@ -606,12 +606,15 @@ public class SinglePlayer extends Scene {
 
 	@Override
 	public void keyPressed(int key) {
+		if (key == input.KEY_ESCAPE) {
+			main.closeScene();
+		}
 	}
 
-	@Override
 	/**
-	 * handle keyboard input
+	 * Handle keyboard input
 	 */
+	@Override
 	public void keyReleased(int key) {
 		switch (key) {
 
@@ -637,10 +640,6 @@ public class SinglePlayer extends Scene {
 
 		case input.KEY_LCRTL:
 			generateFlight(false);
-			break;
-
-		case input.KEY_ESCAPE:
-			main.closeScene();
 			break;
 
 		case input.KEY_F5:

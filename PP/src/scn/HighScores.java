@@ -63,21 +63,17 @@ public class HighScores extends Scene {
 	@Override
 	public void mouseReleased(int key, int x, int y) {
 	}
-
+	
 	/**
-	 * Tracks if any keys are pressed when the game over screen begins
-	 * Prevents the scene instantly ending due to a key press from previous scene
+	 * Ends the scene if any key is pressed, i.e. press any key to continue
 	 */
 	@Override
 	public void keyPressed(int key) {
+		main.closeScene();
 	}
 
-	/**
-	 * Ends the scene if any key is released , ie. press any key to continue
-	 */
 	@Override
 	public void keyReleased(int key) {
-		main.closeScene();
 	}
 
 	@Override

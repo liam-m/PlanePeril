@@ -163,17 +163,17 @@ public class DifficultySelect extends Scene {
 		}
 	}
 
-	@Override
-	public void keyPressed(int key) {
-	}
-
 	/**
 	 * Quits back to title scene on escape button
 	 */
 	@Override
-	public void keyReleased(int key) {
+	public void keyPressed(int key) {
 		if (key == input.KEY_ESCAPE) {
 			main.closeScene();
 		}
+	}
+	
+	@Override
+	public void keyReleased(int key) {
 	}
 }

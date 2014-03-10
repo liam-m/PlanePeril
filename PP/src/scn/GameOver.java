@@ -124,21 +124,17 @@ public class GameOver extends Scene {
 	}
 
 	/**
-	 * Tracks if any keys are pressed when the game over screen begins
-	 * Prevents the scene instantly ending due to a key press from previous scene
+	 * Ends the scene if space, return or escape key is released.
 	 */
 	@Override
 	public void keyPressed(int key) {
-	}
-
-	/**
-	 * Ends the scene if space key is released.
-	 */
-	@Override
-	public void keyReleased(int key) {
-		if (key == input.KEY_SPACE || key == input.KEY_RETURN) {
+		if (key == input.KEY_SPACE || key == input.KEY_RETURN || key == input.KEY_ESCAPE) {
 			main.closeScene();
 		}
+	}
+
+	@Override
+	public void keyReleased(int key) {
 	}
 
 	@Override
