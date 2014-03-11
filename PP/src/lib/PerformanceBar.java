@@ -1,10 +1,12 @@
 package lib;
+import lib.jog.graphics;
 
 public class PerformanceBar {
 	private final int max_value = 100;
 	private final int min_value = 0;
 	private final int starting_value = 50;
 	private int current_value;
+	private boolean bar_draining = false;
 	
 	// for drawing
 	private int position_x;
@@ -33,8 +35,11 @@ public class PerformanceBar {
 	}
 	
 	public void drawPerformanceBar() {
-		//drawing logic - location and 
-	}
-	
+		graphics.setColour(0, 128, 0, 64);
+		graphics.rectangle(true, position_x, position_y, width_of_bar * this.current_value / 100, height_of_bar);
+		graphics.setColour(128, 0, 0, 64);
+		graphics.rectangle(true, position_x, position_y, width_of_bar - this.current_value / 100, height_of_bar);
+		}
+			
 }
 
