@@ -14,7 +14,7 @@ public class MultiplayerRight extends Multiplayer {
 		super(main, their_name, my_name);
 		try {
 			server = new MultiplayerServer(their_address);
-			Thread.sleep(1000);
+			Thread.sleep(3000);
 			server.connect();
 		} catch (RemoteException | InterruptedException e) {
 			e.printStackTrace();
