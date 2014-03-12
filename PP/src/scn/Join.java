@@ -2,6 +2,7 @@ package scn;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.rmi.RemoteException;
 
 import org.lwjgl.input.Keyboard;
 
@@ -26,6 +27,8 @@ public class Join extends Scene {
 	
 	JoinClient join_client;
 	
+	boolean could_not_connect = false;
+	
 	private final int JOIN_X_POSITION = window.getWidth() /2;
 	private final int JOIN_Y_POSITION = 800;
 	private final int JOIN_WIDTH = 100;
@@ -48,9 +51,14 @@ public class Join extends Scene {
 		ButtonText.Action join = new ButtonText.Action() {
 			@Override
 			public void action() {
-				their_name = join_client.connect(their_address, this_address, player_name);
-				main.closeScene();
-				main.setScene(new Multiplayer(main, their_name, player_name));
+				could_not_connect = false;
+				try {
+					their_name = join_client.connect(their_address, this_address, player_name);
+					main.closeScene();
+					main.setScene(new MultiplayerRight(main, their_name, player_name));
+				} catch (RemoteException e) {
+					could_not_connect = true;
+				}
 			}
 		};
 		join_button = new ButtonText("Join", join, JOIN_X_POSITION, JOIN_Y_POSITION, JOIN_WIDTH, JOIN_HEIGHT);
@@ -68,6 +76,7 @@ public class Join extends Scene {
 
 	@Override
 	public void keyPressed(int key) {
+		could_not_connect = false;
 		if (their_address.length() > 13) {
 			if (key == input.KEY_BACKSPACE)
 				their_address = their_address.substring(0, their_address.length()-1);
@@ -99,8 +108,12 @@ public class Join extends Scene {
 		graphics.printTextCentred("Welcome!:", window.getWidth() / 2, 100, 5, 100);
 		graphics.printTextCentred(player_name, window.getWidth() / 2, 300, 10, 100);
 		
-		graphics.printTextCentred("Enter IP: ", window.getWidth() / 2, 600, 5, 100);
-		graphics.printTextCentred(their_address, window.getWidth() / 2, 700, 5, 100);
+		graphics.printTextCentred("Enter IP: ", window.getWidth() / 2, 500, 5, 100);
+		graphics.printTextCentred(their_address, window.getWidth() / 2, 600, 5, 100);
+		
+		if (could_not_connect) {
+			graphics.printTextCentred("Could not find opponent", window.getWidth() / 2, 700, 5, 100);
+		}
 		
 		graphics.rectangle(false, JOIN_X_POSITION, JOIN_Y_POSITION, JOIN_WIDTH, JOIN_HEIGHT);
 		join_button.draw();

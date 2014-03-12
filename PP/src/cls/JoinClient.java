@@ -8,14 +8,14 @@ import java.rmi.registry.Registry;
 public class JoinClient {
 	int server_port = 1729;
 	
-	public String connect(String server_address, String my_address, String my_name) {
+	public String connect(String server_address, String my_address, String my_name) throws RemoteException {
 		HostInterface host_interface;
 		Registry registry;
 		try {
 			registry = LocateRegistry.getRegistry(server_address, server_port);
 			host_interface = (HostInterface)(registry.lookup("host_server"));
 			return host_interface.connect(my_address, my_name);
-		} catch (RemoteException | NotBoundException e) {
+		} catch (NotBoundException e) {
 			e.printStackTrace();
 			return null;
 		}

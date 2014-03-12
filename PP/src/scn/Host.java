@@ -38,7 +38,7 @@ public class Host extends Scene {
 	
 	public void connected(String address, String name) {
 		main.closeScene();
-		main.setScene(new Multiplayer(main, player_name, name));
+		main.setScene(new MultiplayerLeft(main, player_name, name));
 	}
 	
 	@Override
