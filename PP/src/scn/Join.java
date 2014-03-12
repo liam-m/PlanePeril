@@ -55,8 +55,6 @@ public class Join extends Scene {
 				could_not_connect = false;
 				try {
 					their_name = join_client.connect(their_address, this_address, player_name);
-					main.closeScene();
-					main.setScene(new MultiplayerRight(main, new HostServer(new Host(main, player_name)), join_client));
 				} catch (RemoteException e) {
 					could_not_connect = true;
 				}

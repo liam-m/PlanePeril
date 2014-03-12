@@ -42,8 +42,6 @@ public class Host extends Scene {
 	}
 	
 	public void connected() {
-		main.closeScene();
-		main.setScene(new MultiplayerLeft(main, host_server, new JoinClient()));
 	}
 	
 	@Override
