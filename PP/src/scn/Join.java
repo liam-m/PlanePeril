@@ -64,8 +64,6 @@ public class Join extends Scene {
 
 	@Override
 	public void mouseReleased(int key, int x, int y) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -89,14 +87,10 @@ public class Join extends Scene {
 
 	@Override
 	public void keyReleased(int key) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void update(double time_difference) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -118,8 +112,6 @@ public class Join extends Scene {
 
 	@Override
 	public void playSound(Sound sound) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

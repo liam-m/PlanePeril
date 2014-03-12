@@ -87,7 +87,6 @@ public class Host extends Scene {
 	@Override
 	public void update(double time_difference) {
 	}
-
 	
 	@Override
 	public void close() {
