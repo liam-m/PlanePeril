@@ -4,9 +4,10 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.rmi.RemoteException;
 
-import cls.HostServer;
 
 import pp.Main;
+import rem.HostServer;
+import rem.JoinClient;
 import lib.ButtonText;
 import lib.jog.graphics;
 import lib.jog.input;
@@ -30,15 +31,19 @@ public class Host extends Scene {
 			e.printStackTrace();
 		}
 		try {
-			host_server = new HostServer(this, player_name);
+			host_server = new HostServer(this);
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
 	}
 	
+	public String getPlayerName() {
+		return this.player_name;
+	}
+	
 	public void connected(String address, String name) {
 		main.closeScene();
-		main.setScene(new MultiplayerLeft(main, player_name, name));
+		main.setScene(new MultiplayerLeft(main, host_server, new JoinClient()));
 	}
 	
 	@Override

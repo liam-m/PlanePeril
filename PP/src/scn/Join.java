@@ -6,7 +6,6 @@ import java.rmi.RemoteException;
 
 import org.lwjgl.input.Keyboard;
 
-import cls.JoinClient;
 
 import lib.ButtonText;
 import lib.jog.graphics;
@@ -14,6 +13,8 @@ import lib.jog.input;
 import lib.jog.window;
 import lib.jog.audio.Sound;
 import pp.Main;
+import rem.HostServer;
+import rem.JoinClient;
 
 public class Join extends Scene {
 	
@@ -55,7 +56,7 @@ public class Join extends Scene {
 				try {
 					their_name = join_client.connect(their_address, this_address, player_name);
 					main.closeScene();
-					main.setScene(new MultiplayerRight(main, their_name, player_name));
+					main.setScene(new MultiplayerRight(main, new HostServer(new Host(main, player_name)), join_client));
 				} catch (RemoteException e) {
 					could_not_connect = true;
 				}
