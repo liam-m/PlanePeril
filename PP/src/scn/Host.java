@@ -41,8 +41,8 @@ public class Host extends Scene {
 		return this.player_name;
 	}
 	
-	public void connected(String their_name) {
-		System.out.println(their_name);
+	public void connected(String their_name, String their_address) {
+		main.setScene(new MultiplayerLeft(main, player_name, their_name, their_address));
 	}
 	
 	@Override
