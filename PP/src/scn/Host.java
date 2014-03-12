@@ -41,7 +41,7 @@ public class Host extends Scene {
 		return this.player_name;
 	}
 	
-	public void connected(String address, String name) {
+	public void connected() {
 		main.closeScene();
 		main.setScene(new MultiplayerLeft(main, host_server, new JoinClient()));
 	}

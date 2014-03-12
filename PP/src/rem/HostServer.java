@@ -32,9 +32,9 @@ public class HostServer extends UnicastRemoteObject implements HostInterface {
 
 	@Override
 	public String connect(String address, String their_name) throws RemoteException {
-		host.connected(address, their_name);
 		this.address = address;
 		this.their_name = their_name;
+		host.connected();
 		return my_name;
-	}	
+	}
 }

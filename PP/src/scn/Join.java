@@ -62,8 +62,10 @@ public class Join extends Scene {
 				}
 			}
 		};
+		
 		join_button = new ButtonText("Join", join, JOIN_X_POSITION, JOIN_Y_POSITION, JOIN_WIDTH, JOIN_HEIGHT);
 	}
+	
 	@Override
 	public void mousePressed(int key, int x, int y) {
 		if (join_button.isMouseOver(x, y)) {
@@ -127,5 +129,4 @@ public class Join extends Scene {
 	@Override
 	public void playSound(Sound sound) {
 	}
-
 }
