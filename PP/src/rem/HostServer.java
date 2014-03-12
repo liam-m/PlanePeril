@@ -34,7 +34,7 @@ public class HostServer extends UnicastRemoteObject implements HostInterface {
 	public String connect(String address, String their_name) throws RemoteException {
 		this.address = address;
 		this.their_name = their_name;
-		host.connected();
+		host.connected(their_name);
 		return my_name;
 	}
 }

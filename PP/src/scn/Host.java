@@ -41,7 +41,8 @@ public class Host extends Scene {
 		return this.player_name;
 	}
 	
-	public void connected() {
+	public void connected(String their_name) {
+		System.out.println(their_name);
 	}
 	
 	@Override
