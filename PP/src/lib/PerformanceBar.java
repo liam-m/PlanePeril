@@ -1,4 +1,5 @@
 package lib;
+import pp.Main;
 import lib.jog.graphics;
 
 public class PerformanceBar {
@@ -21,12 +22,11 @@ public class PerformanceBar {
 	}
 	
 	public void changeValueBy(int value) {
-		int current_value = this.current_value;
-		current_value += value;
-		if (current_value > max_value)
-			current_value = max_value;
-		else if (current_value < min_value) 
-			current_value = min_value; // will be changed to sth else and WILL TAKE A LIFE AWAY
+		this.current_value += value;
+		if (this.current_value > max_value)
+			this.current_value = max_value;
+		else if (this.current_value < min_value) 
+			this.current_value = min_value; // will be changed to sth else and WILL TAKE A LIFE AWAY
 		}
 		
 	public void setValueTo(int value) {
@@ -34,11 +34,17 @@ public class PerformanceBar {
 			this.current_value = value;
 	}
 	
+	public int getValue() {
+		return this.current_value;
+	}
+	
 	public void drawPerformanceBar() {
-		graphics.setColour(0, 128, 0, 64);
+		graphics.setColour(Main.GREEN);
+		graphics.rectangle(false, position_x, position_y, width_of_bar, height_of_bar);
+		graphics.setColour(Main.GREEN);
 		graphics.rectangle(true, position_x, position_y, width_of_bar * this.current_value / 100, height_of_bar);
-		graphics.setColour(128, 0, 0, 64);
-		graphics.rectangle(true, position_x, position_y, width_of_bar - this.current_value / 100, height_of_bar);
+		//graphics.setColour(128, 0, 0, 64);
+		//graphics.rectangle(true, position_x, position_y, width_of_bar - this.current_value / 100, height_of_bar);
 		}
 			
 }
