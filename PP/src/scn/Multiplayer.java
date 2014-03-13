@@ -25,13 +25,13 @@ public class Multiplayer extends Scene {
 	OrdersBox orders_box;
 	// AirportControlBox airport_control_box;
 	Altimeter altimeter;
-	//Image background;
+	Image background;
 	
 	public Multiplayer(Main main, String left_name, String right_name) {
 		super(main);
 		this.left_name = left_name;
 		this.right_name = right_name;
-		//this.background = graphics.newImage("gfx" + File.separator + "map.png");
+		this.background = graphics.newImage("gfx" + File.separator + "map.png");
 		left_waypoints = new Waypoint[]{
 			new Waypoint(10, 10),
 		};
@@ -77,7 +77,7 @@ public class Multiplayer extends Scene {
 		
 		graphics.setViewport(16, 40, window.getWidth() - 32, window.getHeight() - 180);
 		graphics.setColour(255, 255, 255, 100);
-		//graphics.draw(background, 0, 0);
+		graphics.draw(background, 0, 0);
 		
 		for (int i=0; i<left_waypoints.length; i++) { // Should be same length
 			left_waypoints[i].draw();
