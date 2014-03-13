@@ -3,17 +3,17 @@ import pp.Main;
 import lib.jog.graphics;
 
 public class PerformanceBar {
-	private final int max_value = 120;
-	private final int min_value = 0;
-	private final int starting_value = 60;
-	private int current_value = starting_value;
+	private final int MAX_VALUE = 120;
+	private final int MIN_VALUE = 0;
+	private final int STARTING_VALUE = 60;
+	private int current_value = STARTING_VALUE;
 	
 	// for drawing
 	private int position_x;
 	private int position_y;
+	private final int BAR_HEIGHT = 50;
+	private final int BAR_WIDTH = 300;
 	private double drawn_value = current_value;
-	private final int height_of_bar = 50;
-	private final int width_of_bar = 300;
 	
 	/**
 	 * Constructor for performance bar, takes coordinates of where the performance bar should be drawn
@@ -25,24 +25,32 @@ public class PerformanceBar {
 		this.position_y = location_y;
 	}
 	
+	public void setMax() {
+		current_value = MAX_VALUE;
+		drawn_value = MAX_VALUE;
+		}
+	
 	/**
 	 * Allows to change the value of performance bar - allows both incrementing and decrementing value
 	 * @param value value added to current_value 
 	 */
 	public void changeValueBy(int value) {
 		current_value += value;
-		if (current_value > max_value)
-			current_value = max_value;
-		else if (current_value < min_value) 
-			current_value = min_value; // will be changed to sth different and WILL TAKE A LIFE AWAY
-		}
+		// Can't be greater than max value
+		if (current_value > MAX_VALUE)
+			current_value = MAX_VALUE;
+		// Can't be smaller than min value
+		else if (current_value < MIN_VALUE) 
+			//current_value = MIN_VALUE; // will be changed to sth different and WILL TAKE A LIFE AWAY
+			setMax();
+	}
 	
 	/**
 	 * Sets the value of performance bar - only if the value is valid
 	 * @param value value that performance current_value is changed to if the value is allowed
 	 */
 	public void setValueTo(int value) {
-		if ((value <= max_value) && (value >= min_value))
+		if ((value <= MAX_VALUE) && (value >= MIN_VALUE))
 			current_value = value;
 	}
 	
@@ -54,7 +62,7 @@ public class PerformanceBar {
 	 * Draws the performance bar. The colour of the filling changes when the value decreases and also based on the intermediate value 
 	 */
 	public void draw() {
-		graphics.rectangle(false, position_x, position_y, width_of_bar, height_of_bar); // draws the borders of the bar
+		graphics.rectangle(false, position_x, position_y, BAR_WIDTH, BAR_HEIGHT); // draws the borders of the bar
 			
 		if (current_value < drawn_value) {
 			graphics.setColour(Main.RED);
@@ -65,17 +73,17 @@ public class PerformanceBar {
 			if (this.current_value > drawn_value) 
 				drawn_value += 0.5;
 			
-			if (drawn_value <= (max_value / 2)) 
+			if (drawn_value <= (MAX_VALUE / 2)) 
 				graphics.setColour(238, 230, 140); // khaki colour
-			else if (drawn_value <= (max_value / 2 + max_value/6)) 
+			else if (drawn_value <= (MAX_VALUE / 2 + MAX_VALUE/6)) 
 				graphics.setColour(205, 201, 165); // lemonchiffon  colour
-			else if (drawn_value <= (max_value / 2 + max_value/3)) 
+			else if (drawn_value <= (MAX_VALUE / 2 + MAX_VALUE/3)) 
 				graphics.setColour(205, 205, 0); // yellow  colour
 			else
 				graphics.setColour(0, 199, 140); // turquoiseblue colour
 		}
 		
-		graphics.rectangle(true, position_x, position_y, width_of_bar * drawn_value / max_value, height_of_bar);
+		graphics.rectangle(true, position_x, position_y, BAR_WIDTH * drawn_value / MAX_VALUE, BAR_HEIGHT);
 		
 	}
 			
