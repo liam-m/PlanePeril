@@ -34,6 +34,7 @@ public class Main implements EventHandler {
 	public final static Color GREEN = new Color(0, 200, 0);
 	public final static Color GREY = new Color(128, 128, 128);
 	public final static Color RED = new Color(128, 0, 0);
+	
 	public final static String SCORES_FILE = "scores.ser";
 
 	public final static String TITLE = "Plane Peril";
