@@ -42,7 +42,7 @@ public class Host extends Scene {
 	}
 	
 	public void connected(String their_name, String their_address) {
-		main.setScene(new MultiplayerLeft(main, player_name, their_name, their_address));
+		//main.setScene(new MultiplayerLeft(main, player_name, their_name, their_address));
 	}
 	
 	@Override
@@ -90,6 +90,11 @@ public class Host extends Scene {
 
 	@Override
 	public void update(double time_difference) {
+		if (host_server.hasConnected()) {
+			String their_name = host_server.getTheirName();
+			String their_address = host_server.getTheirAddress();
+			main.setScene(new MultiplayerLeft(main, player_name, their_name, their_address));
+		}
 	}
 	
 	@Override

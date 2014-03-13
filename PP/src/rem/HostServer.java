@@ -13,7 +13,8 @@ public class HostServer extends UnicastRemoteObject implements HostInterface {
 	Registry registry; 
 	int port = 1729;
 	Host host;
-	String my_name, address, their_name;
+	String my_name, their_address, their_name;
+	boolean has_connected = false;
 	
 	public HostServer(Host host) throws RemoteException {
 		super();
@@ -30,12 +31,20 @@ public class HostServer extends UnicastRemoteObject implements HostInterface {
 	public String getTheirName() {
 		return this.their_name;
 	}
+	
+	public String getTheirAddress() {
+		return this.their_address;
+	}
+	
+	public boolean hasConnected() {
+		return has_connected;
+	}
 
 	@Override
 	public String connect(String address, String their_name) throws RemoteException {
-		this.address = address;
+		this.their_address = address;
 		this.their_name = their_name;
-		host.connected(their_name, address);
+		has_connected = true;
 		return my_name;
 	}
 }
