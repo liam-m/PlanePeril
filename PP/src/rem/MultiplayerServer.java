@@ -7,15 +7,17 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
 public class MultiplayerServer extends UnicastRemoteObject implements MultiplayerInterface {
-	int server_port = 1730;
+	int server_port;
 	String opponent_address;
 	Registry registry;
 	MultiplayerInterface multiplayer_interface;
 	Registry their_registry;
 
-	public MultiplayerServer(String opponent_address, String registry_name) throws RemoteException {
+	public MultiplayerServer(String opponent_address, String registry_name, int server_port) throws RemoteException {
 		super();
+		this.server_port = server_port;
 		registry = LocateRegistry.createRegistry(server_port);
+		System.out.println(registry.toString());
 		registry.rebind(registry_name, this);
 		this.opponent_address = opponent_address;
 	}

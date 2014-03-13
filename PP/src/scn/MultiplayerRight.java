@@ -13,7 +13,7 @@ public class MultiplayerRight extends Multiplayer {
 	public MultiplayerRight(Main main, String my_name, String their_name, String their_address) {
 		super(main, their_name, my_name);
 		try {
-			server = new MultiplayerServer(their_address, "player_2");
+			server = new MultiplayerServer(their_address, "player_2", 1731);
 			Thread.sleep(3000);
 			server.connect("player_1");
 		} catch (RemoteException | InterruptedException e) {
