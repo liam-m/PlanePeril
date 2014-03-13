@@ -13,9 +13,9 @@ public class MultiplayerLeft extends Multiplayer {
 	public MultiplayerLeft(Main main, String my_name, String their_name, String their_address) {
 		super(main, my_name, their_name);
 		try {
-			server = new MultiplayerServer(their_address);
+			server = new MultiplayerServer(their_address, "player_1");
 			Thread.sleep(3000);
-			server.connect();
+			server.connect("player_2");
 		} catch (RemoteException | InterruptedException e) {
 			e.printStackTrace();
 		}

@@ -13,17 +13,17 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 	MultiplayerInterface multiplayer_interface;
 	Registry their_registry;
 
-	public MultiplayerServer(String opponent_address) throws RemoteException {
+	public MultiplayerServer(String opponent_address, String registry_name) throws RemoteException {
 		super();
 		registry = LocateRegistry.createRegistry(server_port);
-		registry.rebind("multiplayer", this);
+		registry.rebind(registry_name, this);
 		this.opponent_address = opponent_address;
 	}
 	
-	public void connect() {
+	public void connect(String registry_name) {
 		try {
 			their_registry = LocateRegistry.getRegistry(opponent_address, server_port);
-			multiplayer_interface = (MultiplayerInterface)(their_registry.lookup("multiplayer"));
+			multiplayer_interface = (MultiplayerInterface)(their_registry.lookup(registry_name));
 		} catch (NotBoundException | RemoteException e) {
 			e.printStackTrace();
 		}
