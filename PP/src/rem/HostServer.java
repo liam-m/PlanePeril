@@ -35,11 +35,6 @@ public class HostServer extends UnicastRemoteObject implements HostInterface {
 	public String connect(String address, String their_name) throws RemoteException {
 		this.address = address;
 		this.their_name = their_name;
-		try {
-			registry.unbind("host_server");
-		} catch (NotBoundException e) {
-			e.printStackTrace();
-		}
 		host.connected(their_name, address);
 		return my_name;
 	}
