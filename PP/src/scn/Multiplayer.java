@@ -72,7 +72,7 @@ public class Multiplayer extends Scene {
 	public void draw() {
 		graphics.setColour(Main.GREEN);
 		graphics.printText(left_name, 10, 10, 2);
-		graphics.printText(right_name, window.getWidth()-100, 10, 2);
+		graphics.printText(right_name, window.getWidth()-(right_name.length()*17), 10, 2);
 		graphics.rectangle(false, 16, 40, window.getWidth() - 32, window.getHeight() - 180);
 		
 		graphics.setViewport(16, 40, window.getWidth() - 32, window.getHeight() - 180);

@@ -93,6 +93,7 @@ public class Host extends Scene {
 		if (host_server.hasConnected()) {
 			String their_name = host_server.getTheirName();
 			String their_address = host_server.getTheirAddress();
+			main.closeScene();
 			main.setScene(new MultiplayerLeft(main, player_name, their_name, their_address));
 		}
 	}
