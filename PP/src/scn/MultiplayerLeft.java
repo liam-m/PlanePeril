@@ -1,6 +1,15 @@
 package scn;
 
+import java.io.File;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
+
+import cls.Aircraft;
+import cls.FlightPlan;
+
+import lib.jog.graphics;
+import lib.jog.audio.Sound;
+import lib.jog.graphics.Image;
 
 import pp.Main;
 import rem.HostServer;
@@ -21,9 +30,61 @@ public class MultiplayerLeft extends Multiplayer {
 		}
 	}
 	
-	public void addAircraft() {
+	@Override
+	public void update(double dt) {
+		
+	}
+	
+	public void generateAircraft() {
 		// Add aircraft to self
+		addAircraft();
 		// Send to other
-		server.sendAircraft();
+		//server.sendAircraft(); // Needs args
+	}
+	
+	public void addAircraft() {
+		
+	}
+
+	@Override
+	public void mousePressed(int key, int mouse_x, int mouse_y) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(int key, int mouse_x, int mouse_y) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void keyPressed(int key) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void keyReleased(int key) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void start() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void close() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void playSound(Sound sound) {
+		// TODO Auto-generated method stub
+		
 	}
 }

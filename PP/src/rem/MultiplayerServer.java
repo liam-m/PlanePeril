@@ -21,6 +21,8 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 		this.opponent_port = opponent_port;
 	}
 	
+	// Initial connection
+	
 	public void connect(String registry_name) {
 		try {
 			their_registry = LocateRegistry.getRegistry(opponent_address, opponent_port);
@@ -30,16 +32,20 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 		}
 	}
 	
-	public void sendAircraft() {
+	// Notifying each game of a new aircraft
+	
+	// Server sending an aircraft
+	public void sendAircraft(int speed, int origin_waypoints_index, int destination_waypoints_index, int[] intermediate_waypoints_indexes, int take_off_waypoint_index) {
 		try {
-			multiplayer_interface.addAircraft(true);
+			multiplayer_interface.addAircraft(speed, origin_waypoints_index, destination_waypoints_index, intermediate_waypoints_indexes, take_off_waypoint_index);
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
 	}
 	
+	// Receiving aircraft from other server
 	@Override
-	public void addAircraft(boolean x) {
+	public void addAircraft(int speed, int origin_waypoints_index, int destination_waypoints_index, int[] intermediate_waypoints_indexes, int take_off_waypoint_index) {
 		
 	}
 }

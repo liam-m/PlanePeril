@@ -24,6 +24,6 @@ public class MultiplayerRight extends Multiplayer {
 	public void addAircraft() {
 		// Add aircraft to self
 		// Send to other
-		server.sendAircraft();
+		// server.sendAircraft(); // Needs args
 	}
 }
