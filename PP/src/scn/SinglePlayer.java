@@ -22,9 +22,11 @@ import cls.HoldingWaypoint;
 import cls.OrdersBox;
 import cls.Waypoint;
 import cls.Waypoint.WaypointType;
+import cls.Lives;
 
 public class SinglePlayer extends Scene {
 
+	private Lives test_lives = new Lives(500, 500, graphics.newImage("gfx" + File.separator + "plane.png"), 15, 15, 5);
 	// Position of things drawn to window
 	private final int PLANE_INFO_X = 16;
 	private final int PLANE_INFO_Y = window.getHeight() - 120;
@@ -657,6 +659,7 @@ public class SinglePlayer extends Scene {
 	 */
 	@Override
 	public void draw() {
+		test_lives.draw(500, 500, 20, 3);
 		graphics.setColour(Main.GREEN);
 		graphics.rectangle(false, 16, 16, window.getWidth() - 32, window.getHeight() - 144);
 
@@ -664,7 +667,7 @@ public class SinglePlayer extends Scene {
 
 		graphics.setColour(255, 255, 255, 100);
 		graphics.draw(background, 0, 0);
-
+		
 		drawMap();
 
 		graphics.setViewport();
