@@ -6,7 +6,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Stack;
 
-import lib.PerformanceBar;
+import cls.PerformanceBar;
 import lib.Serializer;
 import lib.jog.audio;
 import lib.jog.graphics;

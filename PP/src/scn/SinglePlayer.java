@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 import pp.Main;
 import lib.ButtonText;
-import lib.PerformanceBar;
+import cls.PerformanceBar;
 import lib.RandomNumber;
 import lib.jog.audio;
 import lib.jog.audio.Music;
