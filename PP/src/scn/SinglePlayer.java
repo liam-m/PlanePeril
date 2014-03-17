@@ -6,7 +6,6 @@ import java.util.ArrayList;
 
 import pp.Main;
 import lib.ButtonText;
-import cls.PerformanceBar;
 import lib.RandomNumber;
 import lib.jog.audio;
 import lib.jog.audio.Music;
@@ -26,7 +25,6 @@ import cls.Waypoint.WaypointType;
 public class SinglePlayer extends Scene {
 
 	// Position of things drawn to window
-	//private PerformanceBar test_performance_bar = new PerformanceBar(500, 300);
 	private final int PLANE_INFO_X = 16;
 	private final int PLANE_INFO_Y = window.getHeight() - 120;
 	private final int PLANE_INFO_W = window.getWidth() / 4 - 16;
@@ -649,25 +647,6 @@ public class SinglePlayer extends Scene {
 			gameOver(a1, a2);
 			break;
 			
-		/*	
-		case input.KEY_Z:
-			test_performance_bar.changeValueBy(-10);
-			System.out.println("performance bar value: " + test_performance_bar.getCurrentValue());
-			break;
-			
-		case input.KEY_X:
-			test_performance_bar.changeValueBy(10);
-			System.out.println("performance bar value: " + test_performance_bar.getCurrentValue());
-			break;
-			
-		case input.KEY_O:
-			test_performance_bar.setValueTo(0);
-			break;
-			
-		case input.KEY_P:
-			test_performance_bar.setValueTo(120);
-			break;
-		*/	
 		}
 	}
 
@@ -696,7 +675,6 @@ public class SinglePlayer extends Scene {
 		orders_box.draw();
 		altimeter.draw();
 		drawPlaneInfo();
-		// test_performance_bar.draw();
 
 		graphics.setColour(Main.GREEN);
 		drawScore();

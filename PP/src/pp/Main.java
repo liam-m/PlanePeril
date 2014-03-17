@@ -30,7 +30,6 @@ import scn.Title;
  * @author Huw Taylor
  */
 public class Main implements EventHandler {
-	public  PerformanceBar test_performance_bar = new PerformanceBar(600,600);
 	public final static Color GREEN = new Color(0, 200, 0);
 	public final static Color GREY = new Color(128, 128, 128);
 	public final static Color RED = new Color(128, 0, 0);
