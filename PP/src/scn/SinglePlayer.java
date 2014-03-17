@@ -5,7 +5,6 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import pp.Main;
-
 import lib.ButtonText;
 import lib.RandomNumber;
 import lib.jog.audio;
@@ -647,7 +646,7 @@ public class SinglePlayer extends Scene {
 			Aircraft a2 = createAircraft(true);
 			gameOver(a1, a2);
 			break;
-
+			
 		}
 	}
 
