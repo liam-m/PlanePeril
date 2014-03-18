@@ -103,10 +103,8 @@ public class AircraftTest {
 		holding_waypoints.get(2).setNextWaypoint(holding_waypoints.get(3));
 		holding_waypoints.get(3).setNextWaypoint(holding_waypoints.get(0));
 
-		aircraft_in_airspace = new ArrayList<Aircraft>();
-
 		test_aircraft = new Aircraft("test_aircraft", null, 10,
-				SinglePlayer.DIFFICULTY_HARD, aircraft_in_airspace,
+				SinglePlayer.DIFFICULTY_HARD,
 				new FlightPlan(location_waypoints[0], location_waypoints[1],
 						airspace_waypoints, holding_waypoints, takeoff_waypoint), -1);
 	}
@@ -122,10 +120,8 @@ public class AircraftTest {
 
 	@Test
 	public void testPosition() {
-		assertEquals(test_aircraft.getPosition().x(), location_waypoints[0]
-				.position().x(), 0);
-		assertEquals(test_aircraft.getPosition().y(), location_waypoints[0]
-				.position().y(), 0);
+		assertEquals(test_aircraft.getPosition().x(), location_waypoints[0].position().x(), 0);
+		assertEquals(test_aircraft.getPosition().y(), location_waypoints[0].position().y(), 0);
 	}
 
 	@Test
@@ -149,7 +145,7 @@ public class AircraftTest {
 		assertFalse(test_aircraft.hasFinished());
 
 		Aircraft testAircraft2 = new Aircraft("testAircraft", null, 10,
-				SinglePlayer.DIFFICULTY_HARD, aircraft_in_airspace,
+				SinglePlayer.DIFFICULTY_HARD,
 				new FlightPlan(location_waypoints[0], location_waypoints[1],
 						airspace_waypoints, holding_waypoints, takeoff_waypoint), -1);
 
@@ -252,7 +248,7 @@ public class AircraftTest {
 	@Test
 	public void testUpdateCollisions() {
 		Aircraft testAircraft2 = new Aircraft("testAircraft", null, 10,
-				SinglePlayer.DIFFICULTY_HARD, aircraft_in_airspace,
+				SinglePlayer.DIFFICULTY_HARD,
 				new FlightPlan(location_waypoints[0], location_waypoints[1],
 						airspace_waypoints, holding_waypoints, takeoff_waypoint), -1);
 

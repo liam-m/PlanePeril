@@ -953,8 +953,8 @@ public class SinglePlayer extends Scene {
 				if (a.getName() == name) name_is_taken = true;
 			}
 		}
-		return new Aircraft(name, aircraft_image, 32 + (int) (10 * Math.random()), difficulty,
-				aircraft_in_airspace, new FlightPlan(origin_point, destination_point, airspaceWaypoints, holding_waypoints, takeoffWaypoint), preferred_altitude_index);
+		return new Aircraft(name, aircraft_image, 32 + (int) (10 * Math.random()), difficulty, new FlightPlan(origin_point, 
+				destination_point, airspaceWaypoints, holding_waypoints, takeoffWaypoint), preferred_altitude_index);
 	}
 
 	@Override

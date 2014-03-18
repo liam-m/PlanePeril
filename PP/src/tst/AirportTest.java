@@ -109,13 +109,8 @@ public class AirportTest {
 		holding_waypoints.get(2).setNextWaypoint(holding_waypoints.get(3));
 		holding_waypoints.get(3).setNextWaypoint(holding_waypoints.get(0));
 
-		aircraft_in_airspace = new ArrayList<Aircraft>();
-
-		test_aircraft = new Aircraft("testAircraft", null,
-				32 + (int) (10 * Math.random()), SinglePlayer.DIFFICULTY_EASY,
-				aircraft_in_airspace, new FlightPlan(location_waypoints[0],
-						location_waypoints[1], airspace_waypoints,
-						holding_waypoints, takeoff_waypoint), -1);
+		test_aircraft = new Aircraft("testAircraft", null, 32 + (int) (10 * Math.random()), SinglePlayer.DIFFICULTY_EASY, 
+				new FlightPlan(location_waypoints[0],location_waypoints[1], airspace_waypoints, holding_waypoints, takeoff_waypoint), -1);
 	}
 
 	@After

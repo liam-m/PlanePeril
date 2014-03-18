@@ -68,12 +68,10 @@ public class Aircraft {
 	 * @param img The image to draw to represent the plane.
 	 * @param speed The speed the plane will travel at.
 	 * @param difficulty Difficulty of the game, changes speed of aircraft and starting points for each aircraft
-	 * @param aircraft_list All aircrafts in the the screen, used to detect collisions and make sure this aircraft doesn't spawn in the same altitude as another one nearby
 	 * @param flight_plan The flightplan, has the destination, origin and used to generate the actual route
 	 * @param preferred_altitude_index used when plane needs to be created in specific altitude. Set to -1 or less for choosing altitude randomly.
 	 */
-	public Aircraft(String name, Image img, double speed, int difficulty,
-			ArrayList<Aircraft> aircraft_list, FlightPlan flight_plan, int preferred_altitude_index) {
+	public Aircraft(String name, Image img, double speed, int difficulty, FlightPlan flight_plan, int preferred_altitude_index) {
 		this.name = name;
 		this.flight_plan = flight_plan;
 		this.image = img;
