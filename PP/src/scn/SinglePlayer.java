@@ -875,11 +875,9 @@ public class SinglePlayer extends Scene {
 	 * @return the create aircraft object
 	 */
 	private Aircraft createAircraft(boolean fromAirport) {
-		String destination_name;
-		String origin_name = "";
-		Waypoint origin_point;
-		Waypoint destination_point;			
-		
+		int destination = RandomNumber.randInclusiveInt(0, location_waypoints.length - 1);
+		int origin = 0; // it is chosen later on, initialized as otherwise compiler complains
+		Waypoint origin_point; 
 		// Chooses two waypoints randomly and then checks if they satisfy the rules, if not, it tries until it finds good ones. 	
 		java.util.ArrayList<Waypoint> available_origins = getAvailableEntryPoints();
 		
@@ -894,24 +892,19 @@ public class SinglePlayer extends Scene {
 				origin_point = available_origins.get(RandomNumber.randInclusiveInt(0, available_origins.size()-1));
 				for (int i = 0; i < location_waypoints.length; i++) {
 					if (location_waypoints[i].equals(origin_point)) {
-						origin_name = location_waypoints[i].getName();
+						origin = i;
 						break;
 					}
 				}
 			}
 		}
 		
-		// Work out destination
-		int destination = RandomNumber.randInclusiveInt(0, location_waypoints.length - 1);
-		destination_name = location_waypoints[destination].getName();
-		destination_point = location_waypoints[destination];
-		
-		while (location_waypoints[destination].getName() == origin_name) {
+		// Make sure origin and destination aren't the same
+		while (location_waypoints[destination].equals(location_waypoints[origin]) || fromAirport && location_waypoints[destination] instanceof Airport) {
 			destination = RandomNumber.randInclusiveInt(0, location_waypoints.length - 1);
-			destination_name = location_waypoints[destination].getName();
-			destination_point = location_waypoints[destination];
 		}			
-
+		
+		Waypoint destination_point = location_waypoints[destination];
 		// Name
 		String name = "";
 		boolean name_is_taken = true;
@@ -922,8 +915,6 @@ public class SinglePlayer extends Scene {
 				if (a.getName() == name) name_is_taken = true;
 			}
 		}
-		
-
 		return new Aircraft(name, aircraft_image, 32 + (int) (10 * Math.random()), difficulty,
 				aircraft_in_airspace, new FlightPlan(origin_point, destination_point, airspaceWaypoints, holding_waypoints, takeoffWaypoint));
 	}
