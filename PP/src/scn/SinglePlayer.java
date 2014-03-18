@@ -19,6 +19,7 @@ import cls.Altimeter;
 import cls.FlightPlan;
 import cls.HoldingWaypoint;
 import cls.OrdersBox;
+import cls.Vector;
 import cls.Waypoint;
 import cls.Waypoint.WaypointType;
 
@@ -846,9 +847,8 @@ public class SinglePlayer extends Scene {
 	}
 	
  	/**
- 	 * prevents spawning a plane in waypoint both:
- 	 * if any plane is currently going towards it 
- 	 * if any plane is less than 300 from it
+ 	 * prevents spawning a plane in waypoint if any plane is currently going towards it 
+ 	 * or any plane is less than 300 from it.
  	 */
 	private java.util.ArrayList<Waypoint> getAvailableEntryPoints() {
 		java.util.ArrayList<Waypoint> available_entry_points = new java.util.ArrayList<Waypoint>();
@@ -867,6 +867,35 @@ public class SinglePlayer extends Scene {
 		 	}	
 		}
 		return available_entry_points;
+	}
+	
+ 	/**
+ 	 * Advanced version of getAvailableEntryPoints() that returns single id (as a combination of waypoint and altitude ids). As opposed to 
+ 	 * declining entry point even if the altitude difference is high, it returns the altitude levels for specific waypoints that are 
+ 	 * valid for creating planes in them. Mod 3 of result gives offset in altitude_list and /3 gives specific entry point.
+ 	 */
+	private java.util.ArrayList<Integer> getIdAvailableEntryPointsAltitudes() {
+		java.util.ArrayList<Integer> available_id_entry_points_altitudes = new java.util.ArrayList<Integer>();
+		int base_id = 0;
+		// checks all waypoints and all altitudes
+		for (Waypoint entry_point : location_waypoints) {
+			for (int i = 1; i < Aircraft.altitude_list.size(); i++) { // starts from 1 as the first in the list is 100 which is not considered
+			boolean is_available = true;
+				for (Aircraft aircraft : aircraft_in_airspace) {
+					// Check if any plane is currently going towards the exit point/chosen originPoint
+					// Check if any plane's altitude is less than 300 different from altitude from altitude_list currently being checked and close to entry point at the same time 
+					if (aircraft.getCurrentTarget().equals(entry_point.position()) ||
+							((Math.abs(aircraft.getPosition().z() - Aircraft.altitude_list.get(i)) < 1000) && aircraft.isCloseToEntry(entry_point.position()))) {
+						is_available = false;
+					}	
+				}
+				if (is_available) {
+					available_id_entry_points_altitudes.add(base_id * 3 + i);
+				}
+		 	}
+			base_id++;
+		}
+		return available_id_entry_points_altitudes;
 	}
 	
 	/**
