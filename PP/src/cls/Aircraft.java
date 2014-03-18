@@ -76,7 +76,7 @@ public class Aircraft {
 	 *            generate the actual route
 	 */
 	public Aircraft(String name, Image img, double speed, int difficulty,
-			ArrayList<Aircraft> aircraft_list, FlightPlan flight_plan) {
+			ArrayList<Aircraft> aircraft_list, FlightPlan flight_plan, int preferred_altitude_index) {
 		this.name = name;
 		this.flight_plan = flight_plan;
 		this.image = img;
@@ -85,8 +85,10 @@ public class Aircraft {
 
 		// Add list of aircraft cruising heights. First entry only used when aircraft is landing/taking off.
 		altitude_list = new ArrayList<Integer>(Arrays.asList(100, 5000, 10000, 15000));
-
-		this.target_altitude_index = RandomNumber.randInclusiveInt(1, altitude_list.size() - 1);
+		
+		this.target_altitude_index = preferred_altitude_index;
+		if (this.target_altitude_index < 0)
+			this.target_altitude_index = RandomNumber.randInclusiveInt(1, altitude_list.size() - 1);
 
 		int altitude = altitude_list.get(target_altitude_index);
 

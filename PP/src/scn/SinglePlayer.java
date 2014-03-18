@@ -876,24 +876,27 @@ public class SinglePlayer extends Scene {
  	 */
 	private java.util.ArrayList<Integer> getIdAvailableEntryPointsAltitudes() {
 		java.util.ArrayList<Integer> available_id_entry_points_altitudes = new java.util.ArrayList<Integer>();
-		int base_id = 0;
+		int base_id = -1;
 		// checks all waypoints and all altitudes
 		for (Waypoint entry_point : location_waypoints) {
-			for (int i = 1; i < Aircraft.altitude_list.size(); i++) { // starts from 1 as the first in the list is 100 which is not considered
-			boolean is_available = true;
-				for (Aircraft aircraft : aircraft_in_airspace) {
-					// Check if any plane is currently going towards the exit point/chosen originPoint
-					// Check if any plane's altitude is less than 300 different from altitude from altitude_list currently being checked and close to entry point at the same time 
-					if (aircraft.getCurrentTarget().equals(entry_point.position()) ||
-							((Math.abs(aircraft.getPosition().z() - Aircraft.altitude_list.get(i)) < 1000) && aircraft.isCloseToEntry(entry_point.position()))) {
-						is_available = false;
-					}	
-				}
-				if (is_available) {
-					available_id_entry_points_altitudes.add(base_id * 3 + i);
-				}
-		 	}
 			base_id++;
+			if (entry_point != airport) {
+				for (int i = 1; i < Aircraft.altitude_list.size(); i++) { // starts from 1 as the first in the list is 100 which is not considered
+					boolean is_available = true;
+					for (Aircraft aircraft : aircraft_in_airspace) {
+						// Check if any plane is currently going towards the exit point/chosen originPoint
+						// Check if any plane's altitude is less than 300 different from altitude from altitude_list currently being checked and close to entry point at the same time 
+						if (aircraft.getCurrentTarget().equals(entry_point.position()) ||
+								((Math.abs(aircraft.getPosition().z() - Aircraft.altitude_list.get(i)) < 1000) && aircraft.isCloseToEntry(entry_point.position()))) {
+							is_available = false;
+						}	
+					}
+					if (is_available) { 
+						available_id_entry_points_altitudes.add(base_id * 3 + i - 1); // -1 because altitude_list starts from index 1
+					}
+				}
+
+			}
 		}
 		return available_id_entry_points_altitudes;
 	}
@@ -904,6 +907,7 @@ public class SinglePlayer extends Scene {
 	 * @return the create aircraft object
 	 */
 	private Aircraft createAircraft(boolean fromAirport) {
+		int preferred_altitude_index = -1;
 		int destination = RandomNumber.randInclusiveInt(0, location_waypoints.length - 1);
 		int origin = 0; // it is chosen later on, initialized as otherwise compiler complains
 		Waypoint origin_point; 
@@ -915,7 +919,14 @@ public class SinglePlayer extends Scene {
 		}
 		else {
 			if (available_origins.isEmpty()) {
-				return null;
+				if (getIdAvailableEntryPointsAltitudes().size() == 0)
+					return null;
+				java.util.ArrayList<Integer> available_id_entry_points_altitudes = getIdAvailableEntryPointsAltitudes();
+				System.out.println(getIdAvailableEntryPointsAltitudes().size());
+				int id = available_id_entry_points_altitudes.get(RandomNumber.randInclusiveInt(0, available_id_entry_points_altitudes.size()-1));
+				origin = id / 3;
+				origin_point = location_waypoints[origin];
+				preferred_altitude_index = id % 3 + 1;
 			}
 			else {
 				origin_point = available_origins.get(RandomNumber.randInclusiveInt(0, available_origins.size()-1));
@@ -945,7 +956,7 @@ public class SinglePlayer extends Scene {
 			}
 		}
 		return new Aircraft(name, aircraft_image, 32 + (int) (10 * Math.random()), difficulty,
-				aircraft_in_airspace, new FlightPlan(origin_point, destination_point, airspaceWaypoints, holding_waypoints, takeoffWaypoint));
+				aircraft_in_airspace, new FlightPlan(origin_point, destination_point, airspaceWaypoints, holding_waypoints, takeoffWaypoint), preferred_altitude_index);
 	}
 
 	@Override

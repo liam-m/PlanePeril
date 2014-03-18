@@ -108,7 +108,7 @@ public class AircraftTest {
 		test_aircraft = new Aircraft("test_aircraft", null, 10,
 				SinglePlayer.DIFFICULTY_HARD, aircraft_in_airspace,
 				new FlightPlan(location_waypoints[0], location_waypoints[1],
-						airspace_waypoints, holding_waypoints, takeoff_waypoint));
+						airspace_waypoints, holding_waypoints, takeoff_waypoint), -1);
 	}
 
 	@After
@@ -151,7 +151,7 @@ public class AircraftTest {
 		Aircraft testAircraft2 = new Aircraft("testAircraft", null, 10,
 				SinglePlayer.DIFFICULTY_HARD, aircraft_in_airspace,
 				new FlightPlan(location_waypoints[0], location_waypoints[1],
-						airspace_waypoints, holding_waypoints, takeoff_waypoint));
+						airspace_waypoints, holding_waypoints, takeoff_waypoint), -1);
 
 		ArrayList<Aircraft> testAircrafts = new ArrayList<Aircraft>();
 		testAircrafts.add(test_aircraft);
@@ -254,7 +254,7 @@ public class AircraftTest {
 		Aircraft testAircraft2 = new Aircraft("testAircraft", null, 10,
 				SinglePlayer.DIFFICULTY_HARD, aircraft_in_airspace,
 				new FlightPlan(location_waypoints[0], location_waypoints[1],
-						airspace_waypoints, holding_waypoints, takeoff_waypoint));
+						airspace_waypoints, holding_waypoints, takeoff_waypoint), -1);
 
 		ArrayList<Aircraft> testAircrafts = new ArrayList<Aircraft>();
 		testAircrafts.add(test_aircraft);
