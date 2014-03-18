@@ -67,13 +67,10 @@ public class Aircraft {
 	 * @param name The name of the flight.
 	 * @param img The image to draw to represent the plane.
 	 * @param speed The speed the plane will travel at.
-	 * @param difficulty Difficulty of the game, changes speed of aircraft and starting
-	 *            points for each aircraft
-	 * @param aircraft_list All aircrafts in the the screen, used to detect collisions and
-	 *            make sure this aircraft doesn't spawn in the same altitude as
-	 *            another one nearby
-	 * @param flight_plan The flightplan, has the destination, origin and used to
-	 *            generate the actual route
+	 * @param difficulty Difficulty of the game, changes speed of aircraft and starting points for each aircraft
+	 * @param aircraft_list All aircrafts in the the screen, used to detect collisions and make sure this aircraft doesn't spawn in the same altitude as another one nearby
+	 * @param flight_plan The flightplan, has the destination, origin and used to generate the actual route
+	 * @param preferred_altitude_index used when plane needs to be created in specific altitude. Set to -1 or less for choosing altitude randomly.
 	 */
 	public Aircraft(String name, Image img, double speed, int difficulty,
 			ArrayList<Aircraft> aircraft_list, FlightPlan flight_plan, int preferred_altitude_index) {
@@ -91,22 +88,6 @@ public class Aircraft {
 			this.target_altitude_index = RandomNumber.randInclusiveInt(1, altitude_list.size() - 1);
 
 		int altitude = altitude_list.get(target_altitude_index);
-
-		// Checking that if an aircraft is near the waypoint that the new
-		// aircraft is to be spawned at and has the same altitude, the new
-		// aircraft must choose a different altitude.
-		for (Aircraft aircraft : aircraft_list) {
-			if (flight_plan.getOrigin().position().sub(aircraft.getPosition()).magnitude() < 200 &&
-					altitude == aircraft.position.z()) {
-				int newTargetAltitudeIndex = target_altitude_index;
-
-				while (newTargetAltitudeIndex == target_altitude_index) {
-					newTargetAltitudeIndex = RandomNumber.randInclusiveInt(1, altitude_list.size() - 1);
-					altitude = altitude_list.get(newTargetAltitudeIndex);
-				}
-				target_altitude_index = newTargetAltitudeIndex;
-			}
-		}
 
 		this.position = position.add(new Vector(0, 0, altitude));
 

@@ -19,7 +19,6 @@ import cls.Altimeter;
 import cls.FlightPlan;
 import cls.HoldingWaypoint;
 import cls.OrdersBox;
-import cls.Vector;
 import cls.Waypoint;
 import cls.Waypoint.WaypointType;
 
@@ -847,7 +846,7 @@ public class SinglePlayer extends Scene {
 	}
 	
  	/**
- 	 * prevents spawning a plane in waypoint if any plane is currently going towards it 
+ 	 * List that helps to prevent spawning a plane in waypoint if any plane is currently going towards it 
  	 * or any plane is less than 300 from it.
  	 */
 	private java.util.ArrayList<Waypoint> getAvailableEntryPoints() {
@@ -870,7 +869,7 @@ public class SinglePlayer extends Scene {
 	}
 	
  	/**
- 	 * Advanced version of getAvailableEntryPoints() that returns single id (as a combination of waypoint and altitude ids). As opposed to 
+ 	 * Advanced version of getAvailableEntryPoints() that returns array of single ids (as a combination of waypoint and altitude ids). As opposed to 
  	 * declining entry point even if the altitude difference is high, it returns the altitude levels for specific waypoints that are 
  	 * valid for creating planes in them. Mod 3 of result gives offset in altitude_list and /3 gives specific entry point.
  	 */
@@ -880,8 +879,8 @@ public class SinglePlayer extends Scene {
 		// checks all waypoints and all altitudes
 		for (Waypoint entry_point : location_waypoints) {
 			base_id++;
-			if (entry_point != airport) {
-				for (int i = 1; i < Aircraft.altitude_list.size(); i++) { // starts from 1 as the first in the list is 100 which is not considered
+			if (entry_point != airport) { // Airport is excluded as it is said initially whether it should come from airport or elsewhere
+				for (int i = 1; i < Aircraft.altitude_list.size(); i++) { // Starts from 1 as the first in the altitude_list is 100 which is not considered
 					boolean is_available = true;
 					for (Aircraft aircraft : aircraft_in_airspace) {
 						// Check if any plane is currently going towards the exit point/chosen originPoint
@@ -892,7 +891,7 @@ public class SinglePlayer extends Scene {
 						}	
 					}
 					if (is_available) { 
-						available_id_entry_points_altitudes.add(base_id * 3 + i - 1); // -1 because altitude_list starts from index 1
+						available_id_entry_points_altitudes.add(base_id * 3 + i - 1); // -1 because altitude_list starts from index 1 (as opposed to usual 0) 
 					}
 				}
 
@@ -902,35 +901,34 @@ public class SinglePlayer extends Scene {
 	}
 	
 	/**
-	 * Handle nitty gritty of aircraft creating including randomisation of
-	 * entry, exit, altitude, etc.
+	 * A rather sophisticated system of creating planes such that it is very fair for the player. Planes are created either from airport or elsewhere based on parameter. 
+	 * Also planes are primarily created from waypoints with no planes near them. Secondarily, planes are created in entry points such that no plane is near the altitude 
+	 * that a newly created plane has. If it cannot create a plane due to constraints, it returns null.
 	 * @return the create aircraft object
 	 */
 	private Aircraft createAircraft(boolean fromAirport) {
 		int preferred_altitude_index = -1;
 		int destination = RandomNumber.randInclusiveInt(0, location_waypoints.length - 1);
-		int origin = 0; // it is chosen later on, initialized as otherwise compiler complains
+		int origin = 0; // 0 is default, it is chosen later on (initialized as compiler would otherwise complain)
 		Waypoint origin_point; 
-		// Chooses two waypoints randomly and then checks if they satisfy the rules, if not, it tries until it finds good ones. 	
 		java.util.ArrayList<Waypoint> available_origins = getAvailableEntryPoints();
 		
 		if (fromAirport) {
 			origin_point = airport;		
 		}
 		else {
-			if (available_origins.isEmpty()) {
+			if (available_origins.isEmpty()) { // Creates a plane in waypoint with planes of different altitude than that of the new plane.
 				if (getIdAvailableEntryPointsAltitudes().size() == 0)
 					return null;
 				java.util.ArrayList<Integer> available_id_entry_points_altitudes = getIdAvailableEntryPointsAltitudes();
-				System.out.println(getIdAvailableEntryPointsAltitudes().size());
 				int id = available_id_entry_points_altitudes.get(RandomNumber.randInclusiveInt(0, available_id_entry_points_altitudes.size()-1));
-				origin = id / 3;
-				origin_point = location_waypoints[origin];
-				preferred_altitude_index = id % 3 + 1;
+				origin = id / 3; // Calculates id of a waypoint
+				origin_point = location_waypoints[origin]; 
+				preferred_altitude_index = id % 3 + 1; // Calculates id for altitude_list (1 is added as the first item on the list is solely for creating from airports)
 			}
-			else {
-				origin_point = available_origins.get(RandomNumber.randInclusiveInt(0, available_origins.size()-1));
-				for (int i = 0; i < location_waypoints.length; i++) {
+			else { // Creates a plane in waypoint with no planes nearby
+				origin_point = available_origins.get(RandomNumber.randInclusiveInt(0, available_origins.size()-1)); 
+				for (int i = 0; i < location_waypoints.length; i++) { // getting id for an entry point
 					if (location_waypoints[i].equals(origin_point)) {
 						origin = i;
 						break;
@@ -939,7 +937,7 @@ public class SinglePlayer extends Scene {
 			}
 		}
 		
-		// Make sure origin and destination aren't the same
+		// Making sure origin and destination aren't the same
 		while (location_waypoints[destination].equals(location_waypoints[origin]) || fromAirport && location_waypoints[destination] instanceof Airport) {
 			destination = RandomNumber.randInclusiveInt(0, location_waypoints.length - 1);
 		}			
