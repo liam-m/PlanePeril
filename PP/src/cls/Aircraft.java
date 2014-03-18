@@ -145,7 +145,6 @@ public class Aircraft {
 
 	/**
 	 * Allows access to the plane's current position.
-	 * 
 	 * @return the plane's current position.
 	 */
 	public Vector getPosition() {
@@ -153,8 +152,15 @@ public class Aircraft {
 	}
 
 	/**
+	 * Allows access to the plane's current target.
+	 * @return current_target
+	 */
+	public Waypoint getCurrentTarget() {
+		return current_target;
+	}
+	
+	/**
 	 * Allows access to the plane's name.
-	 * 
 	 * @return the plane's name.
 	 */
 	public String getName() {
@@ -199,7 +205,6 @@ public class Aircraft {
 
 	/**
 	 * Calculates the angle from the plane's position, to its current target.
-	 * 
 	 * @return an angle in radians to the plane's current target.
 	 */
 	private double angleToTarget() {
@@ -212,7 +217,6 @@ public class Aircraft {
 
 	/**
 	 * Checks whether the plane lies outside of the airspace.
-	 * 
 	 * @return true, if the plane is out of the airspace. False, otherwise.
 	 */
 	public boolean isOutOfBounds() {
@@ -222,8 +226,18 @@ public class Aircraft {
 	}
 
 	/**
+	 * Checks if an aircraft is close to its entry point (sent as parameter).
+	 * @param position position of an entry point
+	 * @return true if closer than a minimum distance
+	 */
+	public boolean isCloseToEntry(Vector position) {
+		double x = this.getPosition().x() - position.x();
+		double y = this.getPosition().y() - position.y();
+		return x*x + y*y <= 300*300;
+	}
+	
+	/**
 	 * Calculates the angle at which the plane is travelling.
-	 * 
 	 * @return the angle in radians of the plane's current velocity.
 	 */
 	public double getBearing() {
@@ -232,7 +246,6 @@ public class Aircraft {
 
 	/**
 	 * Allows access to the magnitude of the plane's velocity.
-	 * 
 	 * @return the speed at which the plane is currently going.
 	 */
 	public double getSpeed() {

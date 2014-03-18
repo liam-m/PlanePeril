@@ -34,14 +34,9 @@ public class Waypoint {
 
 	/**
 	 * Constructor for waypoints
-	 * 
-	 * @param x
-	 *            the x coord of the waypoint
-	 * @param y
-	 *            the y coord of the waypoint
-	 * @param inputEntryOrExit
-	 *            whether the waypoint is a point where planes may enter and
-	 *            leave the airspace
+	 * @param x the x coord of the waypoint
+	 * @param y the y coord of the waypoint
+	 * @param inputEntryOrExit whether the waypoint is a point where planes may enter and leave the airspace
 	 */
 	public Waypoint(double x, double y, WaypointType type, String name) {
 		position = new Vector(x, y, 0);
@@ -63,7 +58,6 @@ public class Waypoint {
 
 	/**
 	 * Gets the waypoint position
-	 * 
 	 * @return the position of the waypoint.
 	 */
 	public Vector position() {
@@ -72,11 +66,8 @@ public class Waypoint {
 
 	/**
 	 * Checks if the mouse is over the waypoint, within MOUSE_LENIANCY
-	 * 
-	 * @param mx
-	 *            the mouse's x location
-	 * @param my
-	 *            the mouse's y location
+	 * @param mx the mouse's x location
+	 * @param my the mouse's y location
 	 * @return whether the mouse is considered over the waypoint.
 	 */
 	public boolean isMouseOver(int mx, int my) {
@@ -88,19 +79,15 @@ public class Waypoint {
 	}
 
 	/**
-	 * @return Whether or not the waypoint is an entry or exit point for the
-	 *         airspace.
+	 * @return Whether or not the waypoint is an entry or exit point for the airspace.
 	 */
 	public WaypointType getType() {
 		return this.type;
 	}
 
 	/**
-	 * Gets the cost of travelling between this waypoint and another Used for
-	 * pathfinding
-	 * 
-	 * @param fromPoint
-	 *            The point to consider cost from, to this waypoint
+	 * Gets the cost of travelling between this waypoint and another Used for pathfinding
+	 * @param fromPoint the point to consider cost from, to this waypoint
 	 * @return the distance (cost) between the two waypoints
 	 */
 	public double getCost(Waypoint fromPoint) {
@@ -109,11 +96,8 @@ public class Waypoint {
 
 	/**
 	 * Gets the cost between two waypoints
-	 * 
-	 * @param source
-	 *            the source waypoint
-	 * @param target
-	 *            the target waypoint
+	 * @param source the source waypoint
+	 * @param target the target waypoint
 	 * @return the cost between source and target
 	 */
 	public static double getCostBetween(Waypoint source, Waypoint target) {
@@ -126,11 +110,8 @@ public class Waypoint {
 
 	/**
 	 * draws the waypoint
-	 * 
-	 * @param x
-	 *            the x location to draw at
-	 * @param y
-	 *            the y location to draw at
+	 * @param x the x location to draw at
+	 * @param y the y location to draw at
 	 */
 	public void draw(double x, double y) {
 		graphics.setColour(128, 0, 0, 128);

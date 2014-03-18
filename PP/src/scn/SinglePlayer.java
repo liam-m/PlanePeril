@@ -844,7 +844,31 @@ public class SinglePlayer extends Scene {
 
 		aircraft_in_airspace.add(a);
 	}
-
+	
+ 	/**
+ 	 * prevents spawning a plane in waypoint both:
+ 	 * if any plane is currently going towards it 
+ 	 * if any plane is less than 250 from it
+ 	 */
+	private java.util.ArrayList<Waypoint> getAvailableEntryPoints() {
+		java.util.ArrayList<Waypoint> available_entry_points = new java.util.ArrayList<Waypoint>();
+		 
+		for (Waypoint entry_point : location_waypoints) {
+			boolean is_available = true;
+			for (Aircraft aircraft : aircraft_in_airspace) {
+				// Check if any plane is currently going towards the exit point/chosen originPoint
+				// Check if any plane is less than what is defined as too close from the chosen originPoint
+				if (aircraft.getCurrentTarget().equals(entry_point.position()) || aircraft.isCloseToEntry(entry_point.position())) {
+					is_available = false;
+		 		}	
+		 	}
+			if (is_available) {
+				available_entry_points.add(entry_point);
+		 	}	
+		}
+		return available_entry_points;
+	}
+	
 	/**
 	 * Handle nitty gritty of aircraft creating including randomisation of
 	 * entry, exit, altitude, etc.
