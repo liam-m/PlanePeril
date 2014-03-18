@@ -833,22 +833,22 @@ public class SinglePlayer extends Scene {
 	private void generateFlight(boolean fromAirport) {
 
 		Aircraft a = createAircraft(fromAirport);
+		if (a != null) {
+			if (fromAirport) {
+				// start at altitude 100 and increase to next step
+				a.setAltitude(100);
+				a.increaseTargetAltitude();
+			}
 
-		if (fromAirport) {
-			// start at altitude 100 and increase to next step
-			a.setAltitude(100);
-			a.increaseTargetAltitude();
+			orders_box.addOrder("<<< " + a.getName() + " incoming from " + a.getFlightPlan().getOriginName() + " heading towards " + a.getFlightPlan().getDestinationName() + ".");
+			aircraft_in_airspace.add(a);
 		}
-
-		orders_box.addOrder("<<< " + a.getName() + " incoming from " + a.getFlightPlan().getOriginName() + " heading towards " + a.getFlightPlan().getDestinationName() + ".");
-
-		aircraft_in_airspace.add(a);
 	}
 	
  	/**
  	 * prevents spawning a plane in waypoint both:
  	 * if any plane is currently going towards it 
- 	 * if any plane is less than 250 from it
+ 	 * if any plane is less than 300 from it
  	 */
 	private java.util.ArrayList<Waypoint> getAvailableEntryPoints() {
 		java.util.ArrayList<Waypoint> available_entry_points = new java.util.ArrayList<Waypoint>();
@@ -872,38 +872,60 @@ public class SinglePlayer extends Scene {
 	/**
 	 * Handle nitty gritty of aircraft creating including randomisation of
 	 * entry, exit, altitude, etc.
-	 * 
 	 * @return the create aircraft object
 	 */
 	private Aircraft createAircraft(boolean fromAirport) {
-		int origin = RandomNumber.randInclusiveInt(0, location_waypoints.length - 2); // -2 to exclude the airport
-		int destination = RandomNumber.randInclusiveInt(0, location_waypoints.length - 1);
+		String destination_name;
+		String origin_name = "";
+		Waypoint origin_point;
+		Waypoint destination_point;			
 		
-		Waypoint originPoint = fromAirport ? airport : location_waypoints[origin];
-
-		// Make sure origin and destination aren't the same
-		while (location_waypoints[destination].equals(location_waypoints[origin]) || fromAirport && location_waypoints[destination] instanceof Airport) {
-			destination = RandomNumber.randInclusiveInt(0, location_waypoints.length - 1);
+		// Chooses two waypoints randomly and then checks if they satisfy the rules, if not, it tries until it finds good ones. 	
+		java.util.ArrayList<Waypoint> available_origins = getAvailableEntryPoints();
+		
+		if (fromAirport) {
+			origin_point = airport;		
 		}
-
-		Waypoint destinationPoint = location_waypoints[destination];
-
-		String name = "";
-		boolean nameTaken = true;
-
-		while (nameTaken) {
-			name = "Flight " + (int) (900 * Math.random() + 100);
-			nameTaken = false;
-			for (Aircraft a : aircraft_in_airspace) {
-				if (a.getName() == name)
-					nameTaken = true;
+		else {
+			if (available_origins.isEmpty()) {
+				return null;
+			}
+			else {
+				origin_point = available_origins.get(RandomNumber.randInclusiveInt(0, available_origins.size()-1));
+				for (int i = 0; i < location_waypoints.length; i++) {
+					if (location_waypoints[i].equals(origin_point)) {
+						origin_name = location_waypoints[i].getName();
+						break;
+					}
+				}
 			}
 		}
+		
+		// Work out destination
+		int destination = RandomNumber.randInclusiveInt(0, location_waypoints.length - 1);
+		destination_name = location_waypoints[destination].getName();
+		destination_point = location_waypoints[destination];
+		
+		while (location_waypoints[destination].getName() == origin_name) {
+			destination = RandomNumber.randInclusiveInt(0, location_waypoints.length - 1);
+			destination_name = location_waypoints[destination].getName();
+			destination_point = location_waypoints[destination];
+		}			
 
-		return new Aircraft(name, aircraft_image,
-				32 + (int) (10 * Math.random()), difficulty,
-				aircraft_in_airspace, new FlightPlan(originPoint,
-						destinationPoint, airspaceWaypoints, holding_waypoints, takeoffWaypoint));
+		// Name
+		String name = "";
+		boolean name_is_taken = true;
+		while (name_is_taken) {
+			name = "Flight " + (int)(900 * Math.random() + 100);
+			name_is_taken = false;
+			for (Aircraft a : aircraft_in_airspace) {
+				if (a.getName() == name) name_is_taken = true;
+			}
+		}
+		
+
+		return new Aircraft(name, aircraft_image, 32 + (int) (10 * Math.random()), difficulty,
+				aircraft_in_airspace, new FlightPlan(origin_point, destination_point, airspaceWaypoints, holding_waypoints, takeoffWaypoint));
 	}
 
 	@Override
