@@ -15,15 +15,15 @@ public class Lives {
 	private int position_y;
 	private int img_height;
 	private int img_width;
-	public Image life_img = graphics.newImage("gfx" + File.separator + "plane.png");
-	public Image dead_life_img = graphics.newImage("gfx" + File.separator + "dead_plane.png");
 	private int x_margin;
+	private Image life_img;
+	private Image dead_life_img;
 	
-	public Lives(int position_x, int position_y, Image img, Image dead_img, int img_height, int img_width, int x_margin){
+	public Lives(int position_x, int position_y, int x_margin){
 		this.position_x = position_x;
 		this.position_y = position_y;
-		this.life_img = img;
-		this.dead_life_img = dead_img;
+		this.life_img = graphics.newImage("gfx" + File.separator + "plane.png");
+		this.dead_life_img = graphics.newImage("gfx" + File.separator + "dead_plane.png"); //Essentially an empty heart container
 		this.img_height = img_height;
 		this.img_width = img_width;
 		this.x_margin = x_margin;
@@ -42,7 +42,7 @@ public class Lives {
 		return this.current_lives;
 	}
 	
-	public void draw(int position_x, int position_y, int x_margin, int current_lives, int INITAL_VALUE){
+	public void draw(int position_x, int position_y, int x_margin,int INITAL_VALUE){
 		for(int i=0; i<current_lives; i++){
 			graphics.draw(life_img, position_x, position_y);
 			position_x = position_x + x_margin;
