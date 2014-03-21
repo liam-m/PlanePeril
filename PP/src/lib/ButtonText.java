@@ -13,7 +13,7 @@ public class ButtonText {
 	private String text;
 	private org.newdawn.slick.Color colour_default, colour_hover, colour_unavailable;
 	private Action action;
-	private boolean available, border;
+	private boolean is_available, has_border;
 
 	public ButtonText(String text, Action action, int x_coordinate, int y_coordinate, int width, int height, int x_offset, int y_offset, boolean border) {
 		this.text = text;
@@ -27,8 +27,8 @@ public class ButtonText {
 		colour_default = new org.newdawn.slick.Color(0, 128, 0);
 		colour_hover = new org.newdawn.slick.Color(128, 128, 128);
 		colour_unavailable = new org.newdawn.slick.Color(64, 64, 64);
-		available = true;
-		this.border = border;
+		is_available = true;
+		this.has_border = border;
 	}
 	
 	public ButtonText(String text, Action action, int x_coordinate, int y_coordinate, int width, int height, boolean border) {
@@ -43,8 +43,8 @@ public class ButtonText {
 		colour_default = new org.newdawn.slick.Color(0, 128, 0);
 		colour_hover = new org.newdawn.slick.Color(128, 128, 128);
 		colour_unavailable = new org.newdawn.slick.Color(64, 64, 64);
-		available = true;
-		this.border = border;
+		is_available = true;
+		this.has_border = border;
 	}
 	
 	public boolean isMouseOver(int mouse_x, int mouse_y) {
@@ -60,17 +60,17 @@ public class ButtonText {
 	}
 	
 	public void setAvailability(boolean available) {
-		this.available = available;
+		this.is_available = available;
 	}
 	
 	public void act() {
-		if (!available)
+		if (!is_available)
 			return;
 		action.action();
 	}
 	
 	public void draw() {
-		if (!available) {
+		if (!is_available) {
 			graphics.setColour(colour_unavailable);
 		}
 		else if (isMouseOver()) {
@@ -79,7 +79,7 @@ public class ButtonText {
 			graphics.setColour(colour_default);
 		}
 		graphics.print(text, x_coordinate + x_offset, y_coordinate + y_offset);
-		if (border)
+		if (has_border)
 			graphics.rectangle(false, x_coordinate + x_offset, y_coordinate + y_offset, width, height);
 	}
 
