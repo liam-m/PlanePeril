@@ -13,9 +13,9 @@ public class ButtonText {
 	private String text;
 	private org.newdawn.slick.Color colour_default, colour_hover, colour_unavailable;
 	private Action action;
-	private boolean available;
+	private boolean available, border;
 
-	public ButtonText(String text, Action action, int x_coordinate, int y_coordinate, int width, int height, int x_offset, int y_offset) {
+	public ButtonText(String text, Action action, int x_coordinate, int y_coordinate, int width, int height, int x_offset, int y_offset, boolean border) {
 		this.text = text;
 		this.action = action;
 		this.x_coordinate = x_coordinate;
@@ -28,9 +28,10 @@ public class ButtonText {
 		colour_hover = new org.newdawn.slick.Color(128, 128, 128);
 		colour_unavailable = new org.newdawn.slick.Color(64, 64, 64);
 		available = true;
+		this.border = border;
 	}
 	
-	public ButtonText(String text, Action action, int x_coordinate, int y_coordinate, int width, int height) {
+	public ButtonText(String text, Action action, int x_coordinate, int y_coordinate, int width, int height, boolean border) {
 		this.text = text;
 		this.action = action;
 		this.x_coordinate = x_coordinate;
@@ -43,6 +44,7 @@ public class ButtonText {
 		colour_hover = new org.newdawn.slick.Color(128, 128, 128);
 		colour_unavailable = new org.newdawn.slick.Color(64, 64, 64);
 		available = true;
+		this.border = border;
 	}
 	
 	public boolean isMouseOver(int mouse_x, int mouse_y) {
@@ -77,6 +79,8 @@ public class ButtonText {
 			graphics.setColour(colour_default);
 		}
 		graphics.print(text, x_coordinate + x_offset, y_coordinate + y_offset);
+		if (border)
+			graphics.rectangle(false, x_coordinate + x_offset, y_coordinate + y_offset, width, height);
 	}
 
 }
