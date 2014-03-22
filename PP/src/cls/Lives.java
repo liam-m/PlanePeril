@@ -22,7 +22,7 @@ public class Lives {
 	public Lives(int position_x, int position_y, int x_margin){
 		this.position_x = position_x;
 		this.position_y = position_y;
-		this.life_img = graphics.newImage("gfx" + File.separator + "plane.png");
+		this.life_img = graphics.newImage("gfx" + File.separator + "life.png");
 		this.dead_life_img = graphics.newImage("gfx" + File.separator + "dead_plane.png"); //Essentially an empty heart container
 		this.img_height = img_height;
 		this.img_width = img_width;
