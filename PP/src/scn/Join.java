@@ -78,20 +78,19 @@ public class Join extends Scene {
 	@Override
 	public void keyPressed(int key) {
 		could_not_connect = false;
-		if (their_address.length() > 13) {
-			if (key == input.KEY_BACKSPACE)
-				their_address = their_address.substring(0, their_address.length()-1);
-		} else if ((key >= input.KEY_1 && key <= input.KEY_0) || (key >= input.KEY_7_NP && key <= input.KEY_0_NP && key != 74 && key != 78)) { // Number key
-			their_address += Keyboard.getEventCharacter();	
-		} else if (key == input.KEY_DECIMAL || key == input.KEY_PERIOD) {
-			their_address +='.';
+		if (key == input.KEY_ESCAPE) {
+			main.closeScene();
 		} else if (key == input.KEY_BACKSPACE) {
 			if (their_address.length() > 0)
 				their_address = their_address.substring(0, their_address.length()-1);
 		} else if (key == input.KEY_RETURN || key == input.KEY_NUMPADENTER) {
 			join_button.act();
-		} else if (key == input.KEY_ESCAPE) {
-			main.closeScene();
+		} else if (their_address.length() < 15) {
+			if ((key >= input.KEY_1 && key <= input.KEY_0) || (key >= input.KEY_7_NP && key <= input.KEY_0_NP && key != 74 && key != 78)) { // Number key
+				their_address += Keyboard.getEventCharacter();	
+			} else if (key == input.KEY_DECIMAL || key == input.KEY_PERIOD) {
+				their_address +='.';
+			}
 		}
 	}
 
