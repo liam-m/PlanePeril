@@ -85,7 +85,8 @@ public class Join extends Scene {
 		} else if ((key >= input.KEY_1 && key <= input.KEY_0) || (key >= input.KEY_7_NP && key <= input.KEY_0_NP && key != 74 && key != 78)) { // Number key
 			their_address += Keyboard.getEventCharacter();	
 		} else if (key == input.KEY_DECIMAL || key == input.KEY_PERIOD) {
-			their_address +='.';
+			if (their_address.charAt(their_address.length()-1) != '.')
+				their_address += '.';
 		} else if (key == input.KEY_BACKSPACE) {
 			if (their_address.length() > 0)
 				their_address = their_address.substring(0, their_address.length()-1);
