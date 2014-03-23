@@ -12,20 +12,14 @@ import scn.Host;
 public class HostServer extends UnicastRemoteObject implements HostInterface {
 	Registry registry; 
 	int port = 1729;
-	Host host;
 	String my_name, their_address, their_name;
 	boolean has_connected = false;
 	
-	public HostServer(Host host) throws RemoteException {
+	public HostServer(String my_name) throws RemoteException {
 		super();
+		this.my_name = my_name;
 		registry = LocateRegistry.createRegistry(port);
 		registry.rebind("host_server", this);
-		this.host = host;
-		this.my_name = host.getPlayerName();
-	}
-	
-	public String getMyName() {
-		return this.my_name;
 	}
 	
 	public String getTheirName() {

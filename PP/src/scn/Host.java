@@ -31,7 +31,7 @@ public class Host extends Scene {
 			e.printStackTrace();
 		}
 		try {
-			host_server = new HostServer(this);
+			host_server = new HostServer(player_name);
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
