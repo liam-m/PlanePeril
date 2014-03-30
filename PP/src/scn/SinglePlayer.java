@@ -119,7 +119,7 @@ public class SinglePlayer extends Scene {
 
 	// The airport, should be one instance of it in general
 	private Airport airport;
-
+	
 	// A list of location names for waypoint flavour
 	private final static String[] LOCATION_NAMES = new String[] {
 			"North West Top Leftonia", "100 Acre Woods", "City of Rightson",
@@ -214,7 +214,7 @@ public class SinglePlayer extends Scene {
 	public void start() {
 		background = graphics.newImage("gfx" + File.separator + "map.png");
 		music = audio.newMusic("sfx" + File.separator + "Gypsy_Shoegazer.ogg");
-		music.play();
+		//music.play();
 
 		flight_generation_interval = 8;
 
@@ -251,6 +251,9 @@ public class SinglePlayer extends Scene {
 				toggleManualControl();
 			}
 		};
+		
+		altimeter = new Altimeter(ALTIMETER_X, ALTIMETER_Y, ALTIMETER_W,
+				ALTIMETER_H);
 
 		manual_override_button = new ButtonText(Texts.TAKE_CONTROL, manual,
 				(window.getWidth() - 128) / 2, 32, 128, 32, 8, 4);
@@ -272,9 +275,6 @@ public class SinglePlayer extends Scene {
 		selected_aircraft = null;
 		selected_waypoint = null;
 		selected_pathpoint = -1;
-
-		altimeter = new Altimeter(ALTIMETER_X, ALTIMETER_Y, ALTIMETER_W,
-				ALTIMETER_H);
 
 		switch (difficulty) {
 		// Set attributes according to the selected difficulty

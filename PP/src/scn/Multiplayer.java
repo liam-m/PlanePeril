@@ -7,7 +7,9 @@ import cls.Aircraft;
 import cls.Airport;
 import cls.Altimeter;
 import cls.OrdersBox;
+import cls.HoldingWaypoint;
 import cls.Waypoint;
+import cls.Waypoint.WaypointType;
 import pp.Main;
 import lib.jog.audio.Sound;
 import lib.jog.graphics;
@@ -18,6 +20,7 @@ import lib.jog.window;
 public class Multiplayer extends Scene {
 	String left_name, right_name;
 	Waypoint[] left_waypoints, right_waypoints;
+	HoldingWaypoint[] left_airport_waypoints, right_airport_waypoints;
 	ArrayList<Aircraft> aircraft = new ArrayList<Aircraft>();
 	Aircraft selected_aircraft;
 	Airport left_airport, right_airport;
@@ -26,6 +29,108 @@ public class Multiplayer extends Scene {
 	// AirportControlBox airport_control_box;
 	Altimeter altimeter;
 	Image background;
+	
+	// Position of things drawn to window
+		private final int PLANE_INFO_X = 16;
+		private final int PLANE_INFO_Y = window.getHeight() - 120;
+		private final int PLANE_INFO_W = window.getWidth() / 4 - 16;
+		private final int PLANE_INFO_H = 112;
+
+		private final int ALTIMETER_X = PLANE_INFO_X + PLANE_INFO_W + 8;
+		private final int ALTIMETER_Y = window.getHeight() - 120;
+		private final int ALTIMETER_W = 244;
+		private final int ALTIMETER_H = 112;
+
+		private final int ORDERSBOX_X = ALTIMETER_X + ALTIMETER_W + 8;
+		private final static int ORDERSBOX_Y = window.getHeight() - 120;
+		private final int ORDERSBOX_W = window.getWidth() - (ORDERSBOX_X + 16);
+		private final static int ORDERSBOX_H = 112;
+	
+	public final Waypoint[] left_location_waypoints = new Waypoint[] {
+			/* A set of Waypoints which are origin / destination points */
+
+			// top 3 entry/exit points
+			new Waypoint(8, 8, WaypointType.ENTRY_EXIT),
+			new Waypoint(8, window.getHeight() - ORDERSBOX_H - 40, WaypointType.ENTRY_EXIT),
+			new Waypoint(window.getWidth() - 40, 8, WaypointType.ENTRY_EXIT),
+
+			// bottom 3 entry/exit points
+			new Waypoint(window.getWidth() - 40, window.getHeight() - ORDERSBOX_H
+					- 40, WaypointType.ENTRY_EXIT),
+			new Waypoint(window.getWidth() - 40, window.getHeight() - ORDERSBOX_H
+					- 40, WaypointType.ENTRY_EXIT),
+			new Waypoint(window.getWidth() - 40, window.getHeight() - ORDERSBOX_H
+					- 40, WaypointType.ENTRY_EXIT),
+
+			left_airport = new Airport(949, 390, "Aerodromio Medved'"), };
+	
+	public final Waypoint[] right_location_waypoints = new Waypoint[] {
+			/* A set of Waypoints which are origin / destination points */
+
+			// top 3 entry/exit points
+			new Waypoint(8, 8, WaypointType.ENTRY_EXIT),
+			new Waypoint(8, window.getHeight() - ORDERSBOX_H - 40, WaypointType.ENTRY_EXIT),
+			new Waypoint(window.getWidth() - 40, 8, WaypointType.ENTRY_EXIT),
+
+			// bottom 3 entry/exit points
+			new Waypoint(window.getWidth() - 40, window.getHeight() - ORDERSBOX_H
+					- 40, WaypointType.ENTRY_EXIT),
+			new Waypoint(window.getWidth() - 40, window.getHeight() - ORDERSBOX_H
+					- 40, WaypointType.ENTRY_EXIT),
+			new Waypoint(window.getWidth() - 40, window.getHeight() - ORDERSBOX_H
+					- 40, WaypointType.ENTRY_EXIT),
+
+			right_airport = new Airport(949, 390, "Aerodromio Medved'"), };
+	
+	// All aircraft taking off must go through this waypoint, allows for
+	// aircraft to take off in one direction all the time
+	private final Waypoint left_takeoff_waypoints = new Waypoint(left_airport.position()
+		.x() - 120, left_airport.position().y());
+
+	// All aircraft that land must pass through this waypoint.
+	private final HoldingWaypoint[] left_land_waypoints = {
+
+		new HoldingWaypoint(left_airport.position().x() + 200, left_airport
+			.position().y()),
+		new HoldingWaypoint(left_airport.position().x() + 150, left_airport
+			.position().y()),
+
+	};
+	
+	// Same functionality as above for the 2nd player's airport
+	private final Waypoint right_takeoff_waypoint = new Waypoint(right_airport.position()
+		.x() - 120, right_airport.position().y());
+
+	private final HoldingWaypoint[] right_land_waypoints = {
+
+		new HoldingWaypoint(right_airport.position().x() + 200, right_airport
+			.position().y()),
+		new HoldingWaypoint(right_airport.position().x() + 150, right_airport
+			.position().y()),
+
+	};
+	
+	public HoldingWaypoint[] left_holding_waypoints = {
+			new HoldingWaypoint(left_airport.position().x() - 150,
+					left_airport.position().y() - 100),
+			new HoldingWaypoint(left_airport.position().x() + 150,
+					left_airport.position().y() - 100),
+			new HoldingWaypoint(left_airport.position().x() + 150,
+					left_airport.position().y() + 100),
+			new HoldingWaypoint(left_airport.position().x() - 150,
+					left_airport.position().y() + 100),
+	};
+	
+	public HoldingWaypoint[] right_holding_waypoints = {
+			new HoldingWaypoint(right_airport.position().x() - 150,
+					right_airport.position().y() - 100),
+			new HoldingWaypoint(right_airport.position().x() + 150,
+					right_airport.position().y() - 100),
+			new HoldingWaypoint(right_airport.position().x() + 150,
+					right_airport.position().y() + 100),
+			new HoldingWaypoint(right_airport.position().x() - 150,
+					right_airport.position().y() + 100),
+	};
 	
 	public Multiplayer(Main main, String left_name, String right_name) {
 		super(main);
@@ -39,6 +144,24 @@ public class Multiplayer extends Scene {
 		right_waypoints = new Waypoint[]{
 				new Waypoint(1300, 10),
 		};
+	}
+	
+	@Override
+	public void start() {
+		
+		altimeter = new Altimeter(ALTIMETER_X, ALTIMETER_Y, ALTIMETER_W,
+				ALTIMETER_H);
+		
+		// Initialise values of setNextWaypoint for each holding waypoint.
+		left_holding_waypoints[0].setNextWaypoint(left_holding_waypoints[1]);
+		left_holding_waypoints[1].setNextWaypoint(left_holding_waypoints[2]);
+		left_holding_waypoints[2].setNextWaypoint(left_holding_waypoints[3]);
+		left_holding_waypoints[3].setNextWaypoint(left_holding_waypoints[0]);
+		
+		right_holding_waypoints[0].setNextWaypoint(right_holding_waypoints[1]);
+		right_holding_waypoints[1].setNextWaypoint(right_holding_waypoints[2]);
+		right_holding_waypoints[2].setNextWaypoint(right_holding_waypoints[3]);
+		right_holding_waypoints[3].setNextWaypoint(right_holding_waypoints[0]);
 	}
 
 	@Override
@@ -58,10 +181,6 @@ public class Multiplayer extends Scene {
 
 	@Override
 	public void keyReleased(int key) {
-	}
-
-	@Override
-	public void start() {
 	}
 
 	@Override
@@ -97,6 +216,38 @@ public class Multiplayer extends Scene {
 		}
 		
 		graphics.setViewport();
+		
+		drawPlaneInfo();
+	}
+	
+	private void drawPlaneInfo() {
+		graphics.setColour(Main.GREEN);
+		graphics.rectangle(false, PLANE_INFO_X, PLANE_INFO_Y, PLANE_INFO_W, PLANE_INFO_H);
+
+		if (selected_aircraft != null) {
+
+			graphics.setViewport(PLANE_INFO_X, PLANE_INFO_Y, PLANE_INFO_W, PLANE_INFO_H);
+			graphics.printTextCentred(selected_aircraft.getName(), 0, 5, 2, PLANE_INFO_W);
+
+			// Altitude
+			String altitude = String.format("%.0f", selected_aircraft.getPosition().z())+ "£";
+			graphics.print("Altitude:", 10, 40);
+			graphics.print(altitude, PLANE_INFO_W - 10 - altitude.length() * 8, 40);
+
+			// Speed
+			String speed = String.format("%.2f", selected_aircraft.getSpeed() * 1.687810) + "$";
+			graphics.print("Speed:", 10, 55);
+			graphics.print(speed, PLANE_INFO_W - 10 - speed.length() * 8, 55);
+
+			// Origin
+			graphics.print("Origin:", 10, 70);
+			graphics.print(selected_aircraft.getFlightPlan().getOriginName(), PLANE_INFO_W - 10 - selected_aircraft.getFlightPlan().getOriginName().length() * 8, 70);
+
+			// Destination
+			graphics.print("Destination:", 10, 85);
+			graphics.print(selected_aircraft.getFlightPlan().getDestinationName(), PLANE_INFO_W - 10 - selected_aircraft.getFlightPlan().getDestinationName().length() * 8, 85);
+			graphics.setViewport();
+		}
 	}
 
 	@Override
