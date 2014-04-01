@@ -58,7 +58,7 @@ public class DifficultySelect extends Scene {
 			public void action() {
 				switch (scene_to_create) {
 				case DifficultySelect.CREATE_DEMO:
-					main.setScene(new SinglePlayer(main, SinglePlayer.DIFFICULTY_EASY));
+					main.setScene(new Multiplayer(main, "host", "join"));
 					break;
 				}
 			}
