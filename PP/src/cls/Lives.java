@@ -48,7 +48,6 @@ public class Lives {
 			position_x = position_x + x_margin;
 		}
 		for (int i=0; i<(INITAL_VALUE - current_lives);i++){
-			System.out.println("AM DRAWING LIVES");
 			graphics.draw(dead_life_img, position_x, position_y);
 			position_x = position_x + x_margin;
 		}
