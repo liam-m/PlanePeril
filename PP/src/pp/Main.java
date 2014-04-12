@@ -19,6 +19,8 @@ import org.newdawn.slick.Color;
 import scn.Scene;
 import scn.Title;
 
+import cls.Lives;
+
 /**
  * <h1>Main</h1>
  * <p>
@@ -29,6 +31,11 @@ import scn.Title;
  * @author Huw Taylor
  */
 public class Main implements EventHandler {
+<<<<<<< HEAD
+=======
+
+	//public Lives test_lives = new Lives(500, 500, graphics.newImage("gfx" + File.separator + "plane.png"), 15, 15, 5);
+>>>>>>> Lives
 	public final static Color GREEN = new Color(0, 200, 0);
 	public final static Color GREY = new Color(128, 128, 128);
 	public final static Color RED = new Color(128, 0, 0);
