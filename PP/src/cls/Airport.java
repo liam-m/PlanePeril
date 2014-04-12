@@ -1,17 +1,17 @@
 package cls;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import pp.Main;
 
 import lib.RandomNumber;
 import lib.jog.graphics;
+import lib.jog.graphics.Image;
 
 public class Airport extends Waypoint {
 
-	// Maximum number of aircraft that can be in the airport at once. If
-	// exceeded, game ends.
-	private final static int MAX_AIRCRAFT_NUMBER = 5;
+	private final static int MAX_AIRCRAFT_NUMBER = 3;
 
 	private final static int TEXT_POSITION = 55;
 	private final static int TEXT_OFFSET = 10;
@@ -21,6 +21,12 @@ public class Airport extends Waypoint {
 	private int time_Left = 0;
 
 	private ArrayList<Aircraft> aircraft_list = new ArrayList<Aircraft>();
+
+	private Image airport;
+
+	private double x_location;
+
+	private double y_location;
 
 	/**
 	 * An airport. In general, it is basically a waypoint (more specifically and
@@ -37,6 +43,9 @@ public class Airport extends Waypoint {
 	 */
 	public Airport(double x, double y, String name) {
 		super(x, y, WaypointType.ENTRY_EXIT, name);
+		x_location = x;
+		y_location = y;
+		loadImage();
 	}
 
 	/**
@@ -113,5 +122,25 @@ public class Airport extends Waypoint {
 		}
 
 	}
+	
+	public void loadImage() {
+		airport = graphics.newImage("gfx" + File.separator + "Airport.png");
+	}
+	
+	@Override
+	public void draw() {
+		graphics.draw(airport, x_location-airport.getWidth()/2, y_location-airport.getHeight()/2);
+	}
 
+	public int getMaxAircraft() {
+		return this.MAX_AIRCRAFT_NUMBER;
+	}
+	
+	public int getNumAircraft() {
+		return this.aircraft_list.size();
+	}
+	
+	public ArrayList<Aircraft> getAircraft() {
+		return this.aircraft_list;
+	}
 }

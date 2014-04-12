@@ -55,15 +55,16 @@ public class Join extends Scene {
 				could_not_connect = false;
 				try {
 					their_name = join_client.connect(their_address, this_address, player_name);
-					main.closeScene();
-					main.setScene(new MultiplayerRight(main, new HostServer(new Host(main, player_name)), join_client));
+					main.setScene(new MultiplayerRight(main, player_name, their_name, their_address));
 				} catch (RemoteException e) {
 					could_not_connect = true;
 				}
 			}
 		};
+		
 		join_button = new ButtonText("Join", join, JOIN_X_POSITION, JOIN_Y_POSITION, JOIN_WIDTH, JOIN_HEIGHT);
 	}
+	
 	@Override
 	public void mousePressed(int key, int x, int y) {
 		if (join_button.isMouseOver(x, y)) {
@@ -78,11 +79,24 @@ public class Join extends Scene {
 	@Override
 	public void keyPressed(int key) {
 		could_not_connect = false;
+<<<<<<< HEAD
 		if (key == input.KEY_ESCAPE) {
 			main.closeScene();
+=======
+		int address_length = their_address.length();
+		if (address_length > 13) {
+			if (key == input.KEY_BACKSPACE)
+				their_address = their_address.substring(0, address_length-1);
+		} else if ((key >= input.KEY_1 && key <= input.KEY_0) || (key >= input.KEY_7_NP && key <= input.KEY_0_NP && key != 74 && key != 78)) { // Number key
+			if (address_length <= 2 || their_address.charAt(address_length-3) == '.' || their_address.charAt(address_length-2) == '.' || their_address.charAt(address_length-1) == '.')
+				their_address += Keyboard.getEventCharacter();
+		} else if (key == input.KEY_DECIMAL || key == input.KEY_PERIOD) {
+			if (address_length > 0 && their_address.charAt(address_length-1) != '.')
+				their_address += '.';
+>>>>>>> Multiplayer
 		} else if (key == input.KEY_BACKSPACE) {
-			if (their_address.length() > 0)
-				their_address = their_address.substring(0, their_address.length()-1);
+			if (address_length > 0)
+				their_address = their_address.substring(0, address_length-1);
 		} else if (key == input.KEY_RETURN || key == input.KEY_NUMPADENTER) {
 			join_button.act();
 		} else if (their_address.length() < 15) {
@@ -126,5 +140,4 @@ public class Join extends Scene {
 	@Override
 	public void playSound(Sound sound) {
 	}
-
 }

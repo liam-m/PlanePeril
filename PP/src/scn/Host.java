@@ -31,7 +31,7 @@ public class Host extends Scene {
 			e.printStackTrace();
 		}
 		try {
-			host_server = new HostServer(this);
+			host_server = new HostServer(player_name);
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
@@ -41,9 +41,8 @@ public class Host extends Scene {
 		return this.player_name;
 	}
 	
-	public void connected(String address, String name) {
-		main.closeScene();
-		main.setScene(new MultiplayerLeft(main, host_server, new JoinClient()));
+	public void connected(String their_name, String their_address) {
+		//main.setScene(new MultiplayerLeft(main, player_name, their_name, their_address));
 	}
 	
 	@Override
@@ -91,6 +90,12 @@ public class Host extends Scene {
 
 	@Override
 	public void update(double time_difference) {
+		if (host_server.hasConnected()) {
+			String their_name = host_server.getTheirName();
+			String their_address = host_server.getTheirAddress();
+			main.closeScene();
+			main.setScene(new MultiplayerLeft(main, player_name, their_name, their_address));
+		}
 	}
 	
 	@Override
