@@ -20,7 +20,7 @@ public class MultiplayerLeft extends Multiplayer {
 	MultiplayerServer server;
 	
 	public MultiplayerLeft(Main main, String my_name, String their_name, String their_address) {
-		super(main, my_name, their_name);
+		super(main, my_name, their_name, true);
 		try {
 			server = new MultiplayerServer(their_address, "player_1", 1730, 1731);
 			Thread.sleep(3000);

@@ -11,7 +11,7 @@ public class MultiplayerRight extends Multiplayer {
 	MultiplayerServer server;
 	
 	public MultiplayerRight(Main main, String my_name, String their_name, String their_address) {
-		super(main, their_name, my_name);
+		super(main, their_name, my_name, false);
 		try {
 			server = new MultiplayerServer(their_address, "player_2", 1731, 1730);
 			Thread.sleep(3000);
