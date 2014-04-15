@@ -80,22 +80,21 @@ public class Join extends Scene {
 	public void keyPressed(int key) {
 		could_not_connect = false;
 		int address_length = their_address.length();
-		if (address_length > 13) {
-			if (key == input.KEY_BACKSPACE)
-				their_address = their_address.substring(0, address_length-1);
-		} else if ((key >= input.KEY_1 && key <= input.KEY_0) || (key >= input.KEY_7_NP && key <= input.KEY_0_NP && key != 74 && key != 78)) { // Number key
-			if (address_length <= 2 || their_address.charAt(address_length-3) == '.' || their_address.charAt(address_length-2) == '.' || their_address.charAt(address_length-1) == '.')
-				their_address += Keyboard.getEventCharacter();
-		} else if (key == input.KEY_DECIMAL || key == input.KEY_PERIOD) {
-			if (address_length > 0 && their_address.charAt(address_length-1) != '.')
-				their_address += '.';
+		if (key == input.KEY_ESCAPE) {
+			main.closeScene();
 		} else if (key == input.KEY_BACKSPACE) {
 			if (address_length > 0)
 				their_address = their_address.substring(0, address_length-1);
 		} else if (key == input.KEY_RETURN || key == input.KEY_NUMPADENTER) {
 			join_button.act();
-		} else if (key == input.KEY_ESCAPE) {
-			main.closeScene();
+		} else if (address_length < 15) { // Max IP length is 15 - 256.256.256.256
+			if ((key >= input.KEY_1 && key <= input.KEY_0) || (key >= input.KEY_7_NP && key <= input.KEY_0_NP && key != 74 && key != 78)) { // Number key
+				if (address_length <= 2 || their_address.charAt(address_length-3) == '.' || their_address.charAt(address_length-2) == '.' || their_address.charAt(address_length-1) == '.') // Can't have more than 3 numbers without a '.'
+					their_address += Keyboard.getEventCharacter();
+			} else if (key == input.KEY_DECIMAL || key == input.KEY_PERIOD) {
+				if (address_length > 0 && their_address.charAt(address_length-1) != '.') // Can't start with '.', can't have two '.'s in a row
+					their_address += '.';
+			}
 		}
 	}
 
