@@ -111,7 +111,7 @@ public class Title extends Scene {
 		
 		for (int i = 0; i < buttons.length; i++) {
 			buttons[i] = new ButtonText(button_labels[i], button_actions[i], window.getHeight(), 
-					window.getHeight()/2 + (offset + button_height * i), window.getWidth() - window.getHeight(), 24, 8, 6);
+					window.getHeight()/2 + (offset + button_height * i), window.getWidth() - window.getHeight(), 24, 8, 6, false);
 		}
 		
 		radar_sweep_angle = 0;

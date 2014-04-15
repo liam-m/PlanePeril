@@ -257,7 +257,7 @@ public class SinglePlayer extends Scene {
 				ALTIMETER_H);
 
 		manual_override_button = new ButtonText(Texts.TAKE_CONTROL, manual,
-				(window.getWidth() - 128) / 2, 32, 128, 32, 8, 4);
+				(window.getWidth() - 128) / 2, 32, 128, 32, 8, 4, true);
 
 		// the action that is called once the land button is clicked.
 		ButtonText.Action land = new ButtonText.Action() {
@@ -269,7 +269,7 @@ public class SinglePlayer extends Scene {
 		};
 
 		land_button = new ButtonText(Texts.LAND, land,
-				(window.getWidth() - 500) / 2, 32, 128, 32, 8, 4);
+				(window.getWidth() - 500) / 2, 32, 128, 32, 8, 4, true);
 
 		time_elapsed = 0;
 		compass_dragged = false;
@@ -716,7 +716,6 @@ public class SinglePlayer extends Scene {
 			graphics.setColour(0, 0, 0);
 			graphics.rectangle(true, (window.getWidth() - 128) / 2, 16, 128, 32);
 			graphics.setColour(Main.GREEN);
-			graphics.rectangle(false, (window.getWidth() - 128) / 2, 16, 128, 32);
 			manual_override_button.draw();
 
 			// if aircraft is flying towards the airport (i.e. it's its
@@ -726,7 +725,6 @@ public class SinglePlayer extends Scene {
 				graphics.setColour(0, 0, 0);
 				graphics.rectangle(true, (window.getWidth() - 500) / 2, 16, 128, 32);
 				graphics.setColour(Main.GREEN);
-				graphics.rectangle(false, (window.getWidth() - 500) / 2, 16, 128, 32);
 			
 				land_button.draw();
 			}
