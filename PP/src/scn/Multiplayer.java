@@ -9,6 +9,7 @@ import cls.AirportControlBox;
 import cls.Altimeter;
 import cls.OrdersBox;
 import cls.HoldingWaypoint;
+import cls.PerformanceBar;
 import cls.Waypoint;
 import cls.Waypoint.WaypointType;
 import pp.Main;
@@ -27,7 +28,7 @@ public class Multiplayer extends Scene {
 	Aircraft selected_aircraft;
 	Airport left_airport = new Airport(449, 390, "Aerodromio Leftved'"),
 	right_airport = new Airport(949, 390, "Aerodromio Rightved'");
-	// PerformanceBar left_performance, right_performance;
+	PerformanceBar left_performance, right_performance;
 	OrdersBox orders_box;
 	AirportControlBox airport_control_box;
 	Altimeter altimeter;
