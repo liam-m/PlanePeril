@@ -52,7 +52,7 @@ public class SinglePlayer extends Scene {
 	private final static int TAKEOFF_DELAY = 5;
 
 	// texts for the buttons in this class
-	private final class Texts {
+	public final class Texts {
 		public final static String TAKE_CONTROL = "Take Control";
 		public final static String REMOVE_CONTROL = "Remove Control";
 		public final static String LAND = "Land";
@@ -903,7 +903,7 @@ public class SinglePlayer extends Scene {
 	}
 	
 	/**
-	 * A rather sophisticated system of creating planes such that it is very fair for the player. Planes are created either from airport or elsewhere based on parameter. 
+	 * A system of creating planes designed to be fair for the player. Planes are created either from airport or elsewhere based on parameter. 
 	 * Also planes are primarily created from waypoints with no planes near them. Secondarily, planes are created in entry points such that no plane is near the altitude 
 	 * that a newly created plane has. If it cannot create a plane due to constraints, it returns null.
 	 * @return the create aircraft object

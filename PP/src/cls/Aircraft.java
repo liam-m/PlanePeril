@@ -59,6 +59,10 @@ public class Aircraft {
 	private final ArrayList<Aircraft> planes_too_near = new ArrayList<Aircraft>(); // List of planes currently in violation of separation rules with this plane
 
 	private int target_altitude_index; // Index of altidudeList for the value of the Altidude the aircraft desires to be at.
+	public int getTargetAltitudeIndex() {
+		return target_altitude_index;
+	}
+
 	public static ArrayList<Integer> altitude_list; // A list holding the list of possible altitudes for the aircraft.
 
 	/**
