@@ -25,6 +25,7 @@ import scn.SinglePlayer.Texts;
 public class MultiplayerLeft extends Multiplayer {
 	MultiplayerServer server;
 	String their_address;
+
 	
 	public MultiplayerLeft(Main main, String my_name, String their_name, String their_address) {
 		super(main, my_name, their_name, true);
@@ -140,6 +141,11 @@ public class MultiplayerLeft extends Multiplayer {
 			if (aircraft.size() < MAX_AIRCRAFT) {
 				generateFlight(false);
 			}
+		}
+		
+		// Update from server
+		for(Aircraft a : server.aircraft_queue) {
+			aircraft.add(a);
 		}
 	}
 	

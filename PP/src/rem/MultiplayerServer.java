@@ -23,6 +23,9 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 	
 	MultiplayerLeft left_game;
 	MultiplayerRight right_game;
+	
+	public ArrayList<Aircraft> aircraft_queue = new ArrayList<Aircraft>();
+	
 	boolean left;
 
 	public MultiplayerServer(MultiplayerLeft game_screen, String opponent_address, String registry_name, int my_port, int opponent_port) throws RemoteException {
@@ -73,16 +76,8 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 	@Override
 	public void addAircraft(boolean from_airport, int speed, int origin_waypoints_index, int destination_waypoints_index, int preferred_altitude_index) {
 		
-		String name = "";
-		boolean name_is_taken = true;
-		while (name_is_taken) {
-			name = "Flight " + (int)(900 * Math.random() + 100);
-			name_is_taken = false;
-			for (Aircraft a : left_game.aircraft) {
-				if (a.getName() == name) name_is_taken = true;
-			}
-		}
-		
+		String name = "Flight " + (int)(900 * Math.random() + 100);
+			
 		if (left) {
 			Waypoint origin_point;
 			if (from_airport) {
@@ -93,8 +88,10 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 			
 			Waypoint destination_point = left_game.left_entryexit_waypoints[destination_waypoints_index];
 			
-			left_game.aircraft.add(new Aircraft(name, left_game.aircraft_image, speed, 1, new FlightPlan(origin_point, 
+			//TODO improve synchronisation methods
+			aircraft_queue.add(new Aircraft(name, left_game.aircraft_image, speed, 1, new FlightPlan(origin_point, 
 					destination_point, left_game.left_waypoints, left_game.left_holding_waypoints, left_game.left_airport_takeoff_waypoint), preferred_altitude_index));
+	
 		} else {
 			Waypoint origin_point;
 			if (from_airport) {
@@ -105,7 +102,7 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 			
 			Waypoint destination_point = right_game.right_entryexit_waypoints[destination_waypoints_index];
 			
-			right_game.aircraft.add(new Aircraft(name, right_game.aircraft_image, speed, 1, new FlightPlan(origin_point, 
+			aircraft_queue.add(new Aircraft(name, right_game.aircraft_image, speed, 1, new FlightPlan(origin_point, 
 					destination_point, right_game.right_waypoints, right_game.right_holding_waypoints, right_game.right_airport_takeoff_waypoint), preferred_altitude_index));
 		}
 	}

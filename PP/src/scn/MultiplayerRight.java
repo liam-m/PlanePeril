@@ -34,9 +34,9 @@ public class MultiplayerRight extends Multiplayer {
 	@Override 
 	public void start() {
 		try {
-			server = new MultiplayerServer(this, their_address, "player_1", 1730, 1731);
+			server = new MultiplayerServer(this, their_address, "player_2", 1731, 1730);
 			Thread.sleep(3000);
-			server.connect("player_2");
+			server.connect("player_1");
 		} catch (RemoteException | InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -140,6 +140,10 @@ public class MultiplayerRight extends Multiplayer {
 			if (aircraft.size() < MAX_AIRCRAFT) {
 				generateFlight(false);
 			}
+		}
+		// Update from server
+		for(Aircraft a : server.aircraft_queue) {
+			aircraft.add(a);
 		}
 	}
 	
@@ -279,7 +283,7 @@ public class MultiplayerRight extends Multiplayer {
 				}
 			}
 			// Send to other player
-			server.sendAircraft(from_airport, (int) a.getSpeed(), origin_index, destination_index, a.getTargetAltitudeIndex() ); 
+			//server.sendAircraft(from_airport, (int) a.getSpeed(), origin_index, destination_index, a.getTargetAltitudeIndex() ); 
 		}
 		
 		
