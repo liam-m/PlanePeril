@@ -62,6 +62,7 @@ public class PerformanceBar {
 	 * Draws the performance bar. The colour of the filling changes when the value decreases and also based on the intermediate value 
 	 */
 	public void draw() {
+		graphics.setColour(Main.GREEN);
 		graphics.rectangle(false, position_x, position_y, BAR_WIDTH, BAR_HEIGHT); // draws the borders of the bar
 			
 		if (current_value < drawn_value) {

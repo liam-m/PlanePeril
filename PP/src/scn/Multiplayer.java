@@ -7,6 +7,7 @@ import cls.Aircraft;
 import cls.Airport;
 import cls.AirportControlBox;
 import cls.Altimeter;
+import cls.Lives;
 import cls.OrdersBox;
 import cls.HoldingWaypoint;
 import cls.PerformanceBar;
@@ -29,6 +30,7 @@ public class Multiplayer extends Scene {
 	Airport left_airport = new Airport(449, 390, "Aerodromio Leftved'"),
 	right_airport = new Airport(949, 390, "Aerodromio Rightved'");
 	PerformanceBar left_performance, right_performance;
+	Lives left_lives, right_lives;
 	OrdersBox orders_box;
 	AirportControlBox airport_control_box;
 	Altimeter altimeter;
@@ -55,6 +57,18 @@ public class Multiplayer extends Scene {
 		private final int ORDERSBOX_W = window.getWidth() - (ORDERSBOX_X + 16);
 		private final static int ORDERSBOX_H = 112;
 	
+		private final int LEFT_PERFOMANCE_X = 100;
+		private final int LEFT_PERFOMANCE_Y = 8;
+		
+		private final int RIGHT_PERFOMANCE_X = window.getWidth()/2 + 200;
+		private final int RIGHT_PERFOMANCE_Y = 8;
+		
+		private final int LEFT_LIVES_X = window.getWidth()/2 - 200;
+		private final int LEFT_LIVES_Y = 8;
+		
+		private final int RIGHT_LIVES_X = window.getWidth()/2 + 20;
+		private final int RIGHT_LIVES_Y = 8;
+		
 	public final Waypoint[] left_entryexit_waypoints = new Waypoint[] {
 			/* A set of Waypoints which are origin / destination points */
 
@@ -159,6 +173,10 @@ public class Multiplayer extends Scene {
 	public void start() {
 		altimeter = new Altimeter(ALTIMETER_X, ALTIMETER_Y, ALTIMETER_W, ALTIMETER_H);
 		orders_box = new OrdersBox(ORDERSBOX_X, ORDERSBOX_Y, ORDERSBOX_W, ORDERSBOX_H, 6);
+		left_performance = new PerformanceBar(LEFT_PERFOMANCE_X, LEFT_PERFOMANCE_Y);
+		right_performance = new PerformanceBar(RIGHT_PERFOMANCE_X,RIGHT_PERFOMANCE_Y);
+		left_lives = new Lives(LEFT_LIVES_X, LEFT_LIVES_Y);
+		right_lives = new Lives(RIGHT_LIVES_X, RIGHT_LIVES_Y);
 		if (is_left) {
 			airport_control_box = new AirportControlBox(AIRPORT_CONTROL_BOX_X, AIRPORT_CONTROL_BOX_Y, AIRPORT_CONTROL_BOX_W, AIRPORT_CONTROL_BOX_H, left_airport);
 		} else {
@@ -179,6 +197,7 @@ public class Multiplayer extends Scene {
 
 	@Override
 	public void mousePressed(int key, int x, int y) {
+		
 	}
 
 	@Override
@@ -189,6 +208,15 @@ public class Multiplayer extends Scene {
 	public void keyPressed(int key) {
 		if (key == input.KEY_ESCAPE) {
 			main.closeScene();
+		}
+		if (key == input.KEY_Q) {
+			left_lives.decrementLives();
+		}
+		if (key == input.KEY_E) {
+			left_performance.changeValueBy(10);
+		}
+		if (key == input.KEY_R) {
+			left_performance.changeValueBy(-10);
 		}
 	}
 
@@ -246,6 +274,13 @@ public class Multiplayer extends Scene {
 		airport_control_box.draw();
 		orders_box.draw();
 		drawPlaneInfo();
+		
+		left_performance.draw();
+		right_performance.draw();
+		
+		graphics.setColour(Main.GREEN);
+		left_lives.draw();
+		right_lives.draw();
 	}
 	
 	private void drawPlaneInfo() {
