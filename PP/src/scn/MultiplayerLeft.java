@@ -26,7 +26,6 @@ public class MultiplayerLeft extends Multiplayer {
 	MultiplayerServer server;
 	String their_address;
 
-	
 	public MultiplayerLeft(Main main, String my_name, String their_name, String their_address) {
 		super(main, my_name, their_name, true);
 		this.their_address = their_address;
@@ -147,6 +146,7 @@ public class MultiplayerLeft extends Multiplayer {
 		for(Aircraft a : server.aircraft_queue) {
 			aircraft.add(a);
 		}
+		server.aircraft_queue.clear();
 	}
 	
 	/**
@@ -276,11 +276,11 @@ public class MultiplayerLeft extends Multiplayer {
 			
 			int origin_index = 0;
 			int destination_index = 0;
-			for (int i = 0; i < left_waypoints.length; i++) {
-				if (a.getFlightPlan().getOrigin().equals(left_waypoints[i])) {
+			for (int i = 0; i < left_entryexit_waypoints.length; i++) {
+				if (a.getFlightPlan().getOrigin().equals(left_entryexit_waypoints[i])) {
 					origin_index = i;
 				}
-				if (a.getFlightPlan().getDestination().equals(left_waypoints[i])) {
+				if (a.getFlightPlan().getDestination().equals(left_entryexit_waypoints[i])) {
 					destination_index = i;
 				}
 			}

@@ -145,6 +145,7 @@ public class MultiplayerRight extends Multiplayer {
 		for(Aircraft a : server.aircraft_queue) {
 			aircraft.add(a);
 		}
+		server.aircraft_queue.clear();
 	}
 	
 	/**
@@ -152,7 +153,7 @@ public class MultiplayerRight extends Multiplayer {
 	 */
 	@Override
 	public void mousePressed(int key, int x, int y) {
-		if (x < window.getWidth()/2 && y < Y_POSITION_OF_BOTTOM_ELEMENTS) // needs to be flipped for Right
+		if (x < window.getWidth()/2 && y < Y_POSITION_OF_BOTTOM_ELEMENTS) 
 			return;
 		if (key == input.MOUSE_LEFT) {
 
@@ -274,16 +275,16 @@ public class MultiplayerRight extends Multiplayer {
 			
 			int origin_index = 0;
 			int destination_index = 0;
-			for (int i = 0; i < right_waypoints.length; i++) {
-				if (a.getFlightPlan().getOrigin().equals(right_waypoints[i])) {
+			for (int i = 0; i < right_entryexit_waypoints.length; i++) {
+				if (a.getFlightPlan().getOrigin().equals(right_entryexit_waypoints[i])) {
 					origin_index = i;
 				}
-				if (a.getFlightPlan().getDestination().equals(right_waypoints[i])) {
+				if (a.getFlightPlan().getDestination().equals(right_entryexit_waypoints[i])) {
 					destination_index = i;
 				}
 			}
 			// Send to other player
-			//server.sendAircraft(from_airport, (int) a.getSpeed(), origin_index, destination_index, a.getTargetAltitudeIndex() ); 
+			server.sendAircraft(from_airport, (int) a.getSpeed(), origin_index, destination_index, a.getTargetAltitudeIndex() ); 
 		}
 		
 		

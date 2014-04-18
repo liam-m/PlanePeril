@@ -97,6 +97,7 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 			if (from_airport) {
 				origin_point = right_game.right_airport; 
 			} else {
+				System.out.println(origin_waypoints_index);
 				origin_point = right_game.right_entryexit_waypoints[origin_waypoints_index];
 			}
 			
