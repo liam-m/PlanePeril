@@ -282,11 +282,7 @@ public class MultiplayerLeft extends Multiplayer {
 				}
 			}
 			// Send to other player
-			server.sendAircraft(from_airport, (int)(a.getInitialSpeed()), origin_index, destination_index, a.getTargetAltitudeIndex() ); 
-		}
-		
-		
-	}
+			server.sendAircraft(from_airport, (int)(a.getInitialSpeed()), origin_index, destination_index, a.getTargetAltitudeIndex() ); 	}
 	
 	/**
  	 * List that helps to prevent spawning a plane in waypoint if any plane is currently going towards it 
