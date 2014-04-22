@@ -387,7 +387,13 @@ public class Multiplayer extends Scene {
 		}
 		server.aircraft_queue.clear();
 	}
-	
+	/**
+	 * Input is invalid if it is both on the wrong side of the screen AND input is above the bottom of the airspace
+	 * 
+	 * @param x position
+	 * @param y position
+	 * @return
+	 */
 	public boolean isInputValid(int x, int y) {
 		if (is_left) {
 			if (x > window.getWidth()/2 && y < Y_POSITION_OF_BOTTOM_ELEMENTS)
