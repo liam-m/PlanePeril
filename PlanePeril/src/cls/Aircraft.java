@@ -65,6 +65,12 @@ public class Aircraft {
 
 	public static ArrayList<Integer> altitude_list; // A list holding the list of possible altitudes for the aircraft.
 
+	private double initial_speed;
+	
+	public double getInitialSpeed() {
+		return initial_speed;
+	}
+	
 	/**
 	 * Constructor for an aircraft.
 	 * 
@@ -79,6 +85,7 @@ public class Aircraft {
 		this.name = name;
 		this.flight_plan = flight_plan;
 		this.image = img;
+		this.initial_speed = speed;
 
 		this.position = flight_plan.getOrigin().position(); // Place on spawn waypoint
 

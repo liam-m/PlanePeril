@@ -282,7 +282,7 @@ public class MultiplayerLeft extends Multiplayer {
 				}
 			}
 			// Send to other player
-			server.sendAircraft(from_airport, (int) a.getSpeed(), origin_index, destination_index, a.getTargetAltitudeIndex() ); 
+			server.sendAircraft(from_airport, (int)(a.getInitialSpeed()), origin_index, destination_index, a.getTargetAltitudeIndex() ); 
 		}
 		
 		
