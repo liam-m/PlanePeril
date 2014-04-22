@@ -65,7 +65,7 @@ public class DifficultySelect extends Scene {
 		};
 
 		buttons[0] = new ButtonText("Easy", easy, EASY_BUTTON_X, EASY_BUTTON_Y,
-				EASY_BUTTON_W, EASY_BUTTON_H);
+				EASY_BUTTON_W, EASY_BUTTON_H, true);
 
 		ButtonText.Action medium = new ButtonText.Action() {
 			@Override
@@ -79,7 +79,7 @@ public class DifficultySelect extends Scene {
 		};
 
 		buttons[1] = new lib.ButtonText("Medium", medium, MEDIUM_BUTTON_X,
-				MEDIUM_BUTTON_Y, MEDIUM_BUTTON_W, MEDIUM_BUTTON_H);
+				MEDIUM_BUTTON_Y, MEDIUM_BUTTON_W, MEDIUM_BUTTON_H, true);
 
 		ButtonText.Action hard = new ButtonText.Action() {
 			@Override
@@ -93,7 +93,7 @@ public class DifficultySelect extends Scene {
 		};
 
 		buttons[2] = new ButtonText("Hard", hard, HARD_BUTTON_X, HARD_BUTTON_Y,
-				HARD_BUTTON_W, HARD_BUTTON_H);
+				HARD_BUTTON_W, HARD_BUTTON_H, true);
 
 		text_box = new TextBox(128, 96, window.getWidth() - 256, window.getHeight() - 96, 32);
 		text_box.addText("You are a 500 kilogram ferocious Grizzly Bear." + TextBox.DELAY_START + "0.5" + TextBox.DELAY_END
@@ -126,9 +126,6 @@ public class DifficultySelect extends Scene {
 	public void draw() {
 		graphics.setColour(Main.GREEN);
 		graphics.printTextCentred("Select the difficulty:", window.getWidth() / 2,	window.getHeight() / 2 + 50, 1, 100);
-		graphics.rectangle(false, EASY_BUTTON_X, EASY_BUTTON_Y, EASY_BUTTON_W, EASY_BUTTON_H);
-		graphics.rectangle(false, MEDIUM_BUTTON_X, MEDIUM_BUTTON_Y, MEDIUM_BUTTON_W, MEDIUM_BUTTON_H);
-		graphics.rectangle(false, HARD_BUTTON_X, HARD_BUTTON_Y, HARD_BUTTON_W, HARD_BUTTON_H);
 
 		for (ButtonText button : buttons) {
 			button.draw();

@@ -88,7 +88,7 @@ public class MultiplayerRight extends Multiplayer {
 				if (aircraft.get(i).equals(selected_aircraft)) {
 					deselectAircraft();
 				}
-				//aircraft.remove(index);
+				aircraft.remove(i);
 				i--;
 				switch (RandomNumber.randInclusiveInt(0, 2)) {
 				case 0:

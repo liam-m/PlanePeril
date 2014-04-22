@@ -61,8 +61,9 @@ public class Join extends Scene {
 				}
 			}
 		};
-		
-		join_button = new ButtonText("Join", join, JOIN_X_POSITION, JOIN_Y_POSITION, JOIN_WIDTH, JOIN_HEIGHT);
+
+		join_button = new ButtonText("Join", join, JOIN_X_POSITION, JOIN_Y_POSITION, JOIN_WIDTH, JOIN_HEIGHT, true);
+
 	}
 	
 	@Override
@@ -119,7 +120,6 @@ public class Join extends Scene {
 			graphics.printTextCentred("Could not find opponent", window.getWidth() / 2, 700, 5, 100);
 		}
 		
-		graphics.rectangle(false, JOIN_X_POSITION, JOIN_Y_POSITION, JOIN_WIDTH, JOIN_HEIGHT);
 		join_button.draw();
 	}
 

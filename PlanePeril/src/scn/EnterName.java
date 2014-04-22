@@ -88,8 +88,8 @@ public class EnterName extends Scene {
 			}
 		};
 
-		buttons[0] = new ButtonText("Host", host, BUTTON_X, BUTTON_Y, BUTTON_WIDTH, BUTTON_HEIGHT);
-		buttons[1] = new ButtonText("Join", join, BUTTON_X + BUTTON_WIDTH + BUTTON_SEPARATION, BUTTON_Y, BUTTON_WIDTH, BUTTON_HEIGHT);
+		buttons[0] = new ButtonText("Host", host, BUTTON_X, BUTTON_Y, BUTTON_WIDTH, BUTTON_HEIGHT, true);
+		buttons[1] = new ButtonText("Join", join, BUTTON_X + BUTTON_WIDTH + BUTTON_SEPARATION, BUTTON_Y, BUTTON_WIDTH, BUTTON_HEIGHT, true);
 	}
 
 	@Override
@@ -101,8 +101,6 @@ public class EnterName extends Scene {
 		graphics.setColour(Main.GREEN);
 		graphics.printTextCentred("Enter your name:", window.getWidth() / 2, 200, 5, 100);
 		graphics.printTextCentred(name, window.getWidth() / 2, 300, 5, 100);
-		graphics.rectangle(false, BUTTON_X, BUTTON_Y, BUTTON_WIDTH, BUTTON_HEIGHT);
-		graphics.rectangle(false, BUTTON_X+BUTTON_WIDTH+BUTTON_SEPARATION, BUTTON_Y, BUTTON_WIDTH, BUTTON_HEIGHT);
 		
 		for (ButtonText button : buttons) {
 			button.draw();
