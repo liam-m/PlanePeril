@@ -389,10 +389,10 @@ public class Multiplayer extends Scene {
 	}
 	
 	public boolean isInputValid(int x, int y) {
-		if (is_left) {
-			return (x <= window.getWidth()/2 && y >= Y_POSITION_OF_BOTTOM_ELEMENTS);
+		if (y <= Y_POSITION_OF_BOTTOM_ELEMENTS) {
+			return true;
 		} else {
-			return (x >= window.getWidth()/2 && y >= Y_POSITION_OF_BOTTOM_ELEMENTS);
+			return (is_left && x <= window.getWidth()/2) || (x >= window.getWidth()/2);
 		}
 	}
 	/**
