@@ -257,7 +257,7 @@ public class SinglePlayer extends Scene {
 				ALTIMETER_H);
 
 		manual_override_button = new ButtonText(Texts.TAKE_CONTROL, manual,
-				(window.getWidth() - 128) / 2, 32, 128, 32, 8, 4, true);
+				(window.getWidth() - 128) / 2, 32, 128, 32, 8, 4, true, true);
 
 		// the action that is called once the land button is clicked.
 		ButtonText.Action land = new ButtonText.Action() {
@@ -269,7 +269,7 @@ public class SinglePlayer extends Scene {
 		};
 
 		land_button = new ButtonText(Texts.LAND, land,
-				(window.getWidth() - 500) / 2, 32, 128, 32, 8, 4, true);
+				(window.getWidth() - 500) / 2, 32, 128, 32, 8, 4, true, true);
 
 		time_elapsed = 0;
 		compass_dragged = false;

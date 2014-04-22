@@ -13,9 +13,9 @@ public class ButtonText {
 	private String text;
 	private org.newdawn.slick.Color colour_default, colour_hover, colour_unavailable;
 	private Action action;
-	private boolean is_available, has_border;
+	private boolean is_available, has_border, centred;
 
-	public ButtonText(String text, Action action, int x_coordinate, int y_coordinate, int width, int height, int x_offset, int y_offset, boolean border) {
+	public ButtonText(String text, Action action, int x_coordinate, int y_coordinate, int width, int height, int x_offset, int y_offset, boolean border, boolean centred) {
 		this.text = text;
 		this.action = action;
 		this.x_coordinate = x_coordinate;
@@ -29,9 +29,10 @@ public class ButtonText {
 		colour_unavailable = new org.newdawn.slick.Color(64, 64, 64);
 		is_available = true;
 		this.has_border = border;
+		this.centred = centred;
 	}
 	
-	public ButtonText(String text, Action action, int x_coordinate, int y_coordinate, int width, int height, boolean border) {
+	public ButtonText(String text, Action action, int x_coordinate, int y_coordinate, int width, int height, boolean border, boolean centred) {
 		this.text = text;
 		this.action = action;
 		this.x_coordinate = x_coordinate;
@@ -45,6 +46,7 @@ public class ButtonText {
 		colour_unavailable = new org.newdawn.slick.Color(64, 64, 64);
 		is_available = true;
 		this.has_border = border;
+		this.centred = centred;
 	}
 	
 	public boolean isMouseOver(int mouse_x, int mouse_y) {
@@ -80,9 +82,15 @@ public class ButtonText {
 		}
 		if (has_border) {
 			graphics.rectangle(false, x_coordinate + x_offset, y_coordinate + y_offset, width, height);
-			graphics.printTextCentred(text, x_coordinate + x_offset, y_coordinate + (y_offset + height)/2, 1, width);
+			if (centred)
+				graphics.printTextCentred(text, x_coordinate + x_offset, y_coordinate + (y_offset + height)/2, 1, width);
+			else
+				graphics.print(text, x_coordinate + x_offset, y_coordinate + (y_offset + height)/2);
 		} else {
-			graphics.printTextCentred(text, x_coordinate + x_offset, y_coordinate + y_offset, 1, width);
+			if (centred)
+				graphics.printTextCentred(text, x_coordinate + x_offset, y_coordinate + y_offset, 1, width);
+			else
+				graphics.print(text, x_coordinate + x_offset, y_coordinate + y_offset);
 		}
 	}
 

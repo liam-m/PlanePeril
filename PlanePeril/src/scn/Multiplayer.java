@@ -242,7 +242,7 @@ public class Multiplayer extends Scene {
 		};
 		
 		land_button = new ButtonText(Texts.LAND, land,
-				(window.getWidth() - 500) / 2, 32, 128, 32, 8, 4, false);
+				(window.getWidth() - 500) / 2, 32, 128, 32, 8, 4, false, true);
 
 		timer = 0;
 		compass_dragged = false;

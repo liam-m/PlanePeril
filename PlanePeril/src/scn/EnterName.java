@@ -88,8 +88,8 @@ public class EnterName extends Scene {
 			}
 		};
 
-		buttons[0] = new ButtonText("Host", host, BUTTON_X, BUTTON_Y, BUTTON_WIDTH, BUTTON_HEIGHT, true);
-		buttons[1] = new ButtonText("Join", join, BUTTON_X + BUTTON_WIDTH + BUTTON_SEPARATION, BUTTON_Y, BUTTON_WIDTH, BUTTON_HEIGHT, true);
+		buttons[0] = new ButtonText("Host", host, BUTTON_X, BUTTON_Y, BUTTON_WIDTH, BUTTON_HEIGHT, true, true);
+		buttons[1] = new ButtonText("Join", join, BUTTON_X + BUTTON_WIDTH + BUTTON_SEPARATION, BUTTON_Y, BUTTON_WIDTH, BUTTON_HEIGHT, true, true);
 	}
 
 	@Override
