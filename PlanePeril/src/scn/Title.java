@@ -106,7 +106,7 @@ public class Title extends Scene {
 		int button_height = 30;
 		
 		ButtonText.Action[] button_actions = new ButtonText.Action[]{launch_single_player,	launch_multiplayer, open_high_scores, open_credits, open_help, exit};
-		String[] button_labels = new String[]{"Single Player", "Multiplayer", "High Scores", "Credits", "Help               (Opens in Browser)", "Exit"};
+		String[] button_labels = new String[]{"Single Player", "Multiplayer", "High Scores", "Credits", "Help (Opens in Browser)", "Exit"};
 		buttons = new ButtonText[button_actions.length];
 		
 		for (int i = 0; i < buttons.length; i++) {

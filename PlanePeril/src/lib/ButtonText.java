@@ -78,9 +78,12 @@ public class ButtonText {
 		} else {
 			graphics.setColour(colour_default);
 		}
-		graphics.print(text, x_coordinate + x_offset, y_coordinate + y_offset);
-		if (has_border)
+		if (has_border) {
 			graphics.rectangle(false, x_coordinate + x_offset, y_coordinate + y_offset, width, height);
+			graphics.printTextCentred(text, x_coordinate + x_offset, y_coordinate + (y_offset + height)/2, 1, width);
+		} else {
+			graphics.printTextCentred(text, x_coordinate + x_offset, y_coordinate + y_offset, 1, width);
+		}
 	}
 
 }
