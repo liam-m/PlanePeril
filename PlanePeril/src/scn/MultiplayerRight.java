@@ -61,13 +61,12 @@ public class MultiplayerRight extends Multiplayer {
 		// update airport timer
 		right_airport.setTimeLeft((int) (next_take_off - timer));
 
-		int index = 0;
-		for (Aircraft plane : aircraft) {
+		for (int i=0; i<aircraft.size(); i++) {
 
 			// Added a try/catch construct to make sure we catch when the
 			// aircraft is inserted into a full airport
 			try {
-				plane.update(dt);
+				aircraft.get(i).update(dt);
 			} catch (IllegalStateException e) {
 				orders_box.addOrder("<<< Aerodromio Medved' is full, divert aircraft Comrade!");
 
@@ -80,17 +79,17 @@ public class MultiplayerRight extends Multiplayer {
 			}
 
 			// if aircraft landed
-			if (plane.isAtAirport()) {
-				orders_box.addOrder("<<< Aircraft " + plane.getName() + " has landed safely at " + right_airport.getName());
+			if (aircraft.get(i).isAtAirport()) {
+				orders_box.addOrder("<<< Aircraft " + aircraft.get(i).getName() + " has landed safely at " + right_airport.getName());
 			}
 			// if aircraft has completed it's journey correctly
-			if (plane.hasFinished()) {
+			if (aircraft.get(i).hasFinished()) {
 				right_performance.changeValueBy(5);
-				if (aircraft.get(index).equals(selected_aircraft)) {
+				if (aircraft.get(i).equals(selected_aircraft)) {
 					deselectAircraft();
 				}
-				aircraft.remove(index);
-				index--;
+				//aircraft.remove(index);
+				i--;
 				switch (RandomNumber.randInclusiveInt(0, 2)) {
 				case 0:
 					orders_box.addOrder("<<< Thank you Comrade");
@@ -103,7 +102,6 @@ public class MultiplayerRight extends Multiplayer {
 					break;
 				}
 			}
-			index++;
 		}
 
 		checkCollisions(dt);
