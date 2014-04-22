@@ -387,14 +387,25 @@ public class Multiplayer extends Scene {
 		}
 		server.aircraft_queue.clear();
 	}
-	
+	public boolean isInputValid(int x, int y) {
+		if (is_left) {
+			if (x > window.getWidth()/2 && y < Y_POSITION_OF_BOTTOM_ELEMENTS)
+				return false;
+		} else {
+			if (x < window.getWidth()/2 && y < Y_POSITION_OF_BOTTOM_ELEMENTS)
+				return false;
+		}
+		return true;
+	}
 	/**
 	 * Handle mouse input
 	 */
 	@Override
 	public void mousePressed(int key, int x, int y) {
-		if (x > window.getWidth()/2 && y < Y_POSITION_OF_BOTTOM_ELEMENTS) // needs to be flipped for Right
+		if (!isInputValid(x, y)) {	
 			return;
+		} 
+		
 		if (key == input.MOUSE_LEFT) {
 
 			
@@ -444,7 +455,10 @@ public class Multiplayer extends Scene {
 	
 	@Override
 	public void mouseReleased(int key, int x, int y) {
-	
+		if (!isInputValid(x, y)) {	
+			return;
+		} 
+		
 		if (selected_aircraft != null && land_button.isMouseOver(x, y))
 			land_button.act();
 
