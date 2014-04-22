@@ -75,35 +75,34 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 	// Receiving aircraft from other server
 	@Override
 	public void addAircraft(boolean from_airport, int speed, int origin_waypoints_index, int destination_waypoints_index, int preferred_altitude_index) {
-		
+
 		String name = "Flight " + (int)(900 * Math.random() + 100);
 			
 		if (left) {
 			Waypoint origin_point;
 			if (from_airport) {
-				origin_point = left_game.left_airport; 
+				origin_point = left_game.right_airport; 
 			} else {
-				origin_point = left_game.left_entryexit_waypoints[origin_waypoints_index];
+				origin_point = left_game.right_entryexit_waypoints[origin_waypoints_index];
 			}
 			
-			Waypoint destination_point = left_game.left_entryexit_waypoints[destination_waypoints_index];
+			Waypoint destination_point = left_game.right_entryexit_waypoints[destination_waypoints_index];
 			
-			//TODO improve synchronisation methods
 			aircraft_queue.add(new Aircraft(name, left_game.aircraft_image, speed, 1, new FlightPlan(origin_point, 
-					destination_point, left_game.left_waypoints, left_game.left_holding_waypoints, left_game.left_airport_takeoff_waypoint), preferred_altitude_index));
-	
+					destination_point, left_game.right_waypoints, left_game.right_holding_waypoints, left_game.right_airport_takeoff_waypoint), preferred_altitude_index));
 		} else {
 			Waypoint origin_point;
 			if (from_airport) {
-				origin_point = right_game.right_airport; 
+				origin_point = right_game.left_airport; 
 			} else {
-				origin_point = right_game.right_entryexit_waypoints[origin_waypoints_index];
+				origin_point = right_game.left_entryexit_waypoints[origin_waypoints_index];
 			}
 			
-			Waypoint destination_point = right_game.right_entryexit_waypoints[destination_waypoints_index];
+			Waypoint destination_point = right_game.left_entryexit_waypoints[destination_waypoints_index];
 			
+			//TODO improve synchronisation methods
 			aircraft_queue.add(new Aircraft(name, right_game.aircraft_image, speed, 1, new FlightPlan(origin_point, 
-					destination_point, right_game.right_waypoints, right_game.right_holding_waypoints, right_game.right_airport_takeoff_waypoint), preferred_altitude_index));
+					destination_point, right_game.left_waypoints, right_game.left_holding_waypoints, right_game.left_airport_takeoff_waypoint), preferred_altitude_index));
 		}
 	}
 	
