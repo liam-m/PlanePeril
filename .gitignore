@@ -4,3 +4,4 @@ tmp/
 *.class
 *.orig
 Thumbs.db
+.metadata/
