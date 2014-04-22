@@ -34,7 +34,7 @@ public class Multiplayer extends Scene {
 	
 	String left_name, right_name;
 	
-	boolean is_left;
+	boolean is_left_player;
 	
 	public Waypoint[] left_waypoints;
 	public Waypoint[] right_waypoints;
@@ -171,7 +171,7 @@ public class Multiplayer extends Scene {
 		this.right_name = right_name;
 		this.background = graphics.newImage("gfx" + File.separator + "map.png");
 		this.their_address = their_address;
-		this.is_left = is_left;
+		this.is_left_player = is_left;
 		
 		left_waypoints = new Waypoint[]{
 			new Waypoint(100, 150),
@@ -276,7 +276,7 @@ public class Multiplayer extends Scene {
 	@Override
 	public void start() {
 		try {
-			if (is_left) {
+			if (is_left_player) {
 				server = new MultiplayerServer(this, true, their_address, "player_1", 1730, 1731);
 				Thread.sleep(3000);
 				server.connect("player_2");
@@ -395,10 +395,12 @@ public class Multiplayer extends Scene {
 	 * @return
 	 */
 	public boolean isInputValid(int x, int y) {
-		if (y <= Y_POSITION_OF_BOTTOM_ELEMENTS) {
+		if (y <= Y_POSITION_OF_BOTTOM_ELEMENTS) { // Clicked on bottom elements (i.e. below airspace)
 			return true;
+		} else if (is_left_player) {
+			return x <= window.getWidth()/2; // Left player can only click on left side of game screen
 		} else {
-			return (is_left && x <= window.getWidth()/2) || (x >= window.getWidth()/2);
+			return x >= window.getWidth()/2; // Right player can only click on right side of game screen
 		}
 	}
 	/**
@@ -534,7 +536,7 @@ public class Multiplayer extends Scene {
 			int origin_index = 0;
 			int destination_index = 0;
 			
-			if(is_left) {
+			if(is_left_player) {
 				for (int i = 0; i < left_entryexit_waypoints.length; i++) {
 					if (a.getFlightPlan().getOrigin().equals(left_entryexit_waypoints[i])) {
 						origin_index = i;
@@ -566,7 +568,7 @@ public class Multiplayer extends Scene {
 	private java.util.ArrayList<Waypoint> getAvailableEntryPoints() {
 		java.util.ArrayList<Waypoint> available_entry_points = new java.util.ArrayList<Waypoint>();
 		Waypoint[] test_points;
-		if (is_left) {
+		if (is_left_player) {
 			test_points = left_entryexit_waypoints;
 		} else {
 			test_points = right_entryexit_waypoints;
@@ -596,7 +598,7 @@ public class Multiplayer extends Scene {
 		java.util.ArrayList<Integer> available_id_entry_points_altitudes = new java.util.ArrayList<Integer>();
 		Waypoint[] my_entryexit_points;
 	
-		if(is_left) {
+		if(is_left_player) {
 			my_entryexit_points = left_entryexit_waypoints;
 		} else {
 			my_entryexit_points = right_entryexit_waypoints;
@@ -641,7 +643,7 @@ public class Multiplayer extends Scene {
 		java.util.ArrayList<Waypoint> available_origins = getAvailableEntryPoints();
 		Waypoint[] my_entryexit_points;
 		
-		if(is_left) {
+		if(is_left_player) {
 			my_entryexit_points = left_entryexit_waypoints;
 		} else {
 			my_entryexit_points = right_entryexit_waypoints;
@@ -687,7 +689,7 @@ public class Multiplayer extends Scene {
 				if (a.getName() == name) name_is_taken = true;
 			}
 		}
-		if (is_left) {
+		if (is_left_player) {
 			return new Aircraft(name, aircraft_image, 32 + (int) (10 * Math.random()), 1, new FlightPlan(origin_point, 
 					destination_point, left_waypoints, left_holding_waypoints, left_airport_takeoff_waypoint), preferred_altitude_index);
 		} else {
