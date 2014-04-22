@@ -7,8 +7,7 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 
-import scn.MultiplayerLeft;
-import scn.MultiplayerRight;
+import scn.Multiplayer;
 
 import cls.Aircraft;
 import cls.FlightPlan;
@@ -21,28 +20,16 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 	Registry their_registry;
 	int opponent_port;
 	
-	MultiplayerLeft left_game;
-	MultiplayerRight right_game;
+	Multiplayer game;
 	
 	public ArrayList<Aircraft> aircraft_queue = new ArrayList<Aircraft>();
 	
 	boolean left;
 
-	public MultiplayerServer(MultiplayerLeft game_screen, String opponent_address, String registry_name, int my_port, int opponent_port) throws RemoteException {
+	public MultiplayerServer(Multiplayer game_screen, boolean left, String opponent_address, String registry_name, int my_port, int opponent_port) throws RemoteException {
 		super();
-		left = true;
-		left_game = game_screen;
-		
-		registry = LocateRegistry.createRegistry(my_port);
-		registry.rebind(registry_name, this);
-		this.opponent_address = opponent_address;
-		this.opponent_port = opponent_port;
-	}
-	
-	public MultiplayerServer(MultiplayerRight game_screen, String opponent_address, String registry_name, int my_port, int opponent_port) throws RemoteException {
-		super();
-		left = false;
-		right_game = game_screen;
+		this.left = left;
+		game = game_screen;
 		
 		registry = LocateRegistry.createRegistry(my_port);
 		registry.rebind(registry_name, this);
@@ -81,28 +68,28 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 		if (left) {
 			Waypoint origin_point;
 			if (from_airport) {
-				origin_point = left_game.right_airport; 
+				origin_point = game.right_airport; 
 			} else {
-				origin_point = left_game.right_entryexit_waypoints[origin_waypoints_index];
+				origin_point = game.right_entryexit_waypoints[origin_waypoints_index];
 			}
 			
-			Waypoint destination_point = left_game.right_entryexit_waypoints[destination_waypoints_index];
+			Waypoint destination_point = game.right_entryexit_waypoints[destination_waypoints_index];
 			
-			aircraft_queue.add(new Aircraft(name, left_game.aircraft_image, speed, 1, new FlightPlan(origin_point, 
-					destination_point, left_game.right_waypoints, left_game.right_holding_waypoints, left_game.right_airport_takeoff_waypoint), preferred_altitude_index));
+			aircraft_queue.add(new Aircraft(name, game.aircraft_image, speed, 1, new FlightPlan(origin_point, 
+					destination_point, game.right_waypoints, game.right_holding_waypoints, game.right_airport_takeoff_waypoint), preferred_altitude_index));
 		} else {
 			Waypoint origin_point;
 			if (from_airport) {
-				origin_point = right_game.left_airport; 
+				origin_point = game.left_airport; 
 			} else {
-				origin_point = right_game.left_entryexit_waypoints[origin_waypoints_index];
+				origin_point = game.left_entryexit_waypoints[origin_waypoints_index];
 			}
 			
-			Waypoint destination_point = right_game.left_entryexit_waypoints[destination_waypoints_index];
+			Waypoint destination_point = game.left_entryexit_waypoints[destination_waypoints_index];
 			
 			//TODO improve synchronisation methods
-			aircraft_queue.add(new Aircraft(name, right_game.aircraft_image, speed, 1, new FlightPlan(origin_point, 
-					destination_point, right_game.left_waypoints, right_game.left_holding_waypoints, right_game.left_airport_takeoff_waypoint), preferred_altitude_index));
+			aircraft_queue.add(new Aircraft(name, game.aircraft_image, speed, 1, new FlightPlan(origin_point, 
+					destination_point, game.left_waypoints, game.left_holding_waypoints, game.left_airport_takeoff_waypoint), preferred_altitude_index));
 		}
 	}
 	
