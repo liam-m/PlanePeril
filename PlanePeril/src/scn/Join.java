@@ -29,6 +29,7 @@ public class Join extends Scene {
 	JoinClient join_client;
 	
 	boolean could_not_connect = false;
+	boolean attempting_to_join = false;
 	
 	private final int JOIN_X_POSITION = window.getWidth() /2;
 	private final int JOIN_Y_POSITION = 800;
@@ -53,11 +54,13 @@ public class Join extends Scene {
 			@Override
 			public void action() {
 				could_not_connect = false;
+				attempting_to_join = true;
 				try {
 					their_name = join_client.connect(their_address, this_address, player_name);
 					main.setScene(new MultiplayerRight(main, player_name, their_name, their_address));
 				} catch (RemoteException e) {
 					could_not_connect = true;
+					attempting_to_join = false;
 				}
 			}
 		};
@@ -118,6 +121,9 @@ public class Join extends Scene {
 		
 		if (could_not_connect) {
 			graphics.printTextCentred("Could not find opponent", window.getWidth() / 2, 700, 5, 100);
+		} 
+		if (attempting_to_join) {
+			graphics.printTextCentred("Attempting to join...", window.getWidth() /2, 700, 5, 100);
 		}
 		
 		join_button.draw();
