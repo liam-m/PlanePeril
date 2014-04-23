@@ -315,12 +315,6 @@ public class Multiplayer extends Scene {
 				aircraft.get(i).update(dt);
 			} catch (IllegalStateException e) {
 				orders_box.addOrder("<<< Aerodromio Medved' is full, divert aircraft Comrade!");
-
-				// simple way to end the game if the airport is full
-				Aircraft a1 = createAircraft(false);
-				Aircraft a2 = createAircraft(true);
-
-				gameOver(a1, a2);
 				return;
 			}
 			
@@ -935,16 +929,23 @@ public class Multiplayer extends Scene {
 	 * @param plane2
 	 *            the second plane in the collision
 	 */
-	public void gameOver(Aircraft plane1, Aircraft plane2) {
+	public void gameOver(boolean win) {
 		main.closeScene();
 		//TODO what happens on game over?
+		main.setScene(new GameOverMult(main, win));
 	}
 	
 	public void updateLives() {
 		Lives my_lives = is_left_player ? left_lives : right_lives;
 		my_lives.decrementLives();
 		
-		server.sendlivesUpadte();
+		// comment out this section if you want to avoid ending the game for testing
+		if (my_lives.getLives() == 0) {
+			gameOver(false);
+			// sendGameOver();
+		} else {
+			server.sendlivesUpadte();
+		}
 	}
 	public void updatePerformance(int value) {
 		my_performance.changeValueBy(value);
