@@ -105,7 +105,7 @@ public class Airport extends Waypoint {
 	 * Name, <br>
 	 * Number of <b>aircraft in </b> <br>
 	 * if the time to next takeoff is more than 0 seconds (i.e. there has been a
-	 * takeoff recently), show how many <b>seconds left util next allowed
+	 * takeoff recently), show how many <b>seconds left until next allowed
 	 * takeoff</b>
 	 */
 	public void drawAirportInfo() {

@@ -41,8 +41,7 @@ public class PerformanceBar {
 			current_value = MAX_VALUE;
 		// Can't be smaller than min value
 		else if (current_value < MIN_VALUE) 
-			//current_value = MIN_VALUE; // will be changed to sth different and WILL TAKE A LIFE AWAY
-			setMax();
+			current_value = MIN_VALUE;
 	}
 	
 	/**
@@ -87,6 +86,9 @@ public class PerformanceBar {
 		graphics.rectangle(true, position_x, position_y, BAR_WIDTH * drawn_value / MAX_VALUE, BAR_HEIGHT);
 		
 	}
-			
+	
+	public boolean isEmpty() {
+		return (current_value == MIN_VALUE);
+	}
 }
 

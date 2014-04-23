@@ -403,6 +403,11 @@ public class Multiplayer extends Scene {
 			}
 		}
 		
+		if (my_performance.isEmpty()) {
+			updateLives();
+			my_performance.setMax();
+		}
+		
 		// Update from server
 		for(Aircraft a : server.aircraft_queue) {
 			aircraft.add(a);
