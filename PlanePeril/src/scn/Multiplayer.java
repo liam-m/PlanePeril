@@ -960,17 +960,10 @@ public class Multiplayer extends Scene {
 		if (aircraft.getFlightPlan().getDestination().equals(my_airport)) {
 			return true;
 		}
-		if (is_left_player) {
-			for (Waypoint w : left_entryexit_waypoints) {
-				if(aircraft.getFlightPlan().getDestination().equals(w)) {
-					return true;
-				}
-			}
-		} else {
-			for (Waypoint w : right_entryexit_waypoints) {
-				if(aircraft.getFlightPlan().getDestination().equals(w)) {
-					return true;
-				}
+		Waypoint[] my_waypoints = is_left_player ? left_entryexit_waypoints : right_entryexit_waypoints;
+		for (Waypoint w : my_waypoints) {
+			if(aircraft.getFlightPlan().getDestination().equals(w)) {
+				return true;
 			}
 		}
 		return false;
