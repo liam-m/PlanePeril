@@ -47,6 +47,15 @@ public class Airport extends Waypoint {
 		y_location = y;
 		loadImage();
 	}
+	
+	public Airport(double x, double y, String name, boolean testing) {
+		super(x, y, WaypointType.ENTRY_EXIT, name);
+		x_location = x;
+		y_location = y;
+		if (!testing) {
+			loadImage();
+		}
+	}
 
 	/**
 	 * Set how much time left until the next takeoff is allowed. As it counted

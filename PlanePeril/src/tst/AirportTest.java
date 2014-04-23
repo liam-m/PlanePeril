@@ -45,7 +45,8 @@ public class AirportTest {
 			new Waypoint(1000, 1000, WaypointType.ENTRY_EXIT, "Test Entry 4"),
 
 			// The airport
-			airport = new Airport(500, 500, "Airport"), };
+			airport = new Airport(500, 500, "Airport", true), 
+	};
 
 	public Waypoint[] airspace_waypoints = new Waypoint[] {
 
@@ -73,12 +74,6 @@ public class AirportTest {
 
 	public final Waypoint takeoff_waypoint = new Waypoint(
 			airport.position().x() - 60, airport.position().y());
-
-	public AirportTest() {
-		Airport testAirport = new Airport(10, 10, "INI");
-		
-
-	}
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {

@@ -37,7 +37,8 @@ public class AircraftTest {
 			new Waypoint(10, 1000, WaypointType.ENTRY_EXIT, "Exit"),
 
 			// The airport
-			airport = new Airport(500, 500, "Airport"), };
+			airport = new Airport(500, 500, "Airport", true), 
+	};
 
 	public Waypoint[] airspace_waypoints = new Waypoint[] {
 
