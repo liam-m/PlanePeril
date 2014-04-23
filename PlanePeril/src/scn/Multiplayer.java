@@ -222,11 +222,8 @@ public class Multiplayer extends Scene {
 		right_performance = new PerformanceBar(RIGHT_PERFOMANCE_X,RIGHT_PERFOMANCE_Y);
 		left_lives = new Lives(LEFT_LIVES_X, LEFT_LIVES_Y);
 		right_lives = new Lives(RIGHT_LIVES_X, RIGHT_LIVES_Y);
-		if (is_left) {
-			airport_control_box = new AirportControlBox(AIRPORT_CONTROL_BOX_X, AIRPORT_CONTROL_BOX_Y, AIRPORT_CONTROL_BOX_W, AIRPORT_CONTROL_BOX_H, left_airport);
-		} else {
-			airport_control_box = new AirportControlBox(AIRPORT_CONTROL_BOX_X, AIRPORT_CONTROL_BOX_Y, AIRPORT_CONTROL_BOX_W, AIRPORT_CONTROL_BOX_H, right_airport);
-		}
+		airport_control_box = new AirportControlBox(AIRPORT_CONTROL_BOX_X, AIRPORT_CONTROL_BOX_Y, AIRPORT_CONTROL_BOX_W, AIRPORT_CONTROL_BOX_H, my_airport);
+		
 		
 		// Initialise values of setNextWaypoint for each holding waypoint.
 		left_holding_waypoints.get(0).setNextWaypoint(left_holding_waypoints.get(1));
@@ -402,12 +399,9 @@ public class Multiplayer extends Scene {
 	 * @return
 	 */
 	public boolean isInputValid(int x, int y) {
-		if (is_left_player) {
-			return x <= window.getWidth()/2 || y > Y_POSITION_OF_BOTTOM_ELEMENTS; // Left player can only click on left side of game screen
-		} else {
-			return x >= window.getWidth()/2 || y > Y_POSITION_OF_BOTTOM_ELEMENTS; // Right player can only click on right side of game screen
-		}
+		return (is_left_player ? x <= window.getWidth()/2 : x >= window.getWidth()/2) ||  y > Y_POSITION_OF_BOTTOM_ELEMENTS;
 	}
+	
 	/**
 	 * Handle mouse input
 	 */
@@ -541,23 +535,14 @@ public class Multiplayer extends Scene {
 			int origin_index = 0;
 			int destination_index = 0;
 			
-			if(is_left_player) {
-				for (int i = 0; i < left_entryexit_waypoints.length; i++) {
-					if (a.getFlightPlan().getOrigin().equals(left_entryexit_waypoints[i])) {
+			Waypoint[] my_entryexit_points = is_left_player ? left_entryexit_waypoints: right_entryexit_waypoints;
+
+			for (int i = 0; i < my_entryexit_points.length; i++) {
+				if (a.getFlightPlan().getOrigin().equals(my_entryexit_points[i])) {
 						origin_index = i;
-					}
-					if (a.getFlightPlan().getDestination().equals(left_entryexit_waypoints[i])) {
-						destination_index = i;
-					}
 				}
-			} else {
-				for (int i = 0; i < right_entryexit_waypoints.length; i++) {
-					if (a.getFlightPlan().getOrigin().equals(right_entryexit_waypoints[i])) {
-						origin_index = i;
-					}
-					if (a.getFlightPlan().getDestination().equals(right_entryexit_waypoints[i])) {
+				if (a.getFlightPlan().getDestination().equals(my_entryexit_points[i])) {
 						destination_index = i;
-					}
 				}
 			}
 			
@@ -572,12 +557,8 @@ public class Multiplayer extends Scene {
  	 */
 	private java.util.ArrayList<Waypoint> getAvailableEntryPoints() {
 		java.util.ArrayList<Waypoint> available_entry_points = new java.util.ArrayList<Waypoint>();
-		Waypoint[] test_points;
-		if (is_left_player) {
-			test_points = left_entryexit_waypoints;
-		} else {
-			test_points = right_entryexit_waypoints;
-		}
+		Waypoint[] test_points = is_left_player ? left_entryexit_waypoints: right_entryexit_waypoints;
+
 		for (Waypoint entry_point : test_points) {
 			boolean is_available = true;
 			for (Aircraft a : aircraft) {
@@ -646,13 +627,8 @@ public class Multiplayer extends Scene {
 		int origin = 0; // 0 is default, it is chosen later on (initialized as compiler would otherwise complain)
 		Waypoint origin_point; 
 		java.util.ArrayList<Waypoint> available_origins = getAvailableEntryPoints();
-		Waypoint[] my_entryexit_points;
 		
-		if(is_left_player) {
-			my_entryexit_points = left_entryexit_waypoints;
-		} else {
-			my_entryexit_points = right_entryexit_waypoints;
-		}
+		Waypoint[] my_entryexit_points = is_left_player ? left_entryexit_waypoints: right_entryexit_waypoints;
 		
 		if (fromAirport) {
 			origin_point = my_airport;		
@@ -944,11 +920,9 @@ public class Multiplayer extends Scene {
 	}
 	
 	public void updateLives() {
-		if(is_left_player) {
-			left_lives.decrementLives();
-		} else {
-			right_lives.decrementLives();
-		}
+		Lives my_lives = is_left_player ? left_lives : right_lives;
+		my_lives.decrementLives();
+		
 		server.sendlivesUpadte();
 	}
 	public void updatePerformance(int value) {
