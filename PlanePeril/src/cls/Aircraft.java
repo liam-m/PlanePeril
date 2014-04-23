@@ -56,7 +56,7 @@ public class Aircraft {
 	private double current_turning_angle = 0; // The angle the plane is currently turning by.
 	private boolean is_at_airport = false; // Whether this aircraft is currently in the airport
 
-	private final ArrayList<Aircraft> planes_too_near = new ArrayList<Aircraft>(); // List of planes currently in violation of separation rules with this plane
+	public final ArrayList<Aircraft> planes_too_near = new ArrayList<Aircraft>(); // List of planes currently in violation of separation rules with this plane
 
 	private int target_altitude_index; // Index of altidudeList for the value of the Altidude the aircraft desires to be at.
 	public int getTargetAltitudeIndex() {

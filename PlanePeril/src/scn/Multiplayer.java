@@ -29,6 +29,7 @@ import lib.jog.window;
 
 public class Multiplayer extends Scene {
 	
+	private static final double DEDUCTION_TIME_DELAY = 0.5;
 	final int MAX_AIRCRAFT = 20;
 	final int TAKEOFF_DELAY = 5;
 	
@@ -61,6 +62,22 @@ public class Multiplayer extends Scene {
 	double timer = 0;
 	double next_take_off = TAKEOFF_DELAY;
 	
+	boolean is_manually_controlling;
+	ButtonText land_button;
+	boolean compass_dragged;
+	Waypoint selected_waypoint;
+	int selected_pathpoint;
+	public Image aircraft_image;
+	private double time_of_last_deduction = 0;
+	
+	double flight_generation_time_elapsed = 6;
+	double flight_generation_interval = 4;
+	
+	MultiplayerServer server;
+	String their_address;
+	
+	private Airport my_airport;
+	private PerformanceBar my_performance;
 	
 	// Position of things drawn to window
 	final int Y_POSITION_OF_BOTTOM_ELEMENTS = window.getHeight() - 120;
@@ -111,6 +128,7 @@ public class Multiplayer extends Scene {
 			new Waypoint(8, window.getHeight() - 190, WaypointType.ENTRY_EXIT),
 			new Waypoint((window.getWidth()/4), window.getHeight() - 190, WaypointType.ENTRY_EXIT),
 			new Waypoint((window.getWidth()/2 - 20), window.getHeight() - 190, WaypointType.ENTRY_EXIT),
+			left_airport
 	};
 	
 	public final Waypoint[] right_entryexit_waypoints = new Waypoint[] {
@@ -125,6 +143,7 @@ public class Multiplayer extends Scene {
 			new Waypoint((window.getWidth()/2 + 20), window.getHeight() - 190, WaypointType.ENTRY_EXIT),
 			new Waypoint(((window.getWidth()* 3)/4), window.getHeight() - 190, WaypointType.ENTRY_EXIT),
 			new Waypoint(window.getWidth() - 40, window.getHeight() - 190, WaypointType.ENTRY_EXIT),
+			right_airport
 	 };
 	
 	// All aircraft taking off must go through this waypoint, allows for
@@ -139,8 +158,6 @@ public class Multiplayer extends Scene {
 	
 	public ArrayList<HoldingWaypoint> left_holding_waypoints = new ArrayList<HoldingWaypoint>();
 	
-	
-	
 	// Same functionality as above for the 2nd player's airport
 	private final Waypoint right_takeoff_waypoint = new Waypoint(right_airport.position().x() - 120, right_airport.position().y());
 
@@ -149,23 +166,7 @@ public class Multiplayer extends Scene {
 		new HoldingWaypoint(right_airport.position().x() + 150, right_airport.position().y()),
 	};
 	
-	public ArrayList<HoldingWaypoint> right_holding_waypoints = new ArrayList<HoldingWaypoint>();;
-	
-	boolean is_manually_controlling;
-	ButtonText land_button;
-	boolean compass_dragged;
-	Waypoint selected_waypoint;
-	int selected_pathpoint;
-	public Image aircraft_image;
-	
-	double flight_generation_time_elapsed = 6;
-	double flight_generation_interval = 4;
-	
-	MultiplayerServer server;
-	String their_address;
-	
-	private Airport my_airport;
-	private PerformanceBar my_performance;
+	public ArrayList<HoldingWaypoint> right_holding_waypoints = new ArrayList<HoldingWaypoint>();
 	
 	public Multiplayer(Main main, String left_name, String right_name, String their_address, final boolean is_left) {
 		super(main);
@@ -188,7 +189,8 @@ public class Multiplayer extends Scene {
 			left_entryexit_waypoints[2],
 			left_entryexit_waypoints[3],
 			left_entryexit_waypoints[4],
-			left_entryexit_waypoints[5]
+			left_entryexit_waypoints[5],
+			left_airport
 		};
 		right_waypoints = new Waypoint[]{
 			new Waypoint((window.getWidth()/2) + 100, 100),
@@ -203,7 +205,8 @@ public class Multiplayer extends Scene {
 			right_entryexit_waypoints[2],
 			right_entryexit_waypoints[3],
 			right_entryexit_waypoints[4],
-			right_entryexit_waypoints[5]
+			right_entryexit_waypoints[5],
+			right_airport
 		};
 		
 		left_holding_waypoints.add( new HoldingWaypoint(left_airport.position().x() - 150, left_airport.position().y() - 100));
@@ -215,15 +218,23 @@ public class Multiplayer extends Scene {
 		right_holding_waypoints.add( new HoldingWaypoint(right_airport.position().x() + 150, right_airport.position().y() - 100));
 		right_holding_waypoints.add( new HoldingWaypoint(right_airport.position().x() + 150, right_airport.position().y() + 100));
 		right_holding_waypoints.add( new HoldingWaypoint(right_airport.position().x() - 150, right_airport.position().y() + 100));
-	
+		
 		altimeter = new Altimeter(ALTIMETER_X, ALTIMETER_Y, ALTIMETER_W, ALTIMETER_H);
 		orders_box = new OrdersBox(ORDERSBOX_X, ORDERSBOX_Y, ORDERSBOX_W, ORDERSBOX_H, 6);
 		left_performance = new PerformanceBar(LEFT_PERFOMANCE_X, LEFT_PERFOMANCE_Y);
 		right_performance = new PerformanceBar(RIGHT_PERFOMANCE_X,RIGHT_PERFOMANCE_Y);
 		left_lives = new Lives(LEFT_LIVES_X, LEFT_LIVES_Y);
 		right_lives = new Lives(RIGHT_LIVES_X, RIGHT_LIVES_Y);
-		airport_control_box = new AirportControlBox(AIRPORT_CONTROL_BOX_X, AIRPORT_CONTROL_BOX_Y, AIRPORT_CONTROL_BOX_W, AIRPORT_CONTROL_BOX_H, my_airport);
 		
+		if (is_left) {
+			my_airport = left_airport;
+			my_performance = left_performance;
+		} else {
+			my_airport = right_airport;
+			my_performance = right_performance;
+		}
+		
+		airport_control_box = new AirportControlBox(AIRPORT_CONTROL_BOX_X, AIRPORT_CONTROL_BOX_Y, AIRPORT_CONTROL_BOX_W, AIRPORT_CONTROL_BOX_H, my_airport);
 		
 		// Initialise values of setNextWaypoint for each holding waypoint.
 		left_holding_waypoints.get(0).setNextWaypoint(left_holding_waypoints.get(1));
@@ -261,15 +272,6 @@ public class Multiplayer extends Scene {
 		selected_pathpoint = -1;
 		
 		aircraft_image = graphics.newImage("gfx" + File.separator + "plane.png");
-		
-		
-		if (is_left) {
-			my_airport = left_airport;
-			my_performance = left_performance;
-		} else {
-			my_airport = right_airport;
-			my_performance = right_performance;
-		}
 	}
 	
 	@Override
@@ -317,7 +319,16 @@ public class Multiplayer extends Scene {
 				gameOver(a1, a2);
 				return;
 			}
-
+			
+			if (isMine(aircraft.get(i))) {
+				if (!aircraft.get(i).planes_too_near.isEmpty()) {
+					if(timer - time_of_last_deduction >= DEDUCTION_TIME_DELAY) {
+						time_of_last_deduction = timer;
+						updatePerformance(-10);
+					}
+				}
+			}
+	
 			// if aircraft landed
 			if (aircraft.get(i).isAtAirport()) {
 				orders_box.addOrder("<<< Aircraft " + aircraft.get(i).getName() + " has landed safely at " + left_airport.getName());
