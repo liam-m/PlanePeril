@@ -915,17 +915,17 @@ public class Multiplayer extends Scene {
 	 */
 	public void checkCollisions(double dt) {
 		for (Aircraft plane : aircraft) {
-			if (isMine(plane)) {
 				int collision_state = plane.updateCollisions(dt, aircraft);
 
-				if (collision_state >= 0) {
-					playSound(audio.newSoundEffect("sfx" + File.separator + "crash.ogg"));
-					//TODO lives need to be subtracted. is it possible for both players to be in the wrong? A crash is between two or more planes! (dont decrement twice)
-					updateLives();
+				if (isMine(plane)) {
+					if (collision_state >= 0) {
+						playSound(audio.newSoundEffect("sfx" + File.separator + "crash.ogg"));
+						//TODO lives need to be subtracted. is it possible for both players to be in the wrong? A crash is between two or more planes! (dont decrement twice)
+						updateLives();
 		
-					return;
+						return;
+					}
 				}
-			}
 		}
 	}
 	
