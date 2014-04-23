@@ -92,5 +92,25 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 					destination_point, game.left_waypoints, game.left_holding_waypoints, game.left_airport_takeoff_waypoint), preferred_altitude_index));
 		}
 	}
+
+	// Notifying each game about a chnage in the performance bar
+	
+	public void sendChangePerformance(int value) {
+		try {
+			multiplayer_interface.changePerformance(value);
+		} catch (RemoteException e){
+			e.printStackTrace();
+		}
+	}
+	
+	@Override
+	public void changePerformance(int value) throws RemoteException {
+		if (left) {
+			game.right_performance.changeValueBy(value);
+		} else {
+			game.left_performance.changeValueBy(value);
+		}
+		
+	}
 	
 }

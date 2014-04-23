@@ -47,7 +47,8 @@ public class Multiplayer extends Scene {
 	public ArrayList<Aircraft> aircraft = new ArrayList<Aircraft>();
 	Aircraft selected_aircraft;
 	
-	PerformanceBar left_performance, right_performance;
+	public PerformanceBar left_performance;
+	public PerformanceBar right_performance;
 	Lives left_lives, right_lives;
 	
 	OrdersBox orders_box;
@@ -325,23 +326,27 @@ public class Multiplayer extends Scene {
 			}
 			// if aircraft has completed it's journey correctly
 			if (aircraft.get(i).hasFinished()) {
-				my_performance.changeValueBy(5);
+				if (isMine(aircraft.get(i))) {
+					
+					updatePerformance(5);
+					switch (RandomNumber.randInclusiveInt(0, 2)) {
+					case 0:
+						orders_box.addOrder("<<< Thank you Comrade");
+						break;
+					case 1:
+						orders_box.addOrder("<<< Well done Comrade");
+						break;
+					case 2:
+						orders_box.addOrder("<<< Many thanks Comrade");
+						break;
+					}
+				}
 				if (aircraft.get(i).equals(selected_aircraft)) {
 					deselectAircraft();
 				}
 				aircraft.remove(i);
 				i--;
-				switch (RandomNumber.randInclusiveInt(0, 2)) {
-				case 0:
-					orders_box.addOrder("<<< Thank you Comrade");
-					break;
-				case 1:
-					orders_box.addOrder("<<< Well done Comrade");
-					break;
-				case 2:
-					orders_box.addOrder("<<< Many thanks Comrade");
-					break;
-				}
+				
 			}
 		}
 
@@ -387,6 +392,7 @@ public class Multiplayer extends Scene {
 		}
 		server.aircraft_queue.clear();
 	}
+
 	/**
 	 * Input is invalid if it is both on the wrong side of the screen AND input is above the bottom of the airspace
 	 * 
@@ -933,6 +939,31 @@ public class Multiplayer extends Scene {
 	public void gameOver(Aircraft plane1, Aircraft plane2) {
 		main.closeScene();
 		//TODO what happens on game over?
+	}
+	
+	public void updatePerformance(int value) {
+		my_performance.changeValueBy(value);
+		server.sendChangePerformance(value);
+	}
+
+	private boolean isMine(Aircraft aircraft) {
+		if (aircraft.getFlightPlan().getDestination().equals(my_airport)) {
+			return true;
+		}
+		if (is_left_player) {
+			for (Waypoint w : left_entryexit_waypoints) {
+				if(aircraft.getFlightPlan().getDestination().equals(w)) {
+					return true;
+				}
+			}
+		} else {
+			for (Waypoint w : right_entryexit_waypoints) {
+				if(aircraft.getFlightPlan().getDestination().equals(w)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 }
