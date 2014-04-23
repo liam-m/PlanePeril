@@ -13,6 +13,7 @@ import cls.Aircraft;
 import cls.FlightPlan;
 import cls.Waypoint;
 
+@SuppressWarnings("serial")
 public class MultiplayerServer extends UnicastRemoteObject implements MultiplayerInterface {
 	String opponent_address;
 	Registry registry;

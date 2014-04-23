@@ -1,7 +1,5 @@
 package scn;
 
-import java.util.Random;
-
 import org.lwjgl.input.Keyboard;
 import org.newdawn.slick.Input;
 

@@ -21,7 +21,6 @@ import cls.HoldingWaypoint;
 import cls.OrdersBox;
 import cls.Waypoint;
 import cls.Waypoint.WaypointType;
-import cls.Lives;
 
 public class SinglePlayer extends Scene {
 

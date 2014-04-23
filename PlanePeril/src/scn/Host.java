@@ -7,8 +7,6 @@ import java.rmi.RemoteException;
 
 import pp.Main;
 import rem.HostServer;
-import rem.JoinClient;
-import lib.ButtonText;
 import lib.jog.graphics;
 import lib.jog.input;
 import lib.jog.window;

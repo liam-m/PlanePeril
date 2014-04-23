@@ -19,8 +19,6 @@ import org.newdawn.slick.Color;
 import scn.Scene;
 import scn.Title;
 
-import cls.Lives;
-
 /**
  * <h1>Main</h1>
  * <p>

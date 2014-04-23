@@ -142,7 +142,7 @@ public class Airport extends Waypoint {
 	}
 
 	public int getMaxAircraft() {
-		return this.MAX_AIRCRAFT_NUMBER;
+		return MAX_AIRCRAFT_NUMBER;
 	}
 	
 	public int getNumAircraft() {

@@ -13,7 +13,6 @@ import lib.jog.input;
 import lib.jog.window;
 import lib.jog.audio.Sound;
 import pp.Main;
-import rem.HostServer;
 import rem.JoinClient;
 
 public class Join extends Scene {

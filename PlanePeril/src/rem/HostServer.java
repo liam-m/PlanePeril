@@ -1,14 +1,11 @@
 package rem;
 
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
-
-import scn.Host;
-
+@SuppressWarnings("serial")
 public class HostServer extends UnicastRemoteObject implements HostInterface {
 	Registry registry; 
 	int port = 1729;
