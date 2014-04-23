@@ -748,23 +748,28 @@ public class Aircraft {
 
 		for (int i = 0; i < aircraft_list.size(); i++) {
 			Aircraft plane = aircraft_list.get(i);
-			if (plane != this && isWithin(plane, RADIUS)) {
-				has_finished = true;
-				return i;
-			} else if (plane != this && isWithin(plane, minimum_separation_distance)) {
-				// When separation rules are breached
-				planes_too_near.add(plane);
+			if (!has_finished) {
+				if (plane != this && isWithin(plane, RADIUS)) {
+					has_finished = true;
+					plane.has_finished = true;
+					return i;
+				} else if (plane != this && isWithin(plane, minimum_separation_distance)) {
+					// When separation rules are breached
+					planes_too_near.add(plane);
 
-				if (!collision_warning_sound_flag) {
-					collision_warning_sound_flag = true;
-					WARNING_SOUND.playSound();
-				}
-				if (!was_breaching_in_last_frame) {
-					was_breaching_in_last_frame = true;
-					num_points -= 20;
+					if (!collision_warning_sound_flag) {
+						collision_warning_sound_flag = true;
+						WARNING_SOUND.playSound();
+					}
+					if (!was_breaching_in_last_frame) {
+						was_breaching_in_last_frame = true;
+						num_points -= 20;
+					}
 				}
 			}
+			
 		}
+
 
 		if (planes_too_near.isEmpty()) {
 			collision_warning_sound_flag = false;

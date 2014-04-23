@@ -49,7 +49,8 @@ public class Multiplayer extends Scene {
 	
 	public PerformanceBar left_performance;
 	public PerformanceBar right_performance;
-	Lives left_lives, right_lives;
+	public Lives left_lives;
+	public Lives right_lives;
 	
 	OrdersBox orders_box;
 	AirportControlBox airport_control_box;
@@ -401,12 +402,10 @@ public class Multiplayer extends Scene {
 	 * @return
 	 */
 	public boolean isInputValid(int x, int y) {
-		if (y <= Y_POSITION_OF_BOTTOM_ELEMENTS) { // Clicked on bottom elements (i.e. below airspace)
-			return true;
-		} else if (is_left_player) {
-			return x <= window.getWidth()/2; // Left player can only click on left side of game screen
+		if (is_left_player) {
+			return x <= window.getWidth()/2 || y > Y_POSITION_OF_BOTTOM_ELEMENTS; // Left player can only click on left side of game screen
 		} else {
-			return x >= window.getWidth()/2; // Right player can only click on right side of game screen
+			return x >= window.getWidth()/2 || y > Y_POSITION_OF_BOTTOM_ELEMENTS; // Right player can only click on right side of game screen
 		}
 	}
 	/**
@@ -916,13 +915,16 @@ public class Multiplayer extends Scene {
 	 */
 	public void checkCollisions(double dt) {
 		for (Aircraft plane : aircraft) {
-			int collision_state = plane.updateCollisions(dt, aircraft);
+			if (isMine(plane)) {
+				int collision_state = plane.updateCollisions(dt, aircraft);
 
-			if (collision_state >= 0) {
-				playSound(audio.newSoundEffect("sfx" + File.separator + "crash.ogg"));
-				//TODO lives need to be subtracted. is it possible for both players to be in the wrong? A crash is between two or more planes! (dont decrement twice)
-			
-				return;
+				if (collision_state >= 0) {
+					playSound(audio.newSoundEffect("sfx" + File.separator + "crash.ogg"));
+					//TODO lives need to be subtracted. is it possible for both players to be in the wrong? A crash is between two or more planes! (dont decrement twice)
+					updateLives();
+		
+					return;
+				}
 			}
 		}
 	}
@@ -941,6 +943,14 @@ public class Multiplayer extends Scene {
 		//TODO what happens on game over?
 	}
 	
+	public void updateLives() {
+		if(is_left_player) {
+			left_lives.decrementLives();
+		} else {
+			right_lives.decrementLives();
+		}
+		server.sendlivesUpadte();
+	}
 	public void updatePerformance(int value) {
 		my_performance.changeValueBy(value);
 		server.sendChangePerformance(value);

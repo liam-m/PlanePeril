@@ -112,5 +112,25 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 		}
 		
 	}
+
+	//Notifying each game about a change to lives
+	
+	public void sendlivesUpadte() {
+		try {
+			multiplayer_interface.removeLife();
+		} catch (RemoteException e){
+			e.printStackTrace();
+		}
+	}
+	
+	@Override
+	public void removeLife() throws RemoteException {
+		if(left) {
+			game.right_lives.decrementLives();
+		} else {
+			game.left_lives.decrementLives();
+		}
+		
+	}
 	
 }
