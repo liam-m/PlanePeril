@@ -11,6 +11,7 @@ public class AirportControlBox implements EventHandler{
 	private int number_of_divisions;	
 	private double x_position, y_position, width, height;	
 	private boolean clicked = false;
+	public boolean signal_take_off = false;
 	
 	/**
 	 * Constructor for the control box
@@ -105,7 +106,7 @@ public class AirportControlBox implements EventHandler{
 	public void mouseReleased(int key, int x, int y) {
 		clicked = false;
 		if (key == input.MOUSE_LEFT && isMouseOverTakeOffButton(x, y)) {
-			airport.takeoff();
+			signal_take_off  = true;
 		}
 	}
 

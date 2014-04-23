@@ -78,6 +78,7 @@ public class Multiplayer extends Scene {
 	
 	private Airport my_airport;
 	private PerformanceBar my_performance;
+	private Waypoint[] my_waypoints;
 	
 	// Position of things drawn to window
 	final int Y_POSITION_OF_BOTTOM_ELEMENTS = window.getHeight() - 120;
@@ -168,6 +169,7 @@ public class Multiplayer extends Scene {
 	
 	public ArrayList<HoldingWaypoint> right_holding_waypoints = new ArrayList<HoldingWaypoint>();
 	
+	
 	public Multiplayer(Main main, String left_name, String right_name, String their_address, final boolean is_left) {
 		super(main);
 		this.left_name = left_name;
@@ -226,12 +228,14 @@ public class Multiplayer extends Scene {
 		left_lives = new Lives(LEFT_LIVES_X, LEFT_LIVES_Y);
 		right_lives = new Lives(RIGHT_LIVES_X, RIGHT_LIVES_Y);
 		
-		if (is_left) {
+		if (is_left_player) {
 			my_airport = left_airport;
 			my_performance = left_performance;
+			my_waypoints = left_waypoints;
 		} else {
 			my_airport = right_airport;
 			my_performance = right_performance;
+			my_waypoints = right_waypoints;
 		}
 		
 		airport_control_box = new AirportControlBox(AIRPORT_CONTROL_BOX_X, AIRPORT_CONTROL_BOX_Y, AIRPORT_CONTROL_BOX_W, AIRPORT_CONTROL_BOX_H, my_airport);
@@ -253,7 +257,7 @@ public class Multiplayer extends Scene {
 			@Override
 			public void action() {
 				// toggle land function
-				if(is_left) {
+				if(is_left_player) {
 					toggleLand(left_holding_waypoints.get(0));
 				} else {
 					toggleLand(right_holding_waypoints.get(0));
@@ -262,8 +266,8 @@ public class Multiplayer extends Scene {
 			}
 		};
 		
-		land_button = new ButtonText(Texts.LAND, land,
-				(window.getWidth() - 500) / 2, 32, 128, 32, 8, 4, false, true);
+		int x_pos = is_left_player ? window.getWidth()/4 : (window.getWidth()*3)/4; // vary where the land button appears for each player
+		land_button = new ButtonText(Texts.LAND, land, x_pos, 32, 128, 32, 8, 4, true, true);
 
 		timer = 0;
 		compass_dragged = false;
@@ -391,7 +395,11 @@ public class Multiplayer extends Scene {
 		if (flight_generation_time_elapsed >= flight_generation_interval) {
 			flight_generation_time_elapsed -= flight_generation_interval;
 			if (aircraft.size() < MAX_AIRCRAFT) {
-				generateFlight(false);
+				if (0 == RandomNumber.randInclusiveInt(0, 9)) { // 1 in 10 chance of spawning at the airport
+					my_airport.insertAircraft(createAircraft(false));
+				} else {
+					generateFlight(false);
+				}
 			}
 		}
 		
@@ -467,6 +475,7 @@ public class Multiplayer extends Scene {
 			deselectAircraft();
 
 		altimeter.mousePressed(key, x, y);
+		airport_control_box.mousePressed(key, x, y);
 	}
 	
 	@Override
@@ -478,19 +487,21 @@ public class Multiplayer extends Scene {
 		if (selected_aircraft != null && land_button.isMouseOver(x, y))
 			land_button.act();
 
-		if (key == input.MOUSE_LEFT && left_airport.isMouseOver(x - 16, y - 16)) {
+		airport_control_box.mouseReleased(key, x, y);
+		if (key == input.MOUSE_LEFT && my_airport.isMouseOver(x - 16, y - 16) || airport_control_box.signal_take_off) {
 			// must wait at least 5 seconds between aircraft takeoff
 			if (next_take_off - timer <= 0) {
 				try {
-					left_airport.takeoff();
+					my_airport.takeoff();
 					generateFlight(true);
 					next_take_off = timer + TAKEOFF_DELAY;
+					airport_control_box.signal_take_off = false;
 				} catch (IllegalStateException e) {
 					orders_box.addOrder("<<< There are no aircraft in the airport, Comrade.");
 				}
 			}
 		}
-
+		
 		if (key == input.MOUSE_LEFT && selected_waypoint != null) {
 
 			if (selected_aircraft.isManuallyControlled() == true) {
@@ -499,7 +510,7 @@ public class Multiplayer extends Scene {
 
 			} else {
 
-				for (Waypoint w : left_waypoints) {
+				for (Waypoint w : my_waypoints) {
 
 					if (w.isMouseOver(x - 16, y - 16)) {
 						selected_aircraft.alterPath(selected_pathpoint, w);
@@ -516,7 +527,7 @@ public class Multiplayer extends Scene {
 		}
 
 		altimeter.mouseReleased(key, x, y);
-
+		
 		if (compass_dragged && selected_aircraft != null) {
 			double dx = input.getMouseX() - selected_aircraft.getPosition().x();
 			double dy = input.getMouseY() - selected_aircraft.getPosition().y();
@@ -743,7 +754,7 @@ public class Multiplayer extends Scene {
 		graphics.setColour(255, 255, 255, 100);
 		graphics.draw(background, 0, 0);
 		
-		for (int i=0; i<left_waypoints.length; i++) { // Should be same length
+		for (int i=0; i<left_waypoints.length-1; i++) { // Should be same length
 			left_waypoints[i].draw();
 			right_waypoints[i].draw();
 		}
@@ -775,13 +786,7 @@ public class Multiplayer extends Scene {
 			// if aircraft is flying towards the airport (i.e. it's its
 			// destination point, draw the land button)
 			if (selected_aircraft.getFlightPlan().getDestination() instanceof Airport) {
-					// Land Button with valid altitude
-					graphics.setColour(0, 0, 0);
-					graphics.rectangle(true, (window.getWidth() - 500) / 2, 16, 128, 32);
-					graphics.setColour(Main.GREEN);
-					graphics.rectangle(false, (window.getWidth() - 500) / 2, 16, 128, 32);
-						
-					land_button.draw();
+				land_button.draw();
 			}
 			
 			graphics.setColour(Main.GREEN);
