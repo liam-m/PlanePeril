@@ -81,7 +81,7 @@ public class Aircraft {
 	 * @param flight_plan The flightplan, has the destination, origin and used to generate the actual route
 	 * @param preferred_altitude_index used when plane needs to be created in specific altitude. Set to -1 or less for choosing altitude randomly.
 	 */
-	public Aircraft(String name, Image img, double speed, int difficulty, FlightPlan flight_plan, int preferred_altitude_index) {
+	public Aircraft(String name, Image img, int speed, int difficulty, FlightPlan flight_plan, int preferred_altitude_index) {
 		this.name = name;
 		this.flight_plan = flight_plan;
 		this.image = img;
