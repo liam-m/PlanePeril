@@ -135,12 +135,6 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 	}
 
 	@Override
-	public void deselect() throws RemoteException {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void turnleft(double dt) throws RemoteException {
 		// TODO Auto-generated method stub
 		
