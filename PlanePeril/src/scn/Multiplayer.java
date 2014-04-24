@@ -568,7 +568,7 @@ public class Multiplayer extends Scene {
 			}
 			
 			// Send to other player
-			server.sendAircraft(from_airport, (int)(a.getInitialSpeed()), origin_index, destination_index, a.getTargetAltitudeIndex() ); 
+			server.sendAircraft(from_airport, a.getName(), (int)(a.getInitialSpeed()), origin_index, destination_index, a.getTargetAltitudeIndex() ); 
 		}	
 	}
 	
@@ -707,12 +707,6 @@ public class Multiplayer extends Scene {
 		}
 		if (key == input.KEY_Q) {
 			left_lives.decrementLives();
-		}
-		if (key == input.KEY_E) {
-			left_performance.changeValueBy(10);
-		}
-		if (key == input.KEY_R) {
-			left_performance.changeValueBy(-10);
 		}
 		if (key == input.KEY_T) {
 			
@@ -938,7 +932,7 @@ public class Multiplayer extends Scene {
 	public void updateLives() {
 		Lives my_lives = is_left_player ? left_lives : right_lives;
 		my_lives.decrementLives();
-		server.sendlivesUpadte();
+		server.sendlivesUpdate();
 		
 		// comment out this section if you want to avoid ending the game for testing
 		if (my_lives.getLives() == 0) {

@@ -54,9 +54,9 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 	// Notifying each game of a new aircraft
 	
 	// Server sending an aircraft
-	public void sendAircraft(boolean from_airport, int speed, int origin_waypoints_index, int destination_waypoints_index, int preferred_altitude_index) {
+	public void sendAircraft(boolean from_airport, String name, int speed, int origin_waypoints_index, int destination_waypoints_index, int preferred_altitude_index) {
 		try {
-			multiplayer_interface.addAircraft(from_airport, speed, origin_waypoints_index, destination_waypoints_index, preferred_altitude_index);
+			multiplayer_interface.addAircraft(from_airport, name, speed, origin_waypoints_index, destination_waypoints_index, preferred_altitude_index);
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
@@ -64,10 +64,7 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 	
 	// Receiving aircraft from other server
 	@Override
-	public void addAircraft(boolean from_airport, int speed, int origin_waypoints_index, int destination_waypoints_index, int preferred_altitude_index) {
-
-		String name = "Flight " + (int)(900 * Math.random() + 100);
-			
+	public void addAircraft(boolean from_airport, String name, int speed, int origin_waypoints_index, int destination_waypoints_index, int preferred_altitude_index) {	
 		if (left) {
 			Waypoint origin_point;
 			if (from_airport) {
@@ -114,7 +111,7 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 
 	//Notifying each game about a change to lives
 	
-	public void sendlivesUpadte() {
+	public void sendlivesUpdate() {
 		try {
 			multiplayer_interface.removeLife();
 		} catch (RemoteException e){
@@ -129,6 +126,36 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 		if (their_lives.getLives() == 0) {
 			game.gameOver(true);
 		}
+	}
+
+	@Override
+	public void selected(String name) throws RemoteException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void deselect() throws RemoteException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void turnleft(double dt) throws RemoteException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void turnRight(double dt) throws RemoteException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void changeAltitude(boolean ascend) throws RemoteException {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }
