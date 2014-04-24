@@ -11,6 +11,8 @@ import scn.Multiplayer;
 
 import cls.Aircraft;
 import cls.FlightPlan;
+import cls.Lives;
+import cls.PerformanceBar;
 import cls.Waypoint;
 
 @SuppressWarnings("serial")
@@ -106,12 +108,8 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 	
 	@Override
 	public void changePerformance(int value) throws RemoteException {
-		if (left) {
-			game.right_performance.changeValueBy(value);
-		} else {
-			game.left_performance.changeValueBy(value);
-		}
-		
+		PerformanceBar their_performance = left ? game.right_performance : game.left_performance;
+		their_performance.changeValueBy(value);
 	}
 
 	//Notifying each game about a change to lives
@@ -126,12 +124,11 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 	
 	@Override
 	public void removeLife() throws RemoteException {
-		if(left) {
-			game.right_lives.decrementLives();
-		} else {
-			game.left_lives.decrementLives();
+		Lives their_lives = left ? game.right_lives : game.left_lives;
+		their_lives.decrementLives();
+		if (their_lives.getLives() == 0) {
+			game.gameOver(true);
 		}
-		
 	}
 	
 }

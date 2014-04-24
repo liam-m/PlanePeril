@@ -938,13 +938,11 @@ public class Multiplayer extends Scene {
 	public void updateLives() {
 		Lives my_lives = is_left_player ? left_lives : right_lives;
 		my_lives.decrementLives();
+		server.sendlivesUpadte();
 		
 		// comment out this section if you want to avoid ending the game for testing
 		if (my_lives.getLives() == 0) {
 			gameOver(false);
-			// sendGameOver();
-		} else {
-			server.sendlivesUpadte();
 		}
 	}
 	public void updatePerformance(int value) {
