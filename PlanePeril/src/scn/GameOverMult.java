@@ -9,7 +9,6 @@ import lib.jog.input;
 import lib.jog.window;
 
 public class GameOverMult extends Scene {
-
 	boolean win;
 	
 	public GameOverMult(Main main, boolean win) {
@@ -19,13 +18,10 @@ public class GameOverMult extends Scene {
 	
 	@Override
 	public void draw() {
-		graphics.setColour(main.GREEN);
-		if (win) {
-			graphics.printTextCentred("You Win!", window.getWidth() / 4, 200, 20, 750);
-		} else {
-			graphics.printTextCentred("You lose!", window.getWidth() / 4, 200, 20, 750);
-		}
-		graphics.printTextCentred("press esc to return to the main menu", window.getWidth() /2 , window.getHeight() - 200, 3, 200);
+		graphics.setColour(Main.GREEN);
+		String text = win ? "You Win!" : "You Lose!";
+		graphics.printTextCentred(text, window.getWidth()/4, 200, 20, 750);
+		graphics.printTextCentred("Press any key to return to the main menu", window.getWidth()/2 , window.getHeight() - 200, 3, 200);
 
 	}
 	@Override
@@ -48,10 +44,7 @@ public class GameOverMult extends Scene {
 
 	@Override
 	public void keyReleased(int key) {
-		if (key == input.KEY_ESCAPE) {
-			main.closeScene();
-		}
-
+		main.closeScene();
 	}
 
 	@Override
@@ -64,9 +57,7 @@ public class GameOverMult extends Scene {
 	public void update(double time_difference) {
 		// TODO Auto-generated method stub
 
-	}
-
-	
+	}	
 
 	@Override
 	public void close() {
@@ -79,5 +70,4 @@ public class GameOverMult extends Scene {
 		// TODO Auto-generated method stub
 
 	}
-
 }
