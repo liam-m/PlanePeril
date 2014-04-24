@@ -2,7 +2,10 @@ package scn;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 
 import org.lwjgl.input.Keyboard;
 
@@ -13,7 +16,7 @@ import lib.jog.input;
 import lib.jog.window;
 import lib.jog.audio.Sound;
 import pp.Main;
-import rem.JoinClient;
+import rem.HostInterface;
 
 public class Join extends Scene {
 	
@@ -25,8 +28,6 @@ public class Join extends Scene {
 	
 	ButtonText join_button;
 	
-	JoinClient join_client;
-	
 	boolean could_not_connect = false;
 	boolean attempting_to_join = false;
 	
@@ -34,6 +35,8 @@ public class Join extends Scene {
 	private final int JOIN_Y_POSITION = 800;
 	private final int JOIN_WIDTH = 100;
 	private final int JOIN_HEIGHT = 25;
+	
+	int server_port = 1729;
 	
 	public Join(Main main, String player_name) {
 		super(main);
@@ -43,8 +46,18 @@ public class Join extends Scene {
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
-		
-		join_client = new JoinClient();
+	}
+	
+	public void connectToOpponent() throws RemoteException {
+		HostInterface host_interface;
+		Registry registry;
+		try {
+			registry = LocateRegistry.getRegistry(their_address, server_port);
+			host_interface = (HostInterface)(registry.lookup("host_server"));
+			their_name = host_interface.connect(this_address, player_name);
+		} catch (NotBoundException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@Override
@@ -55,7 +68,7 @@ public class Join extends Scene {
 				could_not_connect = false;
 				attempting_to_join = true;
 				try {
-					their_name = join_client.connect(their_address, this_address, player_name);
+					connectToOpponent();
 					main.setScene(new Multiplayer(main, player_name, their_name, their_address, false));
 				} catch (RemoteException e) {
 					could_not_connect = true;
