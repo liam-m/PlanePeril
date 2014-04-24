@@ -106,6 +106,9 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 	@Override
 	public void changePerformance(int value) throws RemoteException {
 		PerformanceBar their_performance = left ? game.right_performance : game.left_performance;
+		if (value >= their_performance.getMax()) {
+			their_performance.setMax();
+		}
 		their_performance.changeValueBy(value);
 	}
 
