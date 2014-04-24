@@ -25,10 +25,10 @@ public class PerformanceBar {
 		this.position_y = location_y;
 	}
 	
-	public void setMax() {
+	public void setMax() { // For wrap around (when reaches bottom)
 		current_value = MAX_VALUE;
 		drawn_value = MAX_VALUE;
-		}
+	}
 	
 	/**
 	 * Allows to change the value of performance bar - allows both incrementing and decrementing value
@@ -36,11 +36,9 @@ public class PerformanceBar {
 	 */
 	public void changeValueBy(int value) {
 		current_value += value;
-		// Can't be greater than max value
-		if (current_value > MAX_VALUE)
+		if (current_value > MAX_VALUE) // Can't be greater than max value
 			current_value = MAX_VALUE;
-		// Can't be smaller than min value
-		else if (current_value < MIN_VALUE) 
+		else if (current_value < MIN_VALUE) // Can't be smaller than min value 
 			current_value = MIN_VALUE;
 	}
 	
@@ -49,7 +47,7 @@ public class PerformanceBar {
 	 * @param value value that performance current_value is changed to if the value is allowed
 	 */
 	public void setValueTo(int value) {
-		if ((value <= MAX_VALUE) && (value >= MIN_VALUE))
+		if (value <= MAX_VALUE && value >= MIN_VALUE)
 			current_value = value;
 	}
 	
@@ -62,14 +60,12 @@ public class PerformanceBar {
 	 */
 	public void draw() {
 		graphics.setColour(Main.GREEN);
-		graphics.rectangle(false, position_x, position_y, BAR_WIDTH, BAR_HEIGHT); // draws the borders of the bar
+		graphics.rectangle(false, position_x, position_y, BAR_WIDTH, BAR_HEIGHT); // Bar borders
 			
 		if (current_value < drawn_value) {
 			graphics.setColour(Main.RED);
 			drawn_value -= 0.5;
-		}	
-
-		else { 
+		} else { 
 			if (this.current_value > drawn_value) 
 				drawn_value += 0.5;
 			
@@ -84,11 +80,9 @@ public class PerformanceBar {
 		}
 		
 		graphics.rectangle(true, position_x, position_y, BAR_WIDTH * drawn_value / MAX_VALUE, BAR_HEIGHT);
-		
 	}
 	
 	public boolean isEmpty() {
 		return (current_value == MIN_VALUE);
 	}
 }
-
