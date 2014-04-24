@@ -28,7 +28,9 @@ public class PerformanceBar {
 	public int getMax() {
 		return MAX_VALUE;
 	}
-	public void setMax() { // For wrap around (when reaches bottom)		current_value = MAX_VALUE;
+	
+	public void setToMax() { // For wrap around (when reaches bottom)		
+		current_value = MAX_VALUE;
 		drawn_value = MAX_VALUE;
 	}
 	
@@ -85,6 +87,6 @@ public class PerformanceBar {
 	}
 	
 	public boolean isEmpty() {
-		return (current_value == MIN_VALUE);
+		return (current_value <= MIN_VALUE);
 	}
 }

@@ -107,14 +107,14 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 	public void changePerformance(int value) throws RemoteException {
 		PerformanceBar their_performance = left ? game.right_performance : game.left_performance;
 		if (value >= their_performance.getMax()) {
-			their_performance.setMax();
+			their_performance.setToMax();
 		}
 		their_performance.changeValueBy(value);
 	}
 
 	//Notifying each game about a change to lives
 	
-	public void sendlivesUpdate() {
+	public void loseALife() {
 		try {
 			multiplayer_interface.removeLife();
 		} catch (RemoteException e){
@@ -125,7 +125,7 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 	@Override
 	public void removeLife() throws RemoteException {
 		Lives their_lives = left ? game.right_lives : game.left_lives;
-		their_lives.decrementLives();
+		their_lives.decrement();
 		if (their_lives.getLives() == 0) {
 			game.gameOver(true);
 		}

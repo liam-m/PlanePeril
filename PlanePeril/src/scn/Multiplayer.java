@@ -79,6 +79,8 @@ public class Multiplayer extends Scene {
 	private Airport my_airport;
 	private PerformanceBar my_performance;
 	private Waypoint[] my_waypoints;
+	private Lives my_lives;
+	private Waypoint[] my_entryexit_waypoints;
 	
 	// Position of things drawn to window
 	final int Y_POSITION_OF_BOTTOM_ELEMENTS = window.getHeight() - 120;
@@ -232,10 +234,14 @@ public class Multiplayer extends Scene {
 			my_airport = left_airport;
 			my_performance = left_performance;
 			my_waypoints = left_waypoints;
+			my_lives = left_lives;
+			my_entryexit_waypoints = left_entryexit_waypoints;
 		} else {
 			my_airport = right_airport;
 			my_performance = right_performance;
 			my_waypoints = right_waypoints;
+			my_lives = right_lives;
+			my_entryexit_waypoints = right_entryexit_waypoints;
 		}
 		
 		airport_control_box = new AirportControlBox(AIRPORT_CONTROL_BOX_X, AIRPORT_CONTROL_BOX_Y, AIRPORT_CONTROL_BOX_W, AIRPORT_CONTROL_BOX_H, my_airport);
@@ -398,8 +404,8 @@ public class Multiplayer extends Scene {
 		}
 		
 		if (my_performance.isEmpty()) {
-			updateLives();
-			my_performance.setMax();
+			loseALife();
+			my_performance.setToMax();
 			updatePerformance(my_performance.getCurrentValue()); 
 		}
 		
@@ -418,7 +424,8 @@ public class Multiplayer extends Scene {
 	 * @return
 	 */
 	public boolean isInputValid(int x, int y) {
-		return (is_left_player ? x <= window.getWidth()/2 : x >= window.getWidth()/2) ||  y > Y_POSITION_OF_BOTTOM_ELEMENTS;
+		return (is_left_player ? x <= window.getWidth()/2 : x >= window.getWidth()/2) // Clicked on player's half of the screen
+				||  y > Y_POSITION_OF_BOTTOM_ELEMENTS; // Clicked on bottom buttons
 	}
 	
 	/**
@@ -430,9 +437,7 @@ public class Multiplayer extends Scene {
 			return;
 		} 
 		
-		if (key == input.MOUSE_LEFT) {
-
-			
+		if (key == input.MOUSE_LEFT) {		
 			Aircraft new_selected = selected_aircraft;
 
 			for (Aircraft a : aircraft) {
@@ -449,7 +454,6 @@ public class Multiplayer extends Scene {
 			altimeter.show(selected_aircraft);
 
 			if (selected_aircraft != null) {
-
 				for (Waypoint w : left_waypoints) {
 					if (w.isMouseOver(x - 16, y - 16) && selected_aircraft.indexInFlightPath(w) > -1) {
 						selected_waypoint = w;
@@ -457,8 +461,7 @@ public class Multiplayer extends Scene {
 					}
 				}
 
-				if (selected_waypoint == null
-						&& selected_aircraft.isManuallyControlled()) {
+				if (selected_waypoint == null && selected_aircraft.isManuallyControlled()) {
 					// If mouse is over compass
 					double dx = selected_aircraft.getPosition().x() - input.getMouseX();
 					double dy = selected_aircraft.getPosition().y() - input.getMouseY();
@@ -467,7 +470,6 @@ public class Multiplayer extends Scene {
 						compass_dragged = true;
 					}
 				}
-
 			}
 		}
 
@@ -482,7 +484,7 @@ public class Multiplayer extends Scene {
 	public void mouseReleased(int key, int x, int y) {
 		if (!isInputValid(x, y)) {	
 			return;
-		} 
+		}
 		
 		if (selected_aircraft != null && land_button.isMouseOver(x, y))
 			land_button.act();
@@ -503,15 +505,10 @@ public class Multiplayer extends Scene {
 		}
 		
 		if (key == input.MOUSE_LEFT && selected_waypoint != null) {
-
 			if (selected_aircraft.isManuallyControlled() == true) {
-
 				return;
-
 			} else {
-
 				for (Waypoint w : my_waypoints) {
-
 					if (w.isMouseOver(x - 16, y - 16)) {
 						selected_aircraft.alterPath(selected_pathpoint, w);
 						orders_box.addOrder(">>> " + selected_aircraft.getName() + " please alter your course");
@@ -540,8 +537,7 @@ public class Multiplayer extends Scene {
 	}
 	
 
-	public void generateFlight(boolean from_airport) {
-		
+	public void generateFlight(boolean from_airport) {		
 		Aircraft a = createAircraft(from_airport);
 		if (a != null) {
 			// Add aircraft to self
@@ -557,13 +553,11 @@ public class Multiplayer extends Scene {
 			int origin_index = 0;
 			int destination_index = 0;
 			
-			Waypoint[] my_entryexit_points = is_left_player ? left_entryexit_waypoints: right_entryexit_waypoints;
-
-			for (int i = 0; i < my_entryexit_points.length; i++) {
-				if (a.getFlightPlan().getOrigin().equals(my_entryexit_points[i])) {
+			for (int i = 0; i < my_entryexit_waypoints.length; i++) {
+				if (a.getFlightPlan().getOrigin().equals(my_entryexit_waypoints[i])) {
 						origin_index = i;
 				}
-				if (a.getFlightPlan().getDestination().equals(my_entryexit_points[i])) {
+				if (a.getFlightPlan().getDestination().equals(my_entryexit_waypoints[i])) {
 						destination_index = i;
 				}
 			}
@@ -577,17 +571,17 @@ public class Multiplayer extends Scene {
  	 * List that helps to prevent spawning a plane in waypoint if any plane is currently going towards it 
  	 * or any plane is less than 300 from it.
  	 */
-	private java.util.ArrayList<Waypoint> getAvailableEntryPoints() {
-		java.util.ArrayList<Waypoint> available_entry_points = new java.util.ArrayList<Waypoint>();
-		Waypoint[] test_points = is_left_player ? left_entryexit_waypoints: right_entryexit_waypoints;
+	private ArrayList<Waypoint> getAvailableEntryPoints() {
+		ArrayList<Waypoint> available_entry_points = new ArrayList<Waypoint>();
 
-		for (Waypoint entry_point : test_points) {
+		for (Waypoint entry_point : my_entryexit_waypoints) {
 			boolean is_available = true;
 			for (Aircraft a : aircraft) {
 				// Check if any plane is currently going towards the exit point/chosen originPoint
 				// Check if any plane is less than what is defined as too close from the chosen originPoint
 				if (a.getCurrentTarget().equals(entry_point.position()) || a.isCloseToEntry(entry_point.position())) {
 					is_available = false;
+					break;
 		 		}	
 		 	}
 			if (is_available) {
@@ -602,19 +596,12 @@ public class Multiplayer extends Scene {
  	 * declining entry point even if the altitude difference is high, it returns the altitude levels for specific waypoints that are 
  	 * valid for creating planes in them. Mod 3 of result gives offset in altitude_list and /3 gives specific entry point.
  	 */
-	private java.util.ArrayList<Integer> getIdAvailableEntryPointsAltitudes() {
-		java.util.ArrayList<Integer> available_id_entry_points_altitudes = new java.util.ArrayList<Integer>();
-		Waypoint[] my_entryexit_points;
-	
-		if(is_left_player) {
-			my_entryexit_points = left_entryexit_waypoints;
-		} else {
-			my_entryexit_points = right_entryexit_waypoints;
-		}
+	private ArrayList<Integer> getIdAvailableEntryPointsAltitudes() {
+		ArrayList<Integer> available_id_entry_points_altitudes = new ArrayList<Integer>();
 		
 		int base_id = -1;
 		// checks all waypoints and all altitudes
-		for (Waypoint entry_point : my_entryexit_points) {
+		for (Waypoint entry_point : my_entryexit_waypoints) {
 			base_id++;
 			if (entry_point != my_airport) { // Airport is excluded as it is said initially whether it should come from airport or elsewhere
 				for (int i = 1; i < Aircraft.altitude_list.size(); i++) { // Starts from 1 as the first in the altitude_list is 100 which is not considered
@@ -625,6 +612,7 @@ public class Multiplayer extends Scene {
 						if (a.getCurrentTarget().equals(entry_point.position()) ||
 								((Math.abs(a.getPosition().z() - Aircraft.altitude_list.get(i)) < 1000) && a.isCloseToEntry(entry_point.position()))) {
 							is_available = false;
+							break;
 						}	
 					}
 					if (is_available) { 
@@ -645,30 +633,26 @@ public class Multiplayer extends Scene {
 	 */
 	private Aircraft createAircraft(boolean fromAirport) {
 		int preferred_altitude_index = -1;
-		int destination = RandomNumber.randInclusiveInt(0, left_entryexit_waypoints.length - 1);
+		int destination = RandomNumber.randInclusiveInt(0, my_entryexit_waypoints.length - 1);
 		int origin = 0; // 0 is default, it is chosen later on (initialized as compiler would otherwise complain)
 		Waypoint origin_point; 
-		java.util.ArrayList<Waypoint> available_origins = getAvailableEntryPoints();
-		
-		Waypoint[] my_entryexit_points = is_left_player ? left_entryexit_waypoints: right_entryexit_waypoints;
+		ArrayList<Waypoint> available_origins = getAvailableEntryPoints();
 		
 		if (fromAirport) {
 			origin_point = my_airport;		
-		}
-		else {
+		} else {
 			if (available_origins.isEmpty()) { // Creates a plane in waypoint with planes of different altitude than that of the new plane.
 				if (getIdAvailableEntryPointsAltitudes().size() == 0)
 					return null;
-				java.util.ArrayList<Integer> available_id_entry_points_altitudes = getIdAvailableEntryPointsAltitudes();
+				ArrayList<Integer> available_id_entry_points_altitudes = getIdAvailableEntryPointsAltitudes();
 				int id = available_id_entry_points_altitudes.get(RandomNumber.randInclusiveInt(0, available_id_entry_points_altitudes.size()-1));
 				origin = id / 3; // Calculates id of a waypoint
-				origin_point = my_entryexit_points[origin]; 
+				origin_point = my_entryexit_waypoints[origin]; 
 				preferred_altitude_index = id % 3 + 1; // Calculates id for altitude_list (1 is added as the first item on the list is solely for creating from airports)
-			}
-			else { // Creates a plane in waypoint with no planes nearby
+			} else { // Creates a plane in waypoint with no planes nearby
 				origin_point = available_origins.get(RandomNumber.randInclusiveInt(0, available_origins.size()-1)); 
-				for (int i = 0; i < my_entryexit_points.length; i++) { // getting id for an entry point
-					if (my_entryexit_points[i].equals(origin_point)) {
+				for (int i = 0; i < my_entryexit_waypoints.length; i++) { // getting id for an entry point
+					if (my_entryexit_waypoints[i].equals(origin_point)) {
 						origin = i;
 						break;
 					}
@@ -677,21 +661,21 @@ public class Multiplayer extends Scene {
 		}
 		
 		// Making sure origin and destination aren't the same
-		while (my_entryexit_points[destination].equals(my_entryexit_points[origin]) || fromAirport && my_entryexit_points[destination] instanceof Airport) {
-			destination = RandomNumber.randInclusiveInt(0, my_entryexit_points.length - 1);
+		while (my_entryexit_waypoints[destination].equals(my_entryexit_waypoints[origin]) || fromAirport && my_entryexit_waypoints[destination] instanceof Airport) {
+			destination = RandomNumber.randInclusiveInt(0, my_entryexit_waypoints.length - 1);
 		}			
 		
-		Waypoint destination_point = my_entryexit_points[destination];
-		// Name
+		Waypoint destination_point = my_entryexit_waypoints[destination];
+
 		String name = "";
-		boolean name_is_taken = true;
-		while (name_is_taken) {
+		do { // Find a unique name
 			name = "Flight " + (int)(900 * Math.random() + 100);
-			name_is_taken = false;
 			for (Aircraft a : aircraft) {
-				if (a.getName() == name) name_is_taken = true;
+				if (a.getName() == name) 
+					continue;
 			}
-		}
+			break;
+		} while (true);
 		if (is_left_player) {
 			return new Aircraft(name, aircraft_image, 32 + (int) (10 * Math.random()), 1, new FlightPlan(origin_point, 
 					destination_point, left_waypoints, left_holding_waypoints, left_airport_takeoff_waypoint), preferred_altitude_index);
@@ -705,11 +689,9 @@ public class Multiplayer extends Scene {
 	public void keyPressed(int key) {
 		if (key == input.KEY_ESCAPE) {
 			main.closeScene();
-		}
-		if (key == input.KEY_Q) {
-			left_lives.decrementLives();
-		}
-		if (key == input.KEY_T) {
+		} else if (key == input.KEY_Q) {
+			left_lives.decrement();
+		} else if (key == input.KEY_T) {
 			
 		}
 	}
@@ -907,7 +889,7 @@ public class Multiplayer extends Scene {
 					if (collision_state >= 0) {
 						playSound(audio.newSoundEffect("sfx" + File.separator + "crash.ogg"));
 						//TODO lives need to be subtracted. is it possible for both players to be in the wrong? A crash is between two or more planes! (dont decrement twice)
-						updateLives();
+						loseALife();
 		
 						return;
 					}
@@ -930,10 +912,9 @@ public class Multiplayer extends Scene {
 		main.setScene(new GameOverMult(main, win));
 	}
 	
-	public void updateLives() {
-		Lives my_lives = is_left_player ? left_lives : right_lives;
-		my_lives.decrementLives();
-		server.sendlivesUpdate();
+	public void loseALife() {
+		my_lives.decrement();
+		server.loseALife();
 		
 		// comment out this section if you want to avoid ending the game for testing
 		if (my_lives.getLives() == 0) {
@@ -949,13 +930,11 @@ public class Multiplayer extends Scene {
 		if (aircraft.getFlightPlan().getDestination().equals(my_airport)) {
 			return true;
 		}
-		Waypoint[] my_waypoints = is_left_player ? left_entryexit_waypoints : right_entryexit_waypoints;
-		for (Waypoint w : my_waypoints) {
-			if(aircraft.getFlightPlan().getDestination().equals(w)) {
+		for (Waypoint w : my_entryexit_waypoints) {
+			if (aircraft.getFlightPlan().getDestination().equals(w)) {
 				return true;
 			}
 		}
 		return false;
 	}
-
 }
