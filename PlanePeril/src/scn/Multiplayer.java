@@ -400,6 +400,7 @@ public class Multiplayer extends Scene {
 		if (my_performance.isEmpty()) {
 			updateLives();
 			my_performance.setMax();
+			updatePerformance(my_performance.getCurrentValue() + 1000); // 1000 just to make sure it starts at maximum 
 		}
 		
 		// Update from server

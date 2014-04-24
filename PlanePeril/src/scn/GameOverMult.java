@@ -48,10 +48,7 @@ public class GameOverMult extends Scene {
 
 	@Override
 	public void keyReleased(int key) {
-		if (key == input.KEY_ESCAPE) {
-			main.closeScene();
-		}
-
+		main.closeScene();
 	}
 
 	@Override
