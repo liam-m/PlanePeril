@@ -14,5 +14,6 @@ public interface MultiplayerInterface extends Remote {
 	void turnleft(double dt) throws RemoteException;
 	void turnRight(double dt) throws RemoteException;
 	void changeAltitude(boolean ascend) throws RemoteException;
+	void alterPath(int selectedPathpoint, int waypoint_index) throws RemoteException;
 	
 }

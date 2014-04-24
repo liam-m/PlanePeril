@@ -47,6 +47,7 @@ public class Multiplayer extends Scene {
 	
 	public ArrayList<Aircraft> aircraft = new ArrayList<Aircraft>();
 	Aircraft selected_aircraft;
+	public Aircraft their_selected;
 	
 	public PerformanceBar left_performance;
 	public PerformanceBar right_performance;
@@ -170,7 +171,6 @@ public class Multiplayer extends Scene {
 	};
 	
 	public ArrayList<HoldingWaypoint> right_holding_waypoints = new ArrayList<HoldingWaypoint>();
-	
 	
 	public Multiplayer(Main main, String left_name, String right_name, String their_address, final boolean is_left) {
 		super(main);
@@ -371,9 +371,11 @@ public class Multiplayer extends Scene {
 
 			if (input.isKeyDown(input.KEY_LEFT) || input.isKeyDown(input.KEY_A)) {
 				selected_aircraft.turnLeft(dt);
+				server.sendTurnLeft(dt);
 				is_manually_controlling = true;
 			} else if (input.isKeyDown(input.KEY_RIGHT) || input.isKeyDown(input.KEY_D)) {
 				selected_aircraft.turnRight(dt);
+				server.sendTurnRight(dt);
 				is_manually_controlling = true;
 			}
 
@@ -452,7 +454,11 @@ public class Multiplayer extends Scene {
 			}
 
 			altimeter.show(selected_aircraft);
-
+			
+			if (selected_aircraft != null) {
+				server.sendSelected(selected_aircraft.getName());
+			}
+			
 			if (selected_aircraft != null) {
 				for (Waypoint w : left_waypoints) {
 					if (w.isMouseOver(x - 16, y - 16) && selected_aircraft.indexInFlightPath(w) > -1) {
@@ -508,9 +514,10 @@ public class Multiplayer extends Scene {
 			if (selected_aircraft.isManuallyControlled() == true) {
 				return;
 			} else {
-				for (Waypoint w : my_waypoints) {
-					if (w.isMouseOver(x - 16, y - 16)) {
-						selected_aircraft.alterPath(selected_pathpoint, w);
+				for (int i = 0; i < my_waypoints.length; i++) {
+					if (my_waypoints[i].isMouseOver(x - 16, y - 16)) {
+						selected_aircraft.alterPath(selected_pathpoint, my_waypoints[i]);
+						server.sendAlterPath(selected_pathpoint, i);
 						orders_box.addOrder(">>> " + selected_aircraft.getName() + " please alter your course");
 						orders_box.addOrder("<<< Roger that. Altering course now.");
 						selected_pathpoint = -1;
@@ -563,7 +570,7 @@ public class Multiplayer extends Scene {
 			}
 			
 			// Send to other player
-			server.sendAircraft(from_airport, a.getName(), (int)(a.getInitialSpeed()), origin_index, destination_index, a.getTargetAltitudeIndex() ); 
+			server.sendAddAircraft(from_airport, a.getName(), (int)(a.getInitialSpeed()), origin_index, destination_index, a.getTargetAltitudeIndex() ); 
 		}	
 	}
 	
@@ -685,14 +692,11 @@ public class Multiplayer extends Scene {
 		}
 		
 	}
+	
 	@Override
 	public void keyPressed(int key) {
 		if (key == input.KEY_ESCAPE) {
 			main.closeScene();
-		} else if (key == input.KEY_Q) {
-			left_lives.decrement();
-		} else if (key == input.KEY_T) {
-			
 		}
 	}
 	
@@ -702,14 +706,18 @@ public class Multiplayer extends Scene {
 
 		case input.KEY_S:
 		case input.KEY_DOWN:
-			if (selected_aircraft != null)
+			if (selected_aircraft != null) {
 				selected_aircraft.decreaseTargetAltitude();
+				server.sendChangeAltitude(false);
+			}	
 			break;
 
 		case input.KEY_W:
 		case input.KEY_UP:
-			if (selected_aircraft != null)
+			if (selected_aircraft != null) {
 				selected_aircraft.increaseTargetAltitude();
+				server.sendChangeAltitude(true);				
+			}
 			break;
 
 		case input.KEY_SPACE:
@@ -914,9 +922,8 @@ public class Multiplayer extends Scene {
 	
 	public void loseALife() {
 		my_lives.decrement();
-		server.loseALife();
+		server.sendRemoveLife();
 		
-		// comment out this section if you want to avoid ending the game for testing
 		if (my_lives.getLives() == 0) {
 			gameOver(false);
 		}

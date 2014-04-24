@@ -54,7 +54,7 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 	// Notifying each game of a new aircraft
 	
 	// Server sending an aircraft
-	public void sendAircraft(boolean from_airport, String name, int speed, int origin_waypoints_index, int destination_waypoints_index, int preferred_altitude_index) {
+	public void sendAddAircraft(boolean from_airport, String name, int speed, int origin_waypoints_index, int destination_waypoints_index, int preferred_altitude_index) {
 		try {
 			multiplayer_interface.addAircraft(from_airport, name, speed, origin_waypoints_index, destination_waypoints_index, preferred_altitude_index);
 		} catch (RemoteException e) {
@@ -114,7 +114,7 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 
 	//Notifying each game about a change to lives
 	
-	public void loseALife() {
+	public void sendRemoveLife() {
 		try {
 			multiplayer_interface.removeLife();
 		} catch (RemoteException e){
@@ -131,27 +131,79 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 		}
 	}
 
+	public void sendSelected(String name) {
+		try {
+			multiplayer_interface.selected(name);
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	@Override
 	public void selected(String name) throws RemoteException {
-		// TODO Auto-generated method stub
-		
+		for (Aircraft plane : game.aircraft) {
+			if (plane.getName().equals(name)) {
+				game.their_selected = plane;
+				break;
+			}
+		}
 	}
 
+	public void sendTurnLeft(double dt) {
+		try {
+			multiplayer_interface.turnleft(dt);
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	@Override
 	public void turnleft(double dt) throws RemoteException {
-		// TODO Auto-generated method stub
-		
+		game.their_selected.turnLeft(dt);
 	}
 
+	public void sendTurnRight(double dt) {
+		try {
+			multiplayer_interface.turnRight(dt);
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	@Override
 	public void turnRight(double dt) throws RemoteException {
-		// TODO Auto-generated method stub
-		
+		game.their_selected.turnRight(dt);
 	}
 
+	public void sendChangeAltitude(boolean ascend) {
+		try {
+			multiplayer_interface.changeAltitude(ascend);
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	@Override
 	public void changeAltitude(boolean ascend) throws RemoteException {
-		// TODO Auto-generated method stub
+		if (ascend) {
+			game.their_selected.increaseTargetAltitude();
+		} else {
+			game.their_selected.decreaseTargetAltitude();
+		}
+	}
+
+	public void sendAlterPath(int selected_pathpoint, int waypoint_index) {
+		try {
+			multiplayer_interface.alterPath(selected_pathpoint, waypoint_index);
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Override
+	public void alterPath(int selected_pathpoint, int waypoint_index) throws RemoteException {
+		Waypoint[] their_waypoints = left ? game.right_waypoints : game.left_waypoints;
+		game.their_selected.alterPath(selected_pathpoint, their_waypoints[waypoint_index]);
 		
 	}
 	
