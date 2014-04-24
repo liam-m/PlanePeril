@@ -25,6 +25,10 @@ public class PerformanceBar {
 		this.position_y = location_y;
 	}
 	
+	public int getMax() {
+		return MAX_VALUE;
+	}
+	
 	public void setMax() {
 		current_value = MAX_VALUE;
 		drawn_value = MAX_VALUE;
