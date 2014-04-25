@@ -357,6 +357,8 @@ public class Multiplayer extends Scene {
 				if (aircraft.get(i).equals(selected_aircraft)) {
 					deselectAircraft();
 				}
+				// make sure you notify the server of which aircraft is to be removed BEFORE it is removed
+				server.sendRemoveAircraft(aircraft.get(i).getName());
 				aircraft.remove(i);
 				i--;
 				
@@ -386,8 +388,6 @@ public class Multiplayer extends Scene {
 			// allows to take control by just pressing left/right or A/D
 			//selected_aircraft.setManualControl(is_manually_controlling); // Think this is redundant 
 
-			// Check if the aircraft is out of bounds. If true, remove aircraft
-			// from play.
 			if (selected_aircraft.isOutOfBounds()) {
 				//TODO update this order to something witty
 				orders_box.addOrder(">>> " + selected_aircraft.getName() + " is out of bounds, contact lost. Do better Comrade.");
