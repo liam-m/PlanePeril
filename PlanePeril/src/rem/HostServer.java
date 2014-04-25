@@ -1,5 +1,6 @@
 package rem;
 
+import java.rmi.NoSuchObjectException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -42,5 +43,13 @@ public class HostServer extends UnicastRemoteObject implements HostInterface {
 		this.their_name = their_name;
 		has_connected = true;
 		return my_name;
+	}
+	
+	public void close() {
+		try {
+			UnicastRemoteObject.unexportObject(registry, true);
+		} catch (NoSuchObjectException e) {
+			e.printStackTrace();
+		}
 	}
 }

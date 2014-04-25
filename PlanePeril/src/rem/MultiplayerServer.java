@@ -164,6 +164,7 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 	}
 
 	public void sendTurnLeft(double dt) {
+		System.out.println(dt);
 		try {
 			multiplayer_interface.turnleft(dt);
 		} catch (RemoteException e) {
@@ -173,6 +174,7 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 	
 	@Override
 	public void turnleft(double dt) throws RemoteException {
+		game.their_selected.setManualControl(true);
 		game.their_selected.turnLeft(dt);
 	}
 
@@ -186,6 +188,7 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 	
 	@Override
 	public void turnRight(double dt) throws RemoteException {
+		game.their_selected.setManualControl(true);
 		game.their_selected.turnRight(dt);
 	}
 
@@ -218,7 +221,18 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 	public void alterPath(int selected_pathpoint, int waypoint_index) throws RemoteException {
 		Waypoint[] their_waypoints = left ? game.right_waypoints : game.left_waypoints;
 		game.their_selected.alterPath(selected_pathpoint, their_waypoints[waypoint_index]);
-		
 	}
 	
+	public void sendToggleManualControl() {
+		try {
+			multiplayer_interface.toggleManualControl();
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void toggleManualControl() {
+		game.their_selected.toggleManualControl();
+	}
 }
