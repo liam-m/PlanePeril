@@ -370,17 +370,21 @@ public class Multiplayer extends Scene {
 		if (selected_aircraft != null) {
 
 			if (input.isKeyDown(input.KEY_LEFT) || input.isKeyDown(input.KEY_A)) {
+				if (!selected_aircraft.isManuallyControlled()) {
+					toggleManualControl();
+				}
 				selected_aircraft.turnLeft(dt);
 				server.sendTurnLeft(dt);
-				is_manually_controlling = true;
 			} else if (input.isKeyDown(input.KEY_RIGHT) || input.isKeyDown(input.KEY_D)) {
+				if (!selected_aircraft.isManuallyControlled()) {
+					toggleManualControl();
+				}
 				selected_aircraft.turnRight(dt);
 				server.sendTurnRight(dt);
-				is_manually_controlling = true;
 			}
 
 			// allows to take control by just pressing left/right or A/D
-			selected_aircraft.setManualControl(is_manually_controlling);
+			//selected_aircraft.setManualControl(is_manually_controlling); // Think this is redundant 
 
 			// Check if the aircraft is out of bounds. If true, remove aircraft
 			// from play.
@@ -388,7 +392,6 @@ public class Multiplayer extends Scene {
 				//TODO update this order to something witty
 				orders_box.addOrder(">>> " + selected_aircraft.getName() + " is out of bounds, contact lost. Do better Comrade.");
 				deselectAircraft();
-				is_manually_controlling = false;
 			}
 
 		}
@@ -439,7 +442,7 @@ public class Multiplayer extends Scene {
 			return;
 		} 
 		
-		if (key == input.MOUSE_LEFT) {		
+		if (key == input.MOUSE_LEFT) {
 			Aircraft new_selected = selected_aircraft;
 
 			for (Aircraft a : aircraft) {
@@ -708,7 +711,7 @@ public class Multiplayer extends Scene {
 			if (selected_aircraft != null) {
 				selected_aircraft.decreaseTargetAltitude();
 				server.sendChangeAltitude(false);
-			}	
+			}
 			break;
 
 		case input.KEY_W:
@@ -721,8 +724,7 @@ public class Multiplayer extends Scene {
 
 		case input.KEY_SPACE:
 			toggleManualControl();
-			break;
-			
+			break;			
 		}
 	}
 
@@ -847,9 +849,9 @@ public class Multiplayer extends Scene {
 		if (selected_aircraft == null)
 			return;
 
+		server.sendToggleManualControl();
 		is_manually_controlling = !is_manually_controlling;
 		selected_aircraft.toggleManualControl();
-
 	}
 	
 	
@@ -928,6 +930,7 @@ public class Multiplayer extends Scene {
 			gameOver(false);
 		}
 	}
+
 	public void updatePerformance(int value) {
 		my_performance.changeValueBy(value);
 		server.sendChangePerformance(value);
