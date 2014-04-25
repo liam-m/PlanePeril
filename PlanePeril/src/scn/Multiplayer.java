@@ -132,6 +132,12 @@ public class Multiplayer extends Scene {
 			new Waypoint(8, window.getHeight() - 190, WaypointType.ENTRY_EXIT),
 			new Waypoint((window.getWidth()/4), window.getHeight() - 190, WaypointType.ENTRY_EXIT),
 			new Waypoint((window.getWidth()/2 - 20), window.getHeight() - 190, WaypointType.ENTRY_EXIT),
+			
+			// Hand over points
+			new Waypoint((window.getWidth()/2 - 20), window.getHeight()/3, WaypointType.ENTRY_EXIT),
+			new Waypoint((window.getWidth()/2 - 20), (window.getHeight() *2)/3, WaypointType.ENTRY_EXIT),
+			
+			// Airport
 			left_airport
 	};
 	
@@ -147,29 +153,17 @@ public class Multiplayer extends Scene {
 			new Waypoint((window.getWidth()/2 + 20), window.getHeight() - 190, WaypointType.ENTRY_EXIT),
 			new Waypoint(((window.getWidth()* 3)/4), window.getHeight() - 190, WaypointType.ENTRY_EXIT),
 			new Waypoint(window.getWidth() - 40, window.getHeight() - 190, WaypointType.ENTRY_EXIT),
+			
+			// Hand over points
+			new Waypoint((window.getWidth()/2 + 20), window.getHeight()/3, WaypointType.ENTRY_EXIT),
+			new Waypoint((window.getWidth()/2 + 20), (window.getHeight() *2)/3, WaypointType.ENTRY_EXIT),
+						
+			// Airport
 			right_airport
 	 };
 	
-	// All aircraft taking off must go through this waypoint, allows for
-	// aircraft to take off in one direction all the time
-	private final Waypoint left_takeoff_waypoint = new Waypoint(left_airport.position().x() - 120, left_airport.position().y());
-
-	// All aircraft that land must pass through this waypoint.
-	private final HoldingWaypoint[] left_land_waypoints = {
-		new HoldingWaypoint(left_airport.position().x() + 200, left_airport.position().y()),
-		new HoldingWaypoint(left_airport.position().x() + 150, left_airport.position().y()),
-	};
-	
 	public ArrayList<HoldingWaypoint> left_holding_waypoints = new ArrayList<HoldingWaypoint>();
-	
-	// Same functionality as above for the 2nd player's airport
-	private final Waypoint right_takeoff_waypoint = new Waypoint(right_airport.position().x() - 120, right_airport.position().y());
 
-	private final HoldingWaypoint[] right_land_waypoints = {
-		new HoldingWaypoint(right_airport.position().x() + 200, right_airport.position().y()),
-		new HoldingWaypoint(right_airport.position().x() + 150, right_airport.position().y()),
-	};
-	
 	public ArrayList<HoldingWaypoint> right_holding_waypoints = new ArrayList<HoldingWaypoint>();
 	
 	public Multiplayer(Main main, String left_name, String right_name, String their_address, final boolean is_left) {
@@ -194,6 +188,8 @@ public class Multiplayer extends Scene {
 			left_entryexit_waypoints[3],
 			left_entryexit_waypoints[4],
 			left_entryexit_waypoints[5],
+			left_entryexit_waypoints[6],
+			left_entryexit_waypoints[7],
 			left_airport
 		};
 		right_waypoints = new Waypoint[]{
@@ -210,6 +206,8 @@ public class Multiplayer extends Scene {
 			right_entryexit_waypoints[3],
 			right_entryexit_waypoints[4],
 			right_entryexit_waypoints[5],
+			right_entryexit_waypoints[6],
+			right_entryexit_waypoints[7],
 			right_airport
 		};
 		
@@ -592,8 +590,12 @@ public class Multiplayer extends Scene {
  	 */
 	private ArrayList<Waypoint> getAvailableEntryPoints() {
 		ArrayList<Waypoint> available_entry_points = new ArrayList<Waypoint>();
-
+		Waypoint my_blocked_entry = is_left_player ? left_entryexit_waypoints[7] : right_entryexit_waypoints[6];	
+		
 		for (Waypoint entry_point : my_entryexit_waypoints) {
+			if (entry_point.equals(my_blocked_entry)) {
+				continue;
+			}
 			boolean is_available = true;
 			for (Aircraft a : aircraft) {
 				// Check if any plane is currently going towards the exit point/chosen originPoint
@@ -607,6 +609,11 @@ public class Multiplayer extends Scene {
 				available_entry_points.add(entry_point);
 		 	}	
 		}
+		// Skip the "air channel" entry point  
+				
+		for (int i = 0; i < available_entry_points.size(); i++) {
+			
+		} 
 		return available_entry_points;
 	}
 	
