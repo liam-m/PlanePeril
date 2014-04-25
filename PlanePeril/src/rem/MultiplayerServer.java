@@ -164,7 +164,6 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 	}
 
 	public void sendTurnLeft(double dt) {
-		System.out.println(dt);
 		try {
 			multiplayer_interface.turnleft(dt);
 		} catch (RemoteException e) {
@@ -174,7 +173,6 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 	
 	@Override
 	public void turnleft(double dt) throws RemoteException {
-		game.their_selected.setManualControl(true);
 		game.their_selected.turnLeft(dt);
 	}
 
@@ -188,7 +186,6 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 	
 	@Override
 	public void turnRight(double dt) throws RemoteException {
-		game.their_selected.setManualControl(true);
 		game.their_selected.turnRight(dt);
 	}
 
