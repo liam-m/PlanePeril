@@ -28,6 +28,7 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 	Multiplayer game;
 	
 	public ArrayList<Aircraft> aircraft_queue = new ArrayList<Aircraft>();
+	public ArrayList<Aircraft> removal_queue = new ArrayList<Aircraft>();
 	
 	boolean left;
 
@@ -247,7 +248,7 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 			if (game.aircraft.get(i).getName().equals(name)) {
 				if (game.aircraft.get(i).equals(game.selected_aircraft))
 					game.deselectAircraft();
-				game.aircraft.remove(i);
+				removal_queue.add(game.aircraft.get(i));
 				break;
 			}
 		}

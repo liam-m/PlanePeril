@@ -419,6 +419,16 @@ public class Multiplayer extends Scene {
 			aircraft.add(a);
 		}
 		server.aircraft_queue.clear();
+		
+		for (Aircraft a : server.removal_queue) {
+			for (int i = 0; i < aircraft.size(); i++) {
+				if (a.equals(aircraft.get(i))) {
+					aircraft.remove(i);
+					break;
+				}
+			}
+		}
+		server.removal_queue.clear();
 	}
 
 	/**
