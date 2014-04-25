@@ -28,6 +28,8 @@ import lib.jog.graphics.Image;
 import lib.jog.window;
 
 public class Multiplayer extends Scene {
+	private static final int VIEWPORT_OFFSET_X = 16;
+	private static final int VIEWPORT_OFFSET_Y = 40;
 	
 	private static final double DEDUCTION_TIME_DELAY = 0.5;
 	final int MAX_AIRCRAFT = 20;
@@ -456,7 +458,7 @@ public class Multiplayer extends Scene {
 			Aircraft new_selected = selected_aircraft;
 
 			for (Aircraft a : aircraft) {
-				if (a.isMouseOver(x - 16, y - 16)) { // TODO these -16 could be offsets?
+				if (a.isMouseOver(x - VIEWPORT_OFFSET_X, y - VIEWPORT_OFFSET_Y)) {
 					new_selected = a;
 				}
 			}
@@ -471,7 +473,7 @@ public class Multiplayer extends Scene {
 			
 			if (selected_aircraft != null) {
 				for (Waypoint w : my_waypoints) {
-					if (w.isMouseOver(x - 16, y - 16) && selected_aircraft.indexInFlightPath(w) > -1) {
+					if (w.isMouseOver(x - VIEWPORT_OFFSET_X, y - VIEWPORT_OFFSET_Y) && selected_aircraft.indexInFlightPath(w) > -1) {
 						selected_waypoint = w;
 						selected_pathpoint = selected_aircraft.indexInFlightPath(w);
 					}
@@ -504,11 +506,11 @@ public class Multiplayer extends Scene {
 			return;
 		}
 		
-		if (selected_aircraft != null && land_button.isMouseOver(x, y))
+		if (selected_aircraft != null && land_button.isMouseOver(x - VIEWPORT_OFFSET_X, y - VIEWPORT_OFFSET_Y))
 			land_button.act();
 
 		airport_control_box.mouseReleased(key, x, y);
-		if (key == input.MOUSE_LEFT && my_airport.isMouseOver(x - 16, y - 16) || airport_control_box.signal_take_off) {
+		if (key == input.MOUSE_LEFT && my_airport.isMouseOver(x - VIEWPORT_OFFSET_X, y - VIEWPORT_OFFSET_Y) || airport_control_box.signal_take_off) {
 			// must wait at least 5 seconds between aircraft takeoff
 			if (next_take_off - timer <= 0) {
 				try {
@@ -527,7 +529,7 @@ public class Multiplayer extends Scene {
 				return;
 			} else {
 				for (int i = 0; i < my_waypoints.length; i++) {
-					if (my_waypoints[i].isMouseOver(x - 16, y - 16)) {
+					if (my_waypoints[i].isMouseOver(x - VIEWPORT_OFFSET_X, y - VIEWPORT_OFFSET_Y)) {
 						selected_aircraft.alterPath(selected_pathpoint, my_waypoints[i]);
 						server.sendAlterPath(selected_pathpoint, i);
 						orders_box.addOrder(">>> " + selected_aircraft.getName() + " please alter your course");
@@ -746,9 +748,9 @@ public class Multiplayer extends Scene {
 		graphics.setColour(Main.GREEN);
 		graphics.printText(left_name, 10, 10, 2);
 		graphics.printText(right_name, window.getWidth()-(right_name.length()*17), 10, 2);
-		graphics.rectangle(false, 16, 40, window.getWidth() - 32, window.getHeight() - 180);
+		graphics.rectangle(false, VIEWPORT_OFFSET_X, VIEWPORT_OFFSET_Y, window.getWidth() - 32, window.getHeight() - 180);
 		
-		graphics.setViewport(16, 40, window.getWidth() - 32, window.getHeight() - 180);
+		graphics.setViewport(VIEWPORT_OFFSET_X, VIEWPORT_OFFSET_Y, window.getWidth() - 32, window.getHeight() - 180);
 		graphics.setColour(255, 255, 255, 100);
 		graphics.draw(background, 0, 0);
 		
@@ -771,7 +773,7 @@ public class Multiplayer extends Scene {
 		
 		for (Aircraft a : aircraft) {
 			a.draw();
-			if (a.isMouseOver()) {
+			if (a.isMouseOver(input.getMouseX() - VIEWPORT_OFFSET_X, input.getMouseY() - VIEWPORT_OFFSET_Y)) {
 				a.drawFlightPath(false);
 			}
 		}
@@ -792,7 +794,7 @@ public class Multiplayer extends Scene {
 		
 		if (selected_waypoint != null && selected_aircraft.isManuallyControlled() == false) {
 			//TODO offset values should be placed into a constant
-			selected_aircraft.drawModifiedPath(selected_pathpoint, input.getMouseX() - 16, input.getMouseY() - 16);
+			selected_aircraft.drawModifiedPath(selected_pathpoint, input.getMouseX() - VIEWPORT_OFFSET_X, input.getMouseY() - VIEWPORT_OFFSET_Y);
 		}
 		
 		graphics.setViewport();

@@ -53,7 +53,7 @@ public class ButtonText {
 		return (mouse_x >= x_coordinate && mouse_x <= x_coordinate + width && mouse_y >= y_coordinate && mouse_y <= y_coordinate + height);
 	}
 	
-	public boolean isMouseOver() { 
+	public boolean isMouseOver() {
 		return isMouseOver(input.getMouseX(), input.getMouseY()); 
 	}
 	
