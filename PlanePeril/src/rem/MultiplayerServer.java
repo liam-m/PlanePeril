@@ -248,6 +248,7 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 				if (game.aircraft.get(i).equals(game.selected_aircraft))
 					game.deselectAircraft();
 				game.aircraft.remove(i);
+				break;
 			}
 		}
 		

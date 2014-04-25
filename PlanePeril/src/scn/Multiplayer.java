@@ -388,7 +388,7 @@ public class Multiplayer extends Scene {
 			// allows to take control by just pressing left/right or A/D
 			//selected_aircraft.setManualControl(is_manually_controlling); // Think this is redundant 
 
-			if (selected_aircraft.isOutOfBounds()) {
+			if (isOutOfBounds(selected_aircraft)) {
 				//TODO update this order to something witty
 				orders_box.addOrder(">>> " + selected_aircraft.getName() + " is out of bounds, contact lost. Do better Comrade.");
 				deselectAircraft();
@@ -949,5 +949,9 @@ public class Multiplayer extends Scene {
 			}
 		}
 		return false;
+	}
+	
+	private boolean isOutOfBounds(Aircraft aircraft) {
+		return aircraft.isOutOfBounds() || (is_left_player ? aircraft.getPosition().x() > window.getWidth()/2 : aircraft.getPosition().x() < window.getWidth()/2);
 	}
 }
