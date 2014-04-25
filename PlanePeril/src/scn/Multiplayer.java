@@ -46,7 +46,7 @@ public class Multiplayer extends Scene {
 	public Waypoint right_airport_takeoff_waypoint = new Waypoint(right_airport.position().x() - 120, right_airport.position().y());
 	
 	public ArrayList<Aircraft> aircraft = new ArrayList<Aircraft>();
-	Aircraft selected_aircraft;
+	public Aircraft selected_aircraft;
 	public Aircraft their_selected;
 	
 	public PerformanceBar left_performance;

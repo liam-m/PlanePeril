@@ -245,6 +245,8 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 	public void removeAircraft(String name) throws RemoteException {
 		for (int i = 0; i < game.aircraft.size(); i++) {
 			if (game.aircraft.get(i).getName().equals(name)) {
+				if (game.aircraft.get(i).equals(game.selected_aircraft))
+					game.deselectAircraft();
 				game.aircraft.remove(i);
 			}
 		}
