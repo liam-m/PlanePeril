@@ -678,21 +678,24 @@ public class Multiplayer extends Scene {
 
 		String name = "";
 		do { // Find a unique name
-			name = "Flight " + (int)(900 * Math.random() + 100);
-			for (Aircraft a : aircraft) {
-				if (a.getName() == name) 
-					continue;
-			}
-			break;
-		} while (true);
+			name = "Flight " + RandomNumber.randInclusiveInt(100, 999);
+		} while (nameTaken(name));
+		
 		if (is_left_player) {
 			return new Aircraft(name, aircraft_image, 32 + (int) (10 * Math.random()), 1, new FlightPlan(origin_point, 
 					destination_point, left_waypoints, left_holding_waypoints, left_airport_takeoff_waypoint), preferred_altitude_index);
 		} else {
 			return new Aircraft(name, aircraft_image, 32 + (int) (10 * Math.random()), 1, new FlightPlan(origin_point, 
 					destination_point, right_waypoints, right_holding_waypoints, right_airport_takeoff_waypoint), preferred_altitude_index);
+		}		
+	}
+	
+	private boolean nameTaken(String name) {
+		for (Aircraft a : aircraft) {
+			if (a.getName().equals(name))
+				return true;
 		}
-		
+		return false;
 	}
 	
 	@Override
@@ -739,7 +742,7 @@ public class Multiplayer extends Scene {
 		graphics.setColour(255, 255, 255, 100);
 		graphics.draw(background, 0, 0);
 		
-		for (int i=0; i<left_waypoints.length-1; i++) { // Should be same length
+		for (int i=0; i<left_waypoints.length-1; i++) { // Should be same length as right_waypoints
 			left_waypoints[i].draw();
 			right_waypoints[i].draw();
 		}
