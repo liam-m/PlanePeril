@@ -38,6 +38,7 @@ public class Multiplayer extends Scene {
 	String left_name, right_name;
 	
 	boolean is_left_player;
+	public int hand_over_aircraft_waiting = 0;
 	
 	public Waypoint[] left_waypoints;
 	public Waypoint[] right_waypoints;
@@ -340,18 +341,22 @@ public class Multiplayer extends Scene {
 			// if aircraft has completed it's journey correctly
 			if (aircraft.get(i).hasFinished()) {
 				if (isMine(aircraft.get(i))) {
-					
 					updatePerformance(5);
-					switch (RandomNumber.randInclusiveInt(0, 2)) {
-					case 0:
-						orders_box.addOrder("<<< Thank you Comrade");
-						break;
-					case 1:
-						orders_box.addOrder("<<< Well done Comrade");
-						break;
-					case 2:
-						orders_box.addOrder("<<< Many thanks Comrade");
-						break;
+					Waypoint my_outgoing_hand_over_point = is_left_player ? left_entryexit_waypoints[6] : right_entryexit_waypoints[7];
+					if (aircraft.get(i).getFlightPlan().getDestination().equals(my_outgoing_hand_over_point)) {
+						server.sendHandOver();
+					} else {
+						switch (RandomNumber.randInclusiveInt(0, 2)) {
+						case 0:
+							orders_box.addOrder("<<< Thank you Comrade");
+							break;
+						case 1:
+							orders_box.addOrder("<<< Well done Comrade");
+							break;
+						case 2:
+							orders_box.addOrder("<<< Many thanks Comrade");
+							break;
+						}
 					}
 				}
 				if (aircraft.get(i).equals(selected_aircraft)) {
@@ -556,7 +561,7 @@ public class Multiplayer extends Scene {
 	}
 	
 
-	public void generateFlight(boolean from_airport) {		
+	public void generateFlight(boolean from_airport) {
 		Aircraft a = createAircraft(from_airport);
 		if (a != null) {
 			// Add aircraft to self
@@ -592,10 +597,12 @@ public class Multiplayer extends Scene {
  	 */
 	private ArrayList<Waypoint> getAvailableEntryPoints() {
 		ArrayList<Waypoint> available_entry_points = new ArrayList<Waypoint>();
-		Waypoint my_blocked_entry = is_left_player ? left_entryexit_waypoints[7] : right_entryexit_waypoints[6];	
+		Waypoint my_incoming_hand_over = is_left_player ? left_entryexit_waypoints[7] : right_entryexit_waypoints[6];	
+		Waypoint my_outgoing_hand_over = is_left_player ? left_entryexit_waypoints[6] : right_entryexit_waypoints[7];	
 		
 		for (Waypoint entry_point : my_entryexit_waypoints) {
-			if (entry_point.equals(my_blocked_entry)) {
+			// Skip the "air channel" entry point  
+			if (entry_point.equals(my_incoming_hand_over) || entry_point.equals(my_outgoing_hand_over)) {
 				continue;
 			}
 			boolean is_available = true;
@@ -611,11 +618,6 @@ public class Multiplayer extends Scene {
 				available_entry_points.add(entry_point);
 		 	}	
 		}
-		// Skip the "air channel" entry point  
-				
-		for (int i = 0; i < available_entry_points.size(); i++) {
-			
-		} 
 		return available_entry_points;
 	}
 	
@@ -647,12 +649,18 @@ public class Multiplayer extends Scene {
 						available_id_entry_points_altitudes.add(base_id * 3 + i - 1); // -1 because altitude_list starts from index 1 (as opposed to usual 0) 
 					}
 				}
-
 			}
 		}
 		return available_id_entry_points_altitudes;
 	}
 	
+	private void handOver(Aircraft aircraft) {
+		orders_box.addOrder("<<< " + aircraft.getName() + " has left your airspace into your opponents.");
+			
+		// Send to other player
+		server.sendHandOver(); 	
+	}
+
 	/**
 	 * A system of creating planes designed to be fair for the player. Planes are created either from airport or elsewhere based on parameter. 
 	 * Also planes are primarily created from waypoints with no planes near them. Secondarily, planes are created in entry points such that no plane is near the altitude 
@@ -668,6 +676,9 @@ public class Multiplayer extends Scene {
 		
 		if (fromAirport) {
 			origin_point = my_airport;		
+		} else if (hand_over_aircraft_waiting > 0) {
+				hand_over_aircraft_waiting --;
+				origin_point= is_left_player ? left_entryexit_waypoints[6] : left_entryexit_waypoints[7];
 		} else {
 			if (available_origins.isEmpty()) { // Creates a plane in waypoint with planes of different altitude than that of the new plane.
 				if (getIdAvailableEntryPointsAltitudes().size() == 0)

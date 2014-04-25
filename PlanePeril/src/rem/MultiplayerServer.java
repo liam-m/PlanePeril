@@ -254,4 +254,17 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 		}
 		
 	}
+
+	public void sendHandOver() {
+		try {
+			multiplayer_interface.handOver();
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Override
+	public void handOver() throws RemoteException {
+		game.hand_over_aircraft_waiting++;
+	}
 }
