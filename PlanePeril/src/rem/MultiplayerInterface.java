@@ -18,4 +18,5 @@ public interface MultiplayerInterface extends Remote {
 
 	void toggleManualControl() throws RemoteException;
 	
+	void removeAircraft(String name) throws RemoteException;
 }
