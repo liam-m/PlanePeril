@@ -1,9 +1,11 @@
 package rem;
 
+import java.rmi.NoSuchObjectException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.rmi.server.ExportException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 
@@ -34,7 +36,11 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 		this.left = left;
 		game = game_screen;
 		
-		registry = LocateRegistry.createRegistry(my_port);
+		try {
+			registry = LocateRegistry.createRegistry(my_port);
+		} catch (ExportException e) {
+			registry = LocateRegistry.getRegistry(my_port);
+		}
 		registry.rebind(registry_name, this);
 		this.opponent_address = opponent_address;
 		this.opponent_port = opponent_port;
@@ -47,6 +53,14 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 			their_registry = LocateRegistry.getRegistry(opponent_address, opponent_port);
 			multiplayer_interface = (MultiplayerInterface)(their_registry.lookup(registry_name));
 		} catch (NotBoundException | RemoteException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void close() {
+		try {
+			UnicastRemoteObject.unexportObject(registry, true);
+		} catch (NoSuchObjectException e) {
 			e.printStackTrace();
 		}
 	}

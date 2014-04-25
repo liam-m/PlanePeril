@@ -3,6 +3,7 @@ package rem;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.rmi.server.ExportException;
 import java.rmi.server.UnicastRemoteObject;
 
 @SuppressWarnings("serial")
@@ -15,7 +16,11 @@ public class HostServer extends UnicastRemoteObject implements HostInterface {
 	public HostServer(String my_name) throws RemoteException {
 		super();
 		this.my_name = my_name;
-		registry = LocateRegistry.createRegistry(port);
+		try {
+			registry = LocateRegistry.createRegistry(port);
+		} catch (ExportException e) {
+			registry = LocateRegistry.getRegistry(port);
+		}
 		registry.rebind("host_server", this);
 	}
 	

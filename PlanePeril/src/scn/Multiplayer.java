@@ -451,13 +451,10 @@ public class Multiplayer extends Scene {
 			if (new_selected != selected_aircraft) {
 				deselectAircraft();
 				selected_aircraft = new_selected;
+				server.sendSelected(selected_aircraft.getName());
 			}
 
 			altimeter.show(selected_aircraft);
-			
-			if (selected_aircraft != null) {
-				server.sendSelected(selected_aircraft.getName());
-			}
 			
 			if (selected_aircraft != null) {
 				for (Waypoint w : left_waypoints) {
@@ -828,6 +825,7 @@ public class Multiplayer extends Scene {
 
 	@Override
 	public void close() {
+		server.close();
 	}
 
 	@Override
