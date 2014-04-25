@@ -472,6 +472,8 @@ public class Multiplayer extends Scene {
 					if (dx * dx + dy * dy < r * r) {
 						compass_dragged = true;
 					}
+					
+					//foo
 				}
 			}
 		}
