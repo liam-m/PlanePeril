@@ -457,7 +457,7 @@ public class Multiplayer extends Scene {
 			altimeter.show(selected_aircraft);
 			
 			if (selected_aircraft != null) {
-				for (Waypoint w : left_waypoints) {
+				for (Waypoint w : my_waypoints) {
 					if (w.isMouseOver(x - 16, y - 16) && selected_aircraft.indexInFlightPath(w) > -1) {
 						selected_waypoint = w;
 						selected_pathpoint = selected_aircraft.indexInFlightPath(w);
