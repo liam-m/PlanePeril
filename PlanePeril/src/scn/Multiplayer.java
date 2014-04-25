@@ -678,7 +678,7 @@ public class Multiplayer extends Scene {
 			origin_point = my_airport;		
 		} else if (hand_over_aircraft_waiting > 0) {
 				hand_over_aircraft_waiting --;
-				origin_point= is_left_player ? left_entryexit_waypoints[6] : left_entryexit_waypoints[7];
+				origin_point= is_left_player ? left_entryexit_waypoints[6] : right_entryexit_waypoints[7];
 		} else {
 			if (available_origins.isEmpty()) { // Creates a plane in waypoint with planes of different altitude than that of the new plane.
 				if (getIdAvailableEntryPointsAltitudes().size() == 0)
@@ -699,8 +699,11 @@ public class Multiplayer extends Scene {
 			}
 		}
 		
-		// Making sure origin and destination aren't the same
-		while (my_entryexit_waypoints[destination].equals(my_entryexit_waypoints[origin]) || fromAirport && my_entryexit_waypoints[destination] instanceof Airport) {
+		// Making sure origin and destination aren't the same and the destination is not the incoming air channel
+		while (my_entryexit_waypoints[destination].equals(my_entryexit_waypoints[origin]) || 
+				fromAirport && my_entryexit_waypoints[destination] instanceof Airport ||
+				my_entryexit_waypoints[destination].equals(is_left_player ? left_entryexit_waypoints[7] : right_entryexit_waypoints[6])) {
+			
 			destination = RandomNumber.randInclusiveInt(0, my_entryexit_waypoints.length - 1);
 		}			
 		
