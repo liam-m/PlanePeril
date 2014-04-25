@@ -371,13 +371,13 @@ public class Multiplayer extends Scene {
 
 			if (input.isKeyDown(input.KEY_LEFT) || input.isKeyDown(input.KEY_A)) {
 				if (!selected_aircraft.isManuallyControlled()) {
-					toggleManualControl();
+					toggleMyManualControl();
 				}
 				selected_aircraft.turnLeft(dt);
 				server.sendTurnLeft(dt);
 			} else if (input.isKeyDown(input.KEY_RIGHT) || input.isKeyDown(input.KEY_D)) {
 				if (!selected_aircraft.isManuallyControlled()) {
-					toggleManualControl();
+					toggleMyManualControl();
 				}
 				selected_aircraft.turnRight(dt);
 				server.sendTurnRight(dt);
@@ -723,7 +723,7 @@ public class Multiplayer extends Scene {
 			break;
 
 		case input.KEY_SPACE:
-			toggleManualControl();
+			toggleMyManualControl();
 			break;			
 		}
 	}
@@ -845,13 +845,13 @@ public class Multiplayer extends Scene {
 	/**
 	 * Causes a selected aircraft to call methods to toggle manual control
 	 */
-	private void toggleManualControl() {
+	private void toggleMyManualControl() {
 		if (selected_aircraft == null)
 			return;
 
-		server.sendToggleManualControl();
 		is_manually_controlling = !is_manually_controlling;
 		selected_aircraft.toggleManualControl();
+		server.sendToggleManualControl();
 	}
 	
 	
@@ -861,7 +861,7 @@ public class Multiplayer extends Scene {
 	 */
 	public void deselectAircraft() {
 		if (selected_aircraft != null && selected_aircraft.isManuallyControlled()) {
-			selected_aircraft.toggleManualControl();
+			toggleMyManualControl();
 		}
 
 		selected_aircraft = null;
