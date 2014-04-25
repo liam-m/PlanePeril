@@ -476,7 +476,7 @@ public class Multiplayer extends Scene {
 						compass_dragged = true;
 					}
 					
-					//foo
+					// bar
 				}
 			}
 		}

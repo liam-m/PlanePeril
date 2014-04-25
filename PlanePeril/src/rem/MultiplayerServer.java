@@ -232,4 +232,22 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 	public void toggleManualControl() {
 		game.their_selected.toggleManualControl();
 	}
+
+	public void sendRemoveAircraft(String name) {
+		try {
+			multiplayer_interface.removeAircraft(name);
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Override
+	public void removeAircraft(String name) throws RemoteException {
+		for (int i = 0; i < game.aircraft.size(); i++) {
+			if (game.aircraft.get(i).getName().equals(name)) {
+				game.aircraft.remove(i);
+			}
+		}
+		
+	}
 }
