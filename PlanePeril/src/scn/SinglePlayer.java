@@ -568,15 +568,10 @@ public class SinglePlayer extends Scene {
 		}
 
 		if (key == input.MOUSE_LEFT && selected_waypoint != null) {
-
 			if (selected_aircraft.isManuallyControlled() == true) {
-
 				return;
-
 			} else {
-
 				for (Waypoint w : airspaceWaypoints) {
-
 					if (w.isMouseOver(x - 16, y - 16)) {
 						selected_aircraft.alterPath(selected_pathpoint, w);
 						orders_box.addOrder(">>> " + selected_aircraft.getName() + " please alter your course");
