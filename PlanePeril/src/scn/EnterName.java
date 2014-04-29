@@ -17,7 +17,7 @@ public class EnterName extends Scene {
 	private final int BUTTON_SEPARATION = 100;
 	private final int BUTTON_WIDTH = 100;
 	private final int BUTTON_HEIGHT = 25;
-	private final int BUTTON_X = window.getWidth()/2 - BUTTON_WIDTH - BUTTON_SEPARATION/2;
+	private final int BUTTON_X = window.getWidth()/2 - (BUTTON_WIDTH*2);
 	private final int BUTTON_Y = 500;
 
 	private final int MAX_NAME_LENGTH = 5;
@@ -101,8 +101,8 @@ public class EnterName extends Scene {
 	@Override
 	public void draw() {
 		graphics.setColour(Main.GREEN);
-		graphics.printTextCentred("Enter your name:", window.getWidth() / 2, 200, 5, 100);
-		graphics.printTextCentred(name, window.getWidth() / 2, 300, 5, 100);
+		graphics.printTextCentred("Enter your name:", (window.getWidth()-100) / 2, 250, 5, 100);
+		graphics.printTextCentred(name, (window.getWidth()-100) / 2, 350, 5, 100);
 		
 		for (ButtonText button : buttons) {
 			button.draw();
