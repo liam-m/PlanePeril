@@ -83,7 +83,7 @@ public class PerformanceBar {
 				graphics.setColour(0, 199, 140); // turquoiseblue colour
 		}
 		
-		graphics.rectangle(true, position_x, position_y, BAR_WIDTH * drawn_value / MAX_VALUE, BAR_HEIGHT);
+		graphics.rectangle(true, position_x, position_y, BAR_WIDTH * drawn_value / MAX_VALUE, BAR_HEIGHT -1);//bar fill
 	}
 	
 	public boolean isEmpty() {
