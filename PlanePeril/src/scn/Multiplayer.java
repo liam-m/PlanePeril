@@ -1,5 +1,6 @@
 package scn;
 
+import java.awt.Color;
 import java.io.File;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -43,8 +44,8 @@ public class Multiplayer extends Scene {
 	public Waypoint[] left_waypoints;
 	public Waypoint[] right_waypoints;
 	HoldingWaypoint[] left_airport_waypoints, right_airport_waypoints;
-	public Airport left_airport = new Airport(449, 390, "Aerodromio Leftved'");
-	public Airport right_airport = new Airport(949, 390, "Aerodromio Rightved'");
+	public Airport left_airport = new Airport(window.getWidth()/4, window.getHeight()/2, "Aerodromio Leftved'");
+	public Airport right_airport = new Airport((window.getWidth()*3)/4 + 100, window.getHeight()/2, "Aerodromio Rightved'");
 	public Waypoint left_airport_takeoff_waypoint = new Waypoint(left_airport.position().x() - 120, left_airport.position().y());
 	public Waypoint right_airport_takeoff_waypoint = new Waypoint(right_airport.position().x() - 120, right_airport.position().y());
 	
@@ -109,16 +110,16 @@ public class Multiplayer extends Scene {
 	private final int ORDERSBOX_W = window.getWidth() - (ORDERSBOX_X + 16);
 	private final int ORDERSBOX_H = 112;
 	
-	private final int LEFT_PERFOMANCE_X = 100;
+	private final int LEFT_PERFOMANCE_X = 110;
 	private final int LEFT_PERFOMANCE_Y = 8;
 		
-	private final int RIGHT_PERFOMANCE_X = window.getWidth()/2 + 200;
+	private final int RIGHT_PERFOMANCE_X = window.getWidth() - LEFT_PERFOMANCE_X - PerformanceBar.getWidth(); 
 	private final int RIGHT_PERFOMANCE_Y = 8;
 		
-	private final int LEFT_LIVES_X = window.getWidth()/2 - 200;
+	private final int LEFT_LIVES_X = window.getWidth()/2 - 100;
 	private final int LEFT_LIVES_Y = 8;
 		
-	private final int RIGHT_LIVES_X = window.getWidth()/2 + 20;
+	private final int RIGHT_LIVES_X = window.getWidth()/2 + 50;
 	private final int RIGHT_LIVES_Y = 8;
 		
 	
@@ -178,9 +179,9 @@ public class Multiplayer extends Scene {
 		this.is_left_player = is_left;
 		
 		left_waypoints = new Waypoint[]{
-			new Waypoint(100, 150),
-			new Waypoint(100, 400),
-			new Waypoint(100, 700),
+			new Waypoint(100, 100),
+			new Waypoint(100, 300),
+			new Waypoint(100, 500),
 			new Waypoint(400, 100),
 			new Waypoint(400, 300),
 			new Waypoint(400, 500),
@@ -196,12 +197,12 @@ public class Multiplayer extends Scene {
 			left_airport
 		};
 		right_waypoints = new Waypoint[]{
-			new Waypoint((window.getWidth()/2) + 100, 100),
-			new Waypoint((window.getWidth()/2) + 100, 300),
-			new Waypoint((window.getWidth()/2) + 100, 500),
-			new Waypoint((window.getWidth()/2) + 400, 100),
-			new Waypoint((window.getWidth()/2) + 400, 300),
-			new Waypoint((window.getWidth()/2) + 400, 500),
+			new Waypoint((window.getWidth()/2) + 200, 100),
+			new Waypoint((window.getWidth()/2) + 200, 300),
+			new Waypoint((window.getWidth()/2) + 200, 500),
+			new Waypoint((window.getWidth()/2) + 500, 100),
+			new Waypoint((window.getWidth()/2) + 500, 300),
+			new Waypoint((window.getWidth()/2) + 500, 500),
 				
 			right_entryexit_waypoints[0],
 			right_entryexit_waypoints[1],
@@ -678,7 +679,7 @@ public class Multiplayer extends Scene {
 			origin_point = my_airport;		
 		} else if (hand_over_aircraft_waiting > 0) {
 				hand_over_aircraft_waiting --;
-				origin_point= is_left_player ? left_entryexit_waypoints[6] : right_entryexit_waypoints[7];
+				origin_point= is_left_player ? left_entryexit_waypoints[7] : right_entryexit_waypoints[6];
 		} else {
 			if (available_origins.isEmpty()) { // Creates a plane in waypoint with planes of different altitude than that of the new plane.
 				if (getIdAvailableEntryPointsAltitudes().size() == 0)
@@ -793,6 +794,11 @@ public class Multiplayer extends Scene {
 		right_airport.draw();
 		
 		for (Aircraft a : aircraft) {
+			if (a.getPosition().x() < window.getWidth()/2) {
+				graphics.setColour(is_left_player ? Main.GREEN : Main.GREY); 
+			} else {
+				graphics.setColour(is_left_player ? Main.GREY : Main.GREEN);
+			}
 			a.draw();
 			if (a.isMouseOver(input.getMouseX() - VIEWPORT_OFFSET_X, input.getMouseY() - VIEWPORT_OFFSET_Y)) {
 				a.drawFlightPath(false);
@@ -831,6 +837,19 @@ public class Multiplayer extends Scene {
 		graphics.setColour(Main.GREEN);
 		left_lives.draw();
 		right_lives.draw();
+		
+		
+		graphics.setColour(Main.BLUE);
+		if (is_left_player) {
+			graphics.rectangle(true, left_entryexit_waypoints[6].position().x(), left_entryexit_waypoints[6].position().y(), 50, 20);
+			graphics.setColour((hand_over_aircraft_waiting > 0) ? Main.LIGHT_BLUE : Main.BLUE);
+			graphics.rectangle(true, left_entryexit_waypoints[7].position().x(), left_entryexit_waypoints[7].position().y(), 50, 20);
+		} else {
+			graphics.rectangle(true, left_entryexit_waypoints[7].position().x(), left_entryexit_waypoints[7].position().y(), 50, 20);
+			graphics.setColour((hand_over_aircraft_waiting > 0) ? Main.LIGHT_BLUE : Main.BLUE);
+			graphics.rectangle(true, left_entryexit_waypoints[6].position().x(), left_entryexit_waypoints[6].position().y(), 50, 20);
+		}
+
 	}
 	
 	private void drawPlaneInfo() {
