@@ -11,15 +11,17 @@ import lib.jog.window;
 import lib.jog.audio.Sound;
 
 public class EnterName extends Scene {
-	String name = "";
+	static String name = "";
 	ButtonText[] buttons;
 	
-	int BUTTON_SEPARATION = 100;
-	int BUTTON_WIDTH = 100;
-	int BUTTON_HEIGHT = 25;
-	int BUTTON_X = window.getWidth()/2 - BUTTON_WIDTH - BUTTON_SEPARATION/2;
-	int BUTTON_Y = 500;
+	private final int BUTTON_SEPARATION = 100;
+	private final int BUTTON_WIDTH = 100;
+	private final int BUTTON_HEIGHT = 25;
+	private final int BUTTON_X = window.getWidth()/2 - BUTTON_WIDTH - BUTTON_SEPARATION/2;
+	private final int BUTTON_Y = 500;
 
+	private final int MAX_NAME_LENGTH = 5;
+			
 	public EnterName(Main main) {
 		super(main);
 	}
@@ -48,14 +50,16 @@ public class EnterName extends Scene {
 		if (key == input.KEY_BACKSPACE) {
 			if (name.length() > 0)
 				name = name.substring(0, name.length()-1);
-		} else if ((key >= 16 && key <= 25) || (key >= 30 && key <= 38) || (key >= 44 && key <= 50)) { // a-z
-			char c = Keyboard.getEventCharacter();
-			name += c;
-		} else if (key == Input.KEY_SPACE && name.length() > 0) { // Can't start with space
-			name += ' ';
+		} else if (name.length() <= MAX_NAME_LENGTH) {
+			if ((key >= 16 && key <= 25) || (key >= 30 && key <= 38) || (key >= 44 && key <= 50)) { // a-z
+				char c = Keyboard.getEventCharacter();
+				name += c;
+			} else if (key == Input.KEY_SPACE && name.length() > 0) { // Can't start with space
+				name += ' ';
+			} 
 		} else if (key == Input.KEY_ESCAPE) {
 			main.closeScene();
-		}
+		}		
 	}
 
 	@Override

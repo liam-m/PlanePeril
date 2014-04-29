@@ -11,8 +11,8 @@ public class PerformanceBar {
 	// for drawing
 	private int position_x;
 	private int position_y;
-	private final int BAR_HEIGHT = 50;
-	private final int BAR_WIDTH = 300;
+	private final static int BAR_HEIGHT = 25;
+	private final static int BAR_WIDTH = 600;
 	private double drawn_value = current_value;
 	
 	/**
@@ -88,5 +88,9 @@ public class PerformanceBar {
 	
 	public boolean isEmpty() {
 		return (current_value <= MIN_VALUE);
+	}
+	
+	public static int getWidth() { 
+		return PerformanceBar.BAR_WIDTH;
 	}
 }

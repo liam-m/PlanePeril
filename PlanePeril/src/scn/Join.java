@@ -21,7 +21,7 @@ import rem.HostInterface;
 public class Join extends Scene {
 	
 	String this_address = null;
-	private String their_address = "";
+	private static String their_address = "";
 	
 	String player_name;
 	String their_name = "";

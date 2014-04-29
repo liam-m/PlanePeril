@@ -610,7 +610,6 @@ public class Aircraft {
 		float scale = 2;
 
 		// Draws the aircraft itself
-		graphics.setColour(Main.GREY);
 		graphics.draw(image, scale, position.x(), position.y(), getBearing(), 8, 8);
 
 		// Draw the altitude near the aircraft
