@@ -109,7 +109,8 @@ public class Join extends Scene {
 				if (address_length <= 2 || their_address.charAt(address_length-3) == '.' || their_address.charAt(address_length-2) == '.' || their_address.charAt(address_length-1) == '.') // Can't have more than 3 numbers without a '.'
 					their_address += Keyboard.getEventCharacter();
 			} else if (key == input.KEY_DECIMAL || key == input.KEY_PERIOD) {
-				if (address_length > 0 && their_address.charAt(address_length-1) != '.') // Can't start with '.', can't have two '.'s in a row
+				if (address_length > 0 && their_address.charAt(address_length-1) != '.' // Can't start with '.', can't have two '.'s in a row
+						&& their_address.split("\\.").length < 3) // Can't have more than 3 '.'s
 					their_address += '.';
 			}
 		}
