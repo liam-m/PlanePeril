@@ -109,7 +109,7 @@ public class Multiplayer extends Scene {
 	private final int ORDERSBOX_W = window.getWidth() - (ORDERSBOX_X + 16);
 	private final int ORDERSBOX_H = 112;
 	
-	private final int LEFT_PERFOMANCE_X = 100;
+	private final int LEFT_PERFOMANCE_X = 200;
 	private final int LEFT_PERFOMANCE_Y = 8;
 		
 	private final int RIGHT_PERFOMANCE_X = window.getWidth()/2 + 200;

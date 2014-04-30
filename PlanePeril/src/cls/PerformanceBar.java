@@ -11,8 +11,8 @@ public class PerformanceBar {
 	// for drawing
 	private int position_x;
 	private int position_y;
-	private final int BAR_HEIGHT = 50;
-	private final int BAR_WIDTH = 300;
+	private final int BAR_HEIGHT = 30;
+	private final int BAR_WIDTH = 250;
 	private double drawn_value = current_value;
 	
 	/**
