@@ -33,7 +33,7 @@ public class Join extends Scene {
 	
 	private final int JOIN_WIDTH = 100;
 	private final int JOIN_HEIGHT = 25;
-	private final int JOIN_X_POSITION = (window.getWidth() /2) - (JOIN_WIDTH/2);
+	private final int JOIN_X_POSITION = (window.getWidth()/2) - (JOIN_WIDTH/2);
 	private final int JOIN_Y_POSITION = 800;
 	
 	
@@ -80,7 +80,6 @@ public class Join extends Scene {
 		};
 
 		join_button = new ButtonText("Join", join, JOIN_X_POSITION, JOIN_Y_POSITION, JOIN_WIDTH, JOIN_HEIGHT, true, true);
-
 	}
 	
 	@Override
@@ -111,7 +110,7 @@ public class Join extends Scene {
 					their_address += Keyboard.getEventCharacter();
 			} else if (key == input.KEY_DECIMAL || key == input.KEY_PERIOD) {
 				if (address_length > 0 && their_address.charAt(address_length-1) != '.' // Can't start with '.', can't have two '.'s in a row
-						&& their_address.split("\\.").length < 3) // Can't have more than 3 '.'s
+						&& their_address.split("\\.").length < 4) // Can't have more than 3 '.'s
 					their_address += '.';
 			}
 		}

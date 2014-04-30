@@ -49,13 +49,9 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 	
 	// Initial connection
 	
-	public void connect(String registry_name) {
-		try {
-			their_registry = LocateRegistry.getRegistry(opponent_address, opponent_port);
-			multiplayer_interface = (MultiplayerInterface)(their_registry.lookup(registry_name));
-		} catch (NotBoundException | RemoteException e) {
-			e.printStackTrace();
-		}
+	public void connect(String registry_name) throws RemoteException, NotBoundException {
+		their_registry = LocateRegistry.getRegistry(opponent_address, opponent_port);
+		multiplayer_interface = (MultiplayerInterface)(their_registry.lookup(registry_name));
 	}
 	
 	public void close() {
@@ -69,12 +65,8 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 	// Notifying each game of a new aircraft
 	
 	// Server sending an aircraft
-	public void sendAddAircraft(boolean from_airport, String name, int speed, int origin_waypoints_index, int destination_waypoints_index, int preferred_altitude_index) {
-		try {
-			multiplayer_interface.addAircraft(from_airport, name, speed, origin_waypoints_index, destination_waypoints_index, preferred_altitude_index);
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		}
+	public void sendAddAircraft(boolean from_airport, String name, int speed, int origin_waypoints_index, int destination_waypoints_index, int preferred_altitude_index) throws RemoteException {
+		multiplayer_interface.addAircraft(from_airport, name, speed, origin_waypoints_index, destination_waypoints_index, preferred_altitude_index);
 	}
 	
 	// Receiving aircraft from other server
@@ -110,12 +102,8 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 
 	// Notifying each game about a chnage in the performance bar
 	
-	public void sendChangePerformance(int value) {
-		try {
-			multiplayer_interface.changePerformance(value);
-		} catch (RemoteException e){
-			e.printStackTrace();
-		}
+	public void sendChangePerformance(int value) throws RemoteException {
+		multiplayer_interface.changePerformance(value);
 	}
 	
 	@Override
@@ -129,12 +117,8 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 
 	//Notifying each game about a change to lives
 	
-	public void sendRemoveLife() {
-		try {
-			multiplayer_interface.removeLife();
-		} catch (RemoteException e){
-			e.printStackTrace();
-		}
+	public void sendRemoveLife() throws RemoteException {
+		multiplayer_interface.removeLife();
 	}
 	
 	@Override
@@ -146,12 +130,8 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 		}
 	}
 
-	public void sendSelected(String name) {
-		try {
-			multiplayer_interface.selected(name);
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		}
+	public void sendSelected(String name) throws RemoteException {
+		multiplayer_interface.selected(name);
 	}
 	
 	@Override
@@ -164,12 +144,8 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 		}
 	}
 
-	public void sendTurnLeft(double dt) {
-		try {
-			multiplayer_interface.turnleft(dt);
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		}
+	public void sendTurnLeft(double dt) throws RemoteException {
+		multiplayer_interface.turnleft(dt);
 	}
 	
 	@Override
@@ -177,12 +153,8 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 		game.their_selected.turnLeft(dt);
 	}
 
-	public void sendTurnRight(double dt) {
-		try {
-			multiplayer_interface.turnRight(dt);
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		}
+	public void sendTurnRight(double dt) throws RemoteException {
+		multiplayer_interface.turnRight(dt);
 	}
 	
 	@Override
@@ -190,12 +162,8 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 		game.their_selected.turnRight(dt);
 	}
 
-	public void sendChangeAltitude(boolean ascend) {
-		try {
-			multiplayer_interface.changeAltitude(ascend);
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		}
+	public void sendChangeAltitude(boolean ascend) throws RemoteException {
+		multiplayer_interface.changeAltitude(ascend);
 	}
 	
 	@Override
@@ -207,12 +175,8 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 		}
 	}
 
-	public void sendAlterPath(int selected_pathpoint, int waypoint_index) {
-		try {
-			multiplayer_interface.alterPath(selected_pathpoint, waypoint_index);
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		}
+	public void sendAlterPath(int selected_pathpoint, int waypoint_index) throws RemoteException {
+		multiplayer_interface.alterPath(selected_pathpoint, waypoint_index);
 	}
 	
 	@Override
@@ -221,12 +185,8 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 		game.their_selected.alterPath(selected_pathpoint, their_waypoints[waypoint_index]);
 	}
 	
-	public void sendToggleManualControl() {
-		try {
-			multiplayer_interface.toggleManualControl();
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		}
+	public void sendToggleManualControl() throws RemoteException {
+		multiplayer_interface.toggleManualControl();
 	}
 
 	@Override
@@ -234,12 +194,8 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 		game.their_selected.toggleManualControl();
 	}
 
-	public void sendRemoveAircraft(String name) {
-		try {
-			multiplayer_interface.removeAircraft(name);
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		}
+	public void sendRemoveAircraft(String name) throws RemoteException {
+		multiplayer_interface.removeAircraft(name);
 	}
 	
 	@Override
@@ -255,12 +211,8 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 		
 	}
 
-	public void sendHandOver() {
-		try {
-			multiplayer_interface.handOver();
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		}
+	public void sendHandOver() throws RemoteException {
+		multiplayer_interface.handOver();
 	}
 	
 	@Override

@@ -2,6 +2,7 @@ package scn;
 
 import java.awt.Color;
 import java.io.File;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
@@ -288,18 +289,29 @@ public class Multiplayer extends Scene {
 	
 	@Override
 	public void start() {
+		String my_reg, their_reg;
+		int my_port, their_port;
+		if (is_left_player) {
+			my_reg = "player_2";
+			their_reg = "player_1";
+			my_port = 1730;
+			their_port = 1731;
+		} else {
+			my_reg = "player_1";
+			their_reg = "player_2";
+			my_port = 1731;
+			their_port = 1731;
+		}
 		try {
-			if (is_left_player) {
-				server = new MultiplayerServer(this, true, their_address, "player_1", 1730, 1731);
-				Thread.sleep(3000);
-				server.connect("player_2");
-			} else {
-				server = new MultiplayerServer(this, false, their_address, "player_2", 1731, 1730);
-				Thread.sleep(3000);
-				server.connect("player_1");
+			server = new MultiplayerServer(this, is_left_player, their_address, my_reg, my_port, their_port);
+			try {
+				Thread.sleep(3000); // Wait for opponent's server to be ready, 3000 is probably excessive
+			} catch (InterruptedException e1) {
+				e1.printStackTrace();
 			}
-		} catch (RemoteException | InterruptedException e) {
-			e.printStackTrace();
+			server.connect(their_reg);
+		} catch (RemoteException | NotBoundException e) {
+			connectionLost();
 		}
 	}
 	
@@ -345,7 +357,7 @@ public class Multiplayer extends Scene {
 					updatePerformance(5);
 					Waypoint my_outgoing_hand_over_point = is_left_player ? left_entryexit_waypoints[6] : right_entryexit_waypoints[7];
 					if (aircraft.get(i).getFlightPlan().getDestination().equals(my_outgoing_hand_over_point)) {
-						server.sendHandOver();
+						handOver(aircraft.get(i));
 					} else {
 						switch (RandomNumber.randInclusiveInt(0, 2)) {
 						case 0:
@@ -364,10 +376,13 @@ public class Multiplayer extends Scene {
 					deselectAircraft();
 				}
 				// make sure you notify the server of which aircraft is to be removed BEFORE it is removed
-				server.sendRemoveAircraft(aircraft.get(i).getName());
+				try {
+					server.sendRemoveAircraft(aircraft.get(i).getName());
+				} catch (RemoteException e) {
+					connectionLost();
+				}
 				aircraft.remove(i);
-				i--;
-				
+				i--; // Removed one so want to have same index next time through loop
 			}
 		}
 
@@ -376,19 +391,22 @@ public class Multiplayer extends Scene {
 		altimeter.update(dt);
 
 		if (selected_aircraft != null) {
-
-			if (input.isKeyDown(input.KEY_LEFT) || input.isKeyDown(input.KEY_A)) {
-				if (!selected_aircraft.isManuallyControlled()) {
-					toggleMyManualControl();
+			try {
+				if (input.isKeyDown(input.KEY_LEFT) || input.isKeyDown(input.KEY_A)) {
+					if (!selected_aircraft.isManuallyControlled()) {
+						toggleMyManualControl();
+					}
+					selected_aircraft.turnLeft(dt);
+					server.sendTurnLeft(dt);
+				} else if (input.isKeyDown(input.KEY_RIGHT) || input.isKeyDown(input.KEY_D)) {
+					if (!selected_aircraft.isManuallyControlled()) {
+						toggleMyManualControl();
+					}
+					selected_aircraft.turnRight(dt);
+					server.sendTurnRight(dt);
 				}
-				selected_aircraft.turnLeft(dt);
-				server.sendTurnLeft(dt);
-			} else if (input.isKeyDown(input.KEY_RIGHT) || input.isKeyDown(input.KEY_D)) {
-				if (!selected_aircraft.isManuallyControlled()) {
-					toggleMyManualControl();
-				}
-				selected_aircraft.turnRight(dt);
-				server.sendTurnRight(dt);
+			} catch (RemoteException e) {
+				connectionLost();
 			}
 
 			// allows to take control by just pressing left/right or A/D
@@ -470,7 +488,11 @@ public class Multiplayer extends Scene {
 			if (new_selected != selected_aircraft) {
 				deselectAircraft();
 				selected_aircraft = new_selected;
-				server.sendSelected(selected_aircraft.getName());
+				try {
+					server.sendSelected(selected_aircraft.getName());
+				} catch (RemoteException e) {
+					connectionLost();
+				}
 			}
 
 			altimeter.show(selected_aircraft);
@@ -535,7 +557,11 @@ public class Multiplayer extends Scene {
 				for (int i = 0; i < my_waypoints.length; i++) {
 					if (my_waypoints[i].isMouseOver(x - VIEWPORT_OFFSET_X, y - VIEWPORT_OFFSET_Y)) {
 						selected_aircraft.alterPath(selected_pathpoint, my_waypoints[i]);
-						server.sendAlterPath(selected_pathpoint, i);
+						try {
+							server.sendAlterPath(selected_pathpoint, i);
+						} catch (RemoteException e) {
+							connectionLost();
+						}
 						orders_box.addOrder(">>> " + selected_aircraft.getName() + " please alter your course");
 						orders_box.addOrder("<<< Roger that. Altering course now.");
 						selected_pathpoint = -1;
@@ -588,7 +614,11 @@ public class Multiplayer extends Scene {
 			}
 			
 			// Send to other player
-			server.sendAddAircraft(from_airport, a.getName(), (int)(a.getInitialSpeed()), origin_index, destination_index, a.getTargetAltitudeIndex() ); 
+			try {
+				server.sendAddAircraft(from_airport, a.getName(), (int)(a.getInitialSpeed()), origin_index, destination_index, a.getTargetAltitudeIndex() ); 
+			} catch (RemoteException e) {
+				connectionLost();
+			}
 		}	
 	}
 	
@@ -656,10 +686,14 @@ public class Multiplayer extends Scene {
 	}
 	
 	private void handOver(Aircraft aircraft) {
-		orders_box.addOrder("<<< " + aircraft.getName() + " has left your airspace into your opponents.");
+		orders_box.addOrder("<<< Handing " + aircraft.getName() + " over to your opponent's airspace");
 			
 		// Send to other player
-		server.sendHandOver(); 	
+		try {
+			server.sendHandOver();
+		} catch (RemoteException e) {
+			connectionLost();
+		}
 	}
 
 	/**
@@ -678,7 +712,7 @@ public class Multiplayer extends Scene {
 		if (fromAirport) {
 			origin_point = my_airport;		
 		} else if (hand_over_aircraft_waiting > 0) {
-				hand_over_aircraft_waiting --;
+				hand_over_aircraft_waiting--;
 				origin_point= is_left_player ? left_entryexit_waypoints[7] : right_entryexit_waypoints[6];
 		} else {
 			if (available_origins.isEmpty()) { // Creates a plane in waypoint with planes of different altitude than that of the new plane.
@@ -741,27 +775,31 @@ public class Multiplayer extends Scene {
 	
 	@Override
 	public void keyReleased(int key) {
-		switch (key) {
-
-		case input.KEY_S:
-		case input.KEY_DOWN:
-			if (selected_aircraft != null) {
-				selected_aircraft.decreaseTargetAltitude();
-				server.sendChangeAltitude(false);
+		try {
+			switch (key) {
+	
+			case input.KEY_S:
+			case input.KEY_DOWN:
+				if (selected_aircraft != null) {
+					selected_aircraft.decreaseTargetAltitude();
+					server.sendChangeAltitude(false);
+				}
+				break;
+	
+			case input.KEY_W:
+			case input.KEY_UP:
+				if (selected_aircraft != null) {
+					selected_aircraft.increaseTargetAltitude();
+					server.sendChangeAltitude(true);				
+				}
+				break;
+	
+			case input.KEY_SPACE:
+				toggleMyManualControl();
+				break;			
 			}
-			break;
-
-		case input.KEY_W:
-		case input.KEY_UP:
-			if (selected_aircraft != null) {
-				selected_aircraft.increaseTargetAltitude();
-				server.sendChangeAltitude(true);				
-			}
-			break;
-
-		case input.KEY_SPACE:
-			toggleMyManualControl();
-			break;			
+		} catch (RemoteException e) {
+			connectionLost();
 		}
 	}
 
@@ -906,7 +944,11 @@ public class Multiplayer extends Scene {
 
 		is_manually_controlling = !is_manually_controlling;
 		selected_aircraft.toggleManualControl();
-		server.sendToggleManualControl();
+		try {
+			server.sendToggleManualControl();
+		} catch (RemoteException e) {
+			connectionLost();
+		}
 	}
 	
 	
@@ -978,7 +1020,11 @@ public class Multiplayer extends Scene {
 	
 	public void loseALife() {
 		my_lives.decrement();
-		server.sendRemoveLife();
+		try {
+			server.sendRemoveLife();
+		} catch (RemoteException e) {
+			connectionLost();
+		}
 		
 		if (my_lives.getLives() == 0) {
 			gameOver(false);
@@ -987,7 +1033,11 @@ public class Multiplayer extends Scene {
 
 	public void updatePerformance(int value) {
 		my_performance.changeValueBy(value);
-		server.sendChangePerformance(value);
+		try {
+			server.sendChangePerformance(value);
+		} catch (RemoteException e) {
+			connectionLost();
+		}
 	}
 
 	private boolean isMine(Aircraft aircraft) {
@@ -1004,5 +1054,10 @@ public class Multiplayer extends Scene {
 	
 	private boolean isOutOfBounds(Aircraft aircraft) {
 		return aircraft.isOutOfBounds() || (is_left_player ? aircraft.getPosition().x() > window.getWidth()/2 : aircraft.getPosition().x() < window.getWidth()/2);
+	}
+	
+	private void connectionLost() {
+		main.closeScene();
+		main.setScene(new ConnectionLost(main));
 	}
 }
