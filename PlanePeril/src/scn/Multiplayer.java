@@ -518,7 +518,10 @@ public class Multiplayer extends Scene {
 	
 	@Override
 	public void mouseReleased(int key, int x, int y) {
-		if (!isInputValid(x, y)) {	
+		if (!isInputValid(x, y)) {
+			if (selected_waypoint != null && key == input.MOUSE_LEFT) {
+				selected_waypoint = null;
+			}
 			return;
 		}
 		
@@ -541,9 +544,10 @@ public class Multiplayer extends Scene {
 		}
 		
 		if (key == input.MOUSE_LEFT && selected_waypoint != null) {
-			if (selected_aircraft.isManuallyControlled() == true) {
+			if (selected_aircraft.isManuallyControlled()) {
 				return;
 			} else {
+				selected_waypoint = null;
 				for (int i = 0; i < my_waypoints.length; i++) {
 					if (my_waypoints[i].isMouseOver(x - Main.VIEWPORT_OFFSET_X, y - Main.VIEWPORT_OFFSET_Y)) {
 						selected_aircraft.alterPath(selected_pathpoint, my_waypoints[i]);
@@ -551,9 +555,7 @@ public class Multiplayer extends Scene {
 						orders_box.addOrder(">>> " + selected_aircraft.getName() + " please alter your course");
 						orders_box.addOrder("<<< Roger that. Altering course now.");
 						selected_pathpoint = -1;
-						selected_waypoint = null;
-					} else {
-						selected_waypoint = null;
+						break;
 					}
 				}
 
