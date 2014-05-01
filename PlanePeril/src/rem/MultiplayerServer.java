@@ -71,7 +71,7 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 	
 	// Receiving aircraft from other server
 	@Override
-	public void addAircraft(boolean from_airport, String name, int speed, int origin_waypoints_index, int destination_waypoints_index, int preferred_altitude_index) {	
+	public void addAircraft(boolean from_airport, String name, int speed, int origin_waypoints_index, int destination_waypoints_index, int preferred_altitude_index) throws RemoteException {	
 		if (left) {
 			Waypoint origin_point;
 			if (from_airport) {
@@ -190,7 +190,7 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 	}
 
 	@Override
-	public void toggleManualControl() {
+	public void toggleManualControl() throws RemoteException {
 		game.their_selected.toggleManualControl();
 	}
 

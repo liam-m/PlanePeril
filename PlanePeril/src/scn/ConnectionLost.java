@@ -42,7 +42,7 @@ public class ConnectionLost extends Scene {
 			}
 		};
 		
-		back_to_menu_button = new ButtonText("Join", back_to_menu, window.getWidth()/2, 2*window.getHeight()/3, 200, 100, true, true);
+		back_to_menu_button = new ButtonText("Back to menu", back_to_menu, window.getWidth()/2, 2*window.getHeight()/3, 100, 25, true, true);
 	}
 
 	@Override
