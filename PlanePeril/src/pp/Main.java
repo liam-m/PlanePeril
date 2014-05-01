@@ -29,7 +29,9 @@ import scn.Title;
  * @author Huw Taylor
  */
 public class Main implements EventHandler {
-
+	public static final int VIEWPORT_OFFSET_X = 16;
+	public static final int VIEWPORT_OFFSET_Y = 40;
+	
 	public final static Color GREEN = new Color(0, 200, 0);
 	public final static Color GREY = new Color(128, 128, 128);
 	public final static Color RED = new Color(128, 0, 0);
