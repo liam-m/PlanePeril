@@ -74,6 +74,7 @@ public class Multiplayer extends Scene {
 	
 	double flight_generation_time_elapsed = 6;
 	double flight_generation_interval = 4;
+	double last_penalty_time= 0;
 	
 	MultiplayerServer server;
 	String their_address;
@@ -331,7 +332,7 @@ public class Multiplayer extends Scene {
 					}
 				}
 			}
-	
+			
 			// if aircraft landed
 			if (aircraft.get(i).isAtAirport()) {
 				orders_box.addOrder("<<< Aircraft " + aircraft.get(i).getName() + " has landed safely at " + left_airport.getName());
@@ -432,6 +433,15 @@ public class Multiplayer extends Scene {
 			}
 		}
 		server.removal_queue.clear();
+		penalizeForNotTakingOffIfTheCase ();
+	}
+	
+	
+	public void penalizeForNotTakingOffIfTheCase () {
+		if ((System.currentTimeMillis() - last_penalty_time > 500) && (my_airport.isNotTakingOff())) {
+			updatePerformance(-1);
+			last_penalty_time = System.currentTimeMillis();
+		}		
 	}
 
 	/**
