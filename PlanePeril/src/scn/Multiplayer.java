@@ -292,15 +292,15 @@ public class Multiplayer extends Scene {
 		String my_reg, their_reg;
 		int my_port, their_port;
 		if (is_left_player) {
-			my_reg = "player_2";
-			their_reg = "player_1";
+			my_reg = "player_1";
+			their_reg = "player_2";
 			my_port = 1730;
 			their_port = 1731;
 		} else {
-			my_reg = "player_1";
-			their_reg = "player_2";
+			my_reg = "player_2";
+			their_reg = "player_1";
 			my_port = 1731;
-			their_port = 1731;
+			their_port = 1730;
 		}
 		try {
 			server = new MultiplayerServer(this, is_left_player, their_address, my_reg, my_port, their_port);
@@ -311,6 +311,7 @@ public class Multiplayer extends Scene {
 			}
 			server.connect(their_reg);
 		} catch (RemoteException | NotBoundException e) {
+			e.printStackTrace();
 			connectionLost();
 		}
 	}
