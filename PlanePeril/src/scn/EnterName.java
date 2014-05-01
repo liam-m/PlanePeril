@@ -42,7 +42,7 @@ public class EnterName extends Scene {
 				validateName();
 				button.act();
 			}
-			else
+			else if (button.isMouseOver(x, y))
 				clicked = true;
 		}
 	}
