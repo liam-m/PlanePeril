@@ -382,7 +382,7 @@ public class Multiplayer extends Scene {
 					connectionLost();
 				}
 				aircraft.remove(i);
-				i--; // Removed one so want to have same index next time through loop
+				i--; // Removed one as want to have same index next time through loop
 			}
 		}
 
