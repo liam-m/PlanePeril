@@ -105,7 +105,7 @@ public class AirportControlBox implements EventHandler{
 	@Override
 	public void mouseReleased(int key, int x, int y) {
 		clicked = false;
-		if (key == input.MOUSE_LEFT) {
+		if (key == input.MOUSE_LEFT && isMouseOverTakeOffButton(x, y)) {
 			signal_take_off  = true;
 		}
 	}
