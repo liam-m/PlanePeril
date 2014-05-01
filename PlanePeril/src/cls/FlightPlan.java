@@ -145,16 +145,8 @@ public class FlightPlan {
 
 			selectedWaypoints.add(selectedWaypoints.size() - 1, nearestHoldingWaypoint);
 		}
-
-		// create a Waypoint[] to hold the new route
-		Waypoint[] route = new Waypoint[selectedWaypoints.size()];
-
-		// fill route with the selected waypoints
-		for (int i = 0; i < selectedWaypoints.size(); i++) {
-			route[i] = selectedWaypoints.get(i);
-		}
-
-		return route;
+		
+		return selectedWaypoints.toArray(new Waypoint[selectedWaypoints.size()]);
 	}
 
 	public Waypoint getOrigin() {

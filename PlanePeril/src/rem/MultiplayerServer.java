@@ -208,6 +208,8 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 	}
 
 	public void sendAlterPath(int selected_pathpoint, int waypoint_index) {
+		System.out.println("Selected_pathpoint "+ selected_pathpoint);
+		System.out.println("Waypoint_index"+waypoint_index);
 		try {
 			multiplayer_interface.alterPath(selected_pathpoint, waypoint_index);
 		} catch (RemoteException e) {
