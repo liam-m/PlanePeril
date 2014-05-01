@@ -40,7 +40,6 @@ public class Host extends Scene {
 	}
 	
 	public void connected(String their_name, String their_address) {
-		//main.setScene(new MultiplayerLeft(main, player_name, their_name, their_address));
 	}
 	
 	@Override
