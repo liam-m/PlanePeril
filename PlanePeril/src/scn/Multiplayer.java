@@ -511,7 +511,17 @@ public class Multiplayer extends Scene {
 					selected_aircraft.toggleLand(right_holding_waypoints.get(0));
 				}
 			} else if (my_airport.is_departures_clicked) {
-				
+				// must wait at least 5 seconds between aircraft takeoff
+				if (next_take_off - timer <= 0) {
+					try {
+						my_airport.takeoff();
+						generateFlight(true);
+						next_take_off = timer + TAKEOFF_DELAY;
+						airport_control_box.signal_take_off = false;
+					} catch (IllegalStateException e) {
+						orders_box.addOrder("<<< There are no aircraft in the airport, Comrade.");
+					}
+				}
 			}
 		}
 	}
@@ -529,7 +539,7 @@ public class Multiplayer extends Scene {
 		
 
 		airport_control_box.mouseReleased(key, x, y);
-		if (key == input.MOUSE_LEFT && my_airport.isMouseOver(x - Main.VIEWPORT_OFFSET_X, y - Main.VIEWPORT_OFFSET_Y) || airport_control_box.signal_take_off) {
+		if (key == input.MOUSE_LEFT && airport_control_box.signal_take_off) {
 			// must wait at least 5 seconds between aircraft takeoff
 			if (next_take_off - timer <= 0) {
 				try {
