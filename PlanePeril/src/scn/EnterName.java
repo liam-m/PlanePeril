@@ -19,7 +19,7 @@ public class EnterName extends Scene {
 	private final int BUTTON_HEIGHT = 25;
 	private final int BUTTON_X = window.getWidth()/2 - (BUTTON_WIDTH*2);
 	private final int BUTTON_Y = 500;
-
+	private boolean clicked = false;
 	private final int MAX_NAME_LENGTH = 5;
 			
 	public EnterName(Main main) {
@@ -42,6 +42,8 @@ public class EnterName extends Scene {
 				validateName();
 				button.act();
 			}
+			else
+				clicked = true;
 		}
 	}
 
@@ -103,6 +105,9 @@ public class EnterName extends Scene {
 		graphics.setColour(Main.GREEN);
 		graphics.printTextCentred("Enter your name:", (window.getWidth()-100) / 2, 250, 5, 100);
 		graphics.printTextCentred(name, (window.getWidth()-100) / 2, 350, 5, 100);
+		
+		if (clicked == true)
+			graphics.printTextCentred("You must put your name first", (window.getWidth()-100) / 2, 600, 5, 100);
 		
 		for (ButtonText button : buttons) {
 			button.draw();
