@@ -96,11 +96,11 @@ public class DifficultySelect extends Scene {
 				HARD_BUTTON_W, HARD_BUTTON_H, true, true);
 
 		text_box = new TextBox(128, 96, window.getWidth() - 256, window.getHeight() - 96, 32);
-		text_box.addText("You are a 500 kilogram ferocious Grizzly Bear." + TextBox.DELAY_START + "0.5" + TextBox.DELAY_END
+		text_box.addText("You are a 500 kilogram ferocious Jack Chapman." + TextBox.DELAY_START + "0.5" + TextBox.DELAY_END
 				+ " The Humans are not aware of your hidden identity.");
 		text_box.delay(0.5);
 		text_box.addText("You have become an air traffic controller at "	+ DifficultySelect.place_name
-				+ " international in order to provide for your family during the harsh winters ahead.");
+				+ " international in order to provide for your family during the harsh bitcoin depression.");
 		text_box.delay(0.5);
 		text_box.newline();
 		text_box.addText("Somehow, miraculously, your true nature has not yet been discovered.");
@@ -108,7 +108,7 @@ public class DifficultySelect extends Scene {
 		text_box.delay(1);
 		text_box.addText("Guide planes to their destination successfully and you will be rewarded." + TextBox.DELAY_START
 				+ "0.5"	+ TextBox.DELAY_END + " Fail," + TextBox.DELAY_START + "0.5" + TextBox.DELAY_END + " and the humans may " +
-				"discover your secret identity and put you in a zoo."	+ TextBox.DELAY_START + "1" + TextBox.DELAY_END + " Or worse.");
+				"discover your secret identity and put you in a zoo."	+ TextBox.DELAY_START + "1" + TextBox.DELAY_END + " Or worse. Chapjackman");
 	}
 
 	/**
