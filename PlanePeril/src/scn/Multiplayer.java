@@ -533,7 +533,7 @@ public class Multiplayer extends Scene {
 		// handle airport input
 		my_airport.mousePressed(key, x, y);
 		
-		if (selected_aircraft != null) {
+		if (selected_aircraft != null && !selected_aircraft.isLanding()) {
 			if (my_airport.is_arrivals_clicked) {
 				if (is_left_player) {
 					selected_aircraft.toggleLand(left_holding_waypoints.get(0));
