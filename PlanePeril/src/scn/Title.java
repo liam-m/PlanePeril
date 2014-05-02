@@ -105,8 +105,8 @@ public class Title extends Scene {
 		int offset = 96;
 		int button_height = 30;
 		
-		ButtonText.Action[] button_actions = new ButtonText.Action[]{launch_single_player,	launch_multiplayer, open_high_scores, open_credits, open_help, exit};
-		String[] button_labels = new String[]{"Single Player", "Multiplayer", "High Scores", "Credits", "Help (Opens in Browser)", "Exit"};
+		ButtonText.Action[] button_actions = new ButtonText.Action[]{launch_single_player,	launch_multiplayer, open_credits, open_help, exit};
+		String[] button_labels = new String[]{"Single Player", "Multiplayer", "Credits", "Help (Opens in Browser)", "Exit"};
 		buttons = new ButtonText[button_actions.length];
 		
 		for (int i = 0; i < buttons.length; i++) {
@@ -229,6 +229,9 @@ public class Title extends Scene {
 
 		graphics.print("Fixed and Extended by:", window.getHeight() + 8, 88);
 		graphics.print("TEAM INI", window.getHeight() + 8, 104);
+		
+		graphics.print("Extended and Perfected by:", window.getHeight() + 8, 124);
+		graphics.print("TEAM MQV", window.getHeight() + 8, 139);
 
 		// Draw Buttons
 		for (ButtonText b : buttons)
