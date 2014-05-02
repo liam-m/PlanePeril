@@ -11,8 +11,8 @@ public class PerformanceBar {
 	// for drawing
 	private int position_x;
 	private int position_y;
-	private final int BAR_HEIGHT = 30;
-	private final int BAR_WIDTH = 250;
+	private final static int BAR_HEIGHT = 25;
+	private final static int BAR_WIDTH = 600;
 	private double drawn_value = current_value;
 	
 	/**
@@ -83,10 +83,14 @@ public class PerformanceBar {
 				graphics.setColour(0, 199, 140); // turquoiseblue colour
 		}
 		
-		graphics.rectangle(true, position_x, position_y, BAR_WIDTH * drawn_value / MAX_VALUE, BAR_HEIGHT);
+		graphics.rectangle(true, position_x, position_y, BAR_WIDTH * drawn_value / MAX_VALUE, BAR_HEIGHT -1);//bar fill
 	}
 	
 	public boolean isEmpty() {
 		return (current_value <= MIN_VALUE);
+	}
+	
+	public static int getWidth() { 
+		return PerformanceBar.BAR_WIDTH;
 	}
 }

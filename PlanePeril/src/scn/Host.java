@@ -40,7 +40,6 @@ public class Host extends Scene {
 	}
 	
 	public void connected(String their_name, String their_address) {
-		//main.setScene(new MultiplayerLeft(main, player_name, their_name, their_address));
 	}
 	
 	@Override
@@ -48,7 +47,7 @@ public class Host extends Scene {
 		graphics.setColour(Main.GREEN);
 		graphics.printTextCentred("Welcome!:", window.getWidth() / 2, 100, 5, 100);
 		graphics.printTextCentred(player_name, window.getWidth() / 2, 200, 10, 100);
-		graphics.printTextCentred("Your IP: "+this_address, window.getWidth()/2, 300, 5, 200);
+		graphics.printTextCentred("Your IP: "+this_address, (window.getWidth()/2 - (200/4)), 350, 5, 200);
 
 		if (waiting_dot++ > 25) {
 			waiting_dot = 0;

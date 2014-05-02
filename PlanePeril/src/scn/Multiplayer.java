@@ -1,5 +1,6 @@
 package scn;
 
+import java.awt.Color;
 import java.io.File;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -17,20 +18,15 @@ import cls.Waypoint;
 import cls.Waypoint.WaypointType;
 import pp.Main;
 import rem.MultiplayerServer;
-import scn.SinglePlayer.Texts;
 import lib.ButtonText;
 import lib.RandomNumber;
 import lib.jog.audio.Sound;
-import lib.jog.audio;
 import lib.jog.graphics;
 import lib.jog.input;
 import lib.jog.graphics.Image;
 import lib.jog.window;
 
 public class Multiplayer extends Scene {
-	private static final int VIEWPORT_OFFSET_X = 16;
-	private static final int VIEWPORT_OFFSET_Y = 40;
-	
 	private static final double DEDUCTION_TIME_DELAY = 0.5;
 	final int MAX_AIRCRAFT = 20;
 	final int TAKEOFF_DELAY = 5;
@@ -43,8 +39,8 @@ public class Multiplayer extends Scene {
 	public Waypoint[] left_waypoints;
 	public Waypoint[] right_waypoints;
 	HoldingWaypoint[] left_airport_waypoints, right_airport_waypoints;
-	public Airport left_airport = new Airport(449, 390, "Aerodromio Leftved'");
-	public Airport right_airport = new Airport(949, 390, "Aerodromio Rightved'");
+	public Airport left_airport = new Airport(window.getWidth()/4, window.getHeight()/2, "Aerodromio Leftved'");
+	public Airport right_airport = new Airport((window.getWidth()*3)/4 + 100, window.getHeight()/2, "Aerodromio Rightved'");
 	public Waypoint left_airport_takeoff_waypoint = new Waypoint(left_airport.position().x() - 120, left_airport.position().y());
 	public Waypoint right_airport_takeoff_waypoint = new Waypoint(right_airport.position().x() - 120, right_airport.position().y());
 	
@@ -67,7 +63,6 @@ public class Multiplayer extends Scene {
 	double next_take_off = TAKEOFF_DELAY;
 	
 	boolean is_manually_controlling;
-	ButtonText land_button;
 	boolean compass_dragged;
 	Waypoint selected_waypoint;
 	int selected_pathpoint;
@@ -76,6 +71,7 @@ public class Multiplayer extends Scene {
 	
 	double flight_generation_time_elapsed = 6;
 	double flight_generation_interval = 4;
+	double last_penalty_time= 0;
 	
 	MultiplayerServer server;
 	String their_address;
@@ -109,16 +105,16 @@ public class Multiplayer extends Scene {
 	private final int ORDERSBOX_W = window.getWidth() - (ORDERSBOX_X + 16);
 	private final int ORDERSBOX_H = 112;
 	
-	private final int LEFT_PERFOMANCE_X = 200;
+	private final int LEFT_PERFOMANCE_X = 110;
 	private final int LEFT_PERFOMANCE_Y = 8;
 		
-	private final int RIGHT_PERFOMANCE_X = window.getWidth()/2 + 200;
+	private final int RIGHT_PERFOMANCE_X = window.getWidth() - LEFT_PERFOMANCE_X - PerformanceBar.getWidth(); 
 	private final int RIGHT_PERFOMANCE_Y = 8;
 		
-	private final int LEFT_LIVES_X = window.getWidth()/2 - 200;
+	private final int LEFT_LIVES_X = window.getWidth()/2 - 100;
 	private final int LEFT_LIVES_Y = 8;
 		
-	private final int RIGHT_LIVES_X = window.getWidth()/2 + 20;
+	private final int RIGHT_LIVES_X = window.getWidth()/2 + 50;
 	private final int RIGHT_LIVES_Y = 8;
 		
 	
@@ -178,9 +174,9 @@ public class Multiplayer extends Scene {
 		this.is_left_player = is_left;
 		
 		left_waypoints = new Waypoint[]{
-			new Waypoint(100, 150),
-			new Waypoint(100, 400),
-			new Waypoint(100, 700),
+			new Waypoint(100, 100),
+			new Waypoint(100, 300),
+			new Waypoint(100, 500),
 			new Waypoint(400, 100),
 			new Waypoint(400, 300),
 			new Waypoint(400, 500),
@@ -196,12 +192,12 @@ public class Multiplayer extends Scene {
 			left_airport
 		};
 		right_waypoints = new Waypoint[]{
-			new Waypoint((window.getWidth()/2) + 100, 100),
-			new Waypoint((window.getWidth()/2) + 100, 300),
-			new Waypoint((window.getWidth()/2) + 100, 500),
-			new Waypoint((window.getWidth()/2) + 400, 100),
-			new Waypoint((window.getWidth()/2) + 400, 300),
-			new Waypoint((window.getWidth()/2) + 400, 500),
+			new Waypoint((window.getWidth()/2) + 200, 100),
+			new Waypoint((window.getWidth()/2) + 200, 300),
+			new Waypoint((window.getWidth()/2) + 200, 500),
+			new Waypoint((window.getWidth()/2) + 500, 100),
+			new Waypoint((window.getWidth()/2) + 500, 300),
+			new Waypoint((window.getWidth()/2) + 500, 500),
 				
 			right_entryexit_waypoints[0],
 			right_entryexit_waypoints[1],
@@ -274,7 +270,6 @@ public class Multiplayer extends Scene {
 		};
 		
 		int x_pos = is_left_player ? window.getWidth()/4 : (window.getWidth()*3)/4; // vary where the land button appears for each player
-		land_button = new ButtonText(Texts.LAND, land, x_pos, 32, 128, 32, 8, 4, true, true);
 
 		timer = 0;
 		compass_dragged = false;
@@ -312,9 +307,10 @@ public class Multiplayer extends Scene {
 		timer += dt;
 		orders_box.update(dt);
 
-		// update airport timer
+		// update airports
 		my_airport.setTimeLeft((int) (next_take_off - timer));
-
+		my_airport.update(dt, aircraft, is_left_player);
+		
 		for (int i=0; i<aircraft.size(); i++) {
 			// Added a try/catch construct to make sure we catch when the
 			// aircraft is inserted into a full airport
@@ -333,7 +329,7 @@ public class Multiplayer extends Scene {
 					}
 				}
 			}
-	
+			
 			// if aircraft landed
 			if (aircraft.get(i).isAtAirport()) {
 				orders_box.addOrder("<<< Aircraft " + aircraft.get(i).getName() + " has landed safely at " + left_airport.getName());
@@ -434,6 +430,15 @@ public class Multiplayer extends Scene {
 			}
 		}
 		server.removal_queue.clear();
+		penalizeForNotTakingOffIfTheCase ();
+	}
+	
+	
+	public void penalizeForNotTakingOffIfTheCase () {
+		if ((System.currentTimeMillis() - last_penalty_time > 500) && (my_airport.isNotTakingOff())) {
+			updatePerformance(-1);
+			last_penalty_time = System.currentTimeMillis();
+		}		
 	}
 
 	/**
@@ -461,7 +466,7 @@ public class Multiplayer extends Scene {
 			Aircraft new_selected = selected_aircraft;
 
 			for (Aircraft a : aircraft) {
-				if (a.isMouseOver(x - VIEWPORT_OFFSET_X, y - VIEWPORT_OFFSET_Y)) {
+				if (a.isMouseOver(x - Main.VIEWPORT_OFFSET_X, y - Main.VIEWPORT_OFFSET_Y)) {
 					new_selected = a;
 				}
 			}
@@ -476,7 +481,7 @@ public class Multiplayer extends Scene {
 			
 			if (selected_aircraft != null) {
 				for (Waypoint w : my_waypoints) {
-					if (w.isMouseOver(x - VIEWPORT_OFFSET_X, y - VIEWPORT_OFFSET_Y) && selected_aircraft.indexInFlightPath(w) > -1) {
+					if (w.isMouseOver(x - Main.VIEWPORT_OFFSET_X, y - Main.VIEWPORT_OFFSET_Y) && selected_aircraft.indexInFlightPath(w) > -1) {
 						selected_waypoint = w;
 						selected_pathpoint = selected_aircraft.indexInFlightPath(w);
 					}
@@ -501,19 +506,47 @@ public class Multiplayer extends Scene {
 
 		altimeter.mousePressed(key, x, y);
 		airport_control_box.mousePressed(key, x, y);
+		
+		// handle airport input
+		my_airport.mousePressed(key, x, y);
+		
+		if (selected_aircraft != null) {
+			if (my_airport.is_arrivals_clicked) {
+				if (is_left_player) {
+					selected_aircraft.toggleLand(left_holding_waypoints.get(0));
+				} else {
+					selected_aircraft.toggleLand(right_holding_waypoints.get(0));
+				}
+			} else if (my_airport.is_departures_clicked) {
+				// must wait at least 5 seconds between aircraft takeoff
+				if (next_take_off - timer <= 0) {
+					try {
+						my_airport.takeoff();
+						generateFlight(true);
+						next_take_off = timer + TAKEOFF_DELAY;
+						airport_control_box.signal_take_off = false;
+					} catch (IllegalStateException e) {
+						orders_box.addOrder("<<< There are no aircraft in the airport, Comrade.");
+					}
+				}
+			}
+		}
 	}
 	
 	@Override
 	public void mouseReleased(int key, int x, int y) {
-		if (!isInputValid(x, y)) {	
+		if (!isInputValid(x, y)) {
+			if (selected_waypoint != null && key == input.MOUSE_LEFT) {
+				selected_waypoint = null;
+			}
 			return;
 		}
 		
-		if (selected_aircraft != null && land_button.isMouseOver(x - VIEWPORT_OFFSET_X, y - VIEWPORT_OFFSET_Y))
-			land_button.act();
+		if (selected_aircraft != null) //TODO landing
+		
 
 		airport_control_box.mouseReleased(key, x, y);
-		if (key == input.MOUSE_LEFT && my_airport.isMouseOver(x - VIEWPORT_OFFSET_X, y - VIEWPORT_OFFSET_Y) || airport_control_box.signal_take_off) {
+		if (key == input.MOUSE_LEFT && airport_control_box.signal_take_off) {
 			// must wait at least 5 seconds between aircraft takeoff
 			if (next_take_off - timer <= 0) {
 				try {
@@ -528,19 +561,18 @@ public class Multiplayer extends Scene {
 		}
 		
 		if (key == input.MOUSE_LEFT && selected_waypoint != null) {
-			if (selected_aircraft.isManuallyControlled() == true) {
+			if (selected_aircraft.isManuallyControlled()) {
 				return;
 			} else {
+				selected_waypoint = null;
 				for (int i = 0; i < my_waypoints.length; i++) {
-					if (my_waypoints[i].isMouseOver(x - VIEWPORT_OFFSET_X, y - VIEWPORT_OFFSET_Y)) {
+					if (my_waypoints[i].isMouseOver(x - Main.VIEWPORT_OFFSET_X, y - Main.VIEWPORT_OFFSET_Y)) {
 						selected_aircraft.alterPath(selected_pathpoint, my_waypoints[i]);
 						server.sendAlterPath(selected_pathpoint, i);
 						orders_box.addOrder(">>> " + selected_aircraft.getName() + " please alter your course");
 						orders_box.addOrder("<<< Roger that. Altering course now.");
 						selected_pathpoint = -1;
-						selected_waypoint = null;
-					} else {
-						selected_waypoint = null;
+						break;
 					}
 				}
 
@@ -548,6 +580,7 @@ public class Multiplayer extends Scene {
 		}
 
 		altimeter.mouseReleased(key, x, y);
+		my_airport.mouseReleased(key, x, y);
 		
 		if (compass_dragged && selected_aircraft != null) {
 			double dx = input.getMouseX() - selected_aircraft.getPosition().x();
@@ -678,7 +711,7 @@ public class Multiplayer extends Scene {
 			origin_point = my_airport;		
 		} else if (hand_over_aircraft_waiting > 0) {
 				hand_over_aircraft_waiting --;
-				origin_point= is_left_player ? left_entryexit_waypoints[6] : right_entryexit_waypoints[7];
+				origin_point= is_left_player ? left_entryexit_waypoints[7] : right_entryexit_waypoints[6];
 		} else {
 			if (available_origins.isEmpty()) { // Creates a plane in waypoint with planes of different altitude than that of the new plane.
 				if (getIdAvailableEntryPointsAltitudes().size() == 0)
@@ -769,9 +802,9 @@ public class Multiplayer extends Scene {
 		graphics.setColour(Main.GREEN);
 		graphics.printText(left_name, 10, 10, 2);
 		graphics.printText(right_name, window.getWidth()-(right_name.length()*17), 10, 2);
-		graphics.rectangle(false, VIEWPORT_OFFSET_X, VIEWPORT_OFFSET_Y, window.getWidth() - 32, window.getHeight() - 180);
+		graphics.rectangle(false, Main.VIEWPORT_OFFSET_X, Main.VIEWPORT_OFFSET_Y, window.getWidth() - 32, window.getHeight() - 180);
 		
-		graphics.setViewport(VIEWPORT_OFFSET_X, VIEWPORT_OFFSET_Y, window.getWidth() - 32, window.getHeight() - 180);
+		graphics.setViewport(Main.VIEWPORT_OFFSET_X, Main.VIEWPORT_OFFSET_Y, window.getWidth() - 32, window.getHeight() - 180);
 		graphics.setColour(255, 255, 255, 100);
 		graphics.draw(background, 0, 0);
 		
@@ -788,13 +821,30 @@ public class Multiplayer extends Scene {
 			r.draw();
 		}
 		
-		graphics.setColour(256, 256, 256, 128);
 		left_airport.draw();
 		right_airport.draw();
 		
+		graphics.setColour(Main.BLUE);
+		if (is_left_player) {
+			graphics.rectangle(true, left_entryexit_waypoints[6].position().x(), left_entryexit_waypoints[6].position().y(), 50, 20);
+			graphics.setColour((hand_over_aircraft_waiting > 0) ? Main.LIGHT_BLUE : Main.BLUE);
+			graphics.rectangle(true, left_entryexit_waypoints[7].position().x(), left_entryexit_waypoints[7].position().y(), 50, 20);
+		} else {
+			graphics.rectangle(true, left_entryexit_waypoints[7].position().x(), left_entryexit_waypoints[7].position().y(), 50, 20);
+			graphics.setColour((hand_over_aircraft_waiting > 0) ? Main.LIGHT_BLUE : Main.BLUE);
+			graphics.rectangle(true, left_entryexit_waypoints[6].position().x(), left_entryexit_waypoints[6].position().y(), 50, 20);
+		}
+		
+		graphics.setColour(256, 256, 256, 128);
+		
 		for (Aircraft a : aircraft) {
+			if (a.getPosition().x() < window.getWidth()/2) {
+				graphics.setColour(is_left_player ? Main.GREEN : Main.GREY); 
+			} else {
+				graphics.setColour(is_left_player ? Main.GREY : Main.GREEN);
+			}
 			a.draw();
-			if (a.isMouseOver(input.getMouseX() - VIEWPORT_OFFSET_X, input.getMouseY() - VIEWPORT_OFFSET_Y)) {
+			if (a.isMouseOver(input.getMouseX() - Main.VIEWPORT_OFFSET_X, input.getMouseY() - Main.VIEWPORT_OFFSET_Y)) {
 				a.drawFlightPath(false);
 			}
 		}
@@ -807,7 +857,7 @@ public class Multiplayer extends Scene {
 			// if aircraft is flying towards the airport (i.e. it's its
 			// destination point, draw the land button)
 			if (selected_aircraft.getFlightPlan().getDestination() instanceof Airport) {
-				land_button.draw();
+				
 			}
 			
 			graphics.setColour(Main.GREEN);
@@ -815,7 +865,7 @@ public class Multiplayer extends Scene {
 		
 		if (selected_waypoint != null && selected_aircraft.isManuallyControlled() == false) {
 			//TODO offset values should be placed into a constant
-			selected_aircraft.drawModifiedPath(selected_pathpoint, input.getMouseX() - VIEWPORT_OFFSET_X, input.getMouseY() - VIEWPORT_OFFSET_Y);
+			selected_aircraft.drawModifiedPath(selected_pathpoint, input.getMouseX() - Main.VIEWPORT_OFFSET_X, input.getMouseY() - Main.VIEWPORT_OFFSET_Y);
 		}
 		
 		graphics.setViewport();
@@ -831,6 +881,9 @@ public class Multiplayer extends Scene {
 		graphics.setColour(Main.GREEN);
 		left_lives.draw();
 		right_lives.draw();
+		
+		
+
 	}
 	
 	private void drawPlaneInfo() {
@@ -933,7 +986,7 @@ public class Multiplayer extends Scene {
 
 				if (isMine(plane)) {
 					if (collision_state >= 0) {
-						playSound(audio.newSoundEffect("sfx" + File.separator + "crash.ogg"));
+						//playSound(audio.newSoundEffect("sfx" + File.separator + "crash.ogg"));
 						//TODO lives need to be subtracted. is it possible for both players to be in the wrong? A crash is between two or more planes! (dont decrement twice)
 						loseALife();
 						return;

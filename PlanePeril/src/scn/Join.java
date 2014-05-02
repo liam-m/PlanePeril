@@ -21,7 +21,7 @@ import rem.HostInterface;
 public class Join extends Scene {
 	
 	String this_address = null;
-	private String their_address = "";
+	private static String their_address = "";
 	
 	String player_name;
 	String their_name = "";
@@ -31,10 +31,11 @@ public class Join extends Scene {
 	boolean could_not_connect = false;
 	boolean attempting_to_join = false;
 	
-	private final int JOIN_X_POSITION = window.getWidth() /2;
-	private final int JOIN_Y_POSITION = 800;
 	private final int JOIN_WIDTH = 100;
 	private final int JOIN_HEIGHT = 25;
+	private final int JOIN_X_POSITION = (window.getWidth() /2) - (JOIN_WIDTH/2);
+	private final int JOIN_Y_POSITION = 800;
+	
 	
 	int server_port = 1729;
 	
@@ -110,7 +111,7 @@ public class Join extends Scene {
 					their_address += Keyboard.getEventCharacter();
 			} else if (key == input.KEY_DECIMAL || key == input.KEY_PERIOD) {
 				if (address_length > 0 && their_address.charAt(address_length-1) != '.' // Can't start with '.', can't have two '.'s in a row
-						&& their_address.split("\\.").length < 3) // Can't have more than 3 '.'s
+						&& their_address.split("\\.").length < 4) // Can't have more than 3 '.'s
 					their_address += '.';
 			}
 		}
@@ -128,10 +129,10 @@ public class Join extends Scene {
 	public void draw() {
 		graphics.setColour(Main.GREEN);
 		graphics.printTextCentred("Welcome!:", window.getWidth() / 2, 100, 5, 100);
-		graphics.printTextCentred(player_name, window.getWidth() / 2, 300, 10, 100);
+		graphics.printTextCentred(player_name, window.getWidth() / 2, 225, 10, 100);
 		
-		graphics.printTextCentred("Enter IP: ", window.getWidth() / 2, 500, 5, 100);
-		graphics.printTextCentred(their_address, window.getWidth() / 2, 600, 5, 100);
+		graphics.printTextCentred("Enter IP: ", window.getWidth() / 2, 400, 5, 100);
+		graphics.printTextCentred(their_address, window.getWidth() / 2, 525, 5, 100);
 		
 		if (could_not_connect) {
 			graphics.printTextCentred("Could not find opponent", window.getWidth() / 2, 700, 5, 100);

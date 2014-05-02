@@ -610,12 +610,15 @@ public class Aircraft {
 		float scale = 2;
 
 		// Draws the aircraft itself
-		graphics.setColour(Main.GREY);
 		graphics.draw(image, scale, position.x(), position.y(), getBearing(), 8, 8);
 
 		// Draw the altitude near the aircraft
 		// £ is rendered as cursive "ft" from font file
-		graphics.print(String.format("%.0f", position.z()) + "£", position.x() - 22, position.y() + 15);
+		if (this.position.y() < 700) // if the plane is NOT on the bottom, the altitude is displayed below the plane 
+			graphics.print(String.format("%.0f", position.z()) + "£", position.x() - 22, position.y() + 15);
+		else  // the plane is on the bottom, the altitude is displayed above the plane
+			graphics.print(String.format("%.0f", position.z()) + "£", position.x() - 22, position.y() - 20);
+		
 
 		// Draw the 'land me' message once an aircraft is circling the airport
 		if (current_target instanceof HoldingWaypoint) {
