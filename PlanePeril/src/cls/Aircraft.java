@@ -39,7 +39,7 @@ public class Aircraft {
 	private int num_points; // The number of points (score) an aircraft enters the airspace with.
 	private final static float LANDING_SPEED = 0.6f; // Scalar for the velocity which is imposed upon landing	
 
-	private double turning_speed = Math.PI / 4; // How much the plane can turn per second, in radians.
+	private double turning_speed = Math.PI / 2; // How much the plane can turn per second, in radians.
 	private int altitude_change_speed = 300; // the speed to climb or fall by. Default 300 for easy mode
 	private final String name; // An array of waypoints from the plane's origin to its destination.
 	private final Image image; // The image to be drawn representing the plane.
@@ -66,6 +66,8 @@ public class Aircraft {
 	public static ArrayList<Integer> altitude_list; // A list holding the list of possible altitudes for the aircraft.
 
 	private double initial_speed;
+	
+	private boolean is_handing_over = false; // Been told to hand over to other player
 	
 	public double getInitialSpeed() {
 		return initial_speed;
@@ -769,8 +771,7 @@ public class Aircraft {
 						num_points -= 20;
 					}
 				}
-			}
-			
+			}			
 		}
 
 
@@ -780,5 +781,13 @@ public class Aircraft {
 		}
 
 		return -1;
+	}
+	
+	public void handOver() {
+		this.is_handing_over = true;
+	}
+	
+	public boolean isHandingOver() {
+		return is_handing_over;
 	}
 }

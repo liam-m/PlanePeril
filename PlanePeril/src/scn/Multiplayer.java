@@ -347,13 +347,17 @@ public class Multiplayer extends Scene {
 			if (aircraft.get(i).isAtAirport()) {
 				orders_box.addOrder("<<< Aircraft " + aircraft.get(i).getName() + " has landed safely at " + left_airport.getName());
 			}
-			// if aircraft has completed it's journey correctly
+			// if aircraft has completed its journey correctly
 			if (aircraft.get(i).hasFinished()) {
 				if (isMine(aircraft.get(i))) {
 					updatePerformance(5);
 					Waypoint my_outgoing_hand_over_point = is_left_player ? left_entryexit_waypoints[6] : right_entryexit_waypoints[7];
 					if (aircraft.get(i).getFlightPlan().getDestination().equals(my_outgoing_hand_over_point)) {
-						handOver(aircraft.get(i));
+						if (aircraft.get(i).isHandingOver()) {
+							handOver(aircraft.get(i));
+						} else {
+							continue; // Don't remove an aircraft if it's going to be handed over but hasn't been told to yet
+						}
 					} else {
 						switch (RandomNumber.randInclusiveInt(0, 2)) {
 						case 0:
@@ -367,18 +371,18 @@ public class Multiplayer extends Scene {
 							break;
 						}
 					}
+					if (aircraft.get(i).equals(selected_aircraft)) {
+						deselectAircraft();
+					}
+					// make sure you notify the server of which aircraft is to be removed BEFORE it is removed
+					try {
+						server.sendRemoveAircraft(aircraft.get(i).getName());
+					} catch (RemoteException e) {
+						connectionLost();
+					}
+					aircraft.remove(i);
+					i--; // Removed one as want to have same index next time through loop
 				}
-				if (aircraft.get(i).equals(selected_aircraft)) {
-					deselectAircraft();
-				}
-				// make sure you notify the server of which aircraft is to be removed BEFORE it is removed
-				try {
-					server.sendRemoveAircraft(aircraft.get(i).getName());
-				} catch (RemoteException e) {
-					connectionLost();
-				}
-				aircraft.remove(i);
-				i--; // Removed one as want to have same index next time through loop
 			}
 		}
 
@@ -520,6 +524,12 @@ public class Multiplayer extends Scene {
 					}
 					
 					// bar
+				}
+				
+				Waypoint my_outgoing_hand_over_point = is_left_player ? left_entryexit_waypoints[6] : right_entryexit_waypoints[7];
+				if (selected_aircraft.getFlightPlan().getDestination().equals(my_outgoing_hand_over_point) && 
+						my_outgoing_hand_over_point.isMouseOver(x, y)) {
+					selected_aircraft.handOver();
 				}
 			}
 		}
