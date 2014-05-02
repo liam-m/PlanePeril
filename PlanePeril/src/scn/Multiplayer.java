@@ -477,7 +477,7 @@ public class Multiplayer extends Scene {
 	 */
 	@Override
 	public void mousePressed(int key, int x, int y) {
-		if (!isInputValid(x, y)) {	
+		if (!isInputValid(x, y)) {
 			return;
 		} 
 		
