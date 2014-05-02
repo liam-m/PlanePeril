@@ -67,6 +67,7 @@ public class Aircraft {
 
 	private double initial_speed;
 	
+	private boolean to_be_handed;
 	private boolean is_handing_over = false; // Been told to hand over to other player
 	
 	public double getInitialSpeed() {
@@ -431,7 +432,9 @@ public class Aircraft {
 
 		// Update target waypoint
 		if (isAt(current_target.position()) && current_target.equals(flight_plan.getDestination())) {
-			has_finished = true;
+			if (!to_be_handed) {
+				has_finished = true;
+			}
 			if (flight_plan.getDestination() instanceof Airport) {
 				((Airport) flight_plan.getDestination()).insertAircraft(this);
 				is_at_airport = true;
@@ -789,5 +792,9 @@ public class Aircraft {
 	
 	public boolean isHandingOver() {
 		return is_handing_over;
+	}
+	
+	public void setToBeHanded(boolean to_be_handed) {
+		this.to_be_handed = to_be_handed;
 	}
 }

@@ -638,6 +638,8 @@ public class Multiplayer extends Scene {
 				a.setAltitude(100);
 				a.increaseTargetAltitude(); 
 			}
+			
+			a.setToBeHanded(a.getFlightPlan().getDestination().equals(is_left_player ? left_entryexit_waypoints[6] : right_entryexit_waypoints[7]));
 
 			orders_box.addOrder("<<< " + a.getName() + " incoming from " + a.getFlightPlan().getOriginName() + " heading towards " + a.getFlightPlan().getDestinationName() + ".");
 			aircraft.add(a);
@@ -796,7 +798,7 @@ public class Multiplayer extends Scene {
 		} else {
 			return new Aircraft(name, aircraft_image, 32 + (int) (10 * Math.random()), 1, new FlightPlan(origin_point, 
 					destination_point, right_waypoints, right_holding_waypoints, right_airport_takeoff_waypoint), preferred_altitude_index);
-		}		
+		}
 	}
 	
 	private boolean nameTaken(String name) {
@@ -987,7 +989,6 @@ public class Multiplayer extends Scene {
 	}
 	
 	
-
 	/**
 	 * Causes an aircraft to call methods to handle deselection
 	 */
