@@ -33,7 +33,7 @@ public class Join extends Scene {
 	
 	private final int JOIN_WIDTH = 100;
 	private final int JOIN_HEIGHT = 25;
-	private final int JOIN_X_POSITION = (window.getWidth() /2) - (JOIN_WIDTH/2);
+	private final int JOIN_X_POSITION = (window.getWidth()/2) - (JOIN_WIDTH/2);
 	private final int JOIN_Y_POSITION = 800;
 	
 	
@@ -80,7 +80,6 @@ public class Join extends Scene {
 		};
 
 		join_button = new ButtonText("Join", join, JOIN_X_POSITION, JOIN_Y_POSITION, JOIN_WIDTH, JOIN_HEIGHT, true, true);
-
 	}
 	
 	@Override
