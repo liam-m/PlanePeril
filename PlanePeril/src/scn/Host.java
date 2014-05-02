@@ -97,7 +97,7 @@ public class Host extends Scene {
 	
 	@Override
 	public void close() {
-	host_server.close();
+		host_server.close();
 	}
 
 	@Override
