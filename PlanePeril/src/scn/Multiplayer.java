@@ -533,24 +533,25 @@ public class Multiplayer extends Scene {
 		// handle airport input
 		my_airport.mousePressed(key, x, y);
 		
-		if (selected_aircraft != null) {
-			if (my_airport.is_arrivals_clicked) {
+		if (selected_aircraft != null && !selected_aircraft.isLanding()) {
+			if (my_airport.is_arrivals_clicked && selected_aircraft.getCurrentTarget() instanceof HoldingWaypoint) {
 				if (is_left_player) {
 					selected_aircraft.toggleLand(left_holding_waypoints.get(0));
 				} else {
 					selected_aircraft.toggleLand(right_holding_waypoints.get(0));
 				}
-			} else if (my_airport.is_departures_clicked) {
-				// must wait at least 5 seconds between aircraft takeoff
-				if (next_take_off - timer <= 0) {
-					try {
-						my_airport.takeoff();
-						generateFlight(true);
-						next_take_off = timer + TAKEOFF_DELAY;
-						airport_control_box.signal_take_off = false;
-					} catch (IllegalStateException e) {
-						orders_box.addOrder("<<< There are no aircraft in the airport, Comrade.");
-					}
+			} 
+		}
+		if (my_airport.is_departures_clicked) {
+			// must wait at least 5 seconds between aircraft takeoff
+			if (next_take_off - timer <= 0) {
+				try {
+					my_airport.takeoff();
+					generateFlight(true);
+					next_take_off = timer + TAKEOFF_DELAY;
+					airport_control_box.signal_take_off = false;
+				} catch (IllegalStateException e) {
+					orders_box.addOrder("<<< There are no aircraft in the airport, Comrade.");
 				}
 			}
 		}
@@ -564,9 +565,6 @@ public class Multiplayer extends Scene {
 			}
 			return;
 		}
-		
-		if (selected_aircraft != null) //TODO landing
-		
 
 		airport_control_box.mouseReleased(key, x, y);
 		if (key == input.MOUSE_LEFT && airport_control_box.signal_take_off) {
@@ -891,14 +889,6 @@ public class Multiplayer extends Scene {
 		if (selected_aircraft != null) {
 			
 			selected_aircraft.drawFlightPath(true);
-			graphics.setColour(Main.GREEN);
-			
-			// if aircraft is flying towards the airport (i.e. it's its
-			// destination point, draw the land button)
-			if (selected_aircraft.getFlightPlan().getDestination() instanceof Airport) {
-				
-			}
-			
 			graphics.setColour(Main.GREEN);
 		}	
 		
