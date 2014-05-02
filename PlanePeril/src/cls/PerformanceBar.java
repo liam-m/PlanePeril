@@ -1,4 +1,6 @@
 package cls;
+import org.newdawn.slick.Color;
+
 import pp.Main;
 import lib.jog.graphics;
 
@@ -14,7 +16,13 @@ public class PerformanceBar {
 	private final static int BAR_HEIGHT = 25;
 	private final static int BAR_WIDTH = 600;
 	private double drawn_value = current_value;
-	private double time_since_last_change = 0;
+	
+	// colours
+	final Color KHAKI = new Color(238, 230, 140);
+	final Color LEMON = new Color(205, 201, 165);
+	final Color YELLOW = new Color(205, 205, 0);
+	final Color TURQUOISE = new Color(0, 199, 140);
+	private Color last_colour_used = YELLOW; // default value
 	
 	/**
 	 * Constructor for performance bar, takes coordinates of where the performance bar should be drawn
@@ -67,23 +75,36 @@ public class PerformanceBar {
 		graphics.setColour(Main.GREEN);
 		graphics.rectangle(false, position_x, position_y, BAR_WIDTH, BAR_HEIGHT); // Bar borders
 			
-		if (current_value < drawn_value) {
-			graphics.setColour(Main.RED);
-			drawn_value -= 0.5;
-		} else { 
-			if (this.current_value > drawn_value) 
-				drawn_value += 0.5;
-			
-			if (drawn_value <= (MAX_VALUE / 2)) 
-				graphics.setColour(238, 230, 140); // khaki colour
-			else if (drawn_value <= (MAX_VALUE / 2 + MAX_VALUE/6)) 
-				graphics.setColour(205, 201, 165); // lemonchiffon  colour
-			else if (drawn_value <= (MAX_VALUE / 2 + MAX_VALUE/3)) 
-				graphics.setColour(205, 205, 0); // yellow  colour
+		
+		if (current_value != drawn_value) {
+			if (current_value < drawn_value)
+				drawn_value -= 0.5;
 			else
-				graphics.setColour(0, 199, 140); // turquoiseblue colour
+				drawn_value += 0.5;
+
+			if (drawn_value >= (MAX_VALUE / 2 + MAX_VALUE / 4)) {
+				graphics.setColour(KHAKI);
+				last_colour_used = KHAKI;
+			}
+			else if (drawn_value >= (MAX_VALUE / 2 + MAX_VALUE / 2)) {
+				graphics.setColour(LEMON);
+				last_colour_used = LEMON;
+			}
+			else if (drawn_value >= (MAX_VALUE / 2)) {
+				graphics.setColour(YELLOW);
+				last_colour_used = YELLOW;
+			}
+			else if (drawn_value >= (MAX_VALUE / 2 - MAX_VALUE / 4)) {
+				graphics.setColour(TURQUOISE);
+				last_colour_used = TURQUOISE;
+			}
+			else {
+				graphics.setColour(Main.RED);
+				last_colour_used = Main.RED;
+			}
 		}
 		
+		graphics.setColour(last_colour_used);	
 		graphics.rectangle(true, position_x, position_y, BAR_WIDTH * drawn_value / MAX_VALUE, BAR_HEIGHT -1);//bar fill
 	}
 	
