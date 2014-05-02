@@ -449,14 +449,14 @@ public class Multiplayer extends Scene {
 			}
 		}
 		server.removal_queue.clear();
-		penalizeForNotTakingOffIfTheCase ();
+		applyTakeOffPenalty();
 	}
 	
 	
-	public void penalizeForNotTakingOffIfTheCase () {
-		if ((System.currentTimeMillis() - last_penalty_time > 500) && (my_airport.isNotTakingOff())) {
+	public void applyTakeOffPenalty () {
+		if ((timer - last_penalty_time > 1) && (my_airport.shouldPenalize())) {
 			updatePerformance(-1);
-			last_penalty_time = System.currentTimeMillis();
+			last_penalty_time = timer;
 		}		
 	}
 

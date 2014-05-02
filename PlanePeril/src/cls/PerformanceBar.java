@@ -14,6 +14,7 @@ public class PerformanceBar {
 	private final static int BAR_HEIGHT = 25;
 	private final static int BAR_WIDTH = 600;
 	private double drawn_value = current_value;
+	private double time_since_last_change = 0;
 	
 	/**
 	 * Constructor for performance bar, takes coordinates of where the performance bar should be drawn

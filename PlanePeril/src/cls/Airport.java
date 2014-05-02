@@ -46,7 +46,7 @@ public class Airport extends Waypoint {
 	
 	public boolean is_arrivals_clicked = false;
 	public boolean is_departures_clicked = false;
-	private boolean not_taking_off = false;
+	private boolean apply_penalty = false;
 	/**
 	 * An airport. In general, it is basically a waypoint (more specifically and
 	 * exit point) with few additions: an aircraft and land and takeoff from it. <br>
@@ -107,8 +107,8 @@ public class Airport extends Waypoint {
 	 * Checks if player has a plane or more waiting to take off for particular amount of time
 	 * @return if returns true, player should be penalized
 	 */
-	public boolean isNotTakingOff() {
-		return not_taking_off;
+	public boolean shouldPenalize() {
+		return apply_penalty;
 	}
 	/**
 	 * Inserts an aircraft into the airport, done by reference. if the list is already full then nothing happens
@@ -194,18 +194,13 @@ public class Airport extends Waypoint {
 				if (time_waiting >= 5) { // Cap at 5 seconds
 					green_now = green_danger;
 					red_now = red_danger;
-					not_taking_off = true;
 				} else {
 					// Colour between fine and danger, scaled by time_waiting
 					green_now = green_fine - (int)(Math.abs(green_fine-green_danger) * (time_waiting/5.0)); 
 					red_now = (int)(Math.abs(red_fine-red_danger) * (time_waiting/5.0));
-					not_taking_off = false;
 				}
-			}
+			} 
 			
-			else
-				not_taking_off = false;
-
 			// Draw border, draw as filled if clicked
 			graphics.setColour(red_now, green_now, 0, 256);
 			graphics.rectangle(is_departures_clicked, departures_x_location-airport.getWidth()/2, departures_y_location-airport.getHeight()/2, departures_width, departures_height);
@@ -246,7 +241,11 @@ public class Airport extends Waypoint {
 				}
 			}
 		}
-	
+		if (!time_entered.isEmpty()) {
+			apply_penalty = time_entered.get(0) > 5 ? true : false;
+		} else {
+			apply_penalty = false;
+		}
 	}
 	public int getMaxAircraft() {
 		return MAX_AIRCRAFT_NUMBER;
