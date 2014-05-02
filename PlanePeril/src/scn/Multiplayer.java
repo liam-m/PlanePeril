@@ -534,14 +534,14 @@ public class Multiplayer extends Scene {
 		my_airport.mousePressed(key, x, y);
 		
 		if (selected_aircraft != null) {
-			if (my_airport.is_arrivals_clicked) {
+			if (my_airport.is_arrivals_clicked && selected_aircraft.getCurrentTarget() instanceof HoldingWaypoint) {
 				if (is_left_player) {
 					selected_aircraft.toggleLand(left_holding_waypoints.get(0));
 				} else {
 					selected_aircraft.toggleLand(right_holding_waypoints.get(0));
 				}
 			} 
-		}	
+		}
 		if (my_airport.is_departures_clicked) {
 			// must wait at least 5 seconds between aircraft takeoff
 			if (next_take_off - timer <= 0) {

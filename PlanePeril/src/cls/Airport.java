@@ -231,7 +231,6 @@ public class Airport extends Waypoint {
 				graphics.setColour(255, 255, 255, 128);
 				graphics.print(Integer.toString(aircraft_waiting_to_land.size()), arrivals_x_location-airport.getWidth()/2 + 50, arrivals_y_location-airport.getHeight()/2 + 26);
 			}		
-		
 	}
 
 	public void update(double dt, ArrayList<Aircraft> aircraft, boolean is_left) {
@@ -287,7 +286,7 @@ public class Airport extends Waypoint {
 	}
 	
 	public void mousePressed(int key, int x, int y) {
-		if (key == input.MOUSE_LEFT) { 
+		if (key == input.MOUSE_LEFT) {
 			if (isWithinArrivals(new Vector(x, y, 0))) {
 				is_arrivals_clicked = true;
 			} else if (isWithinDepartures(new Vector(x, y, 0))) {
