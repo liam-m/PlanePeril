@@ -211,12 +211,18 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 		
 	}
 
-	public void sendHandOver() throws RemoteException {
-		multiplayer_interface.handOver();
+	public void sendHandOver(String name) throws RemoteException {
+		multiplayer_interface.handOver(name);
 	}
 	
 	@Override
-	public void handOver() throws RemoteException {
+	public void handOver(String name) throws RemoteException {
+		for (Aircraft a : game.aircraft) {
+			if (a.getName().equals(name)) {
+				a.handOver();
+				break;
+			}
+		}
 		game.hand_over_aircraft_waiting++;
 	}
 }

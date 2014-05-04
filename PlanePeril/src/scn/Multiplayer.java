@@ -639,7 +639,8 @@ public class Multiplayer extends Scene {
 				a.increaseTargetAltitude(); 
 			}
 			
-			a.setToBeHanded(a.getFlightPlan().getDestination().equals(is_left_player ? left_entryexit_waypoints[6] : right_entryexit_waypoints[7]));
+			// If it's towards a handover waypoint, set its attribute to that so that user will have to take manual action to hand it over
+			a.setToBeHanded(a.getFlightPlan().getDestination().equals(left_entryexit_waypoints[6]) || a.getFlightPlan().generateGreedyRoute().equals(right_entryexit_waypoints[7]));
 
 			orders_box.addOrder("<<< " + a.getName() + " incoming from " + a.getFlightPlan().getOriginName() + " heading towards " + a.getFlightPlan().getDestinationName() + ".");
 			aircraft.add(a);
@@ -733,7 +734,7 @@ public class Multiplayer extends Scene {
 			
 		// Send to other player
 		try {
-			server.sendHandOver();
+			server.sendHandOver(aircraft.getName());
 		} catch (RemoteException e) {
 			connectionLost();
 		}
@@ -1007,14 +1008,10 @@ public class Multiplayer extends Scene {
 	 * Causes a selected aircraft to call methods to land
 	 */
 	private void toggleLand(HoldingWaypoint land_waypoint) {
-		if (selected_aircraft == null)
-			return;
-
-		if (selected_aircraft.isLanding())
+		if (selected_aircraft == null || selected_aircraft.isLanding())
 			return;
 
 		selected_aircraft.toggleLand(land_waypoint);
-
 	}
 	
 	/**

@@ -20,5 +20,5 @@ public interface MultiplayerInterface extends Remote {
 	
 	void removeAircraft(String name) throws RemoteException;
 	
-	void handOver() throws RemoteException;
+	void handOver(String name) throws RemoteException;
 }
