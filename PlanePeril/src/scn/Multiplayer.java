@@ -62,6 +62,8 @@ public class Multiplayer extends Scene {
 	
 	Image background;
 	Image explosion;
+	Image left_channel_image;
+	Image right_channel_image;
 	
 	double timer = 0;
 	double next_take_off = TAKEOFF_DELAY;
@@ -288,6 +290,11 @@ public class Multiplayer extends Scene {
 		
 		aircraft_image = graphics.newImage("gfx" + File.separator + "plane.png");
 		explosion = graphics.newImage("gfx" + File.separator + "explosionFrames.png");
+		left_channel_image = graphics.newImage("gfx" + File.separator + "left_channel.png");
+		right_channel_image = graphics.newImage("gfx" + File.separator + "right_channel.png");
+		left_channel = new SpriteAnimation(left_channel_image, (int)left_entryexit_waypoints[7].position().x(), (int)left_entryexit_waypoints[7].position().y(), 6, 16, 8, 16, true);
+		right_channel = new SpriteAnimation(right_channel_image, (int)left_entryexit_waypoints[6].position().x(), (int)left_entryexit_waypoints[6].position().y(), 6, 16, 8, 16, true);
+
 	}
 	
 	@Override
@@ -451,13 +458,25 @@ public class Multiplayer extends Scene {
 				my_explosion_animation = null;
 			}
 		}
-				
+		
 		if (their_explosion_animation != null) {
 			if (!their_explosion_animation.hasFinished()) { 
 				their_explosion_animation.update(dt);
 			} else {
 				their_explosion_animation = null;
 			}
+		}
+		
+		if (left_channel.hasFinished()) {
+			left_channel = new SpriteAnimation(left_channel_image, (int)left_entryexit_waypoints[6].position().x(), (int)left_entryexit_waypoints[6].position().y(), 6, 16, 8, 16, true);
+		} else {
+			left_channel.update(dt);
+		}
+		
+		if (right_channel.hasFinished()) {
+			right_channel = new SpriteAnimation(right_channel_image, (int)left_entryexit_waypoints[6].position().x(), (int)left_entryexit_waypoints[6].position().y(), 6, 16, 8, 16, true);
+		} else {
+			right_channel.update(dt);
 		}
 		
 		// Update from server
@@ -908,6 +927,9 @@ public class Multiplayer extends Scene {
 		if (their_explosion_animation != null) {
 			their_explosion_animation.draw();
 		}
+		
+		left_channel.draw();
+		right_channel.draw();
 		
 		// Draw aircraft
 		graphics.setColour(256, 256, 256, 128);
