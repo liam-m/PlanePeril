@@ -22,7 +22,6 @@ public class PerformanceBar {
 	final Color LEMON = new Color(205, 201, 165);
 	final Color YELLOW = new Color(205, 205, 0);
 	final Color TURQUOISE = new Color(0, 199, 140);
-	private Color last_colour_used = YELLOW; // default value
 	
 	/**
 	 * Constructor for performance bar, takes coordinates of where the performance bar should be drawn
@@ -75,51 +74,38 @@ public class PerformanceBar {
 		return this.current_value;
 	}
 	
+	private Color getColour(double value) { // Colour based on current value of bar
+		if (value >= MAX_VALUE/2 + MAX_VALUE/4) {
+			return KHAKI;
+		} else if (value >= MAX_VALUE/2 + MAX_VALUE/2) {
+			return LEMON;
+		} else if (value >= MAX_VALUE/2) {
+			return YELLOW;
+		} else if (value >= MAX_VALUE/2 - MAX_VALUE/4) {
+			return TURQUOISE;
+		} else {
+			return Main.RED;
+		}
+	}
+	
 	/**
 	 * Draws the performance bar. The colour of the filling changes when the value decreases and also based on the intermediate value 
 	 */
 	public void draw() {
-		graphics.setColour(Main.GREEN);
-		graphics.rectangle(false, position_x, position_y, BAR_WIDTH, BAR_HEIGHT); // Bar borders
-			
-		
 		if (current_value != drawn_value) {
-			if (current_value < drawn_value)
-				drawn_value -= 0.5;
-			else
-				drawn_value += 0.5;
-
-			if (drawn_value >= (MAX_VALUE / 2 + MAX_VALUE / 4)) {
-				graphics.setColour(KHAKI);
-				last_colour_used = KHAKI;
-			}
-			else if (drawn_value >= (MAX_VALUE / 2 + MAX_VALUE / 2)) {
-				graphics.setColour(LEMON);
-				last_colour_used = LEMON;
-			}
-			else if (drawn_value >= (MAX_VALUE / 2)) {
-				graphics.setColour(YELLOW);
-				last_colour_used = YELLOW;
-			}
-			else if (drawn_value >= (MAX_VALUE / 2 - MAX_VALUE / 4)) {
-				graphics.setColour(TURQUOISE);
-				last_colour_used = TURQUOISE;
-			}
-			else {
-				graphics.setColour(Main.RED);
-				last_colour_used = Main.RED;
-			}
+			current_value += current_value > drawn_value ? 0.5 : -0.5;
 		}
 		
-		graphics.setColour(last_colour_used);	
-		graphics.rectangle(true, position_x, position_y, BAR_WIDTH * drawn_value / MAX_VALUE, BAR_HEIGHT -1);//bar fill
+		graphics.setColour(getColour(drawn_value));
+		graphics.rectangle(false, position_x, position_y, BAR_WIDTH, BAR_HEIGHT); // Bar border		
+		graphics.rectangle(true, position_x, position_y, BAR_WIDTH * drawn_value / MAX_VALUE, BAR_HEIGHT -1); // Bar fill
 	}
 	
 	public boolean isEmpty() {
 		return (current_value <= MIN_VALUE);
 	}
 	
-	public static int getWidth() { 
+	public static int getWidth() {
 		return PerformanceBar.BAR_WIDTH;
 	}
 }
