@@ -15,12 +15,14 @@ import cls.Lives;
 import cls.OrdersBox;
 import cls.HoldingWaypoint;
 import cls.PerformanceBar;
+import cls.Vector;
 import cls.Waypoint;
 import cls.Waypoint.WaypointType;
 import pp.Main;
 import rem.MultiplayerServer;
 import lib.ButtonText;
 import lib.RandomNumber;
+import lib.SpriteAnimation;
 import lib.jog.audio.Sound;
 import lib.jog.graphics;
 import lib.jog.input;
@@ -40,8 +42,8 @@ public class Multiplayer extends Scene {
 	public Waypoint[] left_waypoints;
 	public Waypoint[] right_waypoints;
 	HoldingWaypoint[] left_airport_waypoints, right_airport_waypoints;
-	public Airport left_airport = new Airport(window.getWidth()/4, window.getHeight()/2, "Aerodromio Leftved'");
-	public Airport right_airport = new Airport((window.getWidth()*3)/4 + 100, window.getHeight()/2, "Aerodromio Rightved'");
+	public Airport left_airport = new Airport(window.getWidth()/4, window.getHeight()/2, "Airport");
+	public Airport right_airport = new Airport((window.getWidth()*3)/4 + 100, window.getHeight()/2, "Airport");
 	public Waypoint left_airport_takeoff_waypoint = new Waypoint(left_airport.position().x() - 120, left_airport.position().y());
 	public Waypoint right_airport_takeoff_waypoint = new Waypoint(right_airport.position().x() - 120, right_airport.position().y());
 	
@@ -58,7 +60,7 @@ public class Multiplayer extends Scene {
 	AirportControlBox airport_control_box;
 	Altimeter altimeter;
 	
-	Image background;
+	Image background, explosion, left_channel_image, right_channel_image;
 	
 	double timer = 0;
 	double next_take_off = TAKEOFF_DELAY;
@@ -82,6 +84,8 @@ public class Multiplayer extends Scene {
 	private Waypoint[] my_waypoints;
 	private Lives my_lives;
 	private Waypoint[] my_entryexit_waypoints;
+	
+	private SpriteAnimation my_explosion_animation, their_explosion_animation, left_channel, right_channel;
 	
 	// Position of things drawn to window
 	final int Y_POSITION_OF_BOTTOM_ELEMENTS = window.getHeight() - 120;
@@ -122,18 +126,18 @@ public class Multiplayer extends Scene {
 			/* A set of Waypoints which are origin / destination points */
 
 			// top 3 entry/exit points
-			new Waypoint(8, 8, WaypointType.ENTRY_EXIT),
-			new Waypoint((window.getWidth()/4), 8, WaypointType.ENTRY_EXIT),
-			new Waypoint((window.getWidth()/2 - 20), 8, WaypointType.ENTRY_EXIT),
+			new Waypoint(8, 8, WaypointType.ENTRY_EXIT, "Top Left"),
+			new Waypoint((window.getWidth()/4), 8, WaypointType.ENTRY_EXIT, "Top Middle"),
+			new Waypoint((window.getWidth()/2 - 20), 8, WaypointType.ENTRY_EXIT, "Top Right"),
 
 			// bottom 3 entry/exit points
-			new Waypoint(8, window.getHeight() - 190, WaypointType.ENTRY_EXIT),
-			new Waypoint((window.getWidth()/4), window.getHeight() - 190, WaypointType.ENTRY_EXIT),
-			new Waypoint((window.getWidth()/2 - 20), window.getHeight() - 190, WaypointType.ENTRY_EXIT),
+			new Waypoint(8, window.getHeight() - 190, WaypointType.ENTRY_EXIT, "Bottom Left"),
+			new Waypoint((window.getWidth()/4), window.getHeight() - 190, WaypointType.ENTRY_EXIT, "Bottom Middle"),
+			new Waypoint((window.getWidth()/2 - 20), window.getHeight() - 190, WaypointType.ENTRY_EXIT, "Bottom Right"),
 			
 			// Hand over points
-			new Waypoint((window.getWidth()/2 - 20), window.getHeight()/3, WaypointType.ENTRY_EXIT),
-			new Waypoint((window.getWidth()/2 - 20), (window.getHeight() *2)/3, WaypointType.ENTRY_EXIT),
+			new Waypoint((window.getWidth()/2 - 20), window.getHeight()/3, WaypointType.ENTRY_EXIT, "Top Handover"),
+			new Waypoint((window.getWidth()/2 - 20), (window.getHeight() *2)/3, WaypointType.ENTRY_EXIT, "Bottom Handover"),
 			
 			// Airport
 			left_airport
@@ -143,18 +147,18 @@ public class Multiplayer extends Scene {
 			/* A set of Waypoints which are origin / destination points */
 
 			// top 3 entry/exit points
-			new Waypoint((window.getWidth()/2 + 20), 8, WaypointType.ENTRY_EXIT),
-			new Waypoint(((window.getWidth()* 3)/4), 8, WaypointType.ENTRY_EXIT),
-			new Waypoint(window.getWidth() - 40, 8, WaypointType.ENTRY_EXIT),
+			new Waypoint((window.getWidth()/2 + 20), 8, WaypointType.ENTRY_EXIT, "Top Left"),
+			new Waypoint(((window.getWidth()* 3)/4), 8, WaypointType.ENTRY_EXIT, "Top Middle"),
+			new Waypoint(window.getWidth() - 40, 8, WaypointType.ENTRY_EXIT, "Top Right"),
 
 			// bottom 3 entry/exit points
-			new Waypoint((window.getWidth()/2 + 20), window.getHeight() - 190, WaypointType.ENTRY_EXIT),
-			new Waypoint(((window.getWidth()* 3)/4), window.getHeight() - 190, WaypointType.ENTRY_EXIT),
-			new Waypoint(window.getWidth() - 40, window.getHeight() - 190, WaypointType.ENTRY_EXIT),
+			new Waypoint((window.getWidth()/2 + 20), window.getHeight() - 190, WaypointType.ENTRY_EXIT, "Bottom Left"),
+			new Waypoint(((window.getWidth()* 3)/4), window.getHeight() - 190, WaypointType.ENTRY_EXIT, "Bottom Middle"),
+			new Waypoint(window.getWidth() - 40, window.getHeight() - 190, WaypointType.ENTRY_EXIT, "Bottom Right"),
 			
 			// Hand over points
-			new Waypoint((window.getWidth()/2 + 20), window.getHeight()/3, WaypointType.ENTRY_EXIT),
-			new Waypoint((window.getWidth()/2 + 20), (window.getHeight() *2)/3, WaypointType.ENTRY_EXIT),
+			new Waypoint((window.getWidth()/2 + 20), window.getHeight()/3, WaypointType.ENTRY_EXIT, "Top Handover"),
+			new Waypoint((window.getWidth()/2 + 20), (window.getHeight() *2)/3, WaypointType.ENTRY_EXIT, "Bottom Handover"),
 						
 			// Airport
 			right_airport
@@ -455,8 +459,17 @@ public class Multiplayer extends Scene {
 			}
 		}
 		
-		left_channel.update(dt);
-		right_channel.update(dt);
+		if (left_channel.hasFinished()) {
+			left_channel = new SpriteAnimation(left_channel_image, (int)left_entryexit_waypoints[7].position().x(), (int)left_entryexit_waypoints[7].position().y(), 6, 16, 8, 16, true);
+		} else {
+			left_channel.update(dt);			
+		}
+		
+		if (right_channel.hasFinished()) {
+			right_channel = new SpriteAnimation(right_channel_image, (int)left_entryexit_waypoints[6].position().x(), (int)left_entryexit_waypoints[6].position().y(), 6, 16, 8, 16, true);
+		} else {
+			right_channel.update(dt);			
+		}
 		
 		// Update from server
 		for(Aircraft a : server.aircraft_queue) {
@@ -516,7 +529,7 @@ public class Multiplayer extends Scene {
 		if (key == input.MOUSE_LEFT) {
 			// If clicked on an aircraft, set it as selected
 			for (Aircraft a : aircraft) {
-				if (a.isMouseOver(x, y)) {
+				if (a.isMouseOver(x, y) && isMine(a)) {
 					deselectAircraft();
 					selected_aircraft = a;
 					try {
@@ -897,14 +910,25 @@ public class Multiplayer extends Scene {
 			graphics.rectangle(true, left_entryexit_waypoints[6].position().x(), left_entryexit_waypoints[6].position().y(), 50, 20);
 		}
 		
+		// Draw effects
+		graphics.setColour(128, 0, 0);
+		
+		if (my_explosion_animation != null) {
+			my_explosion_animation.draw();
+		}
+		
+		if (their_explosion_animation != null) {
+			their_explosion_animation.draw();
+		}
+
+		left_channel.draw();
+		right_channel.draw();
+	
+		// Draw aircraft
 		graphics.setColour(256, 256, 256, 128);
 		
 		for (Aircraft a : aircraft) {
-			if (a.getPosition().x() < window.getWidth()/2) {
-				graphics.setColour(is_left_player ? Main.GREEN : Main.GREY); 
-			} else {
-				graphics.setColour(is_left_player ? Main.GREY : Main.GREEN);
-			}
+			graphics.setColour(isMine(a) ? Main.GREEN : Main.GREY);
 			a.draw();
 			if (a.isMouseOver(input.getMouseX() - Main.VIEWPORT_OFFSET_X, input.getMouseY() - Main.VIEWPORT_OFFSET_Y)) {
 				a.drawFlightPath(false);
@@ -1039,14 +1063,17 @@ public class Multiplayer extends Scene {
 	public void checkCollisions(double dt) {
 		for (Aircraft plane : aircraft) {
 				int collision_state = plane.updateCollisions(dt, aircraft);
+				int x = (int)plane.getPosition().x() - Main.VIEWPORT_OFFSET_X;
+				int y = (int)plane.getPosition().y() - Main.VIEWPORT_OFFSET_Y;
 
 				if (isMine(plane)) {
 					if (collision_state >= 0) {
-						//playSound(audio.newSoundEffect("sfx" + File.separator + "crash.ogg"));
-						//TODO lives need to be subtracted. is it possible for both players to be in the wrong? A crash is between two or more planes! (dont decrement twice)
 						loseALife();
+						my_explosion_animation = new SpriteAnimation(explosion, x, y, 6, 16, 8, 4, false);
 						return;
 					}
+				} else if (collision_state >= 0) {
+					their_explosion_animation = new SpriteAnimation(explosion, x, y, 6, 16, 8, 4, false);
 				}
 		}
 	}
