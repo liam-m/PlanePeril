@@ -116,9 +116,7 @@ public class Multiplayer extends Scene {
 	private final int LEFT_LIVES_Y = 8;
 		
 	private final int RIGHT_LIVES_X = window.getWidth()/2 + 50;
-	private final int RIGHT_LIVES_Y = 8;
-		
-	
+	private final int RIGHT_LIVES_Y = 8;	
 		
 	public final Waypoint[] left_entryexit_waypoints = new Waypoint[] {
 			/* A set of Waypoints which are origin / destination points */
@@ -166,6 +164,8 @@ public class Multiplayer extends Scene {
 
 	public ArrayList<HoldingWaypoint> right_holding_waypoints = new ArrayList<HoldingWaypoint>();
 	
+	Waypoint my_outgoing_hand_over_point;;
+	
 	public Multiplayer(Main main, String left_name, String right_name, String their_address, final boolean is_left) {
 		super(main);
 		this.left_name = left_name;
@@ -173,6 +173,7 @@ public class Multiplayer extends Scene {
 		this.background = graphics.newImage("gfx" + File.separator + "map.png");
 		this.their_address = their_address;
 		this.is_left_player = is_left;
+		this.my_outgoing_hand_over_point = is_left ? left_entryexit_waypoints[6] : right_entryexit_waypoints[7];
 		
 		left_waypoints = new Waypoint[]{
 			new Waypoint(100, 100),
@@ -350,7 +351,6 @@ public class Multiplayer extends Scene {
 			// if aircraft has completed its journey correctly
 			if (aircraft.get(i).hasFinished() && isMine(aircraft.get(i)) && !aircraft.get(i).isWaitingToBeHanded()) {
 				updatePerformance(5);
-				Waypoint my_outgoing_hand_over_point = is_left_player ? left_entryexit_waypoints[6] : right_entryexit_waypoints[7];
 				if (aircraft.get(i).getFlightPlan().getDestination().equals(my_outgoing_hand_over_point)) {
 					handOver(aircraft.get(i));
 				} else {
@@ -522,7 +522,6 @@ public class Multiplayer extends Scene {
 					}
 				}
 				
-				Waypoint my_outgoing_hand_over_point = is_left_player ? left_entryexit_waypoints[6] : right_entryexit_waypoints[7];
 				if (selected_aircraft.getFlightPlan().getDestination().equals(my_outgoing_hand_over_point) && 
 						my_outgoing_hand_over_point.isMouseOver(x, y)) {
 					selected_aircraft.handOver();
@@ -655,12 +654,11 @@ public class Multiplayer extends Scene {
  	 */
 	private ArrayList<Waypoint> getAvailableEntryPoints() {
 		ArrayList<Waypoint> available_entry_points = new ArrayList<Waypoint>();
-		Waypoint my_incoming_hand_over = is_left_player ? left_entryexit_waypoints[7] : right_entryexit_waypoints[6];	
-		Waypoint my_outgoing_hand_over = is_left_player ? left_entryexit_waypoints[6] : right_entryexit_waypoints[7];	
+		Waypoint my_incoming_hand_over = is_left_player ? left_entryexit_waypoints[7] : right_entryexit_waypoints[6];
 		
 		for (Waypoint entry_point : my_entryexit_waypoints) {
 			// Skip the "air channel" entry point  
-			if (entry_point.equals(my_incoming_hand_over) || entry_point.equals(my_outgoing_hand_over)) {
+			if (entry_point.equals(my_incoming_hand_over) || entry_point.equals(my_outgoing_hand_over_point)) {
 				continue;
 			}
 			boolean is_available = true;
@@ -885,14 +883,20 @@ public class Multiplayer extends Scene {
 		}
 		
 		if (selected_aircraft != null) {
-			
 			selected_aircraft.drawFlightPath(true);
 			graphics.setColour(Main.GREEN);
 		}	
 		
 		if (selected_waypoint != null && selected_aircraft.isManuallyControlled() == false) {
-			//TODO offset values should be placed into a constant
 			selected_aircraft.drawModifiedPath(selected_pathpoint, input.getMouseX() - Main.VIEWPORT_OFFSET_X, input.getMouseY() - Main.VIEWPORT_OFFSET_Y);
+		}
+		
+		// Draw circle around holding waypoint to indicate the user should click there
+		if (selected_aircraft != null && selected_aircraft.isWaitingToBeHanded() && selected_aircraft.getCurrentTarget().equals(selected_aircraft.getFlightPlan().getDestination())) {
+			graphics.setColour(128, 0, 0, 128);
+			graphics.circle(false, my_outgoing_hand_over_point.position().x(), my_outgoing_hand_over_point.position().y(), 20);
+			graphics.circle(false, my_outgoing_hand_over_point.position().x(), my_outgoing_hand_over_point.position().y(), 30);
+			graphics.setColour(Main.GREEN);
 		}
 		
 		graphics.setViewport();
@@ -908,9 +912,6 @@ public class Multiplayer extends Scene {
 		graphics.setColour(Main.GREEN);
 		left_lives.draw();
 		right_lives.draw();
-		
-		
-
 	}
 	
 	private void drawPlaneInfo() {
