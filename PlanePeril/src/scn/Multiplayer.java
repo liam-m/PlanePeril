@@ -490,7 +490,7 @@ public class Multiplayer extends Scene {
 		if (key == input.MOUSE_LEFT) {
 			// If clicked on an aircraft, set it as selected
 			for (Aircraft a : aircraft) {
-				if (a.isMouseOver(x, y)) {
+				if (a.isMouseOver(x, y) && isMine(a)) {
 					deselectAircraft();
 					selected_aircraft = a;
 					try {
