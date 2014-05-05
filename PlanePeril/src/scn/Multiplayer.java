@@ -321,7 +321,7 @@ public class Multiplayer extends Scene {
 			try {
 				aircraft.get(i).update(dt);
 			} catch (IllegalStateException e) {
-				orders_box.addOrder("<<< Aerodromio Medved' is full, divert aircraft Comrade!");
+				orders_box.addOrder("<<< " + my_airport.getName() + " is full, divert aircraft Comrade!");
 				return;
 			}
 			
@@ -381,19 +381,21 @@ public class Multiplayer extends Scene {
 		altimeter.update(dt);
 
 		if (selected_aircraft != null) {
+			if (selected_aircraft.isManuallyControlled() && isInMyHalf(selected_aircraft)) { // Remove control if aircraft flies into other half
+				toggleMyManualControl();
+			}
+			
 			try {
 				if (input.isKeyDown(input.KEY_LEFT) || input.isKeyDown(input.KEY_A)) {
-					if (!selected_aircraft.isManuallyControlled()) {
-						toggleMyManualControl();
+					if (selected_aircraft.isManuallyControlled() || toggleMyManualControl()) { // Already manually controlled or you make it manually controlled
+						selected_aircraft.turnLeft(dt);
+						server.sendTurnLeft(dt);
 					}
-					selected_aircraft.turnLeft(dt);
-					server.sendTurnLeft(dt);
 				} else if (input.isKeyDown(input.KEY_RIGHT) || input.isKeyDown(input.KEY_D)) {
-					if (!selected_aircraft.isManuallyControlled()) {
-						toggleMyManualControl();
+					if (selected_aircraft.isManuallyControlled() || toggleMyManualControl()) {
+						selected_aircraft.turnRight(dt);
+						server.sendTurnRight(dt);
 					}
-					selected_aircraft.turnRight(dt);
-					server.sendTurnRight(dt);
 				}
 			} catch (RemoteException e) {
 				connectionLost();
@@ -404,7 +406,6 @@ public class Multiplayer extends Scene {
 				orders_box.addOrder(">>> " + selected_aircraft.getName() + " is out of bounds, contact lost. Do better Comrade.");
 				deselectAircraft();
 			}
-
 		}
 
 		flight_generation_time_elapsed += dt;
@@ -972,11 +973,16 @@ public class Multiplayer extends Scene {
 	
 	/**
 	 * Causes a selected aircraft to call methods to toggle manual control
+	 * @return If the manual control toggle was successful (allowed)
 	 */
-	private void toggleMyManualControl() {
+	private boolean toggleMyManualControl() {
 		if (selected_aircraft == null)
-			return;
+			return false;
 
+		if (isInMyHalf(selected_aircraft) && !is_manually_controlling) { // Don't allow player to manually control aircraft not in their half
+				return false;
+		}
+		
 		is_manually_controlling = !is_manually_controlling;
 		selected_aircraft.toggleManualControl();
 		try {
@@ -984,6 +990,7 @@ public class Multiplayer extends Scene {
 		} catch (RemoteException e) {
 			connectionLost();
 		}
+		return true;
 	}
 	
 	
@@ -1076,5 +1083,9 @@ public class Multiplayer extends Scene {
 	private void connectionLost() {
 		main.closeScene();
 		main.setScene(new ConnectionLost(main));
+	}
+	
+	private boolean isInMyHalf(Aircraft aircraft) {
+		return is_left_player ? aircraft.getPosition().x() > window.getWidth()/2 : aircraft.getPosition().x() < window.getWidth()/2;
 	}
 }
