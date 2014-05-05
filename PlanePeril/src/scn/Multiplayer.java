@@ -285,8 +285,8 @@ public class Multiplayer extends Scene {
 		
 		aircraft_image = graphics.newImage("gfx" + File.separator + "plane.png");
 		explosion = graphics.newImage("gfx" + File.separator + "explosionFrames.png");
-		left_channel_image = graphics.newImage("gfx" + File.separator + "left_channel.png");
-		right_channel_image = graphics.newImage("gfx" + File.separator + "right_channel.png");
+		left_channel_image = graphics.newImage("gfx" + File.separator + "ChevronFramesFlipped(w-0border).png");
+		right_channel_image = graphics.newImage("gfx" + File.separator + "ChevronFrames(w-0border).png");
 		left_channel = new SpriteAnimation(left_channel_image, (int)left_entryexit_waypoints[7].position().x(), (int)left_entryexit_waypoints[7].position().y(), 2, 16, 50, 20, true);
 		right_channel = new SpriteAnimation(right_channel_image, (int)left_entryexit_waypoints[6].position().x(), (int)left_entryexit_waypoints[6].position().y(), 2, 16, 50, 20, true);
 
@@ -899,17 +899,6 @@ public class Multiplayer extends Scene {
 		left_airport.draw();
 		right_airport.draw();
 		
-		graphics.setColour(Main.BLUE);
-		if (is_left_player) {
-			graphics.rectangle(true, left_entryexit_waypoints[6].position().x(), left_entryexit_waypoints[6].position().y(), 50, 20);
-			graphics.setColour((hand_over_aircraft_waiting > 0) ? Main.LIGHT_BLUE : Main.BLUE);
-			graphics.rectangle(true, left_entryexit_waypoints[7].position().x(), left_entryexit_waypoints[7].position().y(), 50, 20);
-		} else {
-			graphics.rectangle(true, left_entryexit_waypoints[7].position().x(), left_entryexit_waypoints[7].position().y(), 50, 20);
-			graphics.setColour((hand_over_aircraft_waiting > 0) ? Main.LIGHT_BLUE : Main.BLUE);
-			graphics.rectangle(true, left_entryexit_waypoints[6].position().x(), left_entryexit_waypoints[6].position().y(), 50, 20);
-		}
-		
 		// Draw effects
 		graphics.setColour(128, 0, 0);
 		
@@ -921,8 +910,16 @@ public class Multiplayer extends Scene {
 			their_explosion_animation.draw();
 		}
 
-		left_channel.draw();
-		right_channel.draw();
+		graphics.setColour(Main.BLUE);
+		if (is_left_player) {
+			right_channel.draw();
+			graphics.setColour((hand_over_aircraft_waiting > 0) ? Main.LIGHT_BLUE : Main.BLUE);
+			left_channel.draw();
+		} else {
+			left_channel.draw();
+			graphics.setColour((hand_over_aircraft_waiting > 0) ? Main.LIGHT_BLUE : Main.BLUE);
+			right_channel.draw();
+		}
 	
 		// Draw aircraft
 		graphics.setColour(256, 256, 256, 128);

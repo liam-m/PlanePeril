@@ -89,7 +89,6 @@ public class SpriteAnimation {
 		game_time += delta_time;
 		if (game_time > frame_period) { // frame period exceeded
 			game_time = 0; // reset timer
-			System.out.print(current_frame + ", ");
 			current_frame++; // increment frame
 			if (current_frame >= frame_count) {
 				if (!is_looping) {
