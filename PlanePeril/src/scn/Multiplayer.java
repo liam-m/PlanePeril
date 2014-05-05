@@ -525,10 +525,12 @@ public class Multiplayer extends Scene {
 				if (selected_aircraft.getFlightPlan().getDestination().equals(my_outgoing_hand_over_point) && 
 						my_outgoing_hand_over_point.isMouseOver(x, y)) {
 					selected_aircraft.handOver();
+					deselectAircraft();
+					return;
 				}
 			}
 			
-			if (selected_aircraft != null && !selected_aircraft.isLanding()) {
+			if (!selected_aircraft.isLanding()) {
 				if (my_airport.is_arrivals_clicked && selected_aircraft.getCurrentTarget() instanceof HoldingWaypoint) {
 					Waypoint landing_waypoint = is_left_player ? left_holding_waypoints.get(0) : right_holding_waypoints.get(0);
 					selected_aircraft.toggleLand(landing_waypoint);
@@ -891,7 +893,7 @@ public class Multiplayer extends Scene {
 			selected_aircraft.drawModifiedPath(selected_pathpoint, input.getMouseX() - Main.VIEWPORT_OFFSET_X, input.getMouseY() - Main.VIEWPORT_OFFSET_Y);
 		}
 		
-		// Draw circle around holding waypoint to indicate the user should click there
+		// Draw circles around handover waypoint to indicate the user should click there
 		if (selected_aircraft != null && selected_aircraft.isWaitingToBeHanded() && selected_aircraft.getCurrentTarget().equals(selected_aircraft.getFlightPlan().getDestination())) {
 			graphics.setColour(128, 0, 0, 128);
 			graphics.circle(false, my_outgoing_hand_over_point.position().x(), my_outgoing_hand_over_point.position().y(), 20);

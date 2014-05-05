@@ -622,18 +622,18 @@ public class Aircraft {
 
 		// Draws the aircraft itself
 		graphics.draw(image, scale, position.x(), position.y(), getBearing(), 8, 8);
+		
+		// If the plane is near the bottom, the altitude label is shown above the plane. This also shifts up the 'Land/Hand' me label
+		double bottom_label_y = position.y() + (position.y() < 700 ? 15 : -20);
+		double top_label_y = position.y() - (position.y() < 700 ? 22 : 32);
 
-		// Draw the altitude near the aircraft
-		// £ is rendered as cursive "ft" from font file
-		if (this.position.y() < 700) // if the plane is NOT on the bottom, the altitude is displayed below the plane 
-			graphics.print(String.format("%.0f", position.z()) + "£", position.x() - 22, position.y() + 15);
-		else  // the plane is on the bottom, the altitude is displayed above the plane
-			graphics.print(String.format("%.0f", position.z()) + "£", position.x() - 22, position.y() - 20);
+		// Draw the altitude near the aircraft. £ is rendered as cursive "ft" from font file
+		graphics.print(String.format("%.0f", position.z()) + "£", position.x() - 22, bottom_label_y);
 		
 		if (current_target instanceof HoldingWaypoint) { // Draw the 'land me' message once an aircraft is circling the airport or 'landing' once it's been told to land
-			graphics.print(infoText, position.x() - 28, position.y() - 22);
+			graphics.print(infoText, position.x() - 28, top_label_y);
 		} else if (waiting_to_be_handed && current_target.equals(flight_plan.getDestination())) { // Draw 'hand me' if it's going to be handed over and is in final stage (circling hand over point)
-			graphics.print("Hand Me", position.x() - 28, position.y() - 22);
+			graphics.print("Hand Me", position.x() - 28, top_label_y);
 		}
 
 		drawWarningCircles();
