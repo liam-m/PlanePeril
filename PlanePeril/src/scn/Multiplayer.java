@@ -15,12 +15,14 @@ import cls.Lives;
 import cls.OrdersBox;
 import cls.HoldingWaypoint;
 import cls.PerformanceBar;
+import cls.Vector;
 import cls.Waypoint;
 import cls.Waypoint.WaypointType;
 import pp.Main;
 import rem.MultiplayerServer;
 import lib.ButtonText;
 import lib.RandomNumber;
+import lib.SpriteAnimation;
 import lib.jog.audio.Sound;
 import lib.jog.graphics;
 import lib.jog.input;
@@ -59,6 +61,7 @@ public class Multiplayer extends Scene {
 	Altimeter altimeter;
 	
 	Image background;
+	Image explosion;
 	
 	double timer = 0;
 	double next_take_off = TAKEOFF_DELAY;
@@ -82,6 +85,11 @@ public class Multiplayer extends Scene {
 	private Waypoint[] my_waypoints;
 	private Lives my_lives;
 	private Waypoint[] my_entryexit_waypoints;
+	
+	private SpriteAnimation my_explosion_animation;
+	private SpriteAnimation their_explosion_animation;
+	private SpriteAnimation left_channel;
+	private SpriteAnimation right_channel;
 	
 	// Position of things drawn to window
 	final int Y_POSITION_OF_BOTTOM_ELEMENTS = window.getHeight() - 120;
@@ -279,6 +287,7 @@ public class Multiplayer extends Scene {
 		selected_pathpoint = -1;
 		
 		aircraft_image = graphics.newImage("gfx" + File.separator + "plane.png");
+		explosion = graphics.newImage("gfx" + File.separator + "explosionFrames.png");
 	}
 	
 	@Override
@@ -432,6 +441,23 @@ public class Multiplayer extends Scene {
 			loseALife();
 			my_performance.setToMax();
 			updatePerformance(my_performance.getCurrentValue()); 
+		}
+		
+		// Update animation
+		if (my_explosion_animation != null) {
+			if (!my_explosion_animation.hasFinished()) { 
+				my_explosion_animation.update(dt);
+			} else {
+				my_explosion_animation = null;
+			}
+		}
+				
+		if (their_explosion_animation != null) {
+			if (!their_explosion_animation.hasFinished()) { 
+				their_explosion_animation.update(dt);
+			} else {
+				their_explosion_animation = null;
+			}
 		}
 		
 		// Update from server
@@ -872,13 +898,25 @@ public class Multiplayer extends Scene {
 			graphics.rectangle(true, left_entryexit_waypoints[6].position().x(), left_entryexit_waypoints[6].position().y(), 50, 20);
 		}
 		
+		// Draw effects
+		graphics.setColour(128, 0, 0);
+		
+		if (my_explosion_animation != null) {
+			my_explosion_animation.draw();
+		}
+		
+		if (their_explosion_animation != null) {
+			their_explosion_animation.draw();
+		}
+		
+		// Draw aircraft
 		graphics.setColour(256, 256, 256, 128);
 		
 		for (Aircraft a : aircraft) {
-			if (a.getPosition().x() < window.getWidth()/2) {
-				graphics.setColour(is_left_player ? Main.GREEN : Main.GREY); 
+			if (isMine(a)) {
+				graphics.setColour(Main.GREEN); 
 			} else {
-				graphics.setColour(is_left_player ? Main.GREY : Main.GREEN);
+				graphics.setColour(Main.GREY);
 			}
 			a.draw();
 			if (a.isMouseOver(input.getMouseX() - Main.VIEWPORT_OFFSET_X, input.getMouseY() - Main.VIEWPORT_OFFSET_Y)) {
@@ -1016,14 +1054,17 @@ public class Multiplayer extends Scene {
 	public void checkCollisions(double dt) {
 		for (Aircraft plane : aircraft) {
 				int collision_state = plane.updateCollisions(dt, aircraft);
-
+				int x = (int)plane.getPosition().x() - Main.VIEWPORT_OFFSET_X;
+				int y = (int)plane.getPosition().y() - Main.VIEWPORT_OFFSET_Y;
 				if (isMine(plane)) {
 					if (collision_state >= 0) {
-						//playSound(audio.newSoundEffect("sfx" + File.separator + "crash.ogg"));
-						//TODO lives need to be subtracted. is it possible for both players to be in the wrong? A crash is between two or more planes! (dont decrement twice)
 						loseALife();
+						my_explosion_animation = new SpriteAnimation(explosion, x, y, 6, 16, 8, 4, false);
 						return;
 					}
+				} else if (collision_state >= 0) {
+					
+					their_explosion_animation = new SpriteAnimation(explosion, x, y, 6, 16, 8, 4, false);
 				}
 		}
 	}
