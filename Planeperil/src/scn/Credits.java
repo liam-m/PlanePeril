@@ -85,22 +85,14 @@ public class Credits extends Scene {
 
 		String[] people = {"Philip Drew", "Miguel Boland", "Leslie Hor", "Paulius Imbrasas", "Joe Hamm", "Jaidev Mandhiyan",
 				"Josh Adams", "Huw Taylor", "Stephen Webb", "Gareth Handley", "Sanjit Samaddar", "Alex Stewart", "Liam Mullane",
-				"Liam Wellacott", "Jakub Brezonak", "Adam Al-jidy", "Matt Munro", "Jack Chapman"};
+				"Liam Wellacott", "Jakub Brezonak", "Adam Al-Jidy", "Matt Munro", "Jack Chapman"};
 		
-		int index = 0;
-		while (index < people.length) {
+		for (int index=0; index < people.length; index += 3) { // people must be a multiple of 3 (6 people per team so works)
+			graphics.printTextCentred(people[index], 0, currentHeight, 2, window.getWidth() / 3);
+			graphics.printTextCentred(people[index+1], window.getWidth() / 3, currentHeight, 2, window.getWidth() / 3);
+			graphics.printTextCentred(people[index+2], 2 * window.getWidth() / 3, currentHeight, 2, window.getWidth() / 3);
 			
-		graphics.printTextCentred(people[index], 0, currentHeight, 2,
-				window.getWidth() / 3);
-		index++;
-		graphics.printTextCentred(people[index], window.getWidth() / 3,
-				currentHeight, 2, window.getWidth() / 3);
-		index++;
-		graphics.printTextCentred(people[index], 2 * window.getWidth() / 3,
-				currentHeight, 2, window.getWidth() / 3);
-		index++;
-		
-		currentHeight += gap;
+			currentHeight += gap;
 		}
 		
 		graphics.printTextCentred("Music", 0, currentHeight, 2, window.getWidth());

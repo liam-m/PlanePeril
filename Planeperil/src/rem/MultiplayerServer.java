@@ -75,7 +75,7 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 		if (left) {
 			Waypoint origin_point;
 			if (from_airport) {
-				origin_point = game.right_airport; 
+				origin_point = game.right_airport;
 			} else {
 				origin_point = game.right_entryexit_waypoints[origin_waypoints_index];
 			}
@@ -83,7 +83,11 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 			Waypoint destination_point = game.right_entryexit_waypoints[destination_waypoints_index];
 			
 			aircraft_queue.add(new Aircraft(name, game.aircraft_image, speed, 1, new FlightPlan(origin_point, 
-					destination_point, game.right_waypoints, game.right_holding_waypoints, game.right_airport_takeoff_waypoint), preferred_altitude_index, waiting_to_be_handed));
+				destination_point, game.right_waypoints, game.right_holding_waypoints, game.right_airport_takeoff_waypoint), preferred_altitude_index, waiting_to_be_handed));
+			
+			if (origin_point.equals(game.right_airport))  {
+				aircraft_queue.get(aircraft_queue.size() - 1).setAltitude(100);
+			}
 		} else {
 			Waypoint origin_point;
 			if (from_airport) {
@@ -97,6 +101,10 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 			//TODO improve synchronisation methods
 			aircraft_queue.add(new Aircraft(name, game.aircraft_image, speed, 1, new FlightPlan(origin_point, 
 					destination_point, game.left_waypoints, game.left_holding_waypoints, game.left_airport_takeoff_waypoint), preferred_altitude_index, waiting_to_be_handed));
+			
+			if (origin_point.equals(game.left_airport))  {
+				aircraft_queue.get(aircraft_queue.size() - 1).setAltitude(100);
+			}
 		}
 	}
 
@@ -207,8 +215,7 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 				removal_queue.add(game.aircraft.get(i));
 				break;
 			}
-		}
-		
+		}		
 	}
 
 	public void sendHandOver(String name) throws RemoteException {

@@ -267,8 +267,8 @@ public class Multiplayer extends Scene {
 		explosion = graphics.newImage("gfx" + File.separator + "explosionFrames.png");
 		left_channel_image = graphics.newImage("gfx" + File.separator + "ChevronFramesFlipped.png");
 		right_channel_image = graphics.newImage("gfx" + File.separator + "ChevronFrames.png");
-		left_channel = new SpriteAnimation(left_channel_image, (int)left_entryexit_waypoints[7].position().x(), (int)left_entryexit_waypoints[7].position().y(), 2, 16, 50, 20, true);
-		right_channel = new SpriteAnimation(right_channel_image, (int)left_entryexit_waypoints[6].position().x(), (int)left_entryexit_waypoints[6].position().y(), 2, 16, 50, 20, true);
+		left_channel = new SpriteAnimation(left_channel_image, (int)left_entryexit_waypoints[7].position().x(), (int)left_entryexit_waypoints[7].position().y(), 6, 22, 48, 18, true);
+		right_channel = new SpriteAnimation(right_channel_image, (int)left_entryexit_waypoints[6].position().x(), (int)left_entryexit_waypoints[6].position().y(), 6, 22, 48, 18, true);
 
 	}
 	
@@ -338,33 +338,40 @@ public class Multiplayer extends Scene {
 			if (aircraft.get(i).isAtAirport()) {
 				orders_box.addOrder("<<< Aircraft " + aircraft.get(i).getName() + " has landed safely at " + my_airport.getName());
 			}
-			// if aircraft has completed its journey correctly
-			if (aircraft.get(i).hasFinished() && isMine(aircraft.get(i)) && !aircraft.get(i).isWaitingToBeHanded()) {
-				updatePerformance(5);
-				if (aircraft.get(i).getFlightPlan().getDestination().equals(my_outgoing_hand_over_point)) {
-					handOver(aircraft.get(i));
-				} else {
-					switch (RandomNumber.randInclusiveInt(0, 2)) {
-					case 0:
-						orders_box.addOrder("<<< Thank you Comrade");
-						break;
-					case 1:
-						orders_box.addOrder("<<< Well done Comrade");
-						break;
-					case 2:
-						orders_box.addOrder("<<< Many thanks Comrade");
-						break;
+			// if aircraft has completed its journey correctly or crashed
+			if (aircraft.get(i).hasFinished()) {
+				if (!aircraft.get(i).hasCrashed()) {
+					if (isMine(aircraft.get(i))) {
+						updatePerformance(5);
+						if (aircraft.get(i).getFlightPlan().getDestination().equals(my_outgoing_hand_over_point)) {
+							handOver(aircraft.get(i));
+						} else {
+							switch (RandomNumber.randInclusiveInt(0, 2)) {
+								case 0:
+									orders_box.addOrder("<<< Thank you Comrade");
+									break;
+								case 1:
+									orders_box.addOrder("<<< Well done Comrade");
+									break;
+								case 2:
+									orders_box.addOrder("<<< Many thanks Comrade");
+									break;
+							}
+						}
 					}
+				} else {
+					orders_box.addOrder("<<< MAYDAY MAYDAY WE ARE GOING DOWN!!");
 				}
+				
 				if (aircraft.get(i).equals(selected_aircraft)) {
 					deselectAircraft();
 				}
 				// make sure you notify the server of which aircraft is to be removed BEFORE it is removed
-				try {
-					server.sendRemoveAircraft(aircraft.get(i).getName());
-				} catch (RemoteException e) {
-					connectionLost();
-				}
+				//try {
+				//	server.sendRemoveAircraft(aircraft.get(i).getName());
+				//} catch (RemoteException e) {
+				//	connectionLost();
+				//}
 				aircraft.remove(i);
 				i--; // Removed one as want to have same index next time through loop
 			}
@@ -1019,7 +1026,6 @@ public class Multiplayer extends Scene {
 					if (collision_state >= 0) {
 						loseALife();
 						my_explosion_animation = new SpriteAnimation(explosion, x, y, 6, 16, 8, 4, false);
-						return;
 					}
 				} else if (collision_state >= 0) {
 					their_explosion_animation = new SpriteAnimation(explosion, x, y, 6, 16, 8, 4, false);
