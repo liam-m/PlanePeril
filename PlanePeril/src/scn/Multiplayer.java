@@ -285,8 +285,8 @@ public class Multiplayer extends Scene {
 		
 		aircraft_image = graphics.newImage("gfx" + File.separator + "plane.png");
 		explosion = graphics.newImage("gfx" + File.separator + "explosionFrames.png");
-		left_channel_image = graphics.newImage("gfx" + File.separator + "ChevronFramesFlipped(w-0border).png");
-		right_channel_image = graphics.newImage("gfx" + File.separator + "ChevronFrames(w-0border).png");
+		left_channel_image = graphics.newImage("gfx" + File.separator + "ChevronFramesFlipped.png");
+		right_channel_image = graphics.newImage("gfx" + File.separator + "ChevronFrames.png");
 		left_channel = new SpriteAnimation(left_channel_image, (int)left_entryexit_waypoints[7].position().x(), (int)left_entryexit_waypoints[7].position().y(), 2, 16, 50, 20, true);
 		right_channel = new SpriteAnimation(right_channel_image, (int)left_entryexit_waypoints[6].position().x(), (int)left_entryexit_waypoints[6].position().y(), 2, 16, 50, 20, true);
 
