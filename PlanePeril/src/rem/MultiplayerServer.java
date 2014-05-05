@@ -207,8 +207,7 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 				removal_queue.add(game.aircraft.get(i));
 				break;
 			}
-		}
-		
+		}		
 	}
 
 	public void sendHandOver(String name) throws RemoteException {
