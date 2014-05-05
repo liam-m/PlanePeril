@@ -622,7 +622,10 @@ public class Aircraft {
 
 		// Draw the 'land me' message once an aircraft is circling the airport
 		if (current_target instanceof HoldingWaypoint) {
-			graphics.print(infoText, position.x() - 28, position.y() - 22);
+			if (this.position.y() < 700) // if the plane is NOT on the bottom, the landing message is displayed below the plane 
+				graphics.print(infoText, position.x() - 28, position.y() - 22);
+			else // the plane is on the bottom, the landing message is displayed above the plane
+				graphics.print(infoText, position.x() - 28, position.y() - 42);
 		}
 
 		drawWarningCircles();
