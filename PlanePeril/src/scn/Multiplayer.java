@@ -1,6 +1,5 @@
 package scn;
 
-import java.awt.Color;
 import java.io.File;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -15,12 +14,10 @@ import cls.Lives;
 import cls.OrdersBox;
 import cls.HoldingWaypoint;
 import cls.PerformanceBar;
-import cls.Vector;
 import cls.Waypoint;
 import cls.Waypoint.WaypointType;
 import pp.Main;
 import rem.MultiplayerServer;
-import lib.ButtonText;
 import lib.RandomNumber;
 import lib.SpriteAnimation;
 import lib.jog.audio.Sound;
@@ -259,23 +256,6 @@ public class Multiplayer extends Scene {
 		right_holding_waypoints.get(1).setNextWaypoint(right_holding_waypoints.get(2));
 		right_holding_waypoints.get(2).setNextWaypoint(right_holding_waypoints.get(3));
 		right_holding_waypoints.get(3).setNextWaypoint(right_holding_waypoints.get(0));
-	
-		
-		// the action that is called once the land button is clicked.
-		ButtonText.Action land = new ButtonText.Action() {
-			@Override
-			public void action() {
-				// toggle land function
-				if(is_left_player) {
-					toggleLand(left_holding_waypoints.get(0));
-				} else {
-					toggleLand(right_holding_waypoints.get(0));
-				}
-				
-			}
-		};
-		
-		int x_pos = is_left_player ? window.getWidth()/4 : (window.getWidth()*3)/4; // vary where the land button appears for each player
 
 		timer = 0;
 		compass_dragged = false;
@@ -356,7 +336,7 @@ public class Multiplayer extends Scene {
 			
 			// if aircraft landed
 			if (aircraft.get(i).isAtAirport()) {
-				orders_box.addOrder("<<< Aircraft " + aircraft.get(i).getName() + " has landed safely at " + left_airport.getName());
+				orders_box.addOrder("<<< Aircraft " + aircraft.get(i).getName() + " has landed safely at " + my_airport.getName());
 			}
 			// if aircraft has completed its journey correctly
 			if (aircraft.get(i).hasFinished() && isMine(aircraft.get(i)) && !aircraft.get(i).isWaitingToBeHanded()) {
@@ -413,10 +393,7 @@ public class Multiplayer extends Scene {
 				connectionLost();
 			}
 
-			// allows to take control by just pressing left/right or A/D
-			//selected_aircraft.setManualControl(is_manually_controlling); // Think this is redundant 
-
-			if (isOutOfBounds(selected_aircraft)) {
+			if (selected_aircraft.isOutOfBounds()) {
 				//TODO update this order to something witty
 				orders_box.addOrder(">>> " + selected_aircraft.getName() + " is out of bounds, contact lost. Do better Comrade.");
 				deselectAircraft();
@@ -504,7 +481,7 @@ public class Multiplayer extends Scene {
 	 * @param y position
 	 * @return
 	 */
-	public boolean isInputValid(int x, int y) {
+	private boolean isInputValid(int x, int y) {
 		return (is_left_player ? x <= window.getWidth()/2 : x >= window.getWidth()/2) // Clicked on player's half of the screen
 				||  y > Y_POSITION_OF_BOTTOM_ELEMENTS; // Clicked on bottom buttons
 	}
@@ -514,9 +491,6 @@ public class Multiplayer extends Scene {
 	 */
 	@Override
 	public void mousePressed(int key, int x, int y) {
-		if (!isInputValid(x, y)) {
-			return;
-		}
 		// Must be before offsets are applied as outside the viewport
 		altimeter.mousePressed(key, x, y);
 		airport_control_box.mousePressed(key, x, y);
@@ -596,13 +570,6 @@ public class Multiplayer extends Scene {
 	
 	@Override
 	public void mouseReleased(int key, int x, int y) {
-		if (!isInputValid(x, y)) {
-			if (selected_waypoint != null && key == input.MOUSE_LEFT) {
-				selected_waypoint = null;
-			}
-			return;
-		}
-
 		airport_control_box.mouseReleased(key, x, y);
 		if (key == input.MOUSE_LEFT && airport_control_box.signal_take_off) {
 			// must wait at least 5 seconds between aircraft takeoff
@@ -1122,10 +1089,6 @@ public class Multiplayer extends Scene {
 			}
 		}
 		return false;
-	}
-	
-	private boolean isOutOfBounds(Aircraft aircraft) {
-		return aircraft.isOutOfBounds() || (is_left_player ? aircraft.getPosition().x() > window.getWidth()/2 : aircraft.getPosition().x() < window.getWidth()/2);
 	}
 	
 	private void connectionLost() {
