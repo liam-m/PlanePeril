@@ -642,7 +642,7 @@ public class Multiplayer extends Scene {
 			
 			// Send to other player
 			try {
-				server.sendAddAircraft(from_airport, a.getName(), (int)(a.getInitialSpeed()), origin_index, destination_index, a.getTargetAltitudeIndex() ); 
+				server.sendAddAircraft(from_airport, a.getName(), (int)(a.getInitialSpeed()), origin_index, destination_index, a.getTargetAltitudeIndex(), a.isWaitingToBeHanded()); 
 			} catch (RemoteException e) {
 				connectionLost();
 			}

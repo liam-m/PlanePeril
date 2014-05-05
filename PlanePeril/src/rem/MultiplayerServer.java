@@ -65,13 +65,13 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 	// Notifying each game of a new aircraft
 	
 	// Server sending an aircraft
-	public void sendAddAircraft(boolean from_airport, String name, int speed, int origin_waypoints_index, int destination_waypoints_index, int preferred_altitude_index) throws RemoteException {
-		multiplayer_interface.addAircraft(from_airport, name, speed, origin_waypoints_index, destination_waypoints_index, preferred_altitude_index);
+	public void sendAddAircraft(boolean from_airport, String name, int speed, int origin_waypoints_index, int destination_waypoints_index, int preferred_altitude_index, boolean waiting_to_be_handed) throws RemoteException {
+		multiplayer_interface.addAircraft(from_airport, name, speed, origin_waypoints_index, destination_waypoints_index, preferred_altitude_index, waiting_to_be_handed);
 	}
 	
 	// Receiving aircraft from other server
 	@Override
-	public void addAircraft(boolean from_airport, String name, int speed, int origin_waypoints_index, int destination_waypoints_index, int preferred_altitude_index) throws RemoteException {	
+	public void addAircraft(boolean from_airport, String name, int speed, int origin_waypoints_index, int destination_waypoints_index, int preferred_altitude_index, boolean waiting_to_be_handed) throws RemoteException {	
 		if (left) {
 			Waypoint origin_point;
 			if (from_airport) {
@@ -83,7 +83,7 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 			Waypoint destination_point = game.right_entryexit_waypoints[destination_waypoints_index];
 			
 			aircraft_queue.add(new Aircraft(name, game.aircraft_image, speed, 1, new FlightPlan(origin_point, 
-					destination_point, game.right_waypoints, game.right_holding_waypoints, game.right_airport_takeoff_waypoint), preferred_altitude_index));
+					destination_point, game.right_waypoints, game.right_holding_waypoints, game.right_airport_takeoff_waypoint), preferred_altitude_index, waiting_to_be_handed));
 		} else {
 			Waypoint origin_point;
 			if (from_airport) {
@@ -96,7 +96,7 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 			
 			//TODO improve synchronisation methods
 			aircraft_queue.add(new Aircraft(name, game.aircraft_image, speed, 1, new FlightPlan(origin_point, 
-					destination_point, game.left_waypoints, game.left_holding_waypoints, game.left_airport_takeoff_waypoint), preferred_altitude_index));
+					destination_point, game.left_waypoints, game.left_holding_waypoints, game.left_airport_takeoff_waypoint), preferred_altitude_index, waiting_to_be_handed));
 		}
 	}
 
