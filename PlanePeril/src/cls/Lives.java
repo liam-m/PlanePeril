@@ -24,6 +24,14 @@ public class Lives {
 		this.dead_life_img = graphics.newImage("gfx" + File.separator + "dead_plane.png"); // Essentially an empty heart container
 	}
 	
+	/**
+	 * Purely for unit testing
+	 */
+	@Deprecated
+	public Lives(){
+		
+	}
+	
 	public void decrement() {
 		if (this.current_lives > 0) {
 			this.current_lives -= 1;

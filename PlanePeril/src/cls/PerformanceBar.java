@@ -26,6 +26,14 @@ public class PerformanceBar {
 		this.position_y = location_y;
 	}
 	
+	/**
+	 *  Purely for unit testing
+	 */
+	@Deprecated
+	public PerformanceBar() {
+		
+	}
+	
 	public int getMax() {
 		return MAX_VALUE;
 	}
