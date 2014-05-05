@@ -28,8 +28,7 @@ public class Lives {
 	 * Purely for unit testing
 	 */
 	@Deprecated
-	public Lives(){
-		
+	public Lives(){	
 	}
 	
 	public void decrement() {

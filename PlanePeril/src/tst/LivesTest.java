@@ -1,9 +1,7 @@
 package tst;
 
 import static org.junit.Assert.*;
-
 import org.junit.Test;
-
 import cls.Lives;
 
 public class LivesTest {
@@ -30,5 +28,4 @@ public class LivesTest {
 		lives = test_lives.getLives();
 		assertTrue(lives == 0);
 	}
-	
 }

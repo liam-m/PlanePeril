@@ -30,8 +30,7 @@ public class PerformanceBar {
 	 *  Purely for unit testing
 	 */
 	@Deprecated
-	public PerformanceBar() {
-		
+	public PerformanceBar() {	
 	}
 	
 	public int getMax() {

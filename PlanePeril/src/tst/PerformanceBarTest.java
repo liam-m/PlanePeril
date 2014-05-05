@@ -1,15 +1,12 @@
 package tst;
 
 import static org.junit.Assert.*;
-
 import org.junit.Test;
-
 import cls.PerformanceBar;
 
 public class PerformanceBarTest {
 	
-	@Test
-	
+	@Test	
 	public void testPerformanceBar() {
 		// Initialization
 		PerformanceBar test_performance_bar = new PerformanceBar();
