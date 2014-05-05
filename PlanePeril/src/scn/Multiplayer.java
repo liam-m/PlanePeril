@@ -338,24 +338,26 @@ public class Multiplayer extends Scene {
 			if (aircraft.get(i).isAtAirport()) {
 				orders_box.addOrder("<<< Aircraft " + aircraft.get(i).getName() + " has landed safely at " + my_airport.getName());
 			}
-			// if aircraft has completed its journey correctly
-			if (aircraft.get(i).hasFinished() && isMine(aircraft.get(i))) {
+			// if aircraft has completed its journey correctly or crashed
+			if (aircraft.get(i).hasFinished()) {
 				if (!aircraft.get(i).hasCrashed()) {
-					updatePerformance(5);
-					if (aircraft.get(i).getFlightPlan().getDestination().equals(my_outgoing_hand_over_point)) {
-						handOver(aircraft.get(i));
-					} else {
+					if (isMine(aircraft.get(i))) {
+							updatePerformance(5);
+						if (aircraft.get(i).getFlightPlan().getDestination().equals(my_outgoing_hand_over_point)) {
+							handOver(aircraft.get(i));
+						} 
+					}else {
 						switch (RandomNumber.randInclusiveInt(0, 2)) {
-						case 0:
-							orders_box.addOrder("<<< Thank you Comrade");
-							break;
-						case 1:
-							orders_box.addOrder("<<< Well done Comrade");
-							break;
-						case 2:
-							orders_box.addOrder("<<< Many thanks Comrade");
-							break;
-						}
+							case 0:
+								orders_box.addOrder("<<< Thank you Comrade");
+								break;
+							case 1:
+								orders_box.addOrder("<<< Well done Comrade");
+								break;
+							case 2:
+								orders_box.addOrder("<<< Many thanks Comrade");
+								break;
+							}
 					}
 				} else {
 					orders_box.addOrder("<<< MAYDAY MAYDAY WE ARE GOING DOWN!!");
