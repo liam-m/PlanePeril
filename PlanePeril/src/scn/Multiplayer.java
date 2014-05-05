@@ -767,9 +767,11 @@ public class Multiplayer extends Scene {
 				my_entryexit_waypoints[destination].equals(is_left_player ? left_entryexit_waypoints[7] : right_entryexit_waypoints[6])) {
 			
 			destination = RandomNumber.randInclusiveInt(0, my_entryexit_waypoints.length - 1);
-		}			
+		}
 		
 		Waypoint destination_point = my_entryexit_waypoints[destination];
+		
+		boolean towards_handover_point = destination_point.equals(left_entryexit_waypoints[6]) || destination_point.equals(right_entryexit_waypoints[7]);
 
 		String name = "";
 		do { // Find a unique name
@@ -778,10 +780,10 @@ public class Multiplayer extends Scene {
 		
 		if (is_left_player) {
 			return new Aircraft(name, aircraft_image, 32 + (int) (10 * Math.random()), 1, new FlightPlan(origin_point, 
-					destination_point, left_waypoints, left_holding_waypoints, left_airport_takeoff_waypoint), preferred_altitude_index);
+					destination_point, left_waypoints, left_holding_waypoints, left_airport_takeoff_waypoint), preferred_altitude_index, towards_handover_point);
 		} else {
 			return new Aircraft(name, aircraft_image, 32 + (int) (10 * Math.random()), 1, new FlightPlan(origin_point, 
-					destination_point, right_waypoints, right_holding_waypoints, right_airport_takeoff_waypoint), preferred_altitude_index);
+					destination_point, right_waypoints, right_holding_waypoints, right_airport_takeoff_waypoint), preferred_altitude_index, towards_handover_point);
 		}
 	}
 	
