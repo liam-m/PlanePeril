@@ -468,7 +468,7 @@ public class Multiplayer extends Scene {
 		}
 		
 		if (left_channel.hasFinished()) {
-			left_channel = new SpriteAnimation(left_channel_image, (int)left_entryexit_waypoints[6].position().x(), (int)left_entryexit_waypoints[6].position().y(), 6, 16, 8, 16, true);
+			left_channel = new SpriteAnimation(left_channel_image, (int)left_entryexit_waypoints[7].position().x(), (int)left_entryexit_waypoints[7].position().y(), 6, 16, 8, 16, true);
 		} else {
 			left_channel.update(dt);
 		}
