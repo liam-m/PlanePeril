@@ -126,9 +126,7 @@ public class Multiplayer extends Scene {
 	private final int LEFT_LIVES_Y = 8;
 		
 	private final int RIGHT_LIVES_X = window.getWidth()/2 + 50;
-	private final int RIGHT_LIVES_Y = 8;
-		
-	
+	private final int RIGHT_LIVES_Y = 8;	
 		
 	public final Waypoint[] left_entryexit_waypoints = new Waypoint[] {
 			/* A set of Waypoints which are origin / destination points */
@@ -176,6 +174,8 @@ public class Multiplayer extends Scene {
 
 	public ArrayList<HoldingWaypoint> right_holding_waypoints = new ArrayList<HoldingWaypoint>();
 	
+	Waypoint my_outgoing_hand_over_point;;
+	
 	public Multiplayer(Main main, String left_name, String right_name, String their_address, final boolean is_left) {
 		super(main);
 		this.left_name = left_name;
@@ -183,6 +183,7 @@ public class Multiplayer extends Scene {
 		this.background = graphics.newImage("gfx" + File.separator + "map.png");
 		this.their_address = their_address;
 		this.is_left_player = is_left;
+		this.my_outgoing_hand_over_point = is_left ? left_entryexit_waypoints[6] : right_entryexit_waypoints[7];
 		
 		left_waypoints = new Waypoint[]{
 			new Waypoint(100, 100),
@@ -363,25 +364,22 @@ public class Multiplayer extends Scene {
 			if (aircraft.get(i).isAtAirport()) {
 				orders_box.addOrder("<<< Aircraft " + aircraft.get(i).getName() + " has landed safely at " + left_airport.getName());
 			}
-			// if aircraft has completed it's journey correctly
-			if (aircraft.get(i).hasFinished()) {
-				if (isMine(aircraft.get(i))) {
-					updatePerformance(5);
-					Waypoint my_outgoing_hand_over_point = is_left_player ? left_entryexit_waypoints[6] : right_entryexit_waypoints[7];
-					if (aircraft.get(i).getFlightPlan().getDestination().equals(my_outgoing_hand_over_point)) {
-						handOver(aircraft.get(i));
-					} else {
-						switch (RandomNumber.randInclusiveInt(0, 2)) {
-						case 0:
-							orders_box.addOrder("<<< Thank you Comrade");
-							break;
-						case 1:
-							orders_box.addOrder("<<< Well done Comrade");
-							break;
-						case 2:
-							orders_box.addOrder("<<< Many thanks Comrade");
-							break;
-						}
+			// if aircraft has completed its journey correctly
+			if (aircraft.get(i).hasFinished() && isMine(aircraft.get(i)) && !aircraft.get(i).isWaitingToBeHanded()) {
+				updatePerformance(5);
+				if (aircraft.get(i).getFlightPlan().getDestination().equals(my_outgoing_hand_over_point)) {
+					handOver(aircraft.get(i));
+				} else {
+					switch (RandomNumber.randInclusiveInt(0, 2)) {
+					case 0:
+						orders_box.addOrder("<<< Thank you Comrade");
+						break;
+					case 1:
+						orders_box.addOrder("<<< Well done Comrade");
+						break;
+					case 2:
+						orders_box.addOrder("<<< Many thanks Comrade");
+						break;
 					}
 				}
 				if (aircraft.get(i).equals(selected_aircraft)) {
@@ -524,32 +522,36 @@ public class Multiplayer extends Scene {
 	public void mousePressed(int key, int x, int y) {
 		if (!isInputValid(x, y)) {
 			return;
-		} 
+		}
+		// Must be before offsets are applied as outside the viewport
+		altimeter.mousePressed(key, x, y);
+		airport_control_box.mousePressed(key, x, y);
+		my_airport.mousePressed(key, x, y);
+		
+		// Apply offsets so we don't need to keep writing x-Main.VIEWPORT_OFFSET_X
+		x -= Main.VIEWPORT_OFFSET_X;
+		y -= Main.VIEWPORT_OFFSET_Y;		
 		
 		if (key == input.MOUSE_LEFT) {
-			Aircraft new_selected = selected_aircraft;
-
+			// If clicked on an aircraft, set it as selected
 			for (Aircraft a : aircraft) {
-				if (a.isMouseOver(x - Main.VIEWPORT_OFFSET_X, y - Main.VIEWPORT_OFFSET_Y)) {
-					new_selected = a;
+				if (a.isMouseOver(x, y) && isMine(a)) {
+					deselectAircraft();
+					selected_aircraft = a;
+					try {
+						server.sendSelected(selected_aircraft.getName());
+					} catch (RemoteException e) {
+						connectionLost();
+					}
+					break;
 				}
 			}
-
-			if (new_selected != selected_aircraft) {
-				deselectAircraft();
-				selected_aircraft = new_selected;
-				try {
-					server.sendSelected(selected_aircraft.getName());
-				} catch (RemoteException e) {
-					connectionLost();
-				}
-			}
-
 			altimeter.show(selected_aircraft);
 			
+			// Things that require an aircraft to be selected
 			if (selected_aircraft != null) {
 				for (Waypoint w : my_waypoints) {
-					if (w.isMouseOver(x - Main.VIEWPORT_OFFSET_X, y - Main.VIEWPORT_OFFSET_Y) && selected_aircraft.indexInFlightPath(w) > -1) {
+					if (w.isMouseOver(x, y) && selected_aircraft.indexInFlightPath(w) > -1) {
 						selected_waypoint = w;
 						selected_pathpoint = selected_aircraft.indexInFlightPath(w);
 					}
@@ -563,42 +565,37 @@ public class Multiplayer extends Scene {
 					if (dx * dx + dy * dy < r * r) {
 						compass_dragged = true;
 					}
-					
-					// bar
+				}
+				
+				if (selected_aircraft.getFlightPlan().getDestination().equals(my_outgoing_hand_over_point) && 
+						my_outgoing_hand_over_point.isMouseOver(x, y)) {
+					selected_aircraft.handOver();
+					deselectAircraft();
+					return;
 				}
 			}
-		}
-
-		if (key == input.MOUSE_RIGHT)
+			
+			if (!selected_aircraft.isLanding()) {
+				if (my_airport.is_arrivals_clicked && selected_aircraft.getCurrentTarget() instanceof HoldingWaypoint) {
+					Waypoint landing_waypoint = is_left_player ? left_holding_waypoints.get(0) : right_holding_waypoints.get(0);
+					selected_aircraft.toggleLand(landing_waypoint);
+				}
+			}
+			if (my_airport.is_departures_clicked) {
+				// must wait at least 5 seconds between aircraft takeoff
+				if (next_take_off - timer <= 0) {
+					try {
+						my_airport.takeoff();
+						generateFlight(true);
+						next_take_off = timer + TAKEOFF_DELAY;
+						airport_control_box.signal_take_off = false;
+					} catch (IllegalStateException e) {
+						orders_box.addOrder("<<< There are no aircraft in the airport, Comrade.");
+					}
+				}
+			}
+		} else if (key == input.MOUSE_RIGHT) {
 			deselectAircraft();
-
-		altimeter.mousePressed(key, x, y);
-		airport_control_box.mousePressed(key, x, y);
-		
-		// handle airport input
-		my_airport.mousePressed(key, x, y);
-		
-		if (selected_aircraft != null && !selected_aircraft.isLanding()) {
-			if (my_airport.is_arrivals_clicked && selected_aircraft.getCurrentTarget() instanceof HoldingWaypoint) {
-				if (is_left_player) {
-					selected_aircraft.toggleLand(left_holding_waypoints.get(0));
-				} else {
-					selected_aircraft.toggleLand(right_holding_waypoints.get(0));
-				}
-			} 
-		}
-		if (my_airport.is_departures_clicked) {
-			// must wait at least 5 seconds between aircraft takeoff
-			if (next_take_off - timer <= 0) {
-				try {
-					my_airport.takeoff();
-					generateFlight(true);
-					next_take_off = timer + TAKEOFF_DELAY;
-					airport_control_box.signal_take_off = false;
-				} catch (IllegalStateException e) {
-					orders_box.addOrder("<<< There are no aircraft in the airport, Comrade.");
-				}
-			}
 		}
 	}
 	
@@ -673,7 +670,7 @@ public class Multiplayer extends Scene {
 				a.setAltitude(100);
 				a.increaseTargetAltitude(); 
 			}
-
+			
 			orders_box.addOrder("<<< " + a.getName() + " incoming from " + a.getFlightPlan().getOriginName() + " heading towards " + a.getFlightPlan().getDestinationName() + ".");
 			aircraft.add(a);
 			
@@ -691,7 +688,7 @@ public class Multiplayer extends Scene {
 			
 			// Send to other player
 			try {
-				server.sendAddAircraft(from_airport, a.getName(), (int)(a.getInitialSpeed()), origin_index, destination_index, a.getTargetAltitudeIndex() ); 
+				server.sendAddAircraft(from_airport, a.getName(), (int)(a.getInitialSpeed()), origin_index, destination_index, a.getTargetAltitudeIndex(), a.isWaitingToBeHanded()); 
 			} catch (RemoteException e) {
 				connectionLost();
 			}
@@ -704,12 +701,11 @@ public class Multiplayer extends Scene {
  	 */
 	private ArrayList<Waypoint> getAvailableEntryPoints() {
 		ArrayList<Waypoint> available_entry_points = new ArrayList<Waypoint>();
-		Waypoint my_incoming_hand_over = is_left_player ? left_entryexit_waypoints[7] : right_entryexit_waypoints[6];	
-		Waypoint my_outgoing_hand_over = is_left_player ? left_entryexit_waypoints[6] : right_entryexit_waypoints[7];	
+		Waypoint my_incoming_hand_over = is_left_player ? left_entryexit_waypoints[7] : right_entryexit_waypoints[6];
 		
 		for (Waypoint entry_point : my_entryexit_waypoints) {
 			// Skip the "air channel" entry point  
-			if (entry_point.equals(my_incoming_hand_over) || entry_point.equals(my_outgoing_hand_over)) {
+			if (entry_point.equals(my_incoming_hand_over) || entry_point.equals(my_outgoing_hand_over_point)) {
 				continue;
 			}
 			boolean is_available = true;
@@ -766,7 +762,7 @@ public class Multiplayer extends Scene {
 			
 		// Send to other player
 		try {
-			server.sendHandOver();
+			server.sendHandOver(aircraft.getName());
 		} catch (RemoteException e) {
 			connectionLost();
 		}
@@ -816,9 +812,11 @@ public class Multiplayer extends Scene {
 				my_entryexit_waypoints[destination].equals(is_left_player ? left_entryexit_waypoints[7] : right_entryexit_waypoints[6])) {
 			
 			destination = RandomNumber.randInclusiveInt(0, my_entryexit_waypoints.length - 1);
-		}			
+		}
 		
 		Waypoint destination_point = my_entryexit_waypoints[destination];
+		
+		boolean towards_handover_point = destination_point.equals(left_entryexit_waypoints[6]) || destination_point.equals(right_entryexit_waypoints[7]);
 
 		String name = "";
 		do { // Find a unique name
@@ -827,11 +825,11 @@ public class Multiplayer extends Scene {
 		
 		if (is_left_player) {
 			return new Aircraft(name, aircraft_image, 32 + (int) (10 * Math.random()), 1, new FlightPlan(origin_point, 
-					destination_point, left_waypoints, left_holding_waypoints, left_airport_takeoff_waypoint), preferred_altitude_index);
+					destination_point, left_waypoints, left_holding_waypoints, left_airport_takeoff_waypoint), preferred_altitude_index, towards_handover_point);
 		} else {
 			return new Aircraft(name, aircraft_image, 32 + (int) (10 * Math.random()), 1, new FlightPlan(origin_point, 
-					destination_point, right_waypoints, right_holding_waypoints, right_airport_takeoff_waypoint), preferred_altitude_index);
-		}		
+					destination_point, right_waypoints, right_holding_waypoints, right_airport_takeoff_waypoint), preferred_altitude_index, towards_handover_point);
+		}
 	}
 	
 	private boolean nameTaken(String name) {
@@ -947,14 +945,20 @@ public class Multiplayer extends Scene {
 		}
 		
 		if (selected_aircraft != null) {
-			
 			selected_aircraft.drawFlightPath(true);
 			graphics.setColour(Main.GREEN);
 		}	
 		
 		if (selected_waypoint != null && selected_aircraft.isManuallyControlled() == false) {
-			//TODO offset values should be placed into a constant
 			selected_aircraft.drawModifiedPath(selected_pathpoint, input.getMouseX() - Main.VIEWPORT_OFFSET_X, input.getMouseY() - Main.VIEWPORT_OFFSET_Y);
+		}
+		
+		// Draw circles around handover waypoint to indicate the user should click there
+		if (selected_aircraft != null && selected_aircraft.isWaitingToBeHanded() && selected_aircraft.getCurrentTarget().equals(selected_aircraft.getFlightPlan().getDestination())) {
+			graphics.setColour(128, 0, 0, 128);
+			graphics.circle(false, my_outgoing_hand_over_point.position().x(), my_outgoing_hand_over_point.position().y(), 20);
+			graphics.circle(false, my_outgoing_hand_over_point.position().x(), my_outgoing_hand_over_point.position().y(), 30);
+			graphics.setColour(Main.GREEN);
 		}
 		
 		graphics.setViewport();
@@ -970,9 +974,6 @@ public class Multiplayer extends Scene {
 		graphics.setColour(Main.GREEN);
 		left_lives.draw();
 		right_lives.draw();
-		
-		
-
 	}
 	
 	private void drawPlaneInfo() {
@@ -1037,7 +1038,6 @@ public class Multiplayer extends Scene {
 	}
 	
 	
-
 	/**
 	 * Causes an aircraft to call methods to handle deselection
 	 */
@@ -1056,14 +1056,10 @@ public class Multiplayer extends Scene {
 	 * Causes a selected aircraft to call methods to land
 	 */
 	private void toggleLand(HoldingWaypoint land_waypoint) {
-		if (selected_aircraft == null)
-			return;
-
-		if (selected_aircraft.isLanding())
+		if (selected_aircraft == null || selected_aircraft.isLanding())
 			return;
 
 		selected_aircraft.toggleLand(land_waypoint);
-
 	}
 	
 	/**

@@ -57,7 +57,7 @@ public class FlightPlan {
 	 * @return a sensible route between the origin and the destination, using a
 	 *         sensible amount of waypoint.
 	 */
-	public Waypoint[] generateGreedyRoute() {
+	private Waypoint[] generateGreedyRoute() {
 		// to hold the route as we generate it.
 		ArrayList<Waypoint> selectedWaypoints = new ArrayList<Waypoint>();
 

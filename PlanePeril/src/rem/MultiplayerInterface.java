@@ -4,7 +4,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 public interface MultiplayerInterface extends Remote {
-	void addAircraft(boolean from_airport, String name, int speed, int origin_waypoints_index, int destination_waypoints_index, int preferred_altitude_index) throws RemoteException;
+	void addAircraft(boolean from_airport, String name, int speed, int origin_waypoints_index, int destination_waypoints_index, int preferred_altitude_index, boolean waiting_to_be_handed) throws RemoteException;
 	
 	void changePerformance(int value) throws RemoteException;
 	void removeLife() throws RemoteException;
@@ -20,5 +20,5 @@ public interface MultiplayerInterface extends Remote {
 	
 	void removeAircraft(String name) throws RemoteException;
 	
-	void handOver() throws RemoteException;
+	void handOver(String name) throws RemoteException;
 }

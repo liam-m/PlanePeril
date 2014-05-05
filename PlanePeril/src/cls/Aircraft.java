@@ -39,7 +39,7 @@ public class Aircraft {
 	private int num_points; // The number of points (score) an aircraft enters the airspace with.
 	private final static float LANDING_SPEED = 0.6f; // Scalar for the velocity which is imposed upon landing	
 
-	private double turning_speed = Math.PI / 4; // How much the plane can turn per second, in radians.
+	private double turning_speed = Math.PI / 2; // How much the plane can turn per second, in radians.
 	private int altitude_change_speed = 300; // the speed to climb or fall by. Default 300 for easy mode
 	private final String name; // An array of waypoints from the plane's origin to its destination.
 	private final Image image; // The image to be drawn representing the plane.
@@ -66,6 +66,8 @@ public class Aircraft {
 	public static ArrayList<Integer> altitude_list; // A list holding the list of possible altitudes for the aircraft.
 
 	private double initial_speed;
+
+	private boolean waiting_to_be_handed;
 	
 	public double getInitialSpeed() {
 		return initial_speed;
@@ -80,12 +82,14 @@ public class Aircraft {
 	 * @param difficulty Difficulty of the game, changes speed of aircraft and starting points for each aircraft
 	 * @param flight_plan The flightplan, has the destination, origin and used to generate the actual route
 	 * @param preferred_altitude_index used when plane needs to be created in specific altitude. Set to -1 or less for choosing altitude randomly.
-	 */
-	public Aircraft(String name, Image img, int speed, int difficulty, FlightPlan flight_plan, int preferred_altitude_index) {
+	 * @param waiting_to_be_handed If the destination is a handover point, this is initially true (will be set to false when told to hand over). Otherwise it's false
+	 */	
+	public Aircraft(String name, Image img, int speed, int difficulty, FlightPlan flight_plan, int preferred_altitude_index, boolean waiting_to_be_handed) {
 		this.name = name;
 		this.flight_plan = flight_plan;
 		this.image = img;
 		this.initial_speed = speed;
+		this.waiting_to_be_handed = waiting_to_be_handed;
 
 		this.position = flight_plan.getOrigin().position(); // Place on spawn waypoint
 
@@ -133,6 +137,11 @@ public class Aircraft {
 				Exception e = new Exception("Invalid Difficulty : " + difficulty + ".");
 				e.printStackTrace();
 		}
+	}
+	
+	// Without waiting_to_be_handed for SinglePlayer
+	public Aircraft(String name, Image img, int speed, int difficulty, FlightPlan flight_plan, int preferred_altitude_index) {
+		this(name, img,speed, difficulty, flight_plan, preferred_altitude_index, false);
 	}
 
 	/**
@@ -429,7 +438,9 @@ public class Aircraft {
 
 		// Update target waypoint
 		if (isAt(current_target.position()) && current_target.equals(flight_plan.getDestination())) {
-			has_finished = true;
+			if (!waiting_to_be_handed) {
+				has_finished = true;
+			}
 			if (flight_plan.getDestination() instanceof Airport) {
 				((Airport) flight_plan.getDestination()).insertAircraft(this);
 				is_at_airport = true;
@@ -611,21 +622,18 @@ public class Aircraft {
 
 		// Draws the aircraft itself
 		graphics.draw(image, scale, position.x(), position.y(), getBearing(), 8, 8);
-
-		// Draw the altitude near the aircraft
-		// £ is rendered as cursive "ft" from font file
-		if (this.position.y() < 700) // if the plane is NOT on the bottom, the altitude is displayed below the plane 
-			graphics.print(String.format("%.0f", position.z()) + "£", position.x() - 22, position.y() + 15);
-		else  // the plane is on the bottom, the altitude is displayed above the plane
-			graphics.print(String.format("%.0f", position.z()) + "£", position.x() - 22, position.y() - 20);
 		
+		// If the plane is near the bottom, the altitude label is shown above the plane. This also shifts up the 'Land/Hand' me label
+		double bottom_label_y = position.y() + (position.y() < 700 ? 15 : -20);
+		double top_label_y = position.y() - (position.y() < 700 ? 22 : 32);
 
-		// Draw the 'land me' message once an aircraft is circling the airport
-		if (current_target instanceof HoldingWaypoint) {
-			if (this.position.y() < 700) // if the plane is NOT on the bottom, the landing message is displayed below the plane 
-				graphics.print(infoText, position.x() - 28, position.y() - 22);
-			else // the plane is on the bottom, the landing message is displayed above the plane
-				graphics.print(infoText, position.x() - 28, position.y() - 42);
+		// Draw the altitude near the aircraft. £ is rendered as cursive "ft" from font file
+		graphics.print(String.format("%.0f", position.z()) + "£", position.x() - 22, bottom_label_y);
+		
+		if (current_target instanceof HoldingWaypoint) { // Draw the 'land me' message once an aircraft is circling the airport or 'landing' once it's been told to land
+			graphics.print(infoText, position.x() - 28, top_label_y);
+		} else if (waiting_to_be_handed && current_target.equals(flight_plan.getDestination())) { // Draw 'hand me' if it's going to be handed over and is in final stage (circling hand over point)
+			graphics.print("Hand Me", position.x() - 28, top_label_y);
 		}
 
 		drawWarningCircles();
@@ -772,8 +780,7 @@ public class Aircraft {
 						num_points -= 20;
 					}
 				}
-			}
-			
+			}			
 		}
 
 
@@ -783,5 +790,13 @@ public class Aircraft {
 		}
 
 		return -1;
+	}
+	
+	public void handOver() {
+		this.waiting_to_be_handed = false;
+	}
+	
+	public boolean isWaitingToBeHanded() {
+		return this.waiting_to_be_handed;
 	}
 }
