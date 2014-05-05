@@ -483,32 +483,35 @@ public class Multiplayer extends Scene {
 	public void mousePressed(int key, int x, int y) {
 		if (!isInputValid(x, y)) {
 			return;
-		} 
+		}
+		// Must be before offsets are applied as outside the viewport
+		altimeter.mousePressed(key, x, y);
+		airport_control_box.mousePressed(key, x, y);
+		my_airport.mousePressed(key, x, y);
+		
+		// Apply offsets so we don't need to keep writing x-Main.VIEWPORT_OFFSET_X
+		x -= Main.VIEWPORT_OFFSET_X;
+		y -= Main.VIEWPORT_OFFSET_Y;		
 		
 		if (key == input.MOUSE_LEFT) {
-			Aircraft new_selected = selected_aircraft;
-
+			// If clicked on an aircraft, set it as selected
 			for (Aircraft a : aircraft) {
-				if (a.isMouseOver(x - Main.VIEWPORT_OFFSET_X, y - Main.VIEWPORT_OFFSET_Y)) {
-					new_selected = a;
+				if (a.isMouseOver(x, y)) {
+					deselectAircraft();
+					selected_aircraft = a;
+					try {
+						server.sendSelected(selected_aircraft.getName());
+					} catch (RemoteException e) {
+						connectionLost();
+					}
 				}
 			}
-
-			if (new_selected != selected_aircraft) {
-				deselectAircraft();
-				selected_aircraft = new_selected;
-				try {
-					server.sendSelected(selected_aircraft.getName());
-				} catch (RemoteException e) {
-					connectionLost();
-				}
-			}
-
 			altimeter.show(selected_aircraft);
 			
+			// Things that require an aircraft to be selected
 			if (selected_aircraft != null) {
 				for (Waypoint w : my_waypoints) {
-					if (w.isMouseOver(x - Main.VIEWPORT_OFFSET_X, y - Main.VIEWPORT_OFFSET_Y) && selected_aircraft.indexInFlightPath(w) > -1) {
+					if (w.isMouseOver(x, y) && selected_aircraft.indexInFlightPath(w) > -1) {
 						selected_waypoint = w;
 						selected_pathpoint = selected_aircraft.indexInFlightPath(w);
 					}
@@ -522,8 +525,6 @@ public class Multiplayer extends Scene {
 					if (dx * dx + dy * dy < r * r) {
 						compass_dragged = true;
 					}
-					
-					// bar
 				}
 				
 				Waypoint my_outgoing_hand_over_point = is_left_player ? left_entryexit_waypoints[6] : right_entryexit_waypoints[7];
@@ -532,38 +533,28 @@ public class Multiplayer extends Scene {
 					selected_aircraft.handOver();
 				}
 			}
-		}
-
-		if (key == input.MOUSE_RIGHT)
-			deselectAircraft();
-
-		altimeter.mousePressed(key, x, y);
-		airport_control_box.mousePressed(key, x, y);
-		
-		// handle airport input
-		my_airport.mousePressed(key, x, y);
-		
-		if (selected_aircraft != null && !selected_aircraft.isLanding()) {
-			if (my_airport.is_arrivals_clicked && selected_aircraft.getCurrentTarget() instanceof HoldingWaypoint) {
-				if (is_left_player) {
-					selected_aircraft.toggleLand(left_holding_waypoints.get(0));
-				} else {
-					selected_aircraft.toggleLand(right_holding_waypoints.get(0));
-				}
-			} 
-		}
-		if (my_airport.is_departures_clicked) {
-			// must wait at least 5 seconds between aircraft takeoff
-			if (next_take_off - timer <= 0) {
-				try {
-					my_airport.takeoff();
-					generateFlight(true);
-					next_take_off = timer + TAKEOFF_DELAY;
-					airport_control_box.signal_take_off = false;
-				} catch (IllegalStateException e) {
-					orders_box.addOrder("<<< There are no aircraft in the airport, Comrade.");
+			
+			if (selected_aircraft != null && !selected_aircraft.isLanding()) {
+				if (my_airport.is_arrivals_clicked && selected_aircraft.getCurrentTarget() instanceof HoldingWaypoint) {
+					Waypoint landing_waypoint = is_left_player ? left_holding_waypoints.get(0) : right_holding_waypoints.get(0);
+					selected_aircraft.toggleLand(landing_waypoint);
 				}
 			}
+			if (my_airport.is_departures_clicked) {
+				// must wait at least 5 seconds between aircraft takeoff
+				if (next_take_off - timer <= 0) {
+					try {
+						my_airport.takeoff();
+						generateFlight(true);
+						next_take_off = timer + TAKEOFF_DELAY;
+						airport_control_box.signal_take_off = false;
+					} catch (IllegalStateException e) {
+						orders_box.addOrder("<<< There are no aircraft in the airport, Comrade.");
+					}
+				}
+			}
+		} else if (key == input.MOUSE_RIGHT) {
+			deselectAircraft();
 		}
 	}
 	
