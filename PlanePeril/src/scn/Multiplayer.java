@@ -348,41 +348,35 @@ public class Multiplayer extends Scene {
 				orders_box.addOrder("<<< Aircraft " + aircraft.get(i).getName() + " has landed safely at " + left_airport.getName());
 			}
 			// if aircraft has completed its journey correctly
-			if (aircraft.get(i).hasFinished()) {
-				if (isMine(aircraft.get(i))) {
-					updatePerformance(5);
-					Waypoint my_outgoing_hand_over_point = is_left_player ? left_entryexit_waypoints[6] : right_entryexit_waypoints[7];
-					if (aircraft.get(i).getFlightPlan().getDestination().equals(my_outgoing_hand_over_point)) {
-						if (aircraft.get(i).isHandingOver()) {
-							handOver(aircraft.get(i));
-						} else {
-							continue; // Don't remove an aircraft if it's going to be handed over but hasn't been told to yet
-						}
-					} else {
-						switch (RandomNumber.randInclusiveInt(0, 2)) {
-						case 0:
-							orders_box.addOrder("<<< Thank you Comrade");
-							break;
-						case 1:
-							orders_box.addOrder("<<< Well done Comrade");
-							break;
-						case 2:
-							orders_box.addOrder("<<< Many thanks Comrade");
-							break;
-						}
+			if (aircraft.get(i).hasFinished() && isMine(aircraft.get(i)) && !aircraft.get(i).isWaitingToBeHanded()) {
+				updatePerformance(5);
+				Waypoint my_outgoing_hand_over_point = is_left_player ? left_entryexit_waypoints[6] : right_entryexit_waypoints[7];
+				if (aircraft.get(i).getFlightPlan().getDestination().equals(my_outgoing_hand_over_point)) {
+					handOver(aircraft.get(i));
+				} else {
+					switch (RandomNumber.randInclusiveInt(0, 2)) {
+					case 0:
+						orders_box.addOrder("<<< Thank you Comrade");
+						break;
+					case 1:
+						orders_box.addOrder("<<< Well done Comrade");
+						break;
+					case 2:
+						orders_box.addOrder("<<< Many thanks Comrade");
+						break;
 					}
-					if (aircraft.get(i).equals(selected_aircraft)) {
-						deselectAircraft();
-					}
-					// make sure you notify the server of which aircraft is to be removed BEFORE it is removed
-					try {
-						server.sendRemoveAircraft(aircraft.get(i).getName());
-					} catch (RemoteException e) {
-						connectionLost();
-					}
-					aircraft.remove(i);
-					i--; // Removed one as want to have same index next time through loop
 				}
+				if (aircraft.get(i).equals(selected_aircraft)) {
+					deselectAircraft();
+				}
+				// make sure you notify the server of which aircraft is to be removed BEFORE it is removed
+				try {
+					server.sendRemoveAircraft(aircraft.get(i).getName());
+				} catch (RemoteException e) {
+					connectionLost();
+				}
+				aircraft.remove(i);
+				i--; // Removed one as want to have same index next time through loop
 			}
 		}
 
@@ -504,6 +498,7 @@ public class Multiplayer extends Scene {
 					} catch (RemoteException e) {
 						connectionLost();
 					}
+					break;
 				}
 			}
 			altimeter.show(selected_aircraft);
@@ -630,9 +625,6 @@ public class Multiplayer extends Scene {
 				a.increaseTargetAltitude(); 
 			}
 			
-			// If it's towards a handover waypoint, set its attribute to that so that user will have to take manual action to hand it over
-			a.setToBeHanded(a.getFlightPlan().getDestination().equals(left_entryexit_waypoints[6]) || a.getFlightPlan().generateGreedyRoute().equals(right_entryexit_waypoints[7]));
-
 			orders_box.addOrder("<<< " + a.getName() + " incoming from " + a.getFlightPlan().getOriginName() + " heading towards " + a.getFlightPlan().getDestinationName() + ".");
 			aircraft.add(a);
 			

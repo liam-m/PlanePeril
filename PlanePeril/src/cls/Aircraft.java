@@ -66,9 +66,8 @@ public class Aircraft {
 	public static ArrayList<Integer> altitude_list; // A list holding the list of possible altitudes for the aircraft.
 
 	private double initial_speed;
-	
-	private boolean to_be_handed;
-	private boolean is_handing_over = false; // Been told to hand over to other player
+
+	private boolean waiting_to_be_handed;
 	
 	public double getInitialSpeed() {
 		return initial_speed;
@@ -83,12 +82,14 @@ public class Aircraft {
 	 * @param difficulty Difficulty of the game, changes speed of aircraft and starting points for each aircraft
 	 * @param flight_plan The flightplan, has the destination, origin and used to generate the actual route
 	 * @param preferred_altitude_index used when plane needs to be created in specific altitude. Set to -1 or less for choosing altitude randomly.
-	 */
-	public Aircraft(String name, Image img, int speed, int difficulty, FlightPlan flight_plan, int preferred_altitude_index) {
+	 * @param waiting_to_be_handed If the destination is a handover point, this is initially true (will be set to false when told to hand over). Otherwise it's false
+	 */	
+	public Aircraft(String name, Image img, int speed, int difficulty, FlightPlan flight_plan, int preferred_altitude_index, boolean waiting_to_be_handed) {
 		this.name = name;
 		this.flight_plan = flight_plan;
 		this.image = img;
 		this.initial_speed = speed;
+		this.waiting_to_be_handed = waiting_to_be_handed;
 
 		this.position = flight_plan.getOrigin().position(); // Place on spawn waypoint
 
@@ -136,6 +137,11 @@ public class Aircraft {
 				Exception e = new Exception("Invalid Difficulty : " + difficulty + ".");
 				e.printStackTrace();
 		}
+	}
+	
+	// Without waiting_to_be_handed for SinglePlayer
+	public Aircraft(String name, Image img, int speed, int difficulty, FlightPlan flight_plan, int preferred_altitude_index) {
+		this(name, img,speed, difficulty, flight_plan, preferred_altitude_index, false);
 	}
 
 	/**
@@ -432,7 +438,7 @@ public class Aircraft {
 
 		// Update target waypoint
 		if (isAt(current_target.position()) && current_target.equals(flight_plan.getDestination())) {
-			if (!to_be_handed) {
+			if (!waiting_to_be_handed) {
 				has_finished = true;
 			}
 			if (flight_plan.getDestination() instanceof Airport) {
@@ -787,14 +793,10 @@ public class Aircraft {
 	}
 	
 	public void handOver() {
-		this.is_handing_over = true;
+		this.waiting_to_be_handed = false;
 	}
 	
-	public boolean isHandingOver() {
-		return is_handing_over;
-	}
-	
-	public void setToBeHanded(boolean to_be_handed) {
-		this.to_be_handed = to_be_handed;
+	public boolean isWaitingToBeHanded() {
+		return this.waiting_to_be_handed;
 	}
 }
