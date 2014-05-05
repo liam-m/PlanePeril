@@ -548,10 +548,10 @@ public class SinglePlayer extends Scene {
 
 	@Override
 	public void mouseReleased(int key, int x, int y) {
-		if (selected_aircraft != null && manual_override_button.isMouseOver(x, y))
+		if (selected_aircraft != null && manual_override_button.isMouseOver(x - 16, y - 16))
 			manual_override_button.act();
 
-		if (selected_aircraft != null && land_button.isMouseOver(x, y))
+		if (selected_aircraft != null && land_button.isMouseOver(x - 16, y - 16))
 			land_button.act();
 
 		if (key == input.MOUSE_LEFT && airport.isMouseOver(x - 16, y - 16)) {
@@ -691,24 +691,20 @@ public class SinglePlayer extends Scene {
 
 		airport.drawAirportInfo();
 
-		graphics.setColour(255, 255, 255);
-
 		for (Aircraft aircraft : aircraft_in_airspace) {
+			graphics.setColour(255, 255, 255);
 			aircraft.draw();
-			if (aircraft.isMouseOver()) {
+			if (aircraft.isMouseOver(input.getMouseX() - 16, input.getMouseY() - 16)) {
 				aircraft.drawFlightPath(false);
 			}
 		}
 
 		if (selected_aircraft != null) {
-
 			// Flight Path
 			selected_aircraft.drawFlightPath(true);
 			graphics.setColour(Main.GREEN);
 
 			// Override Button
-			graphics.setColour(0, 0, 0);
-			graphics.rectangle(true, (window.getWidth() - 128) / 2, 16, 128, 32);
 			graphics.setColour(Main.GREEN);
 			manual_override_button.draw();
 
@@ -716,10 +712,7 @@ public class SinglePlayer extends Scene {
 			// destination point, draw the land button)
 			if (selected_aircraft.getFlightPlan().getDestination() instanceof Airport) {
 				// Land Button with valid altitude
-				graphics.setColour(0, 0, 0);
-				graphics.rectangle(true, (window.getWidth() - 500) / 2, 16, 128, 32);
-				graphics.setColour(Main.GREEN);
-			
+				graphics.setColour(Main.GREEN);			
 				land_button.draw();
 			}
 
