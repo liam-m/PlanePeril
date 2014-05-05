@@ -1026,6 +1026,7 @@ public class Multiplayer extends Scene {
 					if (collision_state >= 0) {
 						loseALife();
 						my_explosion_animation = new SpriteAnimation(explosion, x, y, 6, 16, 8, 4, false);
+						return;
 					}
 				} else if (collision_state >= 0) {
 					their_explosion_animation = new SpriteAnimation(explosion, x, y, 6, 16, 8, 4, false);

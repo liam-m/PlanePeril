@@ -8,7 +8,6 @@ import pp.Main;
 import lib.jog.graphics;
 import lib.jog.input;
 import lib.jog.graphics.Image;
-import lib.jog.window;
 
 public class Airport extends Waypoint {
 
@@ -29,7 +28,8 @@ public class Airport extends Waypoint {
 
 	private double y_location;
 
-	private ArrayList<Aircraft> aircraft_waiting_to_land =  new ArrayList<Aircraft>();
+	int num_waiting_to_land = 0;
+	
 	double timer = 0;
 	public java.util.ArrayList<Double> time_entered = new java.util.ArrayList<Double>();
 
@@ -190,16 +190,14 @@ public class Airport extends Waypoint {
 			// Assume it hasn't been waiting
 			int green_now = green_fine; 
 			int red_now = red_fine;
-			if (time_waiting > 0) { // Prevent division by 0
-				if (time_waiting >= 5) { // Cap at 5 seconds
-					green_now = green_danger;
-					red_now = red_danger;
-				} else {
-					// Colour between fine and danger, scaled by time_waiting
-					green_now = green_fine - (int)(Math.abs(green_fine-green_danger) * (time_waiting/5.0)); 
-					red_now = (int)(Math.abs(red_fine-red_danger) * (time_waiting/5.0));
-				}
-			} 
+			if (time_waiting >= 5) { // Cap at 5 seconds
+				green_now = green_danger;
+				red_now = red_danger;
+			} else {
+				// Colour between fine and danger, scaled by time_waiting
+				green_now = green_fine - (int)(Math.abs(green_fine-green_danger) * (time_waiting/5.0)); 
+				red_now = (int)(Math.abs(red_fine-red_danger) * (time_waiting/5.0));
+			}
 			
 			// Draw border, draw as filled if clicked
 			graphics.setColour(red_now, green_now, 0, 256);
@@ -212,32 +210,28 @@ public class Airport extends Waypoint {
 			// Print number of aircraft waiting
 			graphics.setColour(255, 255, 255, 128);
 			graphics.print(Integer.toString(aircraft_list.size()), departures_x_location-airport.getWidth()/2 + 23, departures_y_location-airport.getHeight()/2 + 15);
-			}
-			graphics.setColour(0, 128, 0, 128);
-			// Draw the arrivals button if at least one plane is waiting (arriving flights)
-			if (aircraft_waiting_to_land.size() > 0) {
-				// Draw border, draw as filled if clicked
-				graphics.rectangle(is_arrivals_clicked, arrivals_x_location-airport.getWidth()/2, arrivals_y_location-airport.getHeight()/2, arrivals_width, arrivals_height);
-				graphics.setColour(128, 128, 0, 64);			
-				// Draw box
-				graphics.rectangle(true, arrivals_x_location-airport.getWidth()/2 + 1, arrivals_y_location-airport.getHeight()/2 + 1, arrivals_width -2, arrivals_height -2);
-					
-				// Print number of aircraft waiting
-				graphics.setColour(255, 255, 255, 128);
-				graphics.print(Integer.toString(aircraft_waiting_to_land.size()), arrivals_x_location-airport.getWidth()/2 + 50, arrivals_y_location-airport.getHeight()/2 + 26);
-			}		
+		}
+		graphics.setColour(0, 128, 0, 128);
+		// Draw the arrivals button if at least one plane is waiting (arriving flights)
+		if (num_waiting_to_land > 0) {
+			// Draw border, draw as filled if clicked
+			graphics.rectangle(is_arrivals_clicked, arrivals_x_location-airport.getWidth()/2, arrivals_y_location-airport.getHeight()/2, arrivals_width, arrivals_height);
+			graphics.setColour(128, 128, 0, 64);			
+			// Draw box
+			graphics.rectangle(true, arrivals_x_location-airport.getWidth()/2 + 1, arrivals_y_location-airport.getHeight()/2 + 1, arrivals_width -2, arrivals_height -2);
+				
+			// Print number of aircraft waiting
+			graphics.setColour(255, 255, 255, 128);
+			graphics.print(Integer.toString(num_waiting_to_land), arrivals_x_location-airport.getWidth()/2 + 50, arrivals_y_location-airport.getHeight()/2 + 26);
+		}		
 	}
 
 	public void update(double dt, ArrayList<Aircraft> aircraft, boolean is_left) {
 		timer += dt;
-		aircraft_waiting_to_land .clear();
+		num_waiting_to_land = 0;
 		for (Aircraft a : aircraft) {
-			if (a.getCurrentTarget() instanceof HoldingWaypoint) {
-				if (is_left && a.getPosition().x() < window.getWidth()/2) {
-					aircraft_waiting_to_land.add(a);
-				} else if (a.getPosition().x() > window.getWidth()/2){
-					aircraft_waiting_to_land.add(a);
-				}
+			if (a.getCurrentTarget() instanceof HoldingWaypoint && a.getFlightPlan().getDestination().equals(this)) {
+				num_waiting_to_land++;
 			}
 		}
 		if (!time_entered.isEmpty()) {
@@ -246,6 +240,7 @@ public class Airport extends Waypoint {
 			apply_penalty = false;
 		}
 	}
+	
 	public int getMaxAircraft() {
 		return MAX_AIRCRAFT_NUMBER;
 	}
@@ -293,7 +288,6 @@ public class Airport extends Waypoint {
 			}
 		}
 	}
-
 
 	public void mouseReleased(int key, int x, int y) {
 		is_arrivals_clicked = false;
