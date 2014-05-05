@@ -342,26 +342,27 @@ public class Multiplayer extends Scene {
 			if (aircraft.get(i).hasFinished()) {
 				if (!aircraft.get(i).hasCrashed()) {
 					if (isMine(aircraft.get(i))) {
-							updatePerformance(5);
+						updatePerformance(5);
 						if (aircraft.get(i).getFlightPlan().getDestination().equals(my_outgoing_hand_over_point)) {
 							handOver(aircraft.get(i));
-						} 
-					}else {
-						switch (RandomNumber.randInclusiveInt(0, 2)) {
-							case 0:
-								orders_box.addOrder("<<< Thank you Comrade");
-								break;
-							case 1:
-								orders_box.addOrder("<<< Well done Comrade");
-								break;
-							case 2:
-								orders_box.addOrder("<<< Many thanks Comrade");
-								break;
+						} else {
+							switch (RandomNumber.randInclusiveInt(0, 2)) {
+								case 0:
+									orders_box.addOrder("<<< Thank you Comrade");
+									break;
+								case 1:
+									orders_box.addOrder("<<< Well done Comrade");
+									break;
+								case 2:
+									orders_box.addOrder("<<< Many thanks Comrade");
+									break;
 							}
+						}
 					}
 				} else {
 					orders_box.addOrder("<<< MAYDAY MAYDAY WE ARE GOING DOWN!!");
 				}
+				
 				if (aircraft.get(i).equals(selected_aircraft)) {
 					deselectAircraft();
 				}
