@@ -280,6 +280,12 @@ public class Multiplayer extends Scene {
 		selected_pathpoint = -1;
 		
 		aircraft_image = graphics.newImage("gfx" + File.separator + "plane.png");
+		explosion = graphics.newImage("gfx" + File.separator + "explosionFrames.png");
+		left_channel_image = graphics.newImage("gfx" + File.separator + "left_channel.png");
+		right_channel_image = graphics.newImage("gfx" + File.separator + "right_channel.png");
+		left_channel = new SpriteAnimation(left_channel_image, (int)left_entryexit_waypoints[7].position().x(), (int)left_entryexit_waypoints[7].position().y(), 2, 16, 50, 20, true);
+		right_channel = new SpriteAnimation(right_channel_image, (int)left_entryexit_waypoints[6].position().x(), (int)left_entryexit_waypoints[6].position().y(), 2, 16, 50, 20, true);
+
 	}
 	
 	@Override
@@ -431,6 +437,26 @@ public class Multiplayer extends Scene {
 			my_performance.setToMax();
 			updatePerformance(my_performance.getCurrentValue()); 
 		}
+		
+		// Update animation
+		if (my_explosion_animation != null) {
+			if (!my_explosion_animation.hasFinished()) { 
+				my_explosion_animation.update(dt);
+			} else {
+				my_explosion_animation = null;
+			}
+		}
+		
+		if (their_explosion_animation != null) {
+			if (!their_explosion_animation.hasFinished()) { 
+				their_explosion_animation.update(dt);
+			} else {
+				their_explosion_animation = null;
+			}
+		}
+		
+		left_channel.update(dt);
+		right_channel.update(dt);
 		
 		// Update from server
 		for(Aircraft a : server.aircraft_queue) {
