@@ -68,6 +68,7 @@ public class Aircraft {
 	private double initial_speed;
 
 	private boolean waiting_to_be_handed;
+	public boolean has_crashed = false;
 	
 	public double getInitialSpeed() {
 		return initial_speed;
@@ -764,8 +765,10 @@ public class Aircraft {
 			Aircraft plane = aircraft_list.get(i);
 			if (!has_finished) {
 				if (plane != this && isWithin(plane, RADIUS)) {
+					has_crashed = true;
 					has_finished = true;
 					plane.has_finished = true;
+					plane.has_crashed = true;
 					return i;
 				} else if (plane != this && isWithin(plane, minimum_separation_distance)) {
 					// When separation rules are breached
@@ -798,5 +801,9 @@ public class Aircraft {
 	
 	public boolean isWaitingToBeHanded() {
 		return this.waiting_to_be_handed;
+	}
+	
+	public boolean hasCrashed() {
+		return has_crashed;
 	}
 }
