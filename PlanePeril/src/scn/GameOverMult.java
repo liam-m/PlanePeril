@@ -1,10 +1,7 @@
 package scn;
 
-import java.awt.Window;
-
 import pp.Main;
 import lib.ButtonText;
-import lib.ButtonText.Action;
 import lib.jog.audio.Sound;
 import lib.jog.graphics;
 import lib.jog.input;
@@ -64,42 +61,29 @@ public class GameOverMult extends Scene {
 
 	@Override
 	public void mouseReleased(int key, int mouse_x, int mouse_y) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void keyPressed(int key) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void keyReleased(int key) {
-
 	}
 
 	@Override
 	public void start() {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void update(double time_difference) {
-		// TODO Auto-generated method stub
-
 	}	
 
 	@Override
 	public void close() {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void playSound(Sound sound) {
-		// TODO Auto-generated method stub
-
 	}
 }

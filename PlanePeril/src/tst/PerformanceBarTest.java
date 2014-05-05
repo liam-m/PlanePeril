@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 import cls.PerformanceBar;
 
+@SuppressWarnings("deprecation")
 public class PerformanceBarTest {
 	
 	@Test	

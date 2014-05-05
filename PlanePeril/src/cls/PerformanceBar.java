@@ -93,7 +93,7 @@ public class PerformanceBar {
 	 */
 	public void draw() {
 		if (current_value != drawn_value) {
-			current_value += current_value > drawn_value ? 0.5 : -0.5;
+			drawn_value += current_value > drawn_value ? 0.5 : -0.5;
 		}
 		
 		graphics.setColour(getColour(drawn_value));

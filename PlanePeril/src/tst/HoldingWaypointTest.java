@@ -1,20 +1,13 @@
 package tst;
 
-
-
 import static org.junit.Assert.*;
-
 
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
 import cls.HoldingWaypoint;
-import cls.Waypoint;
-import cls.Waypoint.WaypointType;
-
 
 public class HoldingWaypointTest {
 	HoldingWaypoint test_waypoint = new HoldingWaypoint(10, 10);
@@ -75,5 +68,4 @@ public class HoldingWaypointTest {
 		assertEquals(test_waypoint.getNextWaypoint().position().y(), 20, 0);
 		//fail("Not yet implemented");
 	}
-
 }
