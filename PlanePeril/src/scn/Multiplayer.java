@@ -40,8 +40,8 @@ public class Multiplayer extends Scene {
 	public Waypoint[] left_waypoints;
 	public Waypoint[] right_waypoints;
 	HoldingWaypoint[] left_airport_waypoints, right_airport_waypoints;
-	public Airport left_airport = new Airport(window.getWidth()/4, window.getHeight()/2, "Aerodromio Leftved'");
-	public Airport right_airport = new Airport((window.getWidth()*3)/4 + 100, window.getHeight()/2, "Aerodromio Rightved'");
+	public Airport left_airport = new Airport(window.getWidth()/4, window.getHeight()/2, "airport");
+	public Airport right_airport = new Airport((window.getWidth()*3)/4 + 100, window.getHeight()/2, "airport");
 	public Waypoint left_airport_takeoff_waypoint = new Waypoint(left_airport.position().x() - 120, left_airport.position().y());
 	public Waypoint right_airport_takeoff_waypoint = new Waypoint(right_airport.position().x() - 120, right_airport.position().y());
 	
@@ -124,18 +124,18 @@ public class Multiplayer extends Scene {
 			/* A set of Waypoints which are origin / destination points */
 
 			// top 3 entry/exit points
-			new Waypoint(8, 8, WaypointType.ENTRY_EXIT),
-			new Waypoint((window.getWidth()/4), 8, WaypointType.ENTRY_EXIT),
-			new Waypoint((window.getWidth()/2 - 20), 8, WaypointType.ENTRY_EXIT),
+			new Waypoint(8, 8, WaypointType.ENTRY_EXIT,"Top left"),
+			new Waypoint((window.getWidth()/4), 8, WaypointType.ENTRY_EXIT, "Top middle"),
+			new Waypoint((window.getWidth()/2 - 20), 8, WaypointType.ENTRY_EXIT, "Top right"),
 
 			// bottom 3 entry/exit points
-			new Waypoint(8, window.getHeight() - 190, WaypointType.ENTRY_EXIT),
-			new Waypoint((window.getWidth()/4), window.getHeight() - 190, WaypointType.ENTRY_EXIT),
-			new Waypoint((window.getWidth()/2 - 20), window.getHeight() - 190, WaypointType.ENTRY_EXIT),
+			new Waypoint(8, window.getHeight() - 190, WaypointType.ENTRY_EXIT, "Bottom left"),
+			new Waypoint((window.getWidth()/4), window.getHeight() - 190, WaypointType.ENTRY_EXIT, "Bottom middle"),
+			new Waypoint((window.getWidth()/2 - 20), window.getHeight() - 190, WaypointType.ENTRY_EXIT, "Bottom right"),
 			
 			// Hand over points
-			new Waypoint((window.getWidth()/2 - 20), window.getHeight()/3, WaypointType.ENTRY_EXIT),
-			new Waypoint((window.getWidth()/2 - 20), (window.getHeight() *2)/3, WaypointType.ENTRY_EXIT),
+			new Waypoint((window.getWidth()/2 - 20), window.getHeight()/3, WaypointType.ENTRY_EXIT, "Top handover"),
+			new Waypoint((window.getWidth()/2 - 20), (window.getHeight() *2)/3, WaypointType.ENTRY_EXIT, "Bottom handover"),
 			
 			// Airport
 			left_airport
@@ -145,18 +145,18 @@ public class Multiplayer extends Scene {
 			/* A set of Waypoints which are origin / destination points */
 
 			// top 3 entry/exit points
-			new Waypoint((window.getWidth()/2 + 20), 8, WaypointType.ENTRY_EXIT),
-			new Waypoint(((window.getWidth()* 3)/4), 8, WaypointType.ENTRY_EXIT),
-			new Waypoint(window.getWidth() - 40, 8, WaypointType.ENTRY_EXIT),
+			new Waypoint((window.getWidth()/2 + 20), 8, WaypointType.ENTRY_EXIT,"Top left"),
+			new Waypoint(((window.getWidth()* 3)/4), 8, WaypointType.ENTRY_EXIT,"Top middle"),
+			new Waypoint(window.getWidth() - 40, 8, WaypointType.ENTRY_EXIT,"Top right"),
 
 			// bottom 3 entry/exit points
-			new Waypoint((window.getWidth()/2 + 20), window.getHeight() - 190, WaypointType.ENTRY_EXIT),
-			new Waypoint(((window.getWidth()* 3)/4), window.getHeight() - 190, WaypointType.ENTRY_EXIT),
-			new Waypoint(window.getWidth() - 40, window.getHeight() - 190, WaypointType.ENTRY_EXIT),
+			new Waypoint((window.getWidth()/2 + 20), window.getHeight() - 190, WaypointType.ENTRY_EXIT, "Bottom left"),
+			new Waypoint(((window.getWidth()* 3)/4), window.getHeight() - 190, WaypointType.ENTRY_EXIT, "Bottom middle"),
+			new Waypoint(window.getWidth() - 40, window.getHeight() - 190, WaypointType.ENTRY_EXIT, "Bottom right"),
 			
 			// Hand over points
-			new Waypoint((window.getWidth()/2 + 20), window.getHeight()/3, WaypointType.ENTRY_EXIT),
-			new Waypoint((window.getWidth()/2 + 20), (window.getHeight() *2)/3, WaypointType.ENTRY_EXIT),
+			new Waypoint((window.getWidth()/2 + 20), window.getHeight()/3, WaypointType.ENTRY_EXIT, "Top handover"),
+			new Waypoint((window.getWidth()/2 + 20), (window.getHeight() *2)/3, WaypointType.ENTRY_EXIT, "Bottom handover"),
 						
 			// Airport
 			right_airport
