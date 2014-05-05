@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 import cls.Lives;
 
+@SuppressWarnings("deprecation")
 public class LivesTest {
 
 	@Test

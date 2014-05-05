@@ -473,18 +473,6 @@ public class Multiplayer extends Scene {
 			last_penalty_time = timer;
 		}		
 	}
-
-	/**
-	 * Input is invalid if it is both on the wrong side of the screen AND input is above the bottom of the airspace
-	 * 
-	 * @param x position
-	 * @param y position
-	 * @return
-	 */
-	private boolean isInputValid(int x, int y) {
-		return (is_left_player ? x <= window.getWidth()/2 : x >= window.getWidth()/2) // Clicked on player's half of the screen
-				||  y > Y_POSITION_OF_BOTTOM_ELEMENTS; // Clicked on bottom buttons
-	}
 	
 	/**
 	 * Handle mouse input
@@ -1008,16 +996,6 @@ public class Multiplayer extends Scene {
 	}
 	
 	/**
-	 * Causes a selected aircraft to call methods to land
-	 */
-	private void toggleLand(HoldingWaypoint land_waypoint) {
-		if (selected_aircraft == null || selected_aircraft.isLanding())
-			return;
-
-		selected_aircraft.toggleLand(land_waypoint);
-	}
-	
-	/**
 	 * Cause all planes in airspace to update collisions Catch and handle a
 	 * resultant game over state
 	 * 
@@ -1053,7 +1031,6 @@ public class Multiplayer extends Scene {
 	 */
 	public void gameOver(boolean win) {
 		main.closeScene();
-		//TODO what happens on game over?
 		main.setScene(new GameOverMult(main, win));
 	}
 	
