@@ -36,11 +36,14 @@ public class Multiplayer extends Scene {
 	boolean is_left_player;
 	public int hand_over_aircraft_waiting = 0;
 	
+	private int AIRPORT_X_OFFSET = 64; // Used to centre airports horizontally within region
+	private int AIRPORT_Y_OFFSET = 32; // Used to centre airports vertically within region
+	public Airport left_airport = new Airport(window.getWidth()/4-AIRPORT_X_OFFSET, window.getHeight()/2-AIRPORT_Y_OFFSET, "Airport");
+	public Airport right_airport = new Airport((window.getWidth()*3)/4-AIRPORT_X_OFFSET, window.getHeight()/2-AIRPORT_Y_OFFSET, "Airport");
+	
 	public Waypoint[] left_waypoints;
 	public Waypoint[] right_waypoints;
 	HoldingWaypoint[] left_airport_waypoints, right_airport_waypoints;
-	public Airport left_airport = new Airport(window.getWidth()/4, window.getHeight()/2, "Airport");
-	public Airport right_airport = new Airport((window.getWidth()*3)/4 + 100, window.getHeight()/2, "Airport");
 	public Waypoint left_airport_takeoff_waypoint = new Waypoint(left_airport.position().x() - 120, left_airport.position().y());
 	public Waypoint right_airport_takeoff_waypoint = new Waypoint(right_airport.position().x() - 120, right_airport.position().y());
 	

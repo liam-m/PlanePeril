@@ -10,7 +10,6 @@ import lib.jog.input;
 import lib.jog.graphics.Image;
 
 public class Airport extends Waypoint {
-
 	private final static int MAX_AIRCRAFT_NUMBER = 3;
 
 	private final static int TEXT_POSITION = 55;
