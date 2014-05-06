@@ -1,11 +1,9 @@
 package scn;
 
 import java.io.File;
-import java.util.ArrayList;
 
 import pp.Main;
 
-import lib.Serializer;
 import lib.SpriteAnimation;
 import lib.TextBox;
 import lib.jog.audio;
@@ -83,22 +81,6 @@ public class GameOver extends Scene {
 		text_box.addText("Game Over.");
 		text_box.delay(0.5);
 		text_box.addText("You Lose.");
-
-		saveScore();
-	}
-
-	/**
-	 * Used to save the scores in a file defined in Main.java
-	 */
-	private void saveScore() {
-		if (this.score > 0) {
-			if (Serializer.deserialize(Main.SCORES_FILE)) {
-				@SuppressWarnings("unchecked")
-				ArrayList<Integer> scores = (ArrayList<Integer>) Serializer.getRecovered();
-				scores.add(this.score);
-				Serializer.serialize(Main.SCORES_FILE, scores);
-			}
-		}
 	}
 
 	@Override

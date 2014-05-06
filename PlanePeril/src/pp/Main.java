@@ -3,10 +3,8 @@ package pp;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Stack;
 
-import lib.Serializer;
 import lib.jog.audio;
 import lib.jog.graphics;
 import lib.jog.input;
@@ -38,8 +36,6 @@ public class Main implements EventHandler {
 	public final static Color BLUE = new Color(0, 0, 64);
 	public final static Color LIGHT_BLUE = new Color(0, 64, 255);
 	public final static Color ORANGE = new Color(64, 0, 0);
-	
-	public final static String SCORES_FILE = "scores.ser";
 
 	public final static String TITLE = "Plane Peril";
 	final private int WIDTH = 1280;
@@ -100,10 +96,6 @@ public class Main implements EventHandler {
 
 		last_frame_time = (double) (Sys.getTime()) / Sys.getTimerResolution();
 		last_fps_time = ((Sys.getTime() * 1000) / Sys.getTimerResolution()); // Set to current time
-
-		if (!Serializer.deserialize(Main.SCORES_FILE)) {
-			Serializer.serialize(Main.SCORES_FILE, new ArrayList<Integer>());
-		}
 	}
 
 	/**
