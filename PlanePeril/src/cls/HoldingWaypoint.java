@@ -6,9 +6,7 @@ import lib.jog.graphics;
  * A special case of a waypoint. Used to circle the airport. <br>
  * Every holding waypoint as a "next" waypoint which become the target of the
  * aircraft once it reached the "current" holding waypoint.
- * 
  * @author Leslie, Philip
- * 
  */
 public class HoldingWaypoint extends Waypoint {
 
@@ -19,8 +17,7 @@ public class HoldingWaypoint extends Waypoint {
 	}
 
 	/**
-	 * Set the next waypoint, should be done only once.
-	 * 
+	 * Set the next waypoint, should be done only once. 
 	 * @param next_waypoint
 	 */
 	public void setNextWaypoint(Waypoint next_waypoint) {
@@ -29,7 +26,6 @@ public class HoldingWaypoint extends Waypoint {
 
 	/**
 	 * Get the next waypoint
-	 * 
 	 * @return Waypoint next waypoint
 	 */
 	public Waypoint getNextWaypoint() {
@@ -38,11 +34,8 @@ public class HoldingWaypoint extends Waypoint {
 
 	/**
 	 * draws the waypoint
-	 * 
-	 * @param x
-	 *            the x location to draw at
-	 * @param y
-	 *            the y location to draw at
+	 * @param x the x location to draw at
+	 * @param y the y location to draw at
 	 */
 	public void draw(double x, double y) {
 		graphics.setColour(128, 0, 0, 128);
