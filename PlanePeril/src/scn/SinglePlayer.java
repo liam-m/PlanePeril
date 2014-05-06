@@ -231,15 +231,6 @@ public class SinglePlayer extends GameWindow {
 	}
 
 	/**
-	 * Getter for aircraft list
-	 * 
-	 * @return the arrayList of aircraft in the airspace
-	 */
-	public ArrayList<Aircraft> aircraftList() {
-		return aircraft;
-	}
-
-	/**
 	 * Causes a selected aircraft to call methods to toggle manual control
 	 */
 	private void toggleManualControl() {
@@ -397,10 +388,10 @@ public class SinglePlayer extends GameWindow {
 	 */
 	private void checkCollisions(double dt) {
 		for (Aircraft plane : aircraft) {
-			int collision_state = plane.updateCollisions(dt, aircraftList());
+			int collision_state = plane.updateCollisions(dt, aircraft);
 
 			if (collision_state >= 0) {
-				gameOver(plane, aircraftList().get(collision_state));
+				gameOver(plane, aircraft.get(collision_state));
 				return;
 			}
 		}
@@ -415,7 +406,7 @@ public class SinglePlayer extends GameWindow {
 	 * @param plane2
 	 *            the second plane in the collision
 	 */
-	public void gameOver(Aircraft plane1, Aircraft plane2) {
+	private void gameOver(Aircraft plane1, Aircraft plane2) {
 		playSound(audio.newSoundEffect("sfx" + File.separator + "crash.ogg"));
 		main.closeScene();
 		main.setScene(new GameOver(main, plane1, plane2, score));
@@ -662,7 +653,6 @@ public class SinglePlayer extends GameWindow {
 
 	/**
 	 * Whitespace Concatenation maker
-	 * 
 	 */
 	private static String whiteSpace(int text) {
 		String spaces = "";

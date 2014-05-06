@@ -457,7 +457,7 @@ public class Multiplayer extends GameWindow {
 	}
 	
 	
-	public void applyTakeOffPenalty () {
+	private void applyTakeOffPenalty () {
 		if ((timer - last_penalty_time > 1) && (my_airport.shouldPenalize())) {
 			updatePerformance(-1);
 			last_penalty_time = timer;
@@ -621,7 +621,7 @@ public class Multiplayer extends GameWindow {
 	}
 	
 
-	public void generateFlight(boolean from_airport) {
+	private void generateFlight(boolean from_airport) {
 		Aircraft a = createAircraft(from_airport);
 		if (a != null) {
 			// Add aircraft to self
@@ -972,7 +972,7 @@ public class Multiplayer extends GameWindow {
 	 * @param dt
 	 *            delta time since last collision check
 	 */
-	public void checkCollisions(double dt) {
+	private void checkCollisions(double dt) {
 		for (Aircraft plane : aircraft) {
 				int collision_state = plane.updateCollisions(dt, aircraft, separation_allowance);
 				int x = (int)plane.getPosition().x() - Main.VIEWPORT_OFFSET_X;
@@ -1003,7 +1003,7 @@ public class Multiplayer extends GameWindow {
 		main.setScene(new GameOverMult(main, win));
 	}
 	
-	public void loseALife() {
+	private void loseALife() {
 		my_lives.decrement();
 		try {
 			server.sendRemoveLife();
@@ -1016,7 +1016,7 @@ public class Multiplayer extends GameWindow {
 		}
 	}
 
-	public void updatePerformance(int value) {
+	private void updatePerformance(int value) {
 		my_performance.changeValueBy(value);
 		try {
 			server.sendChangePerformance(value);
