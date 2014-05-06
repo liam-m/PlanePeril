@@ -634,7 +634,7 @@ public class Aircraft {
 		if (current_target instanceof HoldingWaypoint) { // Draw the 'land me' message once an aircraft is circling the airport or 'landing' once it's been told to land
 			graphics.print(infoText, position.x() - 28, top_label_y);
 		} else if (waiting_to_be_handed && current_target.equals(flight_plan.getDestination())) { // Draw 'hand me' if it's going to be handed over and is in final stage (circling hand over point)
-			graphics.print("Hand Me", position.x() - 28, top_label_y);
+			graphics.print("Hand Me!", position.x() - 28, top_label_y);
 		}
 
 		drawWarningCircles();
