@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import org.newdawn.slick.Color;
+
 import lib.RandomNumber;
 import lib.jog.audio;
 import lib.jog.audio.Sound;
@@ -37,15 +39,22 @@ public class Aircraft {
 	
 	public int minimum_separation_distance = 128;
 	private int num_points; // The number of points (score) an aircraft enters the airspace with.
-	private final static float LANDING_SPEED = 0.6f; // Scalar for the velocity which is imposed upon landing	
-
+	private final static float LANDING_SPEED = 0.6f; // Scalar for the velocity which is imposed upon landing
+	private final int X_OFFSET = 32; // x offset due to panels 
+	private final int Y_OFFSET = 144; // y offset due to panels 
+	private final int ALTERING_Y_VALUE  = 700; // y value after which labels need to be displayed above, otherwise they will not be seen  
 	private double turning_speed = Math.PI / 2; // How much the plane can turn per second, in radians.
 	private int altitude_change_speed = 300; // the speed to climb or fall by. Default 300 for easy mode
-	private final String name; // An array of waypoints from the plane's origin to its destination.
-	private final Image image; // The image to be drawn representing the plane.
+	private String name; // An array of waypoints from the plane's origin to its destination.
+	private Image image; // The image to be drawn representing the plane.
 
 	private FlightPlan flight_plan;
 	private int current_route_stage = 0; // The current stage the plane is at in its flight_plan.getRoute().
+	
+	final Color GREEN_WITH_ALPHA128 = new Color (0, 128, 0, 128);
+	final Color GREEN_WITH_ALPHA16 = new Color (0, 128, 0, 16);
+	final Color CYAN = new Color (0, 128, 128);
+	final Color CYAN_WITH_ALPHA128 = new Color (0, 128, 128, 128);
 
 	private Vector position, velocity;
 	private boolean is_manually_controlled = false;
@@ -56,7 +65,7 @@ public class Aircraft {
 	private double current_turning_angle = 0; // The angle the plane is currently turning by.
 	private boolean is_at_airport = false; // Whether this aircraft is currently in the airport
 
-	public final ArrayList<Aircraft> planes_too_near = new ArrayList<Aircraft>(); // List of planes currently in violation of separation rules with this plane
+	public ArrayList<Aircraft> planes_too_near = new ArrayList<Aircraft>(); // List of planes currently in violation of separation rules with this plane
 
 	private int target_altitude_index; // Index of altidudeList for the value of the Altidude the aircraft desires to be at.
 	public int getTargetAltitudeIndex() {
@@ -76,7 +85,6 @@ public class Aircraft {
 	
 	/**
 	 * Constructor for an aircraft.
-	 * 
 	 * @param name The name of the flight.
 	 * @param img The image to draw to represent the plane.
 	 * @param speed The speed the plane will travel at.
@@ -171,7 +179,6 @@ public class Aircraft {
 
 	/**
 	 * Allows access to whether the plane has reached its destination.
-	 * 
 	 * @return true, if the plane is to be disposed. False, otherwise.
 	 */
 	public boolean hasFinished() {
@@ -180,7 +187,6 @@ public class Aircraft {
 
 	/**
 	 * Whether the aircraft is in the airport at the moment.
-	 * 
 	 * @return whether the aircraft is at the airport
 	 */
 	public boolean isAtAirport() {
@@ -189,7 +195,6 @@ public class Aircraft {
 
 	/**
 	 * Allows access to whether the plane is being manually controlled.
-	 * 
 	 * @return True, if the plane is currently manually controlled. False, otherwise.
 	 */
 	public boolean isManuallyControlled() {
@@ -198,7 +203,6 @@ public class Aircraft {
 
 	/**
 	 * Allow access to whether plane is in the process of landing
-	 * 
 	 * @return
 	 */
 	public boolean isLanding() {
@@ -224,7 +228,7 @@ public class Aircraft {
 	public boolean isOutOfBounds() {
 		double x = position.x();
 		double y = position.y();
-		return (x < 0 || x > window.getWidth() - 32 || y < 0 || y > window.getHeight() - 144);
+		return (x < 0 || x > window.getWidth() - X_OFFSET || y < 0 || y > window.getHeight() - Y_OFFSET);
 	}
 
 	/**
@@ -256,7 +260,6 @@ public class Aircraft {
 	
 	/**
 	 * Get how many points the aircraft has accumulated after all the breaches
-	 * 
 	 * @return points
 	 */
 	public int getNumPoints() {
@@ -264,8 +267,7 @@ public class Aircraft {
 	}
 
 	/**
-	 * The aircraft's flight plan
-	 * 
+	 * The aircraft's flight plan 
 	 * @return Flight plan
 	 */
 	public FlightPlan getFlightPlan() {
@@ -284,7 +286,6 @@ public class Aircraft {
 
 	/**
 	 * Checks whether the angle at which the plane is turning is less than 0.
-	 * 
 	 * @return true, if the plane is turning left (anti-clockwise). False, otherwise.
 	 */
 	public boolean isTurningLeft() {
@@ -292,8 +293,7 @@ public class Aircraft {
 	}
 
 	/**
-	 * Checks whether the angle at which the plane is turning is greater than 0.
-	 * 
+	 * Checks whether the angle at which the plane is turning is greater than 0. 
 	 * @return true, if the plane is turning right (clockwise). False, otherwise.
 	 */
 	public boolean isTurningRight() {
@@ -302,7 +302,6 @@ public class Aircraft {
 
 	/**
 	 * Checks the plane's route to see if a waypoint is included in it.
-	 * 
 	 * @param waypoint The waypoint to check for.
 	 * @return The index of the waypoint in the flight path. If it is not in the flight path, -1.
 	 */
@@ -316,7 +315,6 @@ public class Aircraft {
 	
 	/**
 	 * Changes the plane's altitude by a given amount.
-	 * 
 	 * @param height The height by which to change altitude.
 	 */
 	private void changeAltitude(int height) {
@@ -341,7 +339,6 @@ public class Aircraft {
 
 	/**
 	 * Manually set the altitude to a specific value. Used when an aircraft takes off.
-	 * 
 	 * @param altitude
 	 */
 	public void setAltitude(int altitude) {
@@ -350,7 +347,6 @@ public class Aircraft {
 	
 	/**
 	 * Changes the direction the plane is going towards.
-	 * 
 	 * @param new_heading
 	 */
 	public void setBearing(double new_heading) {
@@ -370,7 +366,6 @@ public class Aircraft {
 	/**
 	 * Edits the plane's path by changing the waypoint it will go to at a
 	 * certain stage in its flight_plan.getRoute().
-	 * 
 	 * @param route_stage The stage at which the new waypoint will replace the old.
 	 * @param new_waypoint The new waypoint to travel to.
 	 */
@@ -387,7 +382,6 @@ public class Aircraft {
 
 	/**
 	 * Checks whether the mouse cursor is over this plane.
-	 * 
 	 * @param mouse_x The x coordinate of the mouse cursor.
 	 * @param mouse_y The y coordinate of the mouse cursor.
 	 * @return true, if the mouse is close enough to this plane. False, otherwise.
@@ -402,7 +396,6 @@ public class Aircraft {
 	/**
 	 * Calls {@link isMouseOver()} using {@link input.mouseX()} and {@link
 	 * input.mouseY()} as the arguments.
-	 * 
 	 * @return true, if the mouse is close enough to this plane. False, otherwise.
 	 */
 	public boolean isMouseOver() {
@@ -411,8 +404,7 @@ public class Aircraft {
 
 	/**
 	 * Updates the plane's position and bearing, the stage of its route, and
-	 * whether it has finished its flight.
-	 * 
+	 * whether it has finished its flight. 
 	 * @param time_difference
 	 * @throws IllegalStateException When landing an aircraft that will overflow the airport
 	 */
@@ -452,8 +444,7 @@ public class Aircraft {
 		} else if (isAt(current_target.position())) {
 			// handles what happens when the aircraft is circling the airport
 			if (current_target instanceof HoldingWaypoint) {
-				// Changes the current waypoint to the next holding waypoint in
-				// the airport circle
+				// Changes the current waypoint to the next holding waypoint in the airport circle
 				this.alterPath(this.indexInFlightPath(current_target), ((HoldingWaypoint) current_target).getNextWaypoint());
 			} else {
 				current_route_stage++;
@@ -469,7 +460,6 @@ public class Aircraft {
 
 	/**
 	 * Turns the plane left.
-	 * 
 	 * @param time_difference The time elapsed since the last frame.
 	 */
 	public void turnLeft(double time_difference) {
@@ -479,7 +469,6 @@ public class Aircraft {
 
 	/**
 	 * Turns the plane right.
-	 * 
 	 * @param time_difference The time elapsed since the last frame.
 	 */
 	public void turnRight(double time_difference) {
@@ -490,7 +479,6 @@ public class Aircraft {
 	/**
 	 * Turns the plane by a certain angle (in radians). Positive angles turn the
 	 * plane clockwise.
-	 * 
 	 * @param angle The angle by which to turn.
 	 */
 	private void turnBy(double angle) {
@@ -508,7 +496,6 @@ public class Aircraft {
 	/**
 	 * Turns the plane towards its current target. How much it turns is
 	 * determined by the plane's {@link turnSpeed}.
-	 * 
 	 * @param time_difference The time elapsed since the last frame.
 	 */
 	private void turnTowardsTarget(double time_difference) {
@@ -534,7 +521,6 @@ public class Aircraft {
 
 	/**
 	 * Checks whether an aircraft is within a certain distance from this one.
-	 * 
 	 * @param aircraft The aircraft to check.
 	 * @param distance The distance within which to care about.
 	 * @return True, if the aircraft is within the distance. False, otherwise.
@@ -560,7 +546,6 @@ public class Aircraft {
 	/**
 	 * Another method to manually change the "manual control". Used so the
 	 * player can directly the control instead of click the button or space.
-	 * 
 	 * @param manual
 	 */
 	public void setManualControl(boolean manual) {
@@ -570,7 +555,6 @@ public class Aircraft {
 	/**
 	 * Triggered when land button is pressed. Causes plane to immediately target
 	 * airport, and changes other aircraft properties shown below.
-	 * 
 	 * The command to land an aircraft cannot be reneged upon.
 	 */
 	public void toggleLand(Waypoint landing_waypoint) {
@@ -625,16 +609,16 @@ public class Aircraft {
 		graphics.draw(image, scale, position.x(), position.y(), getBearing(), 8, 8);
 		
 		// If the plane is near the bottom, the altitude label is shown above the plane. This also shifts up the 'Land/Hand' me label
-		double bottom_label_y = position.y() + (position.y() < 700 ? 15 : -20);
-		double top_label_y = position.y() - (position.y() < 700 ? 22 : 32);
+		double bottom_label_y = position.y() + (position.y() < ALTERING_Y_VALUE ? 15 : -20); // 15 and -20 are offsets to place into correct position
+		double top_label_y = position.y() - (position.y() < ALTERING_Y_VALUE ? 22 : 32); // 22 and 32 offsets to place into correct position
 
 		// Draw the altitude near the aircraft. £ is rendered as cursive "ft" from font file
-		graphics.print(String.format("%.0f", position.z()) + "£", position.x() - 22, bottom_label_y);
+		graphics.print(String.format("%.0f", position.z()) + "£", position.x() - 22, bottom_label_y); // -22  is offset to place into correct position
 		
 		if (current_target instanceof HoldingWaypoint) { // Draw the 'land me' message once an aircraft is circling the airport or 'landing' once it's been told to land
-			graphics.print(infoText, position.x() - 28, top_label_y);
+			graphics.print(infoText, position.x() - 28, top_label_y); // -28  is offset to place into correct position
 		} else if (waiting_to_be_handed && current_target.equals(flight_plan.getDestination())) { // Draw 'hand me' if it's going to be handed over and is in final stage (circling hand over point)
-			graphics.print("Hand Me!", position.x() - 28, top_label_y);
+			graphics.print("Hand Me!", position.x() - 28, top_label_y); // -28  is offset to place into correct position
 		}
 
 		drawWarningCircles();
@@ -661,7 +645,8 @@ public class Aircraft {
 		double x, y;
 
 		if (is_manually_controlled && input.isMouseDown(input.MOUSE_LEFT)) {
-			graphics.setColour(0, 128, 0, 128);
+		
+			graphics.setColour(GREEN_WITH_ALPHA128);
 			double r = Math.atan2(input.getMouseY() - position.y(), input.getMouseX() - position.x());
 			x = 16 + position.x() + (COMPASS_RADIUS * Math.cos(r));
 			y = 16 + position.y() + (COMPASS_RADIUS * Math.sin(r));
@@ -670,9 +655,10 @@ public class Aircraft {
 			graphics.line(position.x() + 16, position.y() + 15, x, y);
 			graphics.line(position.x() + 17, position.y() + 16, x, y);
 			graphics.line(position.x() + 17, position.y() + 17, x, y);
-			graphics.setColour(0, 128, 0, 16);
+			graphics.setColour(GREEN_WITH_ALPHA16);
+			
 		}
-
+		
 		x = 16 + position.x() + (COMPASS_RADIUS * Math.cos(getBearing()));
 		y = 16 + position.y() + (COMPASS_RADIUS * Math.sin(getBearing()));
 
@@ -702,9 +688,9 @@ public class Aircraft {
 	 */
 	public void drawFlightPath(boolean is_selected) {
 		if (is_selected) {
-			graphics.setColour(0, 128, 128);
+			graphics.setColour(CYAN);
 		} else {
-			graphics.setColour(0, 128, 128, 128);
+			graphics.setColour(CYAN_WITH_ALPHA128);
 		}
 
 		if (current_target != flight_plan.getDestination()) {
@@ -724,7 +710,6 @@ public class Aircraft {
 
 	/**
 	 * Visually represents the pathpoint being moved.
-	 * 
 	 * @param mouse_x Current x position of mouse
 	 * @param mouse_y Current y position of mouse
 	 */
@@ -753,7 +738,6 @@ public class Aircraft {
 	/**
 	 * Updates the amount of planes that are too close, violating the separation
 	 * rules, and also checks for crashes.
-	 * 
 	 * @param time_difference The time elapsed since the last frame.
 	 * @param aircraft_list List of aircraft in airspace
 	 * @return The index of the aircraft in aircraft_list this aircraft collides with. -1 if no collision.
@@ -785,7 +769,6 @@ public class Aircraft {
 				}
 			}			
 		}
-
 
 		if (planes_too_near.isEmpty()) {
 			collision_warning_sound_flag = false;
