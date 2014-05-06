@@ -34,7 +34,7 @@ public class Join extends Scene {
 	private final int JOIN_WIDTH = 100;
 	private final int JOIN_HEIGHT = 25;
 	private final int JOIN_X_POSITION = (window.getWidth()/2 - 40) - (JOIN_WIDTH/2);
-	private final int JOIN_Y_POSITION = 700;
+	private final int JOIN_Y_POSITION = 800;
 	
 	int server_port = 1729;
 	
