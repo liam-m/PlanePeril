@@ -19,7 +19,7 @@ public class Title extends Scene {
 	/**
 	 * A URL to the Bear Traffic Controller Website Webpage contains explanation of game's controls and goal
 	 */
-	private final static String HELP_URL = "http://imp1.github.io/bear_traffic_controller/ingamehelp";
+	private final static String HELP_URL = "http://aljidy.co.uk/planeperil/";
 
 	/**
 	 * The 'beep' played as the radar makes a sweep
