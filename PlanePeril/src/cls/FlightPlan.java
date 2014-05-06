@@ -15,15 +15,10 @@ public class FlightPlan {
 	
 	/**
 	 * Generates a flightplan using the origin and the destination
-	 * 
-	 * @param origin
-	 *            The first waypoint to start the route from
-	 * @param destination
-	 *            The destination point
-	 * @param waypoints
-	 *            All the waypoints in the screen
-	 * @param holding_waypoints
-	 *            The holding waypoints used for circling
+	 * @param origin The first waypoint to start the route from
+	 * @param destination The destination point
+	 * @param waypoints All the waypoints in the screen
+	 * @param holding_waypoints The holding waypoints used for circling
 	 */
 	public FlightPlan(Waypoint origin, Waypoint destination, Waypoint[] waypoints, ArrayList<HoldingWaypoint> holding_waypoints, Waypoint takeoff_waypoint) {
 		this.origin = origin;
@@ -47,24 +42,17 @@ public class FlightPlan {
 	 * waypoints. Waypoint costs are considered according to distance from
 	 * current aircraft location Costs are further weighted by distance from
 	 * waypoint to destination.
-	 * 
-	 * @param origin
-	 *            the waypoint from which to begin.
-	 * @param destination
-	 *            the waypoint at which to end.
-	 * @param waypoints
-	 *            the waypoints to be used.
-	 * @return a sensible route between the origin and the destination, using a
-	 *         sensible amount of waypoint.
+	 * @param origin the waypoint from which to begin.
+	 * @param destination the waypoint at which to end.
+	 * @param waypoints the waypoints to be used.
+	 * @return a sensible route between the origin and the destination, using asensible amount of waypoint.
 	 */
 	private Waypoint[] generateGreedyRoute() {
 		// to hold the route as we generate it.
 		ArrayList<Waypoint> selectedWaypoints = new ArrayList<Waypoint>();
 
-		// initialise the origin as the first point in the route.
-		// selectedWaypoints.add(origin);
-		// to track our position as we generate the route. Initialise to the
-		// start of the route
+
+		// to track our position as we generate the route. Initialise to the start of the route
 		Waypoint currentPos = origin;
 
 		// to track the closest next waypoint
@@ -79,20 +67,15 @@ public class FlightPlan {
 				boolean skip = false;
 
 				for (Waypoint routePoints : selectedWaypoints) {
-					// check we have not already selected the waypoint
-					// if we have, skip evaluating the point
-					// this protects the aircraft from getting stuck looping
-					// between points
+					// check we have not already selected the waypoint if we have, skip evaluating the point
+					// this protects the aircraft from getting stuck looping between points
 					if (routePoints.position().equals(point.position())) {
 						skip = true; // flag to skip
-						break; // no need to check rest of list, already found a
-								// match.
+						break; // no need to check rest of list, already found a match.
 					}
 				}
-				// do not consider the waypoint we are currently at or the
-				// origin
-				// do not consider offscreen waypoints which are not the
-				// destination
+				// do not consider the waypoint we are currently at or the origin
+				// do not consider offscreen waypoints which are not the destination
 				// also skip if flagged as a previously selected waypoint
 				if (skip == true || point.position().equals(currentPos.position()) || 
 						point.position().equals(origin.position()) || 
@@ -100,8 +83,7 @@ public class FlightPlan {
 					skip = false; // reset flag
 					continue;
 				} else {
-					// get cost of visiting waypoint compare cost vs current
-					// cheapest if smaller, replace
+					// get cost of visiting waypoint compare cost vs current; cheapest if smaller, replace
 					if (point.getCost(currentPos) + 0.5 * Waypoint.getCostBetween(point, destination) < cost) {
 						// cheaper route found, update
 						cheapest = point;
@@ -119,9 +101,7 @@ public class FlightPlan {
 				atDestination = true;
 			}
 
-			// update the selected route
-			// consider further points in route from the position of the
-			// selected point
+			// update the selected route; consider further points in route from the position of the selected point
 			// remove previous instances of a point
 			selectedWaypoints.remove(cheapest);
 			selectedWaypoints.add(cheapest);

@@ -27,15 +27,10 @@ public class Altimeter implements EventHandler {
 
 	/**
 	 * Constructor for the altimeter
-	 * 
-	 * @param x
-	 *            the x coord to draw at
-	 * @param y
-	 *            the y coord to draw at
-	 * @param w
-	 *            the width of the altimeter
-	 * @param h
-	 *            the height of the altimeter
+	 * @param x the x coord to draw at
+	 * @param y the y coord to draw at
+	 * @param w the width of the altimeter
+	 * @param h the height of the altimeter
 	 */
 	public Altimeter(double x, double y, double w, double h) {
 		position_x = x;
@@ -47,9 +42,7 @@ public class Altimeter implements EventHandler {
 
 	/**
 	 * Makes the altimeter visible
-	 * 
-	 * @param aircraft
-	 *            The aircraft to associate with the altimeter
+	 * @param aircraft The aircraft to associate with the altimeter
 	 */
 	public void show(Aircraft aircraft) {
 		if (aircraft == null)
@@ -69,16 +62,12 @@ public class Altimeter implements EventHandler {
 
 	/**
 	 * Checks if the mouse is over the altimeter
-	 * 
-	 * @param mx
-	 *            the x coord of the mouse location
-	 * @param my
-	 *            the y coord of the mouse location
+	 * @param mx the x coord of the mouse location
+	 * @param my the y coord of the mouse location
 	 * @return boolean marking if the mouse is over the altimeter
 	 */
 	public boolean isMouseOver(int mx, int my) {
-		return (mx >= position_x && mx <= position_x + width && my >= position_y && my <= position_y
-				+ height);
+		return (mx >= position_x && mx <= position_x + width && my >= position_y && my <= position_y + height);
 	}
 
 	public boolean isMouseOver() {
@@ -161,21 +150,14 @@ public class Altimeter implements EventHandler {
 		double wingLength = width / 3 - 8;
 		double tailLength = width / 9;
 
-		graphics.line(x, y, x + wingLength * Math.cos(r),
-				y + wingLength * Math.sin(r));
-		r -= Math.PI / 2;
-		graphics.line(x, y, x + tailLength * Math.cos(r),
-				y + tailLength * Math.sin(r));
-		r -= Math.PI / 2;
-		graphics.line(x, y, x + wingLength * Math.cos(r),
-				y + wingLength * Math.sin(r));
+		graphics.line(x, y, x + wingLength * Math.cos(r), y + wingLength * Math.sin(r));r -= Math.PI / 2;
+		graphics.line(x, y, x + tailLength * Math.cos(r), y + tailLength * Math.sin(r)); r -= Math.PI / 2;
+		graphics.line(x, y, x + wingLength * Math.cos(r), y + wingLength * Math.sin(r));
 		graphics.setColour(0, 0, 0);
 		graphics.circle(true, x, y, 4);
 		graphics.setColour(Main.GREEN);
 		graphics.circle(false, x, y, 4);
-		graphics.printTextCentred(
-				String.format("%.0f", current_aircraft.getPosition().z()),
-				position_x, y + 32, 1, width);
+		graphics.printTextCentred(String.format("%.0f", current_aircraft.getPosition().z()), position_x, y + 32, 1, width);
 	}
 
 	/**
@@ -184,8 +166,7 @@ public class Altimeter implements EventHandler {
 	 */
 	private void drawAltitudes() {
 		graphics.setColour(0, 128, 0, 32);
-		graphics.setViewport((int) position_x, (int) position_y, (int) width,
-				(int) height);
+		graphics.setViewport((int) position_x, (int) position_y, (int) width, (int) height);
 
 		int midX = (int) (width / 2);
 		int midY = (int) (height / 2);
@@ -212,19 +193,17 @@ public class Altimeter implements EventHandler {
 		graphics.setColour(Main.GREEN);
 
 		if (mouseOverTopButton()) {
-			graphics.setColour(128, 128, 128);
+			graphics.setColour(Main.GREY);
 		}
 
-		graphics.triangle(true, midX - 10, position_y + 10, midX, position_y + 4,
-				midX + 10, position_y + 10);
+		graphics.triangle(true, midX - 10, position_y + 10, midX, position_y + 4, midX + 10, position_y + 10);
 		graphics.setColour(Main.GREEN);
 
 		if (mouseOverBottomButton()) {
-			graphics.setColour(128, 128, 128);
+			graphics.setColour(Main.GREY);
 		}
 
-		graphics.triangle(true, midX - 10, position_y + height - 10, midX,
-				position_y + height - 4, midX + 10, position_y + height - 10);
+		graphics.triangle(true, midX - 10, position_y + height - 10, midX, position_y + height - 4, midX + 10, position_y + height - 10);
 	}
 
 	private boolean mouseOverTopButton(int mx, int my) {

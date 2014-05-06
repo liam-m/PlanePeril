@@ -35,13 +35,13 @@ public class Airport extends Waypoint {
 	// All location values are absolute and based on the current version of the airport image.
 	private double arrivals_x_location;
 	private double arrivals_y_location;
-	private double arrivals_width = 105;
-	private double arrivals_height = 52;
+	private final double ARRIVALS_WIDTH = 105;
+	private final double ARRIVALS_HEIGHT = 52;
 	
 	private double departures_x_location;
 	private double departures_y_location;
-	private double departures_width = 50;
-	private double departures_height = 36;
+	private final double DEPARTURES_WIDTH = 50;
+	private final double DEPARTURES_HEIGHT = 36;
 	
 	public boolean is_arrivals_clicked = false;
 	public boolean is_departures_clicked = false;
@@ -52,11 +52,8 @@ public class Airport extends Waypoint {
 	 * <br>
 	 * It should be noted that the holding waypoints (rendered as X's) are
 	 * relative in position to the airport.
-	 * 
-	 * @param x
-	 *            x-coordinate for the airport
-	 * @param y
-	 *            y-coordinate for the airport
+	 * @param x x-coordinate for the airport
+	 * @param y y-coordinate for the airport
 	 * @param name
 	 */
 	public Airport(double x, double y, String name) {
@@ -92,7 +89,6 @@ public class Airport extends Waypoint {
 	 * Set how much time left until the next takeoff is allowed. As it counted
 	 * in the Demo class, one must pass it here on every iteration. Later on
 	 * displayed near the airport as text.
-	 * 
 	 * @param time_left
 	 */
 	public void setTimeLeft(int time_left) {
@@ -111,9 +107,7 @@ public class Airport extends Waypoint {
 	}
 	/**
 	 * Inserts an aircraft into the airport, done by reference. if the list is already full then nothing happens
-	 * 
-	 * @param aircraft
-	 *            to insert
+	 * @param aircraft to insert
 	 */
 	public void insertAircraft(Aircraft aircraft) {
 		if (aircraft_list.size() < MAX_AIRCRAFT_NUMBER) {
@@ -124,8 +118,7 @@ public class Airport extends Waypoint {
 
 	/**
 	 * Forces an aircraft to take off. Selects one from the list randomly.
-	 * Removes it from the list afterwards.
-	 * 
+	 * Removes it from the list afterwards. 
 	 * @return Aircraft one of the aircraft that were held in the airport. This
 	 *         aircraft can be used instead of generating a new one.
 	 * @throws IllegalStateException
@@ -152,17 +145,14 @@ public class Airport extends Waypoint {
 		graphics.setColour(Main.GREEN);
 
 		// print the name of the airport
-		graphics.print("Aero Medved'", position.x() - 40, position.y()
-				- TEXT_POSITION);
+		graphics.print("Aero Medved'", position.x() - 40, position.y() - TEXT_POSITION);
 
 		// print how many aircraft are currently in the airport
-		graphics.print("Aircraft in: " + aircraft_list.size(),
-				position.x() - 40, position.y() - (TEXT_POSITION - TEXT_OFFSET));
+		graphics.print("Aircraft in: " + aircraft_list.size(), position.x() - 40, position.y() - (TEXT_POSITION - TEXT_OFFSET));
 
 		// hide the timer if it is 0.
 		if (time_Left != 0) {
-			graphics.print("Takeoff in: " + this.time_Left, position.x() - 40,
-					position.y() - (TEXT_POSITION - TEXT_OFFSET * 2));
+			graphics.print("Takeoff in: " + this.time_Left, position.x() - 40, position.y() - (TEXT_POSITION - TEXT_OFFSET * 2));
 		}
 
 	}
@@ -200,11 +190,11 @@ public class Airport extends Waypoint {
 			
 			// Draw border, draw as filled if clicked
 			graphics.setColour(red_now, green_now, 0, 256);
-			graphics.rectangle(is_departures_clicked, departures_x_location-airport.getWidth()/2, departures_y_location-airport.getHeight()/2, departures_width, departures_height);
+			graphics.rectangle(is_departures_clicked, departures_x_location-airport.getWidth()/2, departures_y_location-airport.getHeight()/2, DEPARTURES_WIDTH, DEPARTURES_HEIGHT);
 
 			// Draw box
 			graphics.setColour(red_now, green_now, 0, 64);
-			graphics.rectangle(true, departures_x_location-airport.getWidth()/2 + 1, departures_y_location-airport.getHeight()/2 + 1, departures_width - 2, departures_height - 2);
+			graphics.rectangle(true, departures_x_location-airport.getWidth()/2 + 1, departures_y_location-airport.getHeight()/2 + 1, DEPARTURES_WIDTH - 2, DEPARTURES_HEIGHT - 2);
 					
 			// Print number of aircraft waiting
 			graphics.setColour(255, 255, 255, 128);
@@ -214,10 +204,10 @@ public class Airport extends Waypoint {
 		// Draw the arrivals button if at least one plane is waiting (arriving flights)
 		if (num_waiting_to_land > 0) {
 			// Draw border, draw as filled if clicked
-			graphics.rectangle(is_arrivals_clicked, arrivals_x_location-airport.getWidth()/2, arrivals_y_location-airport.getHeight()/2, arrivals_width, arrivals_height);
+			graphics.rectangle(is_arrivals_clicked, arrivals_x_location-airport.getWidth()/2, arrivals_y_location-airport.getHeight()/2, ARRIVALS_WIDTH, ARRIVALS_HEIGHT);
 			graphics.setColour(128, 128, 0, 64);			
 			// Draw box
-			graphics.rectangle(true, arrivals_x_location-airport.getWidth()/2 + 1, arrivals_y_location-airport.getHeight()/2 + 1, arrivals_width -2, arrivals_height -2);
+			graphics.rectangle(true, arrivals_x_location-airport.getWidth()/2 + 1, arrivals_y_location-airport.getHeight()/2 + 1, ARRIVALS_WIDTH -2, ARRIVALS_HEIGHT -2);
 				
 			// Print number of aircraft waiting
 			graphics.setColour(255, 255, 255, 128);
@@ -257,12 +247,12 @@ public class Airport extends Waypoint {
 	 * @return true if point is within the rectangle that defines the arrivals portion of the airport
 	 */
 	public boolean isWithinArrivals(Vector position) {
-		return isWithinRect((int)position.x(), (int)position.y(),(int)(arrivals_x_location-airport.getWidth()/2) + Main.VIEWPORT_OFFSET_X, (int)(arrivals_y_location-airport.getHeight()/2) + Main.VIEWPORT_OFFSET_Y, (int)arrivals_width, (int)arrivals_height);
+		return isWithinRect((int)position.x(), (int)position.y(),(int)(arrivals_x_location-airport.getWidth()/2) + Main.VIEWPORT_OFFSET_X, (int)(arrivals_y_location-airport.getHeight()/2) + Main.VIEWPORT_OFFSET_Y, (int)ARRIVALS_WIDTH, (int)ARRIVALS_HEIGHT);
 	}
 	
 	// Used for calculating if an aircraft is within the airspace for landing - offset should not be applied
 	public boolean isWithinArrivals(Vector position, boolean apply_offset) {
-		return (apply_offset ? isWithinArrivals(position) : isWithinRect((int)position.x(), (int)position.y(),(int)(arrivals_x_location-airport.getWidth()/2), (int)(arrivals_y_location-airport.getHeight()/2), (int)arrivals_width, (int)arrivals_height));
+		return (apply_offset ? isWithinArrivals(position) : isWithinRect((int)position.x(), (int)position.y(),(int)(arrivals_x_location-airport.getWidth()/2), (int)(arrivals_y_location-airport.getHeight()/2), (int)ARRIVALS_WIDTH, (int)ARRIVALS_HEIGHT));
 	}
 	
 	/**
@@ -271,7 +261,7 @@ public class Airport extends Waypoint {
 	 * @return true if point is within the rectangle that defines the departures portion of the airport
 	 */
 	public boolean isWithinDepartures(Vector position) {
-		return isWithinRect((int)position.x(), (int)position.y(), (int)(departures_x_location-airport.getWidth()/2) + Main.VIEWPORT_OFFSET_X, (int)(departures_y_location-airport.getHeight()/2) + Main.VIEWPORT_OFFSET_Y, (int)departures_width, (int)departures_height);
+		return isWithinRect((int)position.x(), (int)position.y(), (int)(departures_x_location-airport.getWidth()/2) + Main.VIEWPORT_OFFSET_X, (int)(departures_y_location-airport.getHeight()/2) + Main.VIEWPORT_OFFSET_Y, (int)DEPARTURES_WIDTH, (int)DEPARTURES_HEIGHT);
 	}
 	
 	public boolean isWithinRect(int test_x, int test_y, int x, int y, int width, int height) {

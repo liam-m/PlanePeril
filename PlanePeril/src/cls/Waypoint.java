@@ -25,8 +25,7 @@ public class Waypoint {
 	protected final Vector position;
 
 	/**
-	 * Marks whether the waypoint is a point where planes may enter and exit the
-	 * game airspace
+	 * Marks whether the waypoint is a point where planes may enter and exit the game airspace
 	 */
 	private final WaypointType type;
 
