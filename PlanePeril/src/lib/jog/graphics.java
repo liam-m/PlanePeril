@@ -599,13 +599,6 @@ public abstract class graphics{
 	 * Clears the screen ready for another draw process.
 	 */
 	public static void clear() {
-		/*
-		try {
-			org.lwjgl.opengl.Display.swapBuffers();
-		} catch (org.lwjgl.LWJGLException e) {
-			e.printStackTrace();
-		}
-		*/
 		if (viewPortEnabled) setViewport();
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 		GL11.glColor3d(1, 1, 1);
