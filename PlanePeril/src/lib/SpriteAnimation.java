@@ -39,17 +39,17 @@ public class SpriteAnimation {
 	public SpriteAnimation(Image image, int x_coordinate, int y_coordinate, int fps, int frame_count, int frames_wide, int frames_high, boolean looping){
 		this.image = image;
 		image_width = image.getWidth();
-		System.out.println("-----");
+		//System.out.println("-----");
 		image_height = image.getHeight();
-		System.out.println("-----");
+		//System.out.println("-----");
 		this.x_coordinate = x_coordinate;
 		this.y_coordinate = y_coordinate;
 		this.frame_count = frame_count;
 		current_frame = 0;
 		sprite_width = image_width / frames_wide;
 		sprite_height = image_height / frames_high;
-		System.out.println("Image Dimensions: " + image_width + ", " + image_height);
-		System.out.println("Frame Dimensions: " + sprite_width + ", " + sprite_height);
+		//System.out.println("Image Dimensions: " + image_width + ", " + image_height);
+		//System.out.println("Frame Dimensions: " + sprite_width + ", " + sprite_height);
 		frame_period = 1.0/fps;
 		game_time = 0;
 		quads = new Quad[frame_count];

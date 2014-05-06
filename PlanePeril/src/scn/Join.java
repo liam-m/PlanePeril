@@ -36,8 +36,9 @@ public class Join extends Scene {
 	private final int JOIN_X_POSITION = (window.getWidth()/2) - (JOIN_WIDTH/2);
 	private final int JOIN_Y_POSITION = 800;
 	
-	
 	int server_port = 1729;
+	
+	private int difficulty = 0;
 	
 	public Join(Main main, String player_name) {
 		super(main);
@@ -56,6 +57,8 @@ public class Join extends Scene {
 			registry = LocateRegistry.getRegistry(their_address, server_port);
 			host_interface = (HostInterface)(registry.lookup("host_server"));
 			their_name = host_interface.connect(this_address, player_name);
+			difficulty = host_interface.getDifficulty();
+			System.out.println("DIFFICULTY = "+difficulty);
 		} catch (NotBoundException e) {
 			e.printStackTrace();
 		}
@@ -71,7 +74,7 @@ public class Join extends Scene {
 				try {
 					connectToOpponent();
 					main.closeScene();
-					main.setScene(new Multiplayer(main, their_name, player_name, their_address, false));
+					main.setScene(new Multiplayer(main, their_name, player_name, their_address, false, difficulty));
 				} catch (RemoteException e) {
 					could_not_connect = true;
 					attempting_to_join = false;

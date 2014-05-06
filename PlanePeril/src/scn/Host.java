@@ -7,6 +7,7 @@ import java.rmi.RemoteException;
 
 import pp.Main;
 import rem.HostServer;
+import lib.ButtonText;
 import lib.jog.graphics;
 import lib.jog.input;
 import lib.jog.window;
@@ -17,8 +18,12 @@ public class Host extends Scene {
 	HostServer host_server;
 	
 	String player_name;
-	String dot = "";
+	String dots = "";
 	private int waiting_dot = 0;
+	
+	private int difficulty = 0; // Default easy
+	
+	private ButtonText[] buttons;
 	
 	public Host(Main main, String player_name) {
 		super(main);
@@ -48,22 +53,37 @@ public class Host extends Scene {
 		graphics.printTextCentred("Welcome!:", window.getWidth() / 2, 100, 5, 100);
 		graphics.printTextCentred(player_name, window.getWidth() / 2, 200, 10, 100);
 		graphics.printTextCentred("Your IP: "+this_address, (window.getWidth()/2 - (200/4)), 350, 5, 200);
+		
+		String[] diffs = new String[]{"Easy", "Medium", "Hard"};
+		graphics.printTextCentred(diffs[difficulty], window.getWidth() / 2, 500, 4, 100);
+		
+		for (ButtonText button : buttons) {
+			button.draw();
+		}
+
+		graphics.setColour(Main.GREEN); // Hovered buttons may change colour
+		graphics.printTextCentred("Waiting for player", window.getWidth() / 2, 800, 5, 100);
 
 		if (waiting_dot++ > 25) {
 			waiting_dot = 0;
-			if(dot.length() == 10) {
-				dot = "";
+			if(dots.length() == 10) {
+				dots = "";
 			} else {
-				dot += '.'; 
+				dots += '.'; 
 			}
 		}
-			
-		graphics.printTextCentred("Waiting for player", window.getWidth() / 2, 800, 5, 100);
-		graphics.printTextCentred(dot, window.getWidth() / 2, 850, 5, 100);
+		graphics.printTextCentred(dots, window.getWidth() / 2, 850, 5, 100);
 	}
 
 	@Override
 	public void mousePressed(int key, int x, int y) {
+		if (key == input.MOUSE_LEFT) {
+			for (ButtonText button : buttons) {
+				if (button.isMouseOver(x, y)) {
+					button.act();
+				}
+			}			
+		}
 	}
 
 	@Override
@@ -80,9 +100,42 @@ public class Host extends Scene {
 	@Override
 	public void keyReleased(int key) {
 	}
+	
+	private void setDifficulty(int difficulty) {
+		this.difficulty = difficulty;
+		this.host_server.setDifficulty(difficulty); // Notify host server of change so that other player can get difficulty
+	}
 
 	@Override
 	public void start() {
+		buttons = new ButtonText[3];
+
+		ButtonText.Action easy = new ButtonText.Action() {
+			@Override
+			public void action() {
+				setDifficulty(0);
+			}
+		};
+
+		buttons[0] = new ButtonText("Easy", easy, window.getWidth() / 4, 2 * window.getHeight() / 3, 128, 16, true, true);
+
+		ButtonText.Action medium = new ButtonText.Action() {
+			@Override
+			public void action() {
+				setDifficulty(1);
+			}
+		};
+
+		buttons[1] = new lib.ButtonText("Medium", medium, window.getWidth() / 2, 2 * window.getHeight() / 3, 128, 16, true, true);
+
+		ButtonText.Action hard = new ButtonText.Action() {
+			@Override
+			public void action() {
+				setDifficulty(2);
+			}
+		};
+		
+		buttons[2] = new lib.ButtonText("Hard", hard, 3 * window.getWidth() / 4, 2 * window.getHeight() / 3, 128, 16, true, true);
 	}
 
 	@Override
@@ -91,7 +144,7 @@ public class Host extends Scene {
 			String their_name = host_server.getTheirName();
 			String their_address = host_server.getTheirAddress();
 			main.closeScene();
-			main.setScene(new Multiplayer(main, player_name, their_name, their_address, true));
+			main.setScene(new Multiplayer(main, player_name, their_name, their_address, true, difficulty));
 		}
 	}
 	

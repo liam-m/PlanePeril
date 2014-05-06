@@ -756,15 +756,16 @@ public class Aircraft {
 	 * 
 	 * @param time_difference The time elapsed since the last frame.
 	 * @param aircraft_list List of aircraft in airspace
+	 * @param separation_allowance Multiple of aircraft's radius planes must not be within
 	 * @return The index of the aircraft in aircraft_list this aircraft collides with. -1 if no collision.
 	 */
-	public int updateCollisions(double time_difference, ArrayList<Aircraft> aircraft_list) {
+	public int updateCollisions(double time_difference, ArrayList<Aircraft> aircraft_list, double separation_allowance) {
 		planes_too_near.clear();
 
 		for (int i = 0; i < aircraft_list.size(); i++) {
 			Aircraft plane = aircraft_list.get(i);
 			if (!has_finished) {
-				if (plane != this && isWithin(plane, RADIUS)) {
+				if (plane != this && isWithin(plane, (int)(separation_allowance * RADIUS))) {
 					has_crashed = true;
 					has_finished = true;
 					plane.has_finished = true;
@@ -793,6 +794,11 @@ public class Aircraft {
 		}
 
 		return -1;
+	}
+	
+	// Default allowance of 1 (always 1 in single player)
+	public int updateCollisions(double time_difference, ArrayList<Aircraft> aircraft_list) {
+		return updateCollisions(time_difference, aircraft_list, 1);
 	}
 	
 	public void handOver() {

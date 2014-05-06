@@ -12,7 +12,9 @@ public class HostServer extends UnicastRemoteObject implements HostInterface {
 	Registry registry; 
 	int port = 1729;
 	String my_name, their_address, their_name;
-	boolean has_connected = false;
+	boolean has_connected_1 = false; // Initial connection
+	boolean has_connected_2 = false; // Got difficulty
+	private int difficulty = 0; // Default easy
 	
 	public HostServer(String my_name) throws RemoteException {
 		super();
@@ -34,14 +36,14 @@ public class HostServer extends UnicastRemoteObject implements HostInterface {
 	}
 	
 	public boolean hasConnected() {
-		return has_connected;
+		return has_connected_1 && has_connected_2;
 	}
 
 	@Override
 	public String connect(String address, String their_name) throws RemoteException {
 		this.their_address = address;
 		this.their_name = their_name;
-		has_connected = true;
+		has_connected_1 = true;
 		return my_name;
 	}
 	
@@ -51,5 +53,15 @@ public class HostServer extends UnicastRemoteObject implements HostInterface {
 		} catch (NoSuchObjectException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void setDifficulty(int difficulty) {
+		this.difficulty = difficulty;
+	}
+
+	@Override
+	public int getDifficulty() throws RemoteException {
+		this.has_connected_2 = true;
+		return difficulty;
 	}
 }

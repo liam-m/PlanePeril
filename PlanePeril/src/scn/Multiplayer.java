@@ -120,7 +120,15 @@ public class Multiplayer extends Scene {
 	private final int LEFT_LIVES_Y = 8;
 		
 	private final int RIGHT_LIVES_X = window.getWidth()/2 + 50;
-	private final int RIGHT_LIVES_Y = 8;	
+	private final int RIGHT_LIVES_Y = 8;
+	
+	public final static int DIFFICULTY_EASY = 0;
+	public final static int DIFFICULTY_MEDIUM = 1;
+	public final static int DIFFICULTY_HARD = 2;
+	public static int difficulty = DIFFICULTY_EASY;
+	
+	private double plane_speed_multiplier; // Scales plane speed based on difficulty
+	private double separation_allowance; // Based on difficulty
 		
 	public final Waypoint[] left_entryexit_waypoints = new Waypoint[] {
 			/* A set of Waypoints which are origin / destination points */
@@ -171,7 +179,7 @@ public class Multiplayer extends Scene {
 	Waypoint my_outgoing_hand_over_point;
 	Waypoint my_incoming_hand_over_point;
 	
-	public Multiplayer(Main main, String left_name, String right_name, String their_address, final boolean is_left) {
+	public Multiplayer(Main main, String left_name, String right_name, String their_address, final boolean is_left, int difficulty) {
 		super(main);
 		this.left_name = left_name;
 		this.right_name = right_name;
@@ -180,6 +188,8 @@ public class Multiplayer extends Scene {
 		this.is_left_player = is_left;
 		this.my_outgoing_hand_over_point = is_left ? left_entryexit_waypoints[6] : right_entryexit_waypoints[7];
 		this.my_incoming_hand_over_point = is_left ? left_entryexit_waypoints[7] : right_entryexit_waypoints[6];
+		
+		Multiplayer.difficulty = difficulty;
 		
 		left_waypoints = new Waypoint[]{
 			new Waypoint(100, 100),
@@ -275,6 +285,19 @@ public class Multiplayer extends Scene {
 		left_channel = new SpriteAnimation(left_channel_image, (int)left_entryexit_waypoints[7].position().x(), (int)left_entryexit_waypoints[7].position().y() - 8, 2, 15, 15, 2, true); // amount of frames in each picture
 		right_channel = new SpriteAnimation(right_channel_image, (int)left_entryexit_waypoints[6].position().x(), (int)left_entryexit_waypoints[6].position().y()- 8, 2, 15, 15, 2, true); // amount of frames in each picture
 
+		switch(difficulty) {
+		case DIFFICULTY_EASY:
+			this.plane_speed_multiplier = 0.7;
+			this.separation_allowance = 1;
+			break;
+		case DIFFICULTY_MEDIUM:
+			this.plane_speed_multiplier = 1;
+			this.separation_allowance = 1.25;
+			break;
+		case DIFFICULTY_HARD:
+			this.plane_speed_multiplier = 1.3;
+			this.separation_allowance = 1.5;
+		}
 	}
 	
 	@Override
@@ -807,10 +830,10 @@ public class Multiplayer extends Scene {
 		} while (nameTaken(name));
 		
 		if (is_left_player) {
-			return new Aircraft(name, aircraft_image, 32 + (int) (10 * Math.random()), 1, new FlightPlan(origin_point, 
+			return new Aircraft(name, aircraft_image, (int)(plane_speed_multiplier * 32 + (int) (10 * Math.random())), 1, new FlightPlan(origin_point, 
 					destination_point, left_waypoints, left_holding_waypoints, left_airport_takeoff_waypoint), preferred_altitude_index, towards_handover_point);
 		} else {
-			return new Aircraft(name, aircraft_image, 32 + (int) (10 * Math.random()), 1, new FlightPlan(origin_point, 
+			return new Aircraft(name, aircraft_image, (int)(plane_speed_multiplier * 32 + (int) (10 * Math.random())), 1, new FlightPlan(origin_point, 
 					destination_point, right_waypoints, right_holding_waypoints, right_airport_takeoff_waypoint), preferred_altitude_index, towards_handover_point);
 		}
 	}
@@ -1043,7 +1066,7 @@ public class Multiplayer extends Scene {
 	 */
 	public void checkCollisions(double dt) {
 		for (Aircraft plane : aircraft) {
-				int collision_state = plane.updateCollisions(dt, aircraft);
+				int collision_state = plane.updateCollisions(dt, aircraft, separation_allowance);
 				int x = (int)plane.getPosition().x() - Main.VIEWPORT_OFFSET_X;
 				int y = (int)plane.getPosition().y() - Main.VIEWPORT_OFFSET_Y;
 

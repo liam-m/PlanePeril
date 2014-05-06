@@ -281,6 +281,8 @@ public class SinglePlayer extends Scene {
 		// Flights spawn more often on harder difficulties.
 		case DIFFICULTY_EASY:
 			flight_generation_interval = flight_generation_interval / 1.3;
+			airport.insertAircraft(createAircraft(true));
+			break;
 		case DIFFICULTY_MEDIUM:
 			flight_generation_interval = flight_generation_interval / 2.0;
 			airport.insertAircraft(createAircraft(true));

@@ -5,4 +5,5 @@ import java.rmi.RemoteException;
 
 public interface HostInterface extends Remote {
 	String connect(String address, String their_name) throws RemoteException;
+	int getDifficulty() throws RemoteException;
 }
