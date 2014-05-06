@@ -406,7 +406,6 @@ public class Multiplayer extends Scene {
 			}
 
 			if (selected_aircraft.isOutOfBounds()) {
-				//TODO update this order to something witty
 				orders_box.addOrder(">>> " + selected_aircraft.getName() + " is out of bounds, contact lost. Do better Comrade.");
 				deselectAircraft();
 			}
