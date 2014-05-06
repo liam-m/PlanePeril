@@ -168,7 +168,8 @@ public class Multiplayer extends Scene {
 
 	public ArrayList<HoldingWaypoint> right_holding_waypoints = new ArrayList<HoldingWaypoint>();
 	
-	Waypoint my_outgoing_hand_over_point;;
+	Waypoint my_outgoing_hand_over_point;
+	Waypoint my_incoming_hand_over_point;
 	
 	public Multiplayer(Main main, String left_name, String right_name, String their_address, final boolean is_left) {
 		super(main);
@@ -178,6 +179,7 @@ public class Multiplayer extends Scene {
 		this.their_address = their_address;
 		this.is_left_player = is_left;
 		this.my_outgoing_hand_over_point = is_left ? left_entryexit_waypoints[6] : right_entryexit_waypoints[7];
+		this.my_incoming_hand_over_point = is_left ? left_entryexit_waypoints[7] : right_entryexit_waypoints[6];
 		
 		left_waypoints = new Waypoint[]{
 			new Waypoint(100, 100),
@@ -661,11 +663,10 @@ public class Multiplayer extends Scene {
  	 */
 	private ArrayList<Waypoint> getAvailableEntryPoints() {
 		ArrayList<Waypoint> available_entry_points = new ArrayList<Waypoint>();
-		Waypoint my_incoming_hand_over = is_left_player ? left_entryexit_waypoints[7] : right_entryexit_waypoints[6];
 		
 		for (Waypoint entry_point : my_entryexit_waypoints) {
 			// Skip the "air channel" entry point  
-			if (entry_point.equals(my_incoming_hand_over) || entry_point.equals(my_outgoing_hand_over_point)) {
+			if (entry_point.equals(my_incoming_hand_over_point) || entry_point.equals(my_outgoing_hand_over_point)) {
 				continue;
 			}
 			boolean is_available = true;
@@ -745,10 +746,10 @@ public class Multiplayer extends Scene {
 			origin_point = my_airport;		
 		} else if (hand_over_aircraft_waiting > 0) {
 				hand_over_aircraft_waiting--;
-				origin_point = is_left_player ? left_entryexit_waypoints[7] : right_entryexit_waypoints[6];
-				do { // Prevent a plane that is handed over from being handed over again. It wouldn't really make sense to pass planes back and forth
+				origin_point = my_incoming_hand_over_point;
+				while (my_entryexit_waypoints[destination].equals(my_outgoing_hand_over_point)) { // Prevent a plane that is handed over from being handed over again. It wouldn't really make sense to pass planes back and forth
 					destination = RandomNumber.randInclusiveInt(0, my_entryexit_waypoints.length - 1);
-				} while (my_entryexit_waypoints[destination].equals(my_outgoing_hand_over_point));
+				}
 		} else {
 			if (available_origins.isEmpty()) { // Creates a plane in waypoint with planes of different altitude than that of the new plane.
 				if (getIdAvailableEntryPointsAltitudes().size() == 0)
@@ -772,7 +773,7 @@ public class Multiplayer extends Scene {
 		// Making sure origin and destination aren't the same and the destination is not the incoming air channel
 		while (my_entryexit_waypoints[destination].equals(my_entryexit_waypoints[origin]) || 
 				fromAirport && my_entryexit_waypoints[destination] instanceof Airport ||
-				my_entryexit_waypoints[destination].equals(is_left_player ? left_entryexit_waypoints[7] : right_entryexit_waypoints[6])) {			
+				my_entryexit_waypoints[destination].equals(my_incoming_hand_over_point)) {			
 			destination = RandomNumber.randInclusiveInt(0, my_entryexit_waypoints.length - 1);
 		}
 		
