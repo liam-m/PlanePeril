@@ -40,7 +40,7 @@ public class Airport extends Waypoint {
 	
 	private double departures_x_location;
 	private double departures_y_location;
-	private double departures_width = 50;
+	//private double departures_width = 50;
 	private double departures_height = 36;
 	
 	public boolean is_arrivals_clicked = false;
