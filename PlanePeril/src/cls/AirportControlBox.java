@@ -64,8 +64,8 @@ public class AirportControlBox implements EventHandler{
 	 */
 	private void drawLabels() {
 		// Draw take off button
-		int opacity = (airport.getNumAircraft() == 0) ? 128 : 256; // Grey out if not clickable
-		graphics.setColour(0, 128, 0, opacity);
+		int opacity = (airport.getNumAircraft() == 0) ? 128 : 255; // Grey out if not clickable
+		graphics.setColour(0, 200, 0, opacity);
 		double y = (window.getHeight() - height / number_of_divisions) - (window.getHeight() - (y_position + height));
 		graphics.print("TAKE OFF", x_position + ((width - 70)/2), y + 9);
 		
