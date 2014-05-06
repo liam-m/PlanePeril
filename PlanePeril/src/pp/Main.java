@@ -33,8 +33,8 @@ public class Main implements EventHandler {
 	public final static Color GREEN = new Color(0, 200, 0);
 	public final static Color GREY = new Color(128, 128, 128);
 	public final static Color RED = new Color(128, 0, 0);
-	public final static Color BLUE = new Color(0, 0, 64);
-	public final static Color LIGHT_BLUE = new Color(0, 64, 255);
+	public final static Color BLUE = new Color(0, 0, 128);
+	public final static Color LIGHT_BLUE = new Color(0, 128, 255);
 	public final static Color ORANGE = new Color(64, 0, 0);
 
 	public final static String TITLE = "Plane Peril";

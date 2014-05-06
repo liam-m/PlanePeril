@@ -18,7 +18,6 @@ public class PerformanceBar {
 	private double drawn_value = current_value;
 	
 	// colours
-	final Color KHAKI = new Color(238, 230, 140);
 	final Color LEMON = new Color(205, 201, 165);
 	final Color YELLOW = new Color(205, 205, 0);
 	final Color TURQUOISE = new Color(0, 199, 140);
@@ -76,15 +75,15 @@ public class PerformanceBar {
 	
 	private Color getColour(double value) { // Colour based on current value of bar
 		if (value >= MAX_VALUE/2 + MAX_VALUE/4) {
-			return KHAKI;
+			return TURQUOISE; //
 		} else if (value >= MAX_VALUE/2 + MAX_VALUE/2) {
 			return LEMON;
 		} else if (value >= MAX_VALUE/2) {
-			return YELLOW;
+			return Main.GREEN;
 		} else if (value >= MAX_VALUE/2 - MAX_VALUE/4) {
-			return TURQUOISE;
+			return YELLOW; 
 		} else {
-			return Main.RED;
+			return Main.RED; 
 		}
 	}
 	
