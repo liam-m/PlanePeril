@@ -272,8 +272,8 @@ public class Multiplayer extends Scene {
 		explosion = graphics.newImage("gfx" + File.separator + "explosionFrames.png");
 		left_channel_image = graphics.newImage("gfx" + File.separator + "ChevronFramesFlipped.png");
 		right_channel_image = graphics.newImage("gfx" + File.separator + "ChevronFrames.png");
-		left_channel = new SpriteAnimation(left_channel_image, (int)left_entryexit_waypoints[7].position().x(), (int)left_entryexit_waypoints[7].position().y(), 6, 22, 48, 18, true);
-		right_channel = new SpriteAnimation(right_channel_image, (int)left_entryexit_waypoints[6].position().x(), (int)left_entryexit_waypoints[6].position().y(), 6, 22, 48, 18, true);
+		left_channel = new SpriteAnimation(left_channel_image, (int)left_entryexit_waypoints[7].position().x(), (int)left_entryexit_waypoints[7].position().y() - 8, 2, 15, 15, 2, true); // amount of frames in each picture
+		right_channel = new SpriteAnimation(right_channel_image, (int)left_entryexit_waypoints[6].position().x(), (int)left_entryexit_waypoints[6].position().y()- 8, 2, 15, 15, 2, true); // amount of frames in each picture
 
 	}
 	
