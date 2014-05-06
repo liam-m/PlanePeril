@@ -22,34 +22,7 @@ import cls.OrdersBox;
 import cls.Waypoint;
 import cls.Waypoint.WaypointType;
 
-public class SinglePlayer extends Scene {
-
-	//private Lives test_lives = new Lives(500, 500, 15);
-	// Position of things drawn to window
-	private final int PLANE_INFO_X = 16;
-	private final int PLANE_INFO_Y = window.getHeight() - 120;
-	private final int PLANE_INFO_W = window.getWidth() / 4 - 16;
-	private final int PLANE_INFO_H = 112;
-
-	private final int ALTIMETER_X = PLANE_INFO_X + PLANE_INFO_W + 8;
-	private final int ALTIMETER_Y = window.getHeight() - 120;
-	private final int ALTIMETER_W = 244;
-	private final int ALTIMETER_H = 112;
-
-	private final int ORDERSBOX_X = ALTIMETER_X + ALTIMETER_W + 8;
-	private final static int ORDERSBOX_Y = window.getHeight() - 120;
-	private final int ORDERSBOX_W = window.getWidth() - (ORDERSBOX_X + 16);
-	private final static int ORDERSBOX_H = 112;
-
-	// Static Final Ints for difficulty settings
-	// Difficulty of demo scene determined by difficulty selection scene
-	public final static int DIFFICULTY_EASY = 0;
-	public final static int DIFFICULTY_MEDIUM = 1;
-	public final static int DIFFICULTY_HARD = 2;
-	public static int difficulty = DIFFICULTY_EASY;
-
-	private final static int TAKEOFF_DELAY = 5;
-
+public class SinglePlayer extends GameWindow {
 	// texts for the buttons in this class
 	public final class Texts {
 		public final static String TAKE_CONTROL = "Take Control";
@@ -57,36 +30,11 @@ public class SinglePlayer extends Scene {
 		public final static String LAND = "Land";
 	}
 
-	// Orders box to print orders from ACTO to aircraft to
-	private OrdersBox orders_box;
-
 	// Cumulative score, added to upon completion of flightplan by aircraft.
 	private int score;
 
 	// Time since the scene began Could be used for score
 	private double time_elapsed;
-
-	// Time when the last takeoff occured
-	private double next_take_off = 0 + TAKEOFF_DELAY;
-
-	// The currently selected aircraft
-	private Aircraft selected_aircraft;
-
-	// Whether player is currently manually controlling
-	private boolean is_manually_controlling;
-
-	// The currently selected waypoint
-	private Waypoint selected_waypoint;
-
-	// Selected path point, in an aircraft's route, used for altering the route
-	private int selected_pathpoint;
-
-	// A list of aircraft present in the airspace
-	private ArrayList<Aircraft> aircraft_in_airspace;
-
-	// An image to be used for aircraft Expand to list of images for multiple
-	// aircraft appearances
-	private Image aircraft_image;
 
 	// A button to start and end manual control of an aircraft
 	private ButtonText manual_override_button;
@@ -94,22 +42,6 @@ public class SinglePlayer extends Scene {
 	// Tracks if manual heading compass of a manually controller aircraft has
 	// been dragged
 	private ButtonText land_button;
-
-	// Tracks if manual heading compass of a manually controller aircraft has
-	// been dragged
-	private boolean compass_dragged;
-
-	// An altimeter to display aircraft altitidue, heading, etc.
-	private Altimeter altimeter;
-
-	// The interval in seconds to generate flights after
-	private double flight_generation_interval;
-
-	// The time eleapsed since the last flight was generated
-	private double flight_generation_time_elapsed = 6;
-
-	// Max aircraft in the airspace at once Change to 10 for Assessment 3.
-	private final int max_aircraft = 20;
 
 	// Music to play during the game scene
 	private Music music;
@@ -241,7 +173,7 @@ public class SinglePlayer extends Scene {
 		orders_box = new OrdersBox(ORDERSBOX_X, ORDERSBOX_Y, ORDERSBOX_W,
 				ORDERSBOX_H, 6);
 
-		aircraft_in_airspace = new ArrayList<Aircraft>();
+		aircraft = new ArrayList<Aircraft>();
 
 		aircraft_image = graphics.newImage("gfx" + File.separator + "plane.png");
 
@@ -304,7 +236,7 @@ public class SinglePlayer extends Scene {
 	 * @return the arrayList of aircraft in the airspace
 	 */
 	public ArrayList<Aircraft> aircraftList() {
-		return aircraft_in_airspace;
+		return aircraft;
 	}
 
 	/**
@@ -362,7 +294,7 @@ public class SinglePlayer extends Scene {
 		// update airport timer
 		airport.setTimeLeft((int) (next_take_off - time_elapsed));
 
-		for (Aircraft plane : aircraft_in_airspace) {
+		for (Aircraft plane : aircraft) {
 
 			// Added a try/catch construct to make sure we catch when the
 			// aircraft is inserted into a full airport
@@ -407,15 +339,15 @@ public class SinglePlayer extends Scene {
 
 		checkCollisions(dt);
 
-		for (int i = aircraft_in_airspace.size() - 1; i >= 0; i--) {
+		for (int i = aircraft.size() - 1; i >= 0; i--) {
 
-			if (aircraft_in_airspace.get(i).hasFinished()) {
+			if (aircraft.get(i).hasFinished()) {
 
-				if (aircraft_in_airspace.get(i) == selected_aircraft) {
+				if (aircraft.get(i) == selected_aircraft) {
 					deselectAircraft();
 				}
 
-				aircraft_in_airspace.remove(i);
+				aircraft.remove(i);
 			}
 
 		}
@@ -441,7 +373,7 @@ public class SinglePlayer extends Scene {
 			// from play.
 			if (selected_aircraft.isOutOfBounds()) {
 				orders_box.addOrder(">>> " + selected_aircraft.getName() + " is out of bounds, contact lost. Do better Comrade.");
-				aircraft_in_airspace.remove(selected_aircraft);
+				aircraft.remove(selected_aircraft);
 				deselectAircraft();
 			}
 
@@ -450,7 +382,7 @@ public class SinglePlayer extends Scene {
 		flight_generation_time_elapsed += dt;
 		if (flight_generation_time_elapsed >= flight_generation_interval) {
 			flight_generation_time_elapsed -= flight_generation_interval;
-			if (aircraft_in_airspace.size() < max_aircraft) {
+			if (aircraft.size() < MAX_AIRCRAFT) {
 				generateFlight(false);
 			}
 		}
@@ -464,7 +396,7 @@ public class SinglePlayer extends Scene {
 	 *            delta time since last collision check
 	 */
 	private void checkCollisions(double dt) {
-		for (Aircraft plane : aircraft_in_airspace) {
+		for (Aircraft plane : aircraft) {
 			int collision_state = plane.updateCollisions(dt, aircraftList());
 
 			if (collision_state >= 0) {
@@ -472,12 +404,6 @@ public class SinglePlayer extends Scene {
 				return;
 			}
 		}
-	}
-
-	@Override
-	public void playSound(audio.Sound sound) {
-		sound.stopSound();
-		sound.playSound();
 	}
 
 	/**
@@ -504,7 +430,7 @@ public class SinglePlayer extends Scene {
 
 			Aircraft new_selected = selected_aircraft;
 
-			for (Aircraft a : aircraft_in_airspace) {
+			for (Aircraft a : aircraft) {
 				if (a.isMouseOver(x - 16, y - 16)) {
 					new_selected = a;
 				}
@@ -601,13 +527,6 @@ public class SinglePlayer extends Scene {
 		compass_dragged = false;
 	}
 
-	@Override
-	public void keyPressed(int key) {
-		if (key == input.KEY_ESCAPE) {
-			main.closeScene();
-		}
-	}
-
 	/**
 	 * Handle keyboard input
 	 */
@@ -693,11 +612,11 @@ public class SinglePlayer extends Scene {
 
 		airport.drawAirportInfo();
 
-		for (Aircraft aircraft : aircraft_in_airspace) {
+		for (Aircraft a : aircraft) {
 			graphics.setColour(255, 255, 255);
-			aircraft.draw();
-			if (aircraft.isMouseOver(input.getMouseX() - 16, input.getMouseY() - 16)) {
-				aircraft.drawFlightPath(false);
+			a.draw();
+			if (a.isMouseOver(input.getMouseX() - 16, input.getMouseY() - 16)) {
+				a.drawFlightPath(false);
 			}
 		}
 
@@ -742,39 +661,6 @@ public class SinglePlayer extends Scene {
 	}
 
 	/**
-	 * draw the info of a selected plane in the scene GUI
-	 */
-	private void drawPlaneInfo() {
-		graphics.setColour(Main.GREEN);
-		graphics.rectangle(false, PLANE_INFO_X, PLANE_INFO_Y, PLANE_INFO_W, PLANE_INFO_H);
-
-		if (selected_aircraft != null) {
-
-			graphics.setViewport(PLANE_INFO_X, PLANE_INFO_Y, PLANE_INFO_W, PLANE_INFO_H);
-			graphics.printTextCentred(selected_aircraft.getName(), 0, 5, 2, PLANE_INFO_W);
-
-			// Altitude
-			String altitude = String.format("%.0f", selected_aircraft.getPosition().z())+ "£";
-			graphics.print("Altitude:", 10, 40);
-			graphics.print(altitude, PLANE_INFO_W - 10 - altitude.length() * 8, 40);
-
-			// Speed
-			String speed = String.format("%.2f", selected_aircraft.getSpeed() * 1.687810) + "$";
-			graphics.print("Speed:", 10, 55);
-			graphics.print(speed, PLANE_INFO_W - 10 - speed.length() * 8, 55);
-
-			// Origin
-			graphics.print("Origin:", 10, 70);
-			graphics.print(selected_aircraft.getFlightPlan().getOriginName(), PLANE_INFO_W - 10 - selected_aircraft.getFlightPlan().getOriginName().length() * 8, 70);
-
-			// Destination
-			graphics.print("Destination:", 10, 85);
-			graphics.print(selected_aircraft.getFlightPlan().getDestinationName(), PLANE_INFO_W - 10 - selected_aircraft.getFlightPlan().getDestinationName().length() * 8, 85);
-			graphics.setViewport();
-		}
-	}
-
-	/**
 	 * Whitespace Concatenation maker
 	 * 
 	 */
@@ -811,9 +697,9 @@ public class SinglePlayer extends Scene {
 				+ df.format(seconds);
 		graphics.print("Score: " + score + whiteSpace(score) + timePlayed, window.getWidth() - (timePlayed.length() * 8) - 150, padding_from_top);
 
-		int planes = aircraft_in_airspace.size();
+		int planes = aircraft.size();
 
-		graphics.print(String.valueOf(aircraft_in_airspace.size()) + " plane" + (planes == 1 ? "" : "s") + " in the sky.", 32, padding_from_top);
+		graphics.print(String.valueOf(aircraft.size()) + " plane" + (planes == 1 ? "" : "s") + " in the sky.", 32, padding_from_top);
 	}
 
 	/**
@@ -830,7 +716,7 @@ public class SinglePlayer extends Scene {
 			}
 
 			orders_box.addOrder("<<< " + a.getName() + " incoming from " + a.getFlightPlan().getOriginName() + " heading towards " + a.getFlightPlan().getDestinationName() + ".");
-			aircraft_in_airspace.add(a);
+			aircraft.add(a);
 		}
 	}
 	
@@ -843,10 +729,10 @@ public class SinglePlayer extends Scene {
 		 
 		for (Waypoint entry_point : location_waypoints) {
 			boolean is_available = true;
-			for (Aircraft aircraft : aircraft_in_airspace) {
+			for (Aircraft a : aircraft) {
 				// Check if any plane is currently going towards the exit point/chosen originPoint
 				// Check if any plane is less than what is defined as too close from the chosen originPoint
-				if (aircraft.getCurrentTarget().equals(entry_point.position()) || aircraft.isCloseToEntry(entry_point.position())) {
+				if (a.getCurrentTarget().equals(entry_point.position()) || a.isCloseToEntry(entry_point.position())) {
 					is_available = false;
 		 		}	
 		 	}
@@ -864,6 +750,7 @@ public class SinglePlayer extends Scene {
  	 */
 	private java.util.ArrayList<Integer> getIdAvailableEntryPointsAltitudes() {
 		java.util.ArrayList<Integer> available_id_entry_points_altitudes = new java.util.ArrayList<Integer>();
+		
 		int base_id = -1;
 		// checks all waypoints and all altitudes
 		for (Waypoint entry_point : location_waypoints) {
@@ -871,12 +758,13 @@ public class SinglePlayer extends Scene {
 			if (entry_point != airport) { // Airport is excluded as it is said initially whether it should come from airport or elsewhere
 				for (int i = 1; i < Aircraft.altitude_list.size(); i++) { // Starts from 1 as the first in the altitude_list is 100 which is not considered
 					boolean is_available = true;
-					for (Aircraft aircraft : aircraft_in_airspace) {
+					for (Aircraft a : aircraft) {
 						// Check if any plane is currently going towards the exit point/chosen originPoint
 						// Check if any plane's altitude is less than 300 different from altitude from altitude_list currently being checked and close to entry point at the same time 
-						if (aircraft.getCurrentTarget().equals(entry_point.position()) ||
-								((Math.abs(aircraft.getPosition().z() - Aircraft.altitude_list.get(i)) < 1000) && aircraft.isCloseToEntry(entry_point.position()))) {
+						if (a.getCurrentTarget().equals(entry_point.position()) ||
+								((Math.abs(a.getPosition().z() - Aircraft.altitude_list.get(i)) < 1000) && a.isCloseToEntry(entry_point.position()))) {
 							is_available = false;
+							break;
 						}	
 					}
 					if (is_available) { 
@@ -938,7 +826,7 @@ public class SinglePlayer extends Scene {
 		while (name_is_taken) {
 			name = "Flight " + (int)(900 * Math.random() + 100);
 			name_is_taken = false;
-			for (Aircraft a : aircraft_in_airspace) {
+			for (Aircraft a : aircraft) {
 				if (a.getName() == name) name_is_taken = true;
 			}
 		}

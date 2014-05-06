@@ -20,16 +20,13 @@ import pp.Main;
 import rem.MultiplayerServer;
 import lib.RandomNumber;
 import lib.SpriteAnimation;
-import lib.jog.audio.Sound;
 import lib.jog.graphics;
 import lib.jog.input;
 import lib.jog.graphics.Image;
 import lib.jog.window;
 
-public class Multiplayer extends Scene {
+public class Multiplayer extends GameWindow {
 	private static final double DEDUCTION_TIME_DELAY = 0.5;
-	final int MAX_AIRCRAFT = 20;
-	final int TAKEOFF_DELAY = 5;
 	
 	String left_name, right_name;
 	
@@ -47,8 +44,6 @@ public class Multiplayer extends Scene {
 	public Waypoint left_airport_takeoff_waypoint = new Waypoint(left_airport.position().x() - 120, left_airport.position().y());
 	public Waypoint right_airport_takeoff_waypoint = new Waypoint(right_airport.position().x() - 120, right_airport.position().y());
 	
-	public ArrayList<Aircraft> aircraft = new ArrayList<Aircraft>();
-	public Aircraft selected_aircraft;
 	public Aircraft their_selected;
 	
 	public PerformanceBar left_performance;
@@ -56,24 +51,11 @@ public class Multiplayer extends Scene {
 	public Lives left_lives;
 	public Lives right_lives;
 	
-	OrdersBox orders_box;
-	AirportControlBox airport_control_box;
-	Altimeter altimeter;
-	
 	Image background, explosion, left_channel_image, right_channel_image;
 	
 	double timer = 0;
-	double next_take_off = TAKEOFF_DELAY;
 	
-	boolean is_manually_controlling;
-	boolean compass_dragged;
-	Waypoint selected_waypoint;
-	int selected_pathpoint;
-	public Image aircraft_image;
 	private double time_of_last_deduction = 0;
-	
-	double flight_generation_time_elapsed = 6;
-	double flight_generation_interval = 4;
 	double last_penalty_time= 0;
 	
 	MultiplayerServer server;
@@ -87,28 +69,12 @@ public class Multiplayer extends Scene {
 	
 	private SpriteAnimation my_explosion_animation, their_explosion_animation, left_channel, right_channel;
 	
-	// Position of things drawn to window
 	final int Y_POSITION_OF_BOTTOM_ELEMENTS = window.getHeight() - 120;
-	
-	private final int PLANE_INFO_X = 16;
-	private final int PLANE_INFO_Y = Y_POSITION_OF_BOTTOM_ELEMENTS;
-	private final int PLANE_INFO_W = window.getWidth() / 4 - 16;
-	private final int PLANE_INFO_H = 112;
-	
-	private final int ALTIMETER_X = PLANE_INFO_X + PLANE_INFO_W + 8;
-	private final int ALTIMETER_Y = Y_POSITION_OF_BOTTOM_ELEMENTS;
-	private final int ALTIMETER_W = 244;
-	private final int ALTIMETER_H = 112;
 		
 	private final int AIRPORT_CONTROL_BOX_X = ALTIMETER_X + ALTIMETER_W + 8;
 	private final int AIRPORT_CONTROL_BOX_Y = Y_POSITION_OF_BOTTOM_ELEMENTS;
 	private final int AIRPORT_CONTROL_BOX_W = 244;
 	private final int AIRPORT_CONTROL_BOX_H = 112;
-
-	private final int ORDERSBOX_X = AIRPORT_CONTROL_BOX_X + AIRPORT_CONTROL_BOX_W + 8;
-	private final int ORDERSBOX_Y = Y_POSITION_OF_BOTTOM_ELEMENTS;
-	private final int ORDERSBOX_W = window.getWidth() - (ORDERSBOX_X + 16);
-	private final int ORDERSBOX_H = 112;
 	
 	private final int LEFT_PERFOMANCE_X = 110;
 	private final int LEFT_PERFOMANCE_Y = 8;
@@ -121,11 +87,6 @@ public class Multiplayer extends Scene {
 		
 	private final int RIGHT_LIVES_X = window.getWidth()/2 + 50;
 	private final int RIGHT_LIVES_Y = 8;
-	
-	public final static int DIFFICULTY_EASY = 0;
-	public final static int DIFFICULTY_MEDIUM = 1;
-	public final static int DIFFICULTY_HARD = 2;
-	public static int difficulty = DIFFICULTY_EASY;
 	
 	private double plane_speed_multiplier; // Scales plane speed based on difficulty
 	private double separation_allowance; // Based on difficulty
@@ -271,12 +232,6 @@ public class Multiplayer extends Scene {
 		right_holding_waypoints.get(1).setNextWaypoint(right_holding_waypoints.get(2));
 		right_holding_waypoints.get(2).setNextWaypoint(right_holding_waypoints.get(3));
 		right_holding_waypoints.get(3).setNextWaypoint(right_holding_waypoints.get(0));
-
-		timer = 0;
-		compass_dragged = false;
-		selected_aircraft = null;
-		selected_waypoint = null;
-		selected_pathpoint = -1;
 		
 		aircraft_image = graphics.newImage("gfx" + File.separator + "plane.png");
 		explosion = graphics.newImage("gfx" + File.separator + "explosionFrames.png");
@@ -847,13 +802,6 @@ public class Multiplayer extends Scene {
 	}
 	
 	@Override
-	public void keyPressed(int key) {
-		if (key == input.KEY_ESCAPE) {
-			main.closeScene();
-		}
-	}
-	
-	@Override
 	public void keyReleased(int key) {
 		try {
 			switch (key) {
@@ -974,50 +922,10 @@ public class Multiplayer extends Scene {
 		left_lives.draw();
 		right_lives.draw();
 	}
-	
-	private void drawPlaneInfo() {
-		graphics.setColour(Main.GREEN);
-		graphics.rectangle(false, PLANE_INFO_X, PLANE_INFO_Y, PLANE_INFO_W, PLANE_INFO_H);
-
-		if (selected_aircraft != null) {
-
-			graphics.setViewport(PLANE_INFO_X, PLANE_INFO_Y, PLANE_INFO_W, PLANE_INFO_H);
-			graphics.printTextCentred(selected_aircraft.getName(), 0, 5, 2, PLANE_INFO_W);
-
-			// Altitude
-			String altitude = String.format("%.0f", selected_aircraft.getPosition().z())+ "£";
-			graphics.print("Altitude:", 10, 40);
-			graphics.print(altitude, PLANE_INFO_W - 10 - altitude.length() * 8, 40);
-
-			// Speed
-			String speed = String.format("%.2f", selected_aircraft.getSpeed() * 1.687810) + "$";
-			graphics.print("Speed:", 10, 55);
-			graphics.print(speed, PLANE_INFO_W - 10 - speed.length() * 8, 55);
-
-			// Origin
-			graphics.print("Origin:", 10, 70);
-			graphics.print(selected_aircraft.getFlightPlan().getOriginName(), PLANE_INFO_W - 10 - selected_aircraft.getFlightPlan().getOriginName().length() * 8, 70);
-
-			// Destination
-			graphics.print("Destination:", 10, 85);
-			graphics.print(selected_aircraft.getFlightPlan().getDestinationName(), PLANE_INFO_W - 10 - selected_aircraft.getFlightPlan().getDestinationName().length() * 8, 85);
-			graphics.setViewport();
-		}
-	}
 
 	@Override
 	public void close() {
 		server.close();
-	}
-
-	@Override
-	public void playSound(Sound sound) {
-		sound.stopSound();
-		sound.playSound();
-	}
-	
-	public double getTime() {
-		return timer;
 	}
 	
 	/**
