@@ -25,7 +25,7 @@ public class GameOverMult extends Scene {
 				main.setScene(new EnterName(main));
 			}
 		};
-		play_again = new ButtonText("play again", replay, window.getWidth()/2 -100, window.getHeight()/2, 100, 30, true, true);
+		play_again = new ButtonText("play again", replay, window.getWidth()/2 -150, window.getHeight()/2, 100, 30, true, true);
 		
 		ButtonText.Action exit_action = new ButtonText.Action() {
 			@Override
@@ -33,7 +33,7 @@ public class GameOverMult extends Scene {
 				main.closeScene();
 			}
 		};
-		exit = new ButtonText("exit", exit_action, window.getWidth()/2 +100, window.getHeight()/2, 100, 30, true, true);
+		exit = new ButtonText("exit", exit_action, window.getWidth()/2 , window.getHeight()/2, 100, 30, true, true);
 		
 	}
 	
@@ -41,8 +41,8 @@ public class GameOverMult extends Scene {
 	public void draw() {
 		graphics.setColour(Main.GREEN);
 		String text = win ? "You Win!" : "You Lose!";
-		graphics.printTextCentred(text, window.getWidth()/4, 200, 20, 750);
-		graphics.printTextCentred("Press a button to play again or exit", window.getWidth()/2 , window.getHeight() - 200, 3, 200);
+		graphics.printTextCentred(text, window.getWidth()/4 + 80, 200, 20, 750);
+		graphics.printTextCentred("Press a button to play again or exit", window.getWidth()/2 - 90, window.getHeight() - 200, 3, 200);
 		play_again.draw();
 		exit.draw();
 

@@ -42,7 +42,7 @@ public class ConnectionLost extends Scene {
 			}
 		};
 		
-		back_to_menu_button = new ButtonText("Back to menu", back_to_menu, window.getWidth()/2, 2*window.getHeight()/3, 100, 25, true, true);
+		back_to_menu_button = new ButtonText("Back to menu", back_to_menu, window.getWidth()/2 - 40, 2*window.getHeight()/3, 100, 25, true, true);
 	}
 
 	@Override
@@ -51,7 +51,8 @@ public class ConnectionLost extends Scene {
 
 	@Override
 	public void draw() {
-		graphics.printTextCentred("Connection lost :(", window.getWidth()/2, window.getHeight()/3, 5, 200);
+		graphics.setColour(Main.GREEN);
+		graphics.printTextCentred("Connection lost :(", window.getWidth()/2 - 80, window.getHeight()/3, 5, 200);
 		back_to_menu_button.draw();
 	}
 

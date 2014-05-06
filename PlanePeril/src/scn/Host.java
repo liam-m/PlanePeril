@@ -50,19 +50,19 @@ public class Host extends Scene {
 	@Override
 	public void draw() {
 		graphics.setColour(Main.GREEN);
-		graphics.printTextCentred("Welcome!:", window.getWidth() / 2, 100, 5, 100);
-		graphics.printTextCentred(player_name, window.getWidth() / 2, 200, 10, 100);
-		graphics.printTextCentred("Your IP: "+this_address, (window.getWidth()/2 - (200/4)), 350, 5, 200);
+		graphics.printTextCentred("Welcome!:", window.getWidth() / 2 - 40, 100, 5, 100);
+		graphics.printTextCentred(player_name, window.getWidth() / 2 -40 , 200, 10, 100);
+		graphics.printTextCentred("Your IP: "+this_address, (window.getWidth()/2 - 100 ), 350, 5, 200);
 		
 		String[] diffs = new String[]{"Easy", "Medium", "Hard"};
-		graphics.printTextCentred(diffs[difficulty], window.getWidth() / 2, 500, 4, 100);
+		graphics.printTextCentred(diffs[difficulty], window.getWidth() / 2 - 50, 500, 4, 100);
 		
 		for (ButtonText button : buttons) {
 			button.draw();
 		}
 
 		graphics.setColour(Main.GREEN); // Hovered buttons may change colour
-		graphics.printTextCentred("Waiting for player", window.getWidth() / 2, 800, 5, 100);
+		graphics.printTextCentred("Waiting for player", window.getWidth() / 2 - 50, 800, 5, 100);
 
 		if (waiting_dot++ > 25) {
 			waiting_dot = 0;
@@ -72,7 +72,7 @@ public class Host extends Scene {
 				dots += '.'; 
 			}
 		}
-		graphics.printTextCentred(dots, window.getWidth() / 2, 850, 5, 100);
+		graphics.printTextCentred(dots, window.getWidth() / 2 - 70, 850, 5, 100);
 	}
 
 	@Override
@@ -117,7 +117,7 @@ public class Host extends Scene {
 			}
 		};
 
-		buttons[0] = new ButtonText("Easy", easy, window.getWidth() / 4, 2 * window.getHeight() / 3, 128, 16, true, true);
+		buttons[0] = new ButtonText("Easy", easy, window.getWidth() / 4 - 60, 2 * window.getHeight() / 3, 128, 16, true, true);
 
 		ButtonText.Action medium = new ButtonText.Action() {
 			@Override
@@ -126,7 +126,7 @@ public class Host extends Scene {
 			}
 		};
 
-		buttons[1] = new lib.ButtonText("Medium", medium, window.getWidth() / 2, 2 * window.getHeight() / 3, 128, 16, true, true);
+		buttons[1] = new lib.ButtonText("Medium", medium, window.getWidth() / 2 - 100, 2 * window.getHeight() / 3, 128, 16, true, true);
 
 		ButtonText.Action hard = new ButtonText.Action() {
 			@Override
@@ -135,7 +135,7 @@ public class Host extends Scene {
 			}
 		};
 		
-		buttons[2] = new lib.ButtonText("Hard", hard, 3 * window.getWidth() / 4, 2 * window.getHeight() / 3, 128, 16, true, true);
+		buttons[2] = new lib.ButtonText("Hard", hard, (3 * window.getWidth() / 4) - 160, 2 * window.getHeight() / 3, 128, 16, true, true);
 	}
 
 	@Override
