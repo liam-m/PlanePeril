@@ -94,7 +94,6 @@ public class MultiplayerServer extends UnicastRemoteObject implements Multiplaye
 			
 			Waypoint destination_point = game.left_entryexit_waypoints[destination_waypoints_index];
 			
-			//TODO improve synchronisation methods
 			aircraft_queue.add(new Aircraft(name, game.aircraft_image, speed, 1, new FlightPlan(origin_point, 
 					destination_point, game.left_waypoints, game.left_holding_waypoints, game.left_airport_takeoff_waypoint), preferred_altitude_index, waiting_to_be_handed));
 		}
