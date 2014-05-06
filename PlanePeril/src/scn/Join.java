@@ -58,7 +58,6 @@ public class Join extends Scene {
 			host_interface = (HostInterface)(registry.lookup("host_server"));
 			their_name = host_interface.connect(this_address, player_name);
 			difficulty = host_interface.getDifficulty();
-			System.out.println("DIFFICULTY = "+difficulty);
 		} catch (NotBoundException e) {
 			e.printStackTrace();
 		}
