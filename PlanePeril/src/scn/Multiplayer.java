@@ -313,7 +313,7 @@ public class Multiplayer extends Scene {
 	public void update(double dt) {
 		timer += dt;
 		orders_box.update(dt);
-
+		updateFlightGenerationInterval();
 		// update airports
 		my_airport.setTimeLeft((int) (next_take_off - timer));
 		my_airport.update(dt, aircraft, is_left_player);
@@ -483,6 +483,26 @@ public class Multiplayer extends Scene {
 			updatePerformance(-1);
 			last_penalty_time = timer;
 		}		
+	}
+	
+	/**
+	 * Updates the rate of the planes are spawned based on the opponent's performance by changing
+	 * the flight_generation_interval variable.
+	 */
+	private void updateFlightGenerationInterval() { 
+		int chosen_perf = is_left_player ? right_performance.getCurrentValue() : left_performance.getCurrentValue();
+		
+		if (chosen_perf < (my_performance.getMax() / 5)) // less than 1/5 of PB
+			flight_generation_interval = 6;
+		else if (chosen_perf < (my_performance.getMax() / 3)) // less than 1/3 of PB
+			flight_generation_interval = 5;
+		else if (chosen_perf < (my_performance.getMax() / 2)) // less than 1/2 of PB
+			flight_generation_interval = 4;
+		else if (chosen_perf < (my_performance.getMax() - my_performance.getMax() / 3)) // less than 2/3 of PB
+			flight_generation_interval = 3;
+		else 
+			flight_generation_interval = 2;
+		
 	}
 	
 	/**
