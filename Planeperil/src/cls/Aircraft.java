@@ -628,13 +628,13 @@ public class Aircraft {
 		double bottom_label_y = position.y() + (position.y() < 700 ? 15 : -20);
 		double top_label_y = position.y() - (position.y() < 700 ? 22 : 32);
 
-		// Draw the altitude near the aircraft. £ is rendered as cursive "ft" from font file
-		graphics.print(String.format("%.0f", position.z()) + "£", position.x() - 22, bottom_label_y);
+		// Draw the altitude near the aircraft. ï¿½ is rendered as cursive "ft" from font file
+		graphics.print(String.format("%.0f", position.z()) + "ï¿½", position.x() - 22, bottom_label_y);
 		
 		if (current_target instanceof HoldingWaypoint) { // Draw the 'land me' message once an aircraft is circling the airport or 'landing' once it's been told to land
 			graphics.print(infoText, position.x() - 28, top_label_y);
 		} else if (waiting_to_be_handed && current_target.equals(flight_plan.getDestination())) { // Draw 'hand me' if it's going to be handed over and is in final stage (circling hand over point)
-			graphics.print("Hand Me", position.x() - 28, top_label_y);
+			graphics.print("Hand Me!", position.x() - 28, top_label_y);
 		}
 
 		drawWarningCircles();
